@@ -45,18 +45,18 @@ $mode = isset($_GET['mode']) ? $_GET['mode'] : '';
 
 if (isset($_GET['recordkey'])) {
     $recordkey = $_GET['recordkey'];
-/*
-    $key = isset($_GET['recordkey']) ? urldecode($recordkey) : $recordkey;
-    if (!$recordkey = @unserialize(urldecode($key))) {
-		$recordkey = urldecode($key);
-    }
-	*/
+    /*
+        $key = isset($_GET['recordkey']) ? urldecode($recordkey) : $recordkey;
+        if (!$recordkey = @unserialize(urldecode($key))) {
+            $recordkey = urldecode($key);
+        }
+        */
 }
 
 
 if (isset($_POST['recordkey'])) {
-	//  $recordkey = urldecode($_POST['recordkey']);
-	$recordkey = $_POST['recordkey'];
+    //  $recordkey = urldecode($_POST['recordkey']);
+    $recordkey = $_POST['recordkey'];
 }
 
 $context = (!isset($_GET['context'])) ? 0 : $_GET['context'];
