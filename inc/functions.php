@@ -402,6 +402,7 @@ function WriteCronScript($restore_values = false)
         $cron_command_before_dump = $databases['multi_commandbeforedump'];
         $cron_command_after_dump = $databases['multi_commandafterdump'];
     }
+
     // we need to correct the index of the selected database after we cleaned
     // the db-array from information_schema and mysql if it points to a db-name
     if ($config['cron_dbindex'] >= 0) {
@@ -411,14 +412,21 @@ function WriteCronScript($restore_values = false)
     }
 
     $newDbNames = $databases['Name'];
-    // remove database we don't want to backup
-    foreach ($databases['Name'] as $k => $v) {
+    //remove database we don't want to backup
+	// from newDbNames
+    foreach ($databases['Name'] as $k=>$v) {
+        if (in_array($v, $dontBackupDatabases)) {
+            unset($newDbNames[$k]);
+        }
+    }
+	// and from cron (cron_db_array has different length to newDbNames: at least mysql and information_schema are missing)
+    foreach ($cron_db_array as $k=>$v) {
         if (in_array($v, $dontBackupDatabases)) {
             unset($cron_db_array[$k],
-                   $cron_dbpraefix_array[$k],
-                   $cron_command_before_dump[$k],
-                   $cron_command_after_dump[$k],
-                   $newDbNames[$k]);
+                $cron_dbpraefix_array[$k],
+                $cron_command_before_dump[$k],
+                $cron_command_after_dump[$k]
+			);
         }
     }
 

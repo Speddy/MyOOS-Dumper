@@ -409,6 +409,7 @@ if (isset($_POST['save'])) {
     $databases['multisetting_commandbeforedump'] = (count($databases['multi']) > 0) ? implode(';', $databases['multi_commandbeforedump']) : '';
     $databases['multisetting_commandafterdump'] = (count($databases['multi']) > 0) ? implode(';', $databases['multi_commandafterdump']) : '';
 
+
     if (-2 == $config['cron_dbindex']) {
         $datenbanken = count($databases['Name']);
         $cron_db_array = str_replace(';', '|', $databases['multisetting']);
