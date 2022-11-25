@@ -94,7 +94,7 @@ if ($is_new_version_available) {
     $tpl->assign_block_vars('NEW_VERSION_EXISTS', []);
 }
 
-if ($update_info > '') {
+if (isset($update_info)) {
     $tpl->assign_block_vars('UPDATE_INFO', [
     'MSG' => $update_info, ]);
 }
