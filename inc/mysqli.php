@@ -527,7 +527,7 @@ function getDBInfos()
                     }
                 }
                 if ($index) {
-                    $dump['totalrecords'] -= $rekords_to_skip;
+                    $dump['totalrecords'] -= intval($rekords_to_skip);
                 }
             }
         }
