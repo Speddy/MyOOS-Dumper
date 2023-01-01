@@ -473,16 +473,16 @@
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "2.0.39",
+            "version": "2.0.41",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "f3a0e2b715c40cf1fd270d444901b63311725d63"
+                "reference": "7e763c6f97ec1fcb37c46aa8ecfc20a2c71d9c1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/f3a0e2b715c40cf1fd270d444901b63311725d63",
-                "reference": "f3a0e2b715c40cf1fd270d444901b63311725d63",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/7e763c6f97ec1fcb37c46aa8ecfc20a2c71d9c1b",
+                "reference": "7e763c6f97ec1fcb37c46aa8ecfc20a2c71d9c1b",
                 "shasum": ""
             },
             "require": {
@@ -563,7 +563,7 @@
             ],
             "support": {
                 "issues": "https://github.com/phpseclib/phpseclib/issues",
-                "source": "https://github.com/phpseclib/phpseclib/tree/2.0.39"
+                "source": "https://github.com/phpseclib/phpseclib/tree/2.0.41"
             },
             "funding": [
                 {
@@ -579,7 +579,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-10-24T10:49:03+00:00"
+            "time": "2022-12-23T16:44:18+00:00"
         },
         {
             "name": "psr/log",
