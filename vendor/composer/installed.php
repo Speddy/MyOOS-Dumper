@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '2039ff955109b1862654ea60ff4b71c97ec533f3',
+        'reference' => '0528370622b1ca5a79dd23c46658ec9d5da61577',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '2039ff955109b1862654ea60ff4b71c97ec533f3',
+            'reference' => '0528370622b1ca5a79dd23c46658ec9d5da61577',
             'dev_requirement' => false,
         ),
         'composer/semver' => array(
