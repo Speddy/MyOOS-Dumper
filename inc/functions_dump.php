@@ -301,7 +301,7 @@ function ExecuteCommand($when)
             }
 
             for ($i = 0; $i < sizeof($cad); ++$i) {
-                if trim((string) $cad[$i]) > '') {
+                if (trim((string) $cad[$i]) > '') {
                     $result = mysqli_query($config['dbconnection'], $cad[$i]);
 
                     if (false === $result) {
