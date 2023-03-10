@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -44,7 +44,7 @@ function get_sqlbefehl()
         // herausfinden um was für einen Befehl es sich handelt
         if (0 == $sqlparser_status) {
             //Vergleichszeile, um nicht bei jedem Vergleich strtoupper ausführen zu müssen
-            $zeile2 = strtoupper(trim($zeile));
+            $zeile2 = strtoupper(trim((string) $zeile));
             // pre-built compare strings - so we need the CPU power only once :)
             $sub9 = substr($zeile2, 0, 9);
             $sub7 = substr($sub9, 0, 7);
@@ -130,7 +130,7 @@ function get_sqlbefehl()
                 $sqlparser_status = 3;
             }
 
-            if ((0 == $sqlparser_status) && (trim($complete_sql) > '') && (-1 == $restore['flag'])) {
+            if ((0 == $sqlparser_status) && (trim((string) $complete_sql) > '') && (-1 == $restore['flag'])) {
                 // Unbekannten Befehl entdeckt
                 v($restore);
                 echo '<br>Sql: '.htmlspecialchars($complete_sql);
@@ -149,7 +149,7 @@ function get_sqlbefehl()
             //INSERT
             if (SQL_Is_Complete($complete_sql)) {
                 $sqlparser_status = 100;
-                $complete_sql = trim($complete_sql);
+                $complete_sql = trim((string) $complete_sql);
                 if ('*/' == substr($complete_sql, -2)) {
                     $complete_sql = remove_comment_at_eol($complete_sql);
                 }
@@ -270,7 +270,7 @@ function get_sqlbefehl()
     if (is_array($restore['tables_to_restore']) && !(in_array($restore['actual_table'], $restore['tables_to_restore']))) {
         $complete_sql = '';
     }
-    return trim($complete_sql);
+    return trim((string) $complete_sql);
 }
 
 function submit_create_action($sql)
@@ -362,7 +362,7 @@ function get_tablename($t)
         $t = substr($t, $pos, strlen($t) - $pos);
     }
     $t = str_ireplace(';', ' ;', $t); // tricky -> insert space as delimiter
-    $t = trim($t);
+    $t = trim((string) $t);
 
     // jetzt einfach nach dem ersten Leerzeichen suchen
     $delimiter = substr($t, 0, 1);
@@ -381,21 +381,21 @@ function get_tablename($t)
         ++$position;
     }
     $t = substr($t, 0, $position);
-    $t = trim(str_replace('`', '', $t));
+    $t = trim((string) str_replace('`', '', $t));
     return $t;
 }
 
 // decide if an INSERT-Command is complete - simply count quotes and look for ); at the end of line
 function SQL_Is_Complete($string)
 {
-    $string = str_replace('\\\\', '', trim($string)); // trim and remove escaped backslashes
+    $string = str_replace('\\\\', '', trim((string) $string)); // trim and remove escaped backslashes
     $string = trim($string);
     $quotes = substr_count($string, '\'');
     $escaped_quotes = substr_count($string, '\\\'');
     if (($quotes - $escaped_quotes) % 2 == 0) {
         $compare = substr($string, -2);
         if ('*/' == $compare) {
-            $compare = substr(trim(remove_comment_at_eol($string)), -2);
+            $compare = substr(trim((string) remove_comment_at_eol($string)), -2);
         }
         if (');' == $compare) {
             return true;
@@ -410,7 +410,7 @@ function SQL_Is_Complete($string)
 function remove_comment_at_eol($string)
 {
     // check for Inline-Comments at the end of the line
-    if ('*/' == substr(trim($string), -2)) {
+    if ('*/' == substr(trim((string) $string), -2)) {
         $pos = strrpos($string, '/*');
         if ($pos > 0) {
             $string = trim(substr($string, 0, $pos));

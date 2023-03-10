@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -25,7 +25,7 @@ function nl2null($string)
     $search = ["\r", "\n"];
     $replace = ['', ''];
 
-    return trim(str_replace($search, $replace, $string));
+    return trim((string) str_replace($search, $replace, $string));
 }
 
 //SQL-Strings

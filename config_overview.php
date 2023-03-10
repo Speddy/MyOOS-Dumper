@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -351,7 +351,7 @@ if (isset($_POST['save'])) {
         $_POST['cron_select_savepath'] = $config['config_file'];
     }
     if (isset($_POST['cron_savepath_new']) && !empty($_POST['cron_savepath_new'])) {
-        $tmp_configfilename = utf8_decode(trim($_POST['cron_savepath_new']));
+        $tmp_configfilename = utf8_decode(trim((string) $_POST['cron_savepath_new']));
         if (!preg_match('/^[a-z.-_]+$/i', $tmp_configfilename, $matches)) {
             $save_config = false;
             $msg .= '<p class="error">'.sprintf($lang['L_ERROR_CONFIGFILE_NAME'], $_POST['cron_savepath_new']).'</p>';
@@ -528,7 +528,7 @@ if (isset($_POST['save'])) {
 
     // Manuelles hinzufügen einer Datenbank
     if ($_POST['add_db_manual'] > '') {
-        $to_add = trim($_POST['add_db_manual']);
+        $to_add = trim((string) $_POST['add_db_manual']);
         $found = false;
         // Check if the DB already exists in the list
         if (isset($databases['Name'][0])) {

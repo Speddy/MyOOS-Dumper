@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -167,7 +167,7 @@ if (isset($_POST['restore'])) {
                 $encoding = explode(' ', $encodingstring);
                 $dump_encoding = $encoding[0];
             } else {
-                if (!isset($statusline['charset']) || '?' == trim($statusline['charset'])) {
+                if (!isset($statusline['charset']) || '?' == trim((string) $statusline['charset'])) {
                     echo headline($lang['L_FM_RESTORE'].': '.$file);
 
                     // if we can't detect encoding ask user

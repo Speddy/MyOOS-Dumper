@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -76,7 +76,7 @@ if (isset($_POST['dbdosubmit'])) {
 }
 if (isset($_POST['dbwantaction'])) {
     if (isset($_POST['db_createnew'])) {
-        $newname = trim($_POST['db_create']);
+        $newname = trim((string) $_POST['db_create']);
         if (!empty($newname)) {
             $sqlc = "CREATE DATABASE `$newname`";
             $col = (MOD_NEW_VERSION) ? $_POST['db_collate'] : '';

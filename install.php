@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -69,7 +69,7 @@ if (isset($_POST['dbhost'])) {
 //Variabeln
 $phase = (isset($phase)) ? $phase : 0;
 if (isset($_POST['manual_db'])) {
-    $manual_db = trim($_POST['manual_db']);
+    $manual_db = trim((string) $_POST['manual_db']);
 }
 $connstr = "$dbhost|$dbuser|$dbpass|$dbport|$dbsocket|$manual_db";
 $connection = '';
@@ -537,7 +537,7 @@ function Rechte($file)
 
 function extractValue($s)
 {
-    $r = trim(substr($s, strpos($s, '=') + 1));
+    $r = trim((string) substr($s, strpos($s, '=') + 1));
     $r = substr($r, 0, strlen($r) - 1);
     if ("'" == substr($r, -1) || '"' == substr($r, -1)) {
         $r = substr($r, 0, strlen($r) - 1);

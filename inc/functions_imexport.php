@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -215,7 +215,7 @@ function DoImport()
             if (1 == $sql['import']['createindex']) {
                 $insert .= "'', ";
             }
-            $zc .= trim(rtrim($sql['import']['csv'][$i]));
+            $zc .= trim((string) rtrim($sql['import']['csv'][$i]));
             //echo "Zeile $i: $zc<br>";
             if ('' != $zc) { // && substr($zc,-1)== $enc) {
                 $zeile = explode($sql['import']['trenn'], $zc);

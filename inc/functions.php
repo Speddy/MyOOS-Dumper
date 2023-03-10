@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -744,7 +744,7 @@ function SearchDatabases($printout, $db = '')
     $show_dbs = mysqli_query($config['dbconnection'], 'SHOW DATABASES');
     if (false === !$show_dbs) {
         while ($row = mysqli_fetch_row($show_dbs)) {
-            if (trim($row[0]) > '') {
+            if (trim((string) $row[0]) > '') {
                 $db_list[] = $row[0];
             }
         }
@@ -788,7 +788,7 @@ function my_strip_tags($value)
             }
         }
     } else {
-        $ret = trim(strip_tags($value));
+        $ret = trim((string) strip_tags($value));
     }
     return $ret;
 }

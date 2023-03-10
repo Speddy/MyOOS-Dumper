@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -301,11 +301,11 @@ function ExecuteCommand($when)
             }
 
             for ($i = 0; $i < sizeof($cad); ++$i) {
-                if (trim($cad[$i]) > '') {
+                if trim((string) $cad[$i]) > '') {
                     $result = mysqli_query($config['dbconnection'], $cad[$i]);
 
                     if (false === $result) {
-                        WriteLog("Error executing Query '$cad[$i]'! MySQL returns: ".trim(mysqli_error($config['dbconnection'])));
+                        WriteLog("Error executing Query '$cad[$i]'! MySQL returns: ".trim((string) mysqli_error($config['dbconnection'])));
                         ErrorLog("Error executing Query '$cad[$i]'!", $databases['Name'][$dump['dbindex']], $cad[$i], mysqli_error($config['dbconnection']), 0);
                         ++$dump['errors'];
                         $out .= '<span class="error">Error executing Query '.$cad[$i].'</span>'.$lf;
@@ -362,7 +362,7 @@ function DoEmail()
             //anhang zu gross
             $subject = "Backup '".$databases['Name'][$dump['dbindex']]."' - ".date("d\.m\.Y H:i", time());
             $header .= 'FROM:'.$config['email_sender']."\n";
-            if (isset($config['email_recipient_cc']) && trim($config['email_recipient_cc']) > '') {
+            if (isset($config['email_recipient_cc']) && trim((string) $config['email_recipient_cc']) > '') {
                 $header .= 'Cc:     '.$config['email_recipient_cc']."\r\n";
             }
             $header .= "MIME-version: 1.0\n";
@@ -387,7 +387,7 @@ function DoEmail()
             $encoded_file = chunk_split(base64_encode($contents));
             fclose($fp);
             $header .= 'FROM:'.$config['email_sender']."\n";
-            if (isset($config['email_recipient_cc']) && trim($config['email_recipient_cc']) > '') {
+            if (isset($config['email_recipient_cc']) && trim((string) $config['email_recipient_cc']) > '') {
                 $header .= 'Cc:     '.$config['email_recipient_cc']."\r\n";
             }
             $header .= "MIME-version: 1.0\n";
@@ -414,7 +414,7 @@ function DoEmail()
         $mp_sub = "Backup '".$databases['Name'][$dump['dbindex']]."' - ".date("d\.m\.Y", time());
         $subject = $mp_sub;
         $header .= 'FROM:'.$config['email_sender']."\n";
-        if (isset($config['email_recipient_cc']) && trim($config['email_recipient_cc']) > '') {
+        if (isset($config['email_recipient_cc']) && trim((string) $config['email_recipient_cc']) > '') {
             $header .= 'Cc:     '.$config['email_recipient_cc']."\r\n";
         }
         $header .= "MIME-version: 1.0\n";
@@ -455,7 +455,7 @@ function DoEmail()
             fclose($fp);
             $subject = $mp_sub.'  [Part '.($i + 1).' / '.count($mpdatei).']';
             $header = 'FROM:'.$config['email_sender']."\n";
-            if (isset($config['email_recipient_cc']) && trim($config['email_recipient_cc']) > '') {
+            if (isset($config['email_recipient_cc']) && trim((string) $config['email_recipient_cc']) > '') {
                 $header .= 'Cc:     '.$config['email_recipient_cc']."\r\n";
             }
             $header .= "MIME-version: 1.0\n";

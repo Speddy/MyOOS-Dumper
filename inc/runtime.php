@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -75,10 +75,10 @@ if ($config['max_execution_time'] > 30) {
 $config['upload_max_filesize'] = get_cfg_var('upload_max_filesize');
 $config['disabled'] = get_cfg_var('disable_functions');
 $config['phpextensions'] = implode(', ', get_loaded_extensions());
-$m = trim(str_replace('M', '', ini_get('memory_limit')));
+$m = trim((string) str_replace('M', '', ini_get('memory_limit')));
 // fallback if ini_get doesn't work
 if (0 == intval($m)) {
-    $m = trim(str_replace('M', '', get_cfg_var('memory_limit')));
+    $m = trim((string) str_replace('M', '', get_cfg_var('memory_limit')));
 }
 $config['php_ram'] = $m;
 

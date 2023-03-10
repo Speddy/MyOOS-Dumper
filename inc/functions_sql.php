@@ -213,7 +213,7 @@ function splitSQLStatements2Array($sql)
             $tmp = '';
         }
     }
-    if ('' != trim($tmp)) {
+    if ('' != trim((string) $tmp)) {
         $sqlArr[] = $tmp;
     }
     return $sqlArr;
@@ -310,7 +310,7 @@ function MOD_DoSQL($sqlcommands, $limit = '')
     } else {
         $result = true;
         for ($i = 0; $i < $sql_queries; ++$i) {
-            $allSQL[$i] = trim(rtrim($allSQL[$i]));
+            $allSQL[$i] = trim((string) rtrim($allSQL[$i]));
 
             if ('' != $allSQL[$i]) {
                 $sqlcommand .= $allSQL[$i];
@@ -350,7 +350,7 @@ function SQLParser($command, $debug = 0)
         $sql['parser']['comment'] = 0;
     }
     $Backslash = chr(92);
-    $s = rtrim(trim(($command)));
+    $s = rtrim(trim((string) ($command)));
 
     //Was ist das für eine Anfrage ?
     if ('#' == substr($s, 0, 1) || '--' == substr($s, 0, 2)) {
@@ -382,7 +382,7 @@ function SQLParser($command, $debug = 0)
         $tb = explode(',', $st);
         for ($i = 0; $i < count($tb); ++$i) {
             $first = $B_Esc = $B_Ticks = $B_Dashes = 0;
-            $v = trim($tb[$i]);
+            $v = trim((string) $tb[$i]);
             //Ticks + Dashes zählen
             for ($cpos = 2; $cpos <= strlen($v); ++$cpos) {
                 if ("'" == substr($v, (-1 * $cpos), 1)) {
@@ -473,7 +473,7 @@ function SQLOutput($sqlcommand, $meldung = '')
     global $sql, $lang;
     $s = '<h6 align="center">'.$lang['L_SQL_OUTPUT'].'</h6><div id="sqloutbox"><strong>';
     if ('' != $meldung) {
-        $s .= trim($meldung);
+        $s .= trim((string) $meldung);
     }
 
     if (isset($sql['parser']['sql_commands'])) {
@@ -569,7 +569,7 @@ function ComboCommandDump($when, $index, $disabled = '')
         $r .= '<option value="" '.(('' == $csql) ? ' selected="selected"' : '').'>&nbsp;</option>'."\n";
         if (is_array($SQL_ARRAY) && count($SQL_ARRAY) > 0) {
             for ($i = 0; $i < count($SQL_ARRAY); ++$i) {
-                $s = trim(SQL_String($i));
+                $s = trim((string) SQL_String($i));
                 $r .= '<option value="'.htmlspecialchars($s).'" '.(($csql == $s) ? ' selected="selected"' : '').'>'.SQL_Name($i).'</option>'."\n";
             }
         }
@@ -897,9 +897,9 @@ function getFieldinfos($db, $tabelle)
         if (isset($attributes[1])) {
             // we found attributes
             unset($attributes[0]); // delete type
-            $fields_infos[$i]['attributes'] = trim(implode(' ', $attributes)); //merge all other attributes
+            $fields_infos[$i]['attributes'] = trim((string) implode(' ', $attributes)); //merge all other attributes
             // remove attributes from type
-            $fields_infos[$i]['type'] = trim(str_replace($fields_infos[$i]['attributes'], '', $fields_infos[$i]['type']));
+            $fields_infos[$i]['type'] = trim((string) str_replace($fields_infos[$i]['attributes'], '', $fields_infos[$i]['type']));
         }
         if (isset($row['NULL'])) {
             $fields_infos[$i]['null'] = $row['NULL'];
@@ -1017,9 +1017,9 @@ function getExtendedFieldInfo($db, $table)
         if (isset($attributes[1])) {
             // we found attributes
             unset($attributes[0]); // delete type
-            $f[$i]['attributes'] = trim(implode(' ', $attributes)); //merge all other attributes
+            $f[$i]['attributes'] = trim((string) implode(' ', $attributes)); //merge all other attributes
             // remove attributes from type
-            $f[$i]['type'] = trim(str_replace($f[$i]['attributes'], '', $f[$i]['type']));
+            $f[$i]['type'] = trim((string) str_replace($f[$i]['attributes'], '', $f[$i]['type']));
         }
         if (isset($row['NULL'])) {
             $f[$i]['null'] = $row['NULL'];

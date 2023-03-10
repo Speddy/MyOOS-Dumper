@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -376,7 +376,7 @@ function Converter($filesource, $filedestination, $cp)
                         if (false === strpos($zeile, '(')) {
                             //Feldnamen stehen in der naechsten Zeile - holen
                             $zeile .= "\n\r";
-                            $zeile .= (1 == $cps) ? trim(gzgets($f, 8192)) : trim(fgets($f, 8192));
+                            $zeile .= (1 == $cps) ? trim((string) gzgets($f, 8192)) : trim((string) fgets($f, 8192));
                             $zeile .= ' ';
                         }
 

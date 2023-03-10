@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -84,13 +84,13 @@ function mysqli_search($db, $tabelle, $suchbegriffe, $suchart, $offset = 0, $anz
     $ret = false;
     $link = mod_mysqli_connect();
     if (sizeof($tables) > 0) {
-        $suchbegriffe = trim(str_replace('*', '', $suchbegriffe));
+        $suchbegriffe = trim((string) str_replace('*', '', $suchbegriffe));
         $suchworte = explode(' ', $suchbegriffe);
         if (($suchbegriffe > '') && (is_array($suchworte))) {
             // Remove empty entries (due to double spaces)
             $anzahl_suchworte = sizeof($suchworte);
             for ($i = 0; $i < $anzahl_suchworte; ++$i) {
-                if ('' == trim($suchworte[$i])) {
+                if ('' == trim((string) $suchworte[$i])) {
                     unset($suchworte[$i]);
                 }
             }
@@ -248,7 +248,7 @@ function ersetze_suchtreffer($text)
     return str_replace($such, $ersetzen, htmlspecialchars($text));
 }
 
-$suchbegriffe = trim($suchbegriffe); // Leerzeichen vorne und hinten wegschneiden
+$suchbegriffe = trim((string) $suchbegriffe); // Leerzeichen vorne und hinten wegschneiden
 if (isset($_POST['reset'])) {
     $suchbegriffe = '';
     $_SESSION['mysql_search']['suchbegriffe'] = '';

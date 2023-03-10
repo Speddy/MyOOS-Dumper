@@ -4,7 +4,7 @@
    MyOOS [Dumper]
    http://www.oos-shop.de/
 
-   Copyright (c) 2013 - 2022 by the MyOOS Development Team.
+   Copyright (c) 2003 - 2023 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
@@ -63,7 +63,7 @@ function mu_sort($array, $key_sort)
     $n = 0;
 
     for ($m = 0; $m < count($key_sorta); ++$m) {
-        $nkeys[$m] = trim($key_sorta[$m]);
+        $nkeys[$m] = trim((string) $key_sorta[$m]);
     }
     $n += count($key_sorta);
 
@@ -649,7 +649,7 @@ function ReadStatusline($line)
         $statusline['flags'] = $s[9];
         $statusline['sqlbefore'] = $s[10];
         $statusline['sqlafter'] = $s[11];
-        if ((isset($s[12])) && 'EXTINFO' != trim($s[12])) {
+        if ((isset($s[12])) && 'EXTINFO' != trim((string) $s[12])) {
             $statusline['charset'] = $s[12];
         } else {
             $statusline['charset'] = '?';
@@ -1109,7 +1109,7 @@ function MODFooter($rfoot = '', $enddiv = 1)
 function save_bracket($str)
 {
     // Wenn Klammer zu am Ende steht, diese behalten
-    $str = trim($str);
+    $str = trim((string) $str);
     if (')' == substr($str, -1)) {
         $str = ')';
     } else {
@@ -1431,7 +1431,7 @@ function stripslashes_deep($value)
  */
 function trim_deep($value)
 {
-    $value = is_array($value) ? array_map('trim_deep', $value) : trim($value);
+    $value = is_array($value) ? array_map('trim_deep', $value) : trim((string) $value);
     return $value;
 }
 
