@@ -109,7 +109,7 @@ function FillMultiDBArrays()
         //		{
         if ('' == $databases['multisetting']) {
             //$databases['multi'][0] = $databases['db_actual'];
-        //$databases['multi_praefix'][0] =(isset($databases['praefix'][0])) ? $databases['praefix'][0] : '';
+			//$databases['multi_praefix'][0] =(isset($databases['praefix'][0])) ? $databases['praefix'][0] : '';
         } else {
             $databases['multi'] = explode(';', $databases['multisetting']);
             $flipped = array_flip($databases['Name']);
