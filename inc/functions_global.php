@@ -33,8 +33,8 @@ if (!defined('MOD_VERSION')) {
 }
 
 use League\Flysystem\Filesystem;
-use League\Flysystem\PhpseclibV2\SftpAdapter;
-use League\Flysystem\PhpseclibV2\SftpConnectionProvider;
+use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
+use League\Flysystem\PhpseclibV3\SftpAdapter;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 
 $autoloader = require_once './vendor/autoload.php';
@@ -803,7 +803,7 @@ function TesteSFTP($i)
     if (1 == $pass) {
         $s = $lang['L_CONNECT_TO'].' `'.$config['sftp_server'][$i].'` Port '.$config['sftp_port'][$i];
 
-        // https://flysystem.thephpleague.com/v2/docs/adapter/sftp/
+        // https://flysystem.thephpleague.com/docs/adapter/sftp-v3/
         $filesystem = new Filesystem(new SftpAdapter(
             new SftpConnectionProvider(
                 $config['sftp_server'][$i], // host (required)
