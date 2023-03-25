@@ -1109,11 +1109,12 @@ function build_where_from_record($data)
             $val = str_replace('<span class="treffer">', '', $val);
             $val = str_replace('</span>', '', $val);
         }
-        $nLen = strlen($val);
+        $nLen = strlen($val ?? ''); 
         if (!empty($val) && ($nLen < 200)) {
             $ret .= '`'.$key.'`="'.addslashes($val).'" AND ';
         }
     }
+	
     $ret = substr($ret, 0, -5);
 
     return $ret;
