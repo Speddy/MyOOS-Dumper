@@ -16,7 +16,11 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------- */
 
-ini_set('display_errors', 0);
+error_reporting(E_ALL);
+if (function_exists('ini_set')) {
+    ini_set("display_errors", 1);
+}
+
 
 $mod_path = realpath(dirname(__FILE__).'/../').'/';
 if (!defined('MOD_PATH')) {
