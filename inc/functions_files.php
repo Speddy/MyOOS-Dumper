@@ -402,7 +402,7 @@ function Converter($filesource, $filedestination, $cp)
         }
 
         if ('insert' == $mode) {
-            if (');' == substr(rtrim($zeile), strlen($zeile) - 3, 2)) {
+            if (');' == substr(rtrim($zeile), strlen($zeile ?? '') - 3, 2)) {
                 $splitable = true;
             }
 
@@ -422,7 +422,7 @@ function Converter($filesource, $filedestination, $cp)
                     $zeile = '';
                 } else {
                     fwrite($z, $zeile);
-                    echo '<br>Neue Datei.Zeile: <br>'.htmlspecialchars(substr($zeile, 0, 20)).'..'.htmlspecialchars(substr($zeile, strlen($zeile) - 41, 40)).'<br>';
+                    echo '<br>Neue Datei.Zeile: <br>'.htmlspecialchars(substr($zeile, 0, 20)).'..'.htmlspecialchars(substr($zeile, strlen($zeile ?? '') - 41, 40)).'<br>';
                     fclose($z);
                     $z = fopen($config['paths']['backup'].$filedestination.'_part_'.$part.'.sql', 'w');
                     $zeile = get_pseudo_statusline($part, $filedestination)."\r\n";
@@ -445,7 +445,7 @@ function Converter($filesource, $filedestination, $cp)
             $filesize = 0;
             $splitable = false;
         } else { // no, append to actual file
-            $filesize += strlen($zeile);
+            $filesize += strlen($zeile ?? '');
             if ($n > 600) {
                 $n = 0;
                 echo '<br>';

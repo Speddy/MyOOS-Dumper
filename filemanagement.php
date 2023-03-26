@@ -108,7 +108,7 @@ if (isset($_POST['dump_tbl'])) {
     if (true === !$check_dirs) {
         exit($check_dirs);
     }
-    $databases['db_actual_tableselected'] = substr($_POST['tbl_array'], 0, strlen($_POST['tbl_array']) - 1);
+    $databases['db_actual_tableselected'] = substr($_POST['tbl_array'], 0, strlen($_POST['tbl_array'] ?? '') - 1);
     WriteParams();
     $dump['fileoperations'] = 0;
     echo '<script>parent.MyOOS_Dumper_content.location.href="dump.php?comment='.urlencode($dk).'&sel_dump_encoding='.$dump['sel_dump_encoding'].'&config='.urlencode($config['config_file']).'";</script></body></html>';
@@ -143,7 +143,7 @@ if (isset($_POST['dump'])) {
 
 //*** Abfrage ob Restore nach Tabellenaufruf ***
 if (isset($_POST['restore_tbl'])) {
-    $databases['db_actual_tableselected'] = substr($_POST['tbl_array'], 0, strlen($_POST['tbl_array']) - 1);
+    $databases['db_actual_tableselected'] = substr($_POST['tbl_array'], 0, strlen($_POST['tbl_array'] ?? '') - 1);
     WriteParams();
     echo '<script>parent.MyOOS_Dumper_content.location.href="restore.php?filename='.urlencode($_POST['filename']).'";</script></body></html>';
 
@@ -535,7 +535,7 @@ switch ($action) {
             //$destfile.=($compressed==1) ? ".sql.gz" : ".sql";
             echo $lang['L_CONVERTING']." $selectfile ==&gt; $destfile<br>";
 
-            if ('' != $selectfile && file_exists($config['paths']['backup'].$selectfile) && strlen($destfile) > 2) {
+            if ('' != $selectfile && file_exists($config['paths']['backup'].$selectfile) && strlen($destfile ?? '') > 2) {
                 Converter($selectfile, $destfile, $compressed);
             } else {
                 echo $lang['L_CONVERT_WRONG_PARAMETERS'];

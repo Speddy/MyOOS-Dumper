@@ -58,7 +58,7 @@ foreach ($record as $field => $fieldvalue) {
 }
 $tpl->assign_vars([
     'HIDDEN_FIELDS' => FormHiddenParams(),
-    'FIELDNAMES' => substr($fieldnames, 0, strlen($fieldnames) - 1),
+    'FIELDNAMES' => substr($fieldnames, 0, strlen($fieldnames ?? '') - 1),
     'SQL_STATEMENT' => my_quotes($sql['sql_statement']),
     'RECORDKEY' => my_quotes($recordkey),
     'TARGET' => $target, ]);

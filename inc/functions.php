@@ -50,8 +50,8 @@ if (!function_exists('str_ireplace')) { // borrowed from http://www.dscripts.net
             $between = explode(strtolower($fItem), strtolower($string));
             $pos = 0;
             foreach ($between as $bKey => $bItem) {
-                $between[$bKey] = substr($string, $pos, strlen($bItem));
-                $pos += strlen($bItem) + strlen($fItem);
+                $between[$bKey] = substr($string, $pos, strlen($bItem ?? ''));
+                $pos += strlen($bItem ?? '') + strlen($fItem ?? '');
             }
             $string = implode($replace[$fKey], $between);
         }

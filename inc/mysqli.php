@@ -438,7 +438,7 @@ function Fieldlist($db, $tbl)
             $row = mysqli_fetch_row($res);
             $fl .= '`'.$row[0].'`,';
         }
-        $fl = substr($fl, 0, strlen($fl) - 1).')';
+        $fl = substr($fl, 0, strlen($fl ?? '') - 1).')';
     }
     return $fl;
 }
@@ -486,7 +486,7 @@ function getDBInfos()
                         $dump['totalrecords'] += $row['Rows'];
                     }
                 } elseif ('' != $databases['praefix'][$dump['dbindex']] && !isset($tbl_sel)) {
-                    if (substr($row['Name'], 0, strlen($databases['praefix'][$dump['dbindex']])) == $databases['praefix'][$dump['dbindex']]) {
+                    if (substr($row['Name'], 0, strlen($databases['praefix'][$dump['dbindex']] ?? '')) == $databases['praefix'][$dump['dbindex']]) {
                         $dump['tables'][] = $databases['Name'][$dump['dbindex']].'|'.$row['Name'];
                         $dump['records'][] = $databases['Name'][$dump['dbindex']].'|'.$row['Rows'];
                         $dump['totalrecords'] += $row['Rows'];

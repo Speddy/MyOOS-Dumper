@@ -20,7 +20,7 @@ class APR1_MD5
             $salt = self::salt();
         }
         $salt = substr($salt, 0, 8);
-        $max = strlen($mdp);
+        $max = strlen($mdp ?? '');
         $context = $mdp.'$apr1$'.$salt;
         $binary = pack('H32', md5($mdp.$salt.$mdp));
         for ($i = $max; $i > 0; $i -= 16) {

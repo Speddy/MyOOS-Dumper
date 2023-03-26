@@ -130,7 +130,7 @@ function ExportCSV()
                 if ('' == $config['memory_limit']) {
                     $config['memory_limit'] = 0;
                 }
-                if (strlen($t) > $config['memory_limit']) {
+                if (strlen($t) > $config['memory_limit'] ?? '') {
                     CSVOutput($t);
                     $t = '';
                 }
@@ -263,7 +263,7 @@ function ImportCreateTable()
     if (1 == $sql['import']['createindex']) {
         $create .= 'PRIMARY KEY (`import_id`) ';
     } else {
-        $create = substr($create, 0, strlen($create) - 2);
+        $create = substr($create, 0, strlen($create ?? '') - 2);
     }
 
     $create .= ') '.((MOD_NEW_VERSION) ? 'ENGINE' : 'TYPE')."=MyISAM COMMENT='imported at ".date('l dS of F Y H:i:s A')."'";
@@ -322,7 +322,7 @@ function ExportXML()
                 if ('' == $config['memory_limit']) {
                     $config['memory_limit'] = 0;
                 }
-                if (strlen($t) > $config['memory_limit']) {
+                if (strlen($t) > $config['memory_limit'] ?? '') {
                     CSVOutput($t);
                     $t = '';
                 }

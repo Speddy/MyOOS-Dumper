@@ -54,7 +54,7 @@ if ($res) {
 
 $tpl->assign_vars([
     'HIDDEN_FIELDS' => FormHiddenParams(),
-    'FIELDNAMES' => substr($feldnamen, 0, strlen($feldnamen) - 1),
+    'FIELDNAMES' => substr($feldnamen, 0, strlen($feldnamen ?? '') - 1),
     'SQL_STATEMENT' => my_quotes($sql['sql_statement']), ]);
 
 $tpl->pparse('show');

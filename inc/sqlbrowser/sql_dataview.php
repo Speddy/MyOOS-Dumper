@@ -301,7 +301,7 @@ if ($numrowsabs > 0 && $Anzahl_SQLs <= 1) {
                 $keys = explode('|', $key);
                 foreach ($sortkey as $rowkey => $rowval) {
                     if (in_array($rowkey, $keys)) {
-                        if (strlen($primary_key) > 0) {
+                        if (strlen($primary_key ?? '') > 0) {
                             $primary_key .= ' AND ';
                         }
                         $primary_key .= '`'.urlencode($rowkey).'`=\''.urlencode($rowval).'\'';

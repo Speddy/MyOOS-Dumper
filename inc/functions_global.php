@@ -163,8 +163,8 @@ function DBDetailInfo($index)
 
 function Stringformat($s, $count)
 {
-    if ($count >= strlen($s)) {
-        return str_repeat('0', $count - strlen($s)).$s;
+    if ($count >= strlen($s ?? '')) {
+        return str_repeat('0', $count - strlen($s ?? '')).$s;
     } else {
         return $s;
     }
@@ -289,7 +289,7 @@ function WriteLog($aktion)
     $logfile = (isset($config['logcompression']) && (1 == $config['logcompression'])) ? $config['files']['log'].'.gz' : $config['files']['log'];
     $config['log_maxsize'] = isset($config['log_maxsize']) ? $config['log_maxsize'] : 0;
 
-    if (@filesize($logfile) + strlen($log) > $config['log_maxsize']) {
+    if (@filesize($logfile) + strlen($log ?? '') > $config['log_maxsize']) {
         @unlink($logfile);
     }
 
@@ -319,7 +319,7 @@ function ErrorLog($dest, $db, $sql, $error, $art = 1)
     //$art=1 -> Hinweis
 
     global $config;
-    if (strlen($sql) > 100) {
+    if (strlen($sql ?? '') > 100) {
         $sql = substr($sql, 0, 100).' ... (snip)';
     }
     //Error-Zeile generieren
@@ -541,7 +541,7 @@ function AutoDelete()
                             $eintraege = (-1 == $statusline['records']) ? '' : $statusline['records'];
                             $part = ('MP_0' == $statusline['part'] || $statusline['part'] = '') ? 0 : substr($statusline['part'], 3);
                             $db_name = $statusline['dbname'];
-                            $datum = substr($filename, strlen($db_name) + 1);
+                            $datum = substr($filename, strlen($db_name ?? '') + 1);
                             $timestamp = substr($datum, 0, 16);
                             if (!isset($files[$db_name])) {
                                 $files[$db_name] = [];
@@ -661,7 +661,7 @@ function ReadStatusline($line)
     }
 
     //flags zerlegen
-    if (strlen($statusline['flags']) < 6) {
+    if (strlen($statusline['flags'] ?? '') < 6) {
         $statusline['flags'] = '2222222';
     }
     $statusline['complete_inserts'] = substr($statusline['flags'], 0, 1);
@@ -679,7 +679,7 @@ function NextPart($s, $first = 0, $keep_suffix = false)
     $nf = explode('_', $s);
     $i = array_search('part', $nf) + 1;
     $p = substr($nf[$i], 0, strpos($nf[$i], '.'));
-    $ext = substr($nf[$i], strlen($p));
+    $ext = substr($nf[$i], strlen($p ?? ''));
     if (1 == $first) {
         $nf[$i] = '1'.$ext;
     } else {
@@ -966,7 +966,7 @@ function get_config_filelist()
     $r = '';
     foreach ($dirs as $filename) {
         if (!is_dir($config['paths']['config'].$filename) && '.conf.php' == substr($filename, -9)) {
-            $f = substr($filename, 0, strlen($filename) - 9);
+            $f = substr($filename, 0, strlen($filename ?? '') - 9);
             $r .= '<option value="'.$f.'" ';
             if ($f == $default) {
                 $r .= ' selected';
@@ -1146,7 +1146,7 @@ function DownGrade($s, $show = true)
             $tmp2 = explode(' ', $tmp[$i]);
             for ($j = 0; $j < count($tmp2); ++$j) {
                 if ('ENGINE=' == substr(strtoupper($tmp2[$j]), 0, 7)) {
-                    $tmp2[$j] = 'TYPE='.substr($tmp2[$j], 7, strlen($tmp2[$j]) - 7);
+                    $tmp2[$j] = 'TYPE='.substr($tmp2[$j], 7, strlen($tmp2[$j] ?? '') - 7);
                 }
                 if ('CHARSET=' == substr(strtoupper($tmp2[$j]), 0, 8)) {
                     $tmp2[$j] = '';
@@ -1292,7 +1292,7 @@ function get_index($arr, $selected)
 {
     $ret = false; // return false if not found
     foreach ($arr as $key => $val) {
-        if (strtolower(substr($val, 0, strlen($selected))) == strtolower($selected)) {
+        if (strtolower(substr($val, 0, strlen($selected ?? ''))) == strtolower($selected)) {
             $ret = $key;
             break;
         }

@@ -412,7 +412,7 @@ class MODTemplate
     public function generate_block_varref($namespace, $varname)
     {
         // Strip the trailing period.
-        $namespace = substr($namespace, 0, strlen($namespace) - 1);
+        $namespace = substr($namespace, 0, strlen($namespace ?? '') - 1);
 
         // Get a reference to the data block for this namespace.
         $varref = $this->generate_block_data_ref($namespace, true);

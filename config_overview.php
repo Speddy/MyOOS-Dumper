@@ -126,7 +126,7 @@ if ((isset($_POST['testFTP0'])) || (isset($_POST['testFTP1'])) || (isset($_POST[
         $config['ftp_user'][$i] = (isset($_POST['ftp_user'][$i])) ? $_POST['ftp_user'][$i] : '';
         $config['ftp_pass'][$i] = (isset($_POST['ftp_pass'][$i])) ? $_POST['ftp_pass'][$i] : '';
         $config['ftp_dir'][$i] = (isset($_POST['ftp_dir'][$i])) ? stripslashes($_POST['ftp_dir'][$i]) : '/';
-        if ('' == $config['ftp_dir'][$i] || (strlen($config['ftp_dir'][$i]) > 1 && '/' != substr($config['ftp_dir'][$i], -1))) {
+        if ('' == $config['ftp_dir'][$i] || (strlen($config['ftp_dir'][$i] ?? '') > 1 && '/' != substr($config['ftp_dir'][$i], -1))) {
             $config['ftp_dir'][$i] .= '/';
         }
         if (isset($_POST['testFTP'.$i])) {
@@ -162,7 +162,7 @@ if ((isset($_POST['testSFTP0'])) || (isset($_POST['testSFTP1'])) || (isset($_POS
         $config['sftp_secret_passphrase_for_private_key'][$i] = (isset($_POST['sftp_secret_passphrase_for_private_key'][$i])) ? stripslashes($_POST['sftp_secret_passphrase_for_private_key'][$i]) : null;
         $config['sftp_fingerprint'][$i] = (isset($_POST['sftp_fingerprint'][$i])) ? stripslashes($_POST['sftp_fingerprint'][$i]) : null;
 
-        if ('' == $config['sftp_dir'][$i] || (strlen($config['sftp_dir'][$i]) > 1 && '/' != substr($config['sftp_dir'][$i], -1))) {
+        if ('' == $config['sftp_dir'][$i] || (strlen($config['sftp_dir'][$i] ?? '') > 1 && '/' != substr($config['sftp_dir'][$i], -1))) {
             $config['sftp_dir'][$i] .= '/';
         }
 
@@ -197,7 +197,7 @@ if ($ftptested > -1) {
     $config['ftp_pass'][$ftptested] = $ftp_pass[$ftptested];
     $config['ftp_dir'][$ftptested] = $ftp_dir[$ftptested];
 
-    if ('' == $ftp_dir[$ftptested] || (strlen($ftp_dir[$ftptested]) > 1 && '/' != substr($ftp_dir[$ftptested], -1))) {
+    if ('' == $ftp_dir[$ftptested] || (strlen($ftp_dir[$ftptested] ?? '') > 1 && '/' != substr($ftp_dir[$ftptested], -1))) {
         $ftp_dir[$ftptested] .= '/';
     }
     WriteParams();
@@ -211,7 +211,7 @@ if ($sftptested > -1) {
     $sftp_dir_s = 'sftp_dir['.$sftptested.']';
     $f = $_POST['sftp_dir'];
     $sftp_dir[$sftptested] = stripslashes($f[$sftptested]);
-    if ('' == $sftp_dir[$sftptested] || (strlen($sftp_dir[$sftptested]) > 1 && '/' != substr($sftp_dir[$sftptested], -1))) {
+    if ('' == $sftp_dir[$sftptested] || (strlen($sftp_dir[$sftptested] ?? '') > 1 && '/' != substr($sftp_dir[$sftptested], -1))) {
         $sftp_dir[$sftptested] .= '/';
     }
 
@@ -367,7 +367,7 @@ if (isset($_POST['save'])) {
     if ('' == $config['cron_execution_path']) {
         $config['cron_execution_path'] = 'mod_cron/';
     }
-    if (strlen($config['cron_execution_path']) > 1 && '/' != substr($config['cron_execution_path'], -1)) {
+    if (strlen($config['cron_execution_path'] ?? '') > 1 && '/' != substr($config['cron_execution_path'], -1)) {
         $config['cron_execution_path'] .= '/';
     }
 
@@ -449,7 +449,7 @@ if (isset($_POST['save'])) {
         if (0 == $config['ftp_port'][$i]) {
             $config['ftp_port'][$i] = 21;
         }
-        if ('' == $config['ftp_dir'][$i] || (strlen($config['ftp_dir'][$i]) > 1 && '/' != substr($config['ftp_dir'][$i], -1))) {
+        if ('' == $config['ftp_dir'][$i] || (strlen($config['ftp_dir'][$i] ?? '') > 1 && '/' != substr($config['ftp_dir'][$i], -1))) {
             $config['ftp_dir'][$i] .= '/';
         }
     }
@@ -485,7 +485,7 @@ if (isset($_POST['save'])) {
         if (0 == $config['sftp_port'][$i]) {
             $config['sftp_port'][$i] = 22;
         }
-        if ('' == $config['sftp_dir'][$i] || (strlen($config['sftp_dir'][$i]) > 1 && '/' != substr($config['sftp_dir'][$i], -1))) {
+        if ('' == $config['sftp_dir'][$i] || (strlen($config['sftp_dir'][$i] ?? '') > 1 && '/' != substr($config['sftp_dir'][$i], -1))) {
             $config['sftp_dir'][$i] .= '/';
         }
     }

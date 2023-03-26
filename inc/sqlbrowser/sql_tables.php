@@ -153,7 +153,7 @@ if (isset($_POST['t_edit_submit'])) {
     $sql_alter = 'ALTER TABLE `'.$databases['Name'][$dbid].'`.`'.$_POST['table_edit_name'].'` ';
     if ('' == $_POST['t_edit_name']) {
         echo '<p class="error">'.$lang['L_SQL_TBLNAMEEMPTY'].'</p>';
-    } elseif (MOD_NEW_VERSION && '' != $_POST['t_edit_collate'] && substr($_POST['t_edit_collate'], 0, strlen($_POST['t_edit_charset'])) != $_POST['t_edit_charset']) {
+    } elseif (MOD_NEW_VERSION && '' != $_POST['t_edit_collate'] && substr($_POST['t_edit_collate'], 0, strlen($_POST['t_edit_charset'] ?? '')) != $_POST['t_edit_charset']) {
         echo '<p class="error">'.$lang['L_SQL_COLLATENOTMATCH'].'</p>';
     } else {
         if ($_POST['table_edit_name'] != $_POST['t_edit_name']) {
@@ -300,7 +300,7 @@ if ('' != $table_edit_name) {
 
     $t_charset = (isset($fields_infos['_tableinfo_']['DEFAULT CHARSET'])) ? $fields_infos['_tableinfo_']['DEFAULT CHARSET'] : '';
     $t_collation = isset($row['Collation']) ? $row['Collation'] : ''; //(isset($fields_infos['_tableinfo_']['COLLATE'])) ? $fields_infos['_tableinfo_']['COLLATE'] : '';
-    $t_comment = (isset($fields_infos['_tableinfo_']['COMMENT'])) ? substr($fields_infos['_tableinfo_']['COMMENT'], 1, strlen($fields_infos['_tableinfo_']['COMMENT']) - 2) : '';
+    $t_comment = (isset($fields_infos['_tableinfo_']['COMMENT'])) ? substr($fields_infos['_tableinfo_']['COMMENT'], 1, strlen($fields_infos['_tableinfo_']['COMMENT'] ?? '') - 2) : '';
     $t_rowformat = (isset($fields_infos['_tableinfo_']['ROW_FORMAT'])) ? $fields_infos['_tableinfo_']['ROW_FORMAT'] : '';
     echo '<h6>'.$lang['L_TABLE']." `$table_edit_name`</h6>";
     $td = '<td valign="top" nowrap="nowrap" class="small">';
@@ -339,7 +339,7 @@ if ('' != $table_edit_name) {
             if ('NULL' == $fields_infos[$id]['default']) {
                 $d_default = 'NULL';
             } else {
-                $d_default = substr($fields_infos[$id]['default'], 1, strlen($fields_infos[$id]['default']) - 2);
+                $d_default = substr($fields_infos[$id]['default'], 1, strlen($fields_infos[$id]['default'] ?? '') - 2);
             }
         }
         $d_extra = (isset($_GET['editfield'])) ? $fields_infos[$id]['extra'] : '';

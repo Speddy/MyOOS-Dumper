@@ -252,7 +252,7 @@ if (0 == $num_tables) {
                 WriteToDumpFile();
                 ++$dump['table_offset'];
             }
-            if ((isset($config['memory_limit']) && $config['memory_limit'] > 0) && strlen($dump['data']) > $config['memory_limit']) {
+            if ((isset($config['memory_limit']) && $config['memory_limit'] > 0) && strlen($dump['data'] ?? '') > $config['memory_limit']) {
                 WriteToDumpFile();
             }
         }

@@ -184,7 +184,7 @@ if (isset($_POST['update']) || isset($_GET['update'])) {
             $sqlu .= '`'.$f[$i].'`=\''.db_escape(convert_to_latin1($_POST[$index])).'\', ';
         }
     }
-    $sqlu = substr($sqlu, 0, strlen($sqlu) - 2).' WHERE '.$recordkey;
+    $sqlu = substr($sqlu, 0, strlen($sqlu ?? '') - 2).' WHERE '.$recordkey;
     $res = mod_query($sqlu);
     $msg = '<p class = "success">'.$lang['L_SQL_RECORDUPDATED'].'</p>';
     if (isset($mode) && 'searchedit' == $mode) {
@@ -206,7 +206,7 @@ if (isset($_POST['insert'])) {
             $sqlu .= '`'.$f[$i].'` = \''.db_escape(convert_to_latin1($_POST[$index])).'\', ';
         }
     }
-    $sqlu = substr($sqlu, 0, strlen($sqlu) - 2);
+    $sqlu = substr($sqlu, 0, strlen($sqlu ?? '') - 2);
     $res = mod_query($sqlu);
     $msg = '<p class = "success">'.$lang['L_SQL_RECORDINSERTED'].'</p>';
     $sql_to_display_data = 1;

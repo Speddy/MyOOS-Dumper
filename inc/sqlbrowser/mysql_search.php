@@ -46,7 +46,7 @@ $suchbegriffe = $_SESSION['mysql_search']['suchbegriffe'];
 if (isset($_POST['suchart'])) {
     $_SESSION['mysql_search']['suchart'] = $_POST['suchart'];
 }
-if (!isset($_SESSION['mysql_search']['suchart']) || strlen($_SESSION['mysql_search']['suchart']) < 2) {
+if (!isset($_SESSION['mysql_search']['suchart']) || strlen($_SESSION['mysql_search']['suchart'] ?? '') < 2) {
     $_SESSION['mysql_search']['suchart'] = 'AND';
 }
 $suchart = $_SESSION['mysql_search']['suchart'];
@@ -178,19 +178,19 @@ function markiere_suchtreffer($suchbegriff, $suchstring)
 {
     $str = strtolower($suchstring);
     $suchbegriff = strtolower($suchbegriff);
-    if ((strlen($str) > 0) && (strlen($suchbegriff) > 0)) {
+    if ((strlen($str) > 0) && (strlen($suchbegriff ?? '') > 0)) {
         // Determine hit position
         $offset = 0;
         $trefferpos = 0;
-        while (($offset <= strlen($str))) {
+        while (($offset <= strlen($str ?? ''))) {
             // If only the first hit is to be marked, the line must read as follow
             // 		while ( ($offset<=strlen($str)) || ($in_html==false) )
-            for ($offset = $trefferpos; $offset <= strlen($str); ++$offset) {
+            for ($offset = $trefferpos; $offset <= strlen($str ?? ''); ++$offset) {
                 $start = strpos($str, $suchbegriff, $offset);
                 if (false === $start) {
-                    $offset = strlen($str) + 1;
+                    $offset = strlen($str ?? '') + 1;
                 } else {
-                    if ($offset <= strlen($str)) {
+                    if ($offset <= strlen($str ?? '')) {
                         //Treffer überprüfen
                         $in_html = false;
                         // Steht die Fundstelle zwischen < und > (also im HTML-Tag) ?
@@ -205,22 +205,22 @@ function markiere_suchtreffer($suchbegriff, $suchstring)
                             }
                         }
                         if ($in_html) {
-                            for ($position2 = $start; $position2 < strlen($str); ++$position2) {
+                            for ($position2 = $start; $position2 < strlen($str ?? ''); ++$position2) {
                                 if ('<' == substr($str, $position2, 1)) {
                                     $position2 = strlen($str) + 1;
                                 }
                                 if ('>' == substr($str, $position2, 1)) {
                                     $in_html = true;
-                                    $position2 = strlen($str) + 1;
-                                    $offset = strlen($str) + 1;
+                                    $position2 = strlen($str ?? '') + 1;
+                                    $offset = strlen($str ?? '') + 1;
                                 }
                             }
                         }
                         if (!$in_html) {
-                            $ersetzen = substr($suchstring, $start, strlen($suchbegriff));
+                            $ersetzen = substr($suchstring, $start, strlen($suchbegriff ?? ''));
                             $str = substr($suchstring, 0, $start);
                             $str .= chr(1).$ersetzen.chr(2);
-                            $str .= substr($suchstring, ($start + strlen($ersetzen)), (strlen($suchstring) - strlen($ersetzen)));
+                            $str .= substr($suchstring, ($start + strlen($ersetzen ?? '')), (strlen($suchstring ?? '') - strlen($ersetzen ?? '')));
                             $suchstring = $str;
                         }
                         if ($in_html) {

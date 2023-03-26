@@ -111,7 +111,7 @@ function GetStatusLine($kind = 'php')
             $row2 = mysqli_fetch_array($res2);
             $erg['Rows'] = $row2['count_records'];
 
-            if (('' == $databases['db_actual_tableselected'] || ('' != $databases['db_actual_tableselected'] && (in_array($erg[0], $t_array)))) && (substr($erg[0], 0, strlen($databases['praefix'][$dump['dbindex']])) == $databases['praefix'][$dump['dbindex']])) {
+            if (('' == $databases['db_actual_tableselected'] || ('' != $databases['db_actual_tableselected'] && (in_array($erg[0], $t_array)))) && (substr($erg[0], 0, strlen($databases['praefix'][$dump['dbindex']] ?? '')) == $databases['praefix'][$dump['dbindex']])) {
                 ++$t;
                 $r += $erg['Rows'];
                 if (isset($erg['Type'])) {
@@ -218,7 +218,7 @@ function get_content($db, $table)
             $dump['data'] .= $insert;
             ++$dump['countdata'];
             $config['memory_limit'] = isset($config['memory_limit']) ? $config['memory_limit'] : 0;
-            if (strlen($dump['data']) > $config['memory_limit'] || (1 == $config['multi_part'] && strlen($dump['data']) + $buffer > $config['multipart_groesse'])) {
+            if (strlen($dump['data']) > $config['memory_limit'] || (1 == $config['multi_part'] && strlen($dump['data'] ?? '') + $buffer > $config['multipart_groesse'])) {
                 WriteToDumpFile();
             }
         }
@@ -231,7 +231,7 @@ function get_content($db, $table)
         $dump['zeilen_offset'] = 0;
         $dump['restzeilen'] = $dump['restzeilen'] - $ergebnisse;
         $dump['data'] .= "/*!40000 ALTER TABLE `$table` ENABLE KEYS */;\n";
-        if (strlen($dump['data']) > $config['memory_limit'] || (1 == $config['multi_part'] && strlen($dump['data']) + $buffer > $config['multipart_groesse'])) {
+        if (strlen($dump['data'] ?? '') > $config['memory_limit'] || (1 == $config['multi_part'] && strlen($dump['data'] ?? '') + $buffer > $config['multipart_groesse'])) {
             WriteToDumpFile();
         }
     }

@@ -258,7 +258,7 @@ switch ($phase) {
                     }
                     if (!isset($databases['Name']) || !in_array($manual_db, $databases['Name'])) {
                         // conect to manual db was not successful
-                        $connstr = substr($connstr, 0, strlen($connstr) - strlen($manual_db));
+                        $connstr = substr($connstr, 0, strlen($connstr ?? '') - strlen($manual_db ?? ''));
                         $manual_db = '';
                     }
                 }
@@ -423,7 +423,7 @@ switch ($phase) {
     case 101:
         echo '<h6>'.$lang['L_UI5'].'</h6>';
         $paths = [];
-        $w = substr($config['paths']['work'], 0, strlen($config['paths']['work']) - 1);
+        $w = substr($config['paths']['work'], 0, strlen($config['paths']['work'] ?? '') - 1);
         if (is_dir($w)) {
             $res = rec_rmdir($w);
         } else {
@@ -538,9 +538,9 @@ function Rechte($file)
 function extractValue($s)
 {
     $r = trim((string) substr($s, strpos($s, '=') + 1));
-    $r = substr($r, 0, strlen($r) - 1);
+    $r = substr($r, 0, strlen($r ?? '') - 1);
     if ("'" == substr($r, -1) || '"' == substr($r, -1)) {
-        $r = substr($r, 0, strlen($r) - 1);
+        $r = substr($r, 0, strlen($r ?? '') - 1);
     }
     if ("'" == substr($r, 0, 1) || '"' == substr($r, 0, 1)) {
         $r = substr($r, 1);
