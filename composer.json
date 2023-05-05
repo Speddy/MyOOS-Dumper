@@ -10,6 +10,7 @@
 		"ext-zlib": "*",
 		"visualappeal/php-auto-update": "^1.0.2",
         "phpseclib/phpseclib": "3",
-        "league/flysystem-sftp-v3": "^3.10"
+        "league/flysystem-sftp-v3": "^3.10",
+        "phpmailer/phpmailer": "^6.8"
     }
 }
