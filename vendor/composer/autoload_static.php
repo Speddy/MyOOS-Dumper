@@ -34,6 +34,7 @@ class ComposerStaticInit2352399418895b7bd82ed699298d379a
         array (
             'League\\MimeTypeDetection\\' => 25,
             'League\\Flysystem\\PhpseclibV3\\' => 29,
+            'League\\Flysystem\\Local\\' => 23,
             'League\\Flysystem\\' => 17,
         ),
         'D' => 
@@ -78,6 +79,10 @@ class ComposerStaticInit2352399418895b7bd82ed699298d379a
         'League\\Flysystem\\PhpseclibV3\\' => 
         array (
             0 => __DIR__ . '/..' . '/league/flysystem-sftp-v3',
+        ),
+        'League\\Flysystem\\Local\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/flysystem-local',
         ),
         'League\\Flysystem\\' => 
         array (
