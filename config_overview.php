@@ -300,7 +300,11 @@ if (isset($_POST['save'])) {
     if (isset($_POST['stop_with_error'])) {
         $config['stop_with_error'] = $_POST['stop_with_error'];
     }
+	
+
     $config['ignore_enable_keys'] = isset($_POST['ignore_enable_keys']) ? (int) $_POST['ignore_enable_keys'] : 0;
+	$config['update_core'] = isset($_POST['update_core']) ? (int) $_POST['update_core'] : 0;
+
 
     $config['multi_part'] = isset($_POST['multi_part']) ? $_POST['multi_part'] : 0;
     if (1 == $config['multi_part']) {
@@ -996,10 +1000,17 @@ $aus['global1'] .= '</td></tr>';
 $aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_SPEED'], '').$lang['L_SPEED'].':&nbsp;</td>';
 $aus['global1'] .= '<td><input type="text" class="text" size="6" name="minspeed" maxlength="6" style="text-align:right;" value="'.((isset($config['minspeed'])) ? $config['minspeed'] : '').'">&nbsp;'.$lang['L_TO'].'&nbsp;<input type="text" class="text" size="6" name="maxspeed" maxlength="9" style="text-align:right;" value="'.((isset($config['maxspeed'])) ? $config['maxspeed'] : '').'"></td></tr>';
 
+$aus['global1'] .= '</table></fieldset><fieldset><legend>'.$lang['L_UPDATE'].'</legend><table>';
+
+$aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_ZIP'], 'conf3').$lang['L_UPDATE_CORE'].':&nbsp;</td>';
+$aus['global1'] .= '<td><input type="checkbox" class="checkbox" value="1" name="update_core" '.((isset($config['update_core']) && (1 == $config['update_core'])) ? ' checked' : '').'>';
+$aus['global1'] .= '</td></tr>';
+
+
 $aus['global1'] .= '</table></fieldset><fieldset><legend>'.$lang['L_DUMP'].'</legend><table>';
 
 $aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_ZIP'], 'conf3').$lang['L_GZIP'].':&nbsp;</td>';
-$aus['global1'] .= '<td><input type="checkbox" class="checkbox" value="1" name="compression" '.(($config['zlib']) ? '' : 'disabled').((isset($config['compression']) && (1 == $config['compression'])) ? ' checked' : '').'>';
+$aus['global1'] .= '<td><input type="checkbox" class="checkbox" value="1" name="compression" '.((isset($config['zlib']) && (1 == $config['zlib'])) ? '' : 'disabled').((isset($config['compression']) && (1 == $config['compression'])) ? ' checked' : '').'>';
 $aus['global1'] .= '</td></tr>';
 //Multipart-Backup -->
 

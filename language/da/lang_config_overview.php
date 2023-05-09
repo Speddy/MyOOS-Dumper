@@ -77,6 +77,8 @@ Denne kommando kan være en SQL-konstruktion eller en Systemkommando (f.eks. et 
 $lang['L_COMMAND'] = 'Kommando';
 $lang['L_WRONG_CONNECTIONPARS'] = 'Forbindelsesparametre er forkerte!';
 $lang['L_CONNECTIONPARS'] = 'Forbindelsesparametre';
+$lang['L_UPDATE'] = 'Update from MyOOS[Dumper]';
+$lang['L_UPDATE_CORE'] = 'Automatic update';
 $lang['L_EXTENDEDPARS'] = 'Udvidede parametre';
 $lang['L_FADE_IN_OUT'] = 'Visning til/fra';
 $lang['L_DB_BACKUPPARS'] = 'Database backupparametre';
