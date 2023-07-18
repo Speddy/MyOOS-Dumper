@@ -22,6 +22,8 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
+define('MOD_INCLUDE_PATH', dirname(__FILE__)=='/' ? '' : dirname(__FILE__));
+
 session_name('MyOOSDumperID');
 session_start();
 $aus2 = $page_parameter = $a = $out = '';

@@ -141,7 +141,7 @@ $config['max_backup_files'] = 3;
 $config['cron_configurationfile'] = 'myoosdumper.conf.php';
 //path to perl, for windows use e.g. C:perlbinperl.exe
 $config['cron_perlpath'] = '/usr/bin/perl';
-//mailer use sendmail(1) or SMTP(0)
+//mailer use sendmail(1) or SMTP(0) or other SMPT(3)
 $config['cron_use_sendmail'] = 1;
 //path to sendmail
 $sendmail_path = ini_get('sendmail_path');
@@ -151,6 +151,13 @@ $config['cron_sendmail'] = $sendmail_path > '' ? $sendmail_path : '/usr/lib/send
 $config['cron_smtp'] = 'localhost';
 //smtp-port
 $config['cron_smtp_port'] = 25;
+
+$config['other_smtp_host'] = 'smtp.example.com';
+// non = 0; SSL = 1  TLS = 2
+$config['other_smtp_encryption'] = '2';
+
+
+
 $config['cron_extender'] = 0;
 $config['cron_compression'] = 1;
 $config['cron_printout'] = 1;

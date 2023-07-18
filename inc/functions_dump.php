@@ -332,7 +332,90 @@ function ExecuteCommand($when)
 
 function DoEmail()
 {
-    global $config, $dump, $databases, $email, $lang, $out, $REMOTE_ADDR;
+    global $phpmailer, $config, $dump, $databases, $email, $lang, $out, $REMOTE_ADDR;
+
+
+
+    if (!is_array($attachments)) {
+        $attachments = explode("\n", str_replace("\r\n", "\n", $attachments));
+    }
+
+    $sLang = (isset($_SESSION['iso_639_1']) ? $_SESSION['iso_639_1'] : DEFAULT_LANGUAGE_CODE);
+
+    // (Re)create it, if it's gone missing
+    if (! ($phpmailer instanceof PHPMailer\PHPMailer\PHPMailer)) {
+        include_once MOD_INCLUDE_PATH . '/includes/lib/phpmailer/src/PHPMailer.php';
+        include_once MOD_INCLUDE_PATH . '/includes/lib/phpmailer/src/SMTP.php';
+        include_once MOD_INCLUDE_PATH . '/includes/lib/phpmailer/src/Exception.php';
+        $phpmailer = new PHPMailer\PHPMailer\PHPMailer(true);
+    }
+
+    //To load the French version
+    $phpmailer->setLanguage($sLang, MOD_INCLUDE_PATH . '/includes/lib/phpmailer/language/');
+
+    // Empty out the values that may be set.
+    $phpmailer->clearAllRecipients();
+    $phpmailer->clearAttachments();
+    $phpmailer->clearCustomHeaders();
+    $phpmailer->clearReplyTos();
+
+    $phpmailer->IsMail();
+
+
+    $phpmailer->CharSet   = 'UTF-8';
+    $phpmailer->Encoding  = 'base64';
+
+    $phpmailer->From = $from_email_address ? $from_email_address : STORE_OWNER_EMAIL_ADDRESS;
+    $phpmailer->FromName = $from_email_name ? $from_email_name : STORE_OWNER;
+    $phpmailer->Mailer = EMAIL_TRANSPORT;
+##
+    $phpmailer->Host       = 'smtp.example.com';                     //Set the SMTP server to send through
+    $phpmailer->SMTPAuth   = true;                                   //Enable SMTP authentication
+    $phpmailer->Username   = 'user@example.com';                     //SMTP username
+    $phpmailer->Password   = 'secret';                               //SMTP password
+    $phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+    $phpmailer->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+
+
+
+
+##
+    // Add smtp values if needed
+    if (EMAIL_TRANSPORT == 'smtp') {
+        $phpmailer->IsSMTP(); // set mailer to use SMTP
+        $phpmailer->SMTPAuth = OOS_SMTPAUTH; // turn on SMTP authentication
+        $phpmailer->Username = OOS_SMTPUSER; // SMTP username
+        $phpmailer->Password = OOS_SMTPPASS; // SMTP password
+        $phpmailer->Host     = OOS_SMTPHOST; // specify main and backup server
+    } else {
+        // Set sendmail path
+        if (EMAIL_TRANSPORT == 'sendmail') {
+            if (!oos_empty(OOS_SENDMAIL)) {
+                $phpmailer->Sendmail = OOS_SENDMAIL;
+                $phpmailer->IsSendmail();
+            }
+        }
+    }
+
+    $phpmailer->AddAddress($to_email_address, $to_name);
+    $phpmailer->Subject = $email_subject;
+
+
+    // Build the text version
+    $text = strip_tags($email_text);
+    if (EMAIL_USE_HTML == 'true') {
+        $phpmailer->IsHTML(true);
+        $phpmailer->Body = $email_html;
+        $phpmailer->AltBody = $text;
+    } else {
+        $phpmailer->Body = $text;
+    }
+
+    // Send message
+    $phpmailer->Send();
+
+
+
 
     $header = '';
     if (1 == $config['cron_use_sendmail']) {
