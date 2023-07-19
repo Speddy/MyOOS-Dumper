@@ -1154,7 +1154,7 @@ $aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_s
 
 <tr><td></td>
 <td>SMTP-Port</td><td>
-	<input type="text" class="text" size="30" name="other_smtp_port" value="'.((isset($config['other_smtp_port'])) ? $config['other_smtp_port'] : '587').'">
+	<input type="text" class="text" size="30" name="other_smtp_port" value="'.((isset($config['other_smtp_port'])) ? $config['other_smtp_port'] : '').'">
 </td></tr>';
 
 
@@ -1295,6 +1295,23 @@ echo '<script>show_pardivs("'.$sel.'");';
 if (($showVP) || (!isset($databases['Name'])) || (isset($databases['name']) && count(0 == $databases['Name'])) || (isset($add_db_message))) {
     echo 'SwitchVP();';
 }
+?>
+// Eine Funktion definieren, die den Portwert basierend auf der Verschlüsselung ändert
+function changePort() {
+  // Das ausgewählte Optionsfeld finden
+  var encryption = document.querySelector('input[name="other_smtp_encryption"]:checked');
+  // Den entsprechenden Portwert zuweisen
+  var port = encryption.value === "1" ? 465 : encryption.value === "2" ? 587 : 25;
+  // Den Wert des Port-Eingabefeldes aktualisieren
+  document.querySelector('input[name="other_smtp_port"]').value = port;
+}
+
+// Einen Event-Listener hinzufügen, der die Funktion aufruft, wenn sich ein Optionsfeld ändert
+var radios = document.querySelectorAll('input[name="other_smtp_encryption"]');
+for (var i = 0; i < radios.length; i++) {
+  radios[i].addEventListener('change', changePort);
+}
+<?php
 echo '</script>';
 echo MODFooter();
 $_SESSION['config'] = $config;
