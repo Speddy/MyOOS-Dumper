@@ -155,6 +155,10 @@ $config['cron_smtp_port'] = 25;
 $config['other_smtp_host'] = 'smtp.example.com';
 // non = 0; SSL = 1  TLS = 2
 $config['other_smtp_encryption'] = '2';
+$config['other_smtp_port'] = '587';
+$config['other_smtp_username'] = '';
+$config['other_smtp_password'] = '';
+$config['other_smtp_auth'] = '';
 
 
 
