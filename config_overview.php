@@ -388,6 +388,15 @@ if (isset($_POST['save'])) {
     }
     $config['cron_smtp'] = isset($_POST['cron_smtp']) ? $_POST['cron_smtp'] : 'localhost';
 
+
+	$config['other_smtp_host'] = $_POST['other_smtp_host'] ?? '';
+	$config['other_smtp_encryption'] = $_POST['other_smtp_encryption'] ?? '2';
+	$config['other_smtp_host'] = $_POST['other_smtp_host'] ?? '';
+	$config['other_smtp_port'] = $_POST['other_smtp_port'] ?? '587';
+	$config['other_smtp_username'] = $_POST['other_smtp_username'] ?? '';
+	$config['other_smtp_password'] = $_POST['other_smtp_password'] ?? '';
+	$config['other_smtp_auth'] = $_POST['other_smtp_auth'] ?? '';
+
     $config['cron_printout'] = isset($_POST['cron_printout']) ? $_POST['cron_printout'] : 0;
     $config['cron_completelog'] = isset($_POST['cron_completelog']) ? $_POST['cron_completelog'] : 0;
     $config['cron_compression'] = isset($_POST['compression']) ? $_POST['compression'] : 0;
@@ -1149,7 +1158,7 @@ $aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_s
 
 $aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_sendmail" value="2" '.((isset($config['cron_use_sendmail']) && (2 == $config['cron_use_sendmail'])) ? ' checked' : '').'>&nbsp;Other SMTP</td>
 
-<td>SMTP HOST</td><td><input type="text" class="text" size="30" name="other_smtp_host" value="'.((isset($config['other_smtp_host'])) ? $config['other_smtp_host'] : '').'"></td></tr>
+<td>SMTP HOST</td><td><input type="text" class="text" size="30" name="other_smtp_host" value="'.((isset($config['other_smtp_host'])) ? $config['other_smtp_host'] : 'smtp.example.com').'"></td></tr>
 <tr><td></td>
 <td>Art der Verschlüsselung</td><td>
 	<input type="radio" class="radio" name="other_smtp_encryption" value="0" '.((isset($config['other_smtp_encryption']) && (0 == $config['other_smtp_encryption'])) ? ' checked' : '').'>&nbsp;Keine&nbsp;

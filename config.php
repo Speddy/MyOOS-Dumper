@@ -152,7 +152,7 @@ $config['cron_smtp'] = 'localhost';
 //smtp-port
 $config['cron_smtp_port'] = 25;
 
-$config['other_smtp_host'] = 'smtp.example.com';
+$config['other_smtp_host'] = '';
 // non = 0; SSL = 1  TLS = 2
 $config['other_smtp_encryption'] = '2';
 $config['other_smtp_port'] = '587';
