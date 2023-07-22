@@ -335,7 +335,6 @@ function DoEmail()
     global $phpmailer, $config, $dump, $databases, $email, $lang, $out, $REMOTE_ADDR;
 
 
-
     if (!is_array($attachments)) {
         $attachments = explode("\n", str_replace("\r\n", "\n", $attachments));
     }
@@ -368,32 +367,53 @@ function DoEmail()
     $phpmailer->From = $from_email_address ? $from_email_address : STORE_OWNER_EMAIL_ADDRESS;
     $phpmailer->FromName = $from_email_name ? $from_email_name : STORE_OWNER;
     $phpmailer->Mailer = EMAIL_TRANSPORT;
-##
-    $phpmailer->Host       = 'smtp.example.com';                     //Set the SMTP server to send through
-    $phpmailer->SMTPAuth   = true;                                   //Enable SMTP authentication
-    $phpmailer->Username   = 'user@example.com';                     //SMTP username
-    $phpmailer->Password   = 'secret';                               //SMTP password
-    $phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-    $phpmailer->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
 
 
+	if (0 == $config['cron_use_sendmail']) {
+			$phpmailer->IsSMTP();isSendmail();
 
-##
+			$config['other_smtp_port'] = '25';
+		}
+	}
+
     // Add smtp values if needed
-    if (EMAIL_TRANSPORT == 'smtp') {
+     if (3 == $config['cron_use_sendmail']) {
         $phpmailer->IsSMTP(); // set mailer to use SMTP
-        $phpmailer->SMTPAuth = OOS_SMTPAUTH; // turn on SMTP authentication
-        $phpmailer->Username = OOS_SMTPUSER; // SMTP username
-        $phpmailer->Password = OOS_SMTPPASS; // SMTP password
-        $phpmailer->Host     = OOS_SMTPHOST; // specify main and backup server
+		
+		$phpmailer->Host       = $config['other_smtp_host'];                   //Set the SMTP server to send through
+		$phpmailer->SMTPAuth   = isset($config['other_smtp_username']) || isset($config['other_smtp_password']);   //Enable SMTP authentication
+		$phpmailer->Username   = $config['other_smtp_username'];                     //SMTP username
+		$phpmailer->Password   = $config['other_smtp_password'];                               //SMTP password
+
+		//Set the encryption mechanism to use:
+		// - SMTPS (implicit TLS on port 465) or
+		// - STARTTLS (explicit TLS on port 587)
+
+		switch ($config['other_smtp_encryption']) {
+			case 1:
+				$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+				break;
+			case 2:
+				$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+				break;
+			default:
+				$phpmailer->SMTPSecure = '';
+				break;
+		}
+
+
+		//Set the SMTP port number:
+		// - 465 for SMTP with implicit TLS, a.k.a. RFC8314 SMTPS or
+		// - 587 for SMTP+STARTTLS
+		$phpmailer->Port       = $config['other_smtp_port']; 
+  		
+		
     } else {
         // Set sendmail path
-        if (EMAIL_TRANSPORT == 'sendmail') {
-            if (!oos_empty(OOS_SENDMAIL)) {
-                $phpmailer->Sendmail = OOS_SENDMAIL;
-                $phpmailer->IsSendmail();
-            }
+        if (1 == $config['cron_use_sendmail']) {
+			$phpmailer->isSendmail();
+			$phpmailer->Sendmail = OOS_SENDMAIL;
         }
     }
 
