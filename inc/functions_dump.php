@@ -363,19 +363,20 @@ function DoEmail()
 
     $phpmailer->CharSet   = 'UTF-8';
     $phpmailer->Encoding  = 'base64';
-
-    $phpmailer->From = $from_email_address ? $from_email_address : STORE_OWNER_EMAIL_ADDRESS;
+	
     $phpmailer->FromName = $from_email_name ? $from_email_name : STORE_OWNER;
     $phpmailer->Mailer = EMAIL_TRANSPORT;
 
 
-
+	// SMTP for Perl
+	/*
 	if (0 == $config['cron_use_sendmail']) {
-			$phpmailer->IsSMTP();isSendmail();
-
-			$config['other_smtp_port'] = '25';
+			$phpmailer->IsSMTP();
+			$phpmailer->Host  = $config['cron_smtp'];
+			$phpmailer->Port  = $config['other_smtp_port'] = '25';
 		}
 	}
+	*/
 
     // Add smtp values if needed
      if (3 == $config['cron_use_sendmail']) {
@@ -413,7 +414,7 @@ function DoEmail()
         // Set sendmail path
         if (1 == $config['cron_use_sendmail']) {
 			$phpmailer->isSendmail();
-			$phpmailer->Sendmail = OOS_SENDMAIL;
+			$phpmailer->Sendmail = $config['cron_sendmail'];
         }
     }
 
@@ -437,24 +438,7 @@ function DoEmail()
 
 
 
-    $header = '';
-    if (1 == $config['cron_use_sendmail']) {
-        //sendmail
-        if (ini_get('sendmail_path') != $config['cron_sendmail']) {
-            @ini_set('SMTP', $config['cron_sendmail']);
-        }
-        if (ini_get('sendmail_from') != $config['email_sender']) {
-            @ini_set('SMTP', $config['email_sender']);
-        }
-    } else {
-        //SMTP
-    }
-    if (ini_get('SMTP') != $config['cron_smtp']) {
-        @ini_set('SMTP', $config['cron_smtp']);
-    }
-    if (25 != ini_get('smtp_port')) {
-        @ini_set('smtp_port', 25);
-    }
+
 
     if (0 == $config['multi_part']) {
         $file = $dump['backupdatei'];
@@ -464,14 +448,13 @@ function DoEmail()
         if (($config['email_maxsize'] > 0 && $file_size > $config['email_maxsize']) || 0 == $config['send_mail_dump']) {
             //anhang zu gross
             $subject = "Backup '".$databases['Name'][$dump['dbindex']]."' - ".date("d\.m\.Y H:i", time());
-            $header .= 'FROM:'.$config['email_sender']."\n";
+			$phpmailer->Subject = $subject;
+			
+			$phpmailer->From = $config['email_sender'];
             if (isset($config['email_recipient_cc']) && trim((string) $config['email_recipient_cc']) > '') {
-                $header .= 'Cc:     '.$config['email_recipient_cc']."\r\n";
-            }
-            $header .= "MIME-version: 1.0\n";
-            $header .= 'X-Mailer: PHP/'.phpversion()."\n";
-            $header .= "X-Sender-IP: $REMOTE_ADDR\n";
-            $header .= "Content-Type: text/html; charset=utf-8\n";
+				$phpmailer->addCC($config['email_recipient_cc']);
+            }	
+
             if (0 != $config['send_mail_dump']) {
                 $msg_body = sprintf(addslashes($lang['L_EMAILBODY_TOOBIG']), byte_output($config['email_maxsize']), $databases['Name'][$dump['dbindex']], "$file (".byte_output(filesize($config['paths']['backup'].$file)).')<br>');
             } else {
@@ -485,18 +468,19 @@ function DoEmail()
             //alles ok, anhang generieren
             $msg_body = sprintf(addslashes($lang['L_EMAILBODY_ATTACH']), $databases['Name'][$dump['dbindex']], "$file (".byte_output(filesize($config['paths']['backup'].$file)).')');
             $subject = "Backup '".$databases['Name'][$dump['dbindex']]."' - ".date("d\.m\.Y", time());
+			$phpmailer->Subject = $subject;
+			
             $fp = fopen($config['paths']['backup'].$file, 'r');
             $contents = fread($fp, $file_size);
             $encoded_file = chunk_split(base64_encode($contents));
             fclose($fp);
-            $header .= 'FROM:'.$config['email_sender']."\n";
+
+            $phpmailer->From = $config['email_sender'];
             if (isset($config['email_recipient_cc']) && trim((string) $config['email_recipient_cc']) > '') {
-                $header .= 'Cc:     '.$config['email_recipient_cc']."\r\n";
+				$phpmailer->addCC($config['email_recipient_cc']);
             }
-            $header .= "MIME-version: 1.0\n";
-            $header .= 'Content-type: multipart/mixed; ';
-            $header .= "boundary=\"Message-Boundary\"\n";
-            $header .= "Content-transfer-encoding: 7BIT\n";
+
+
             $header .= "X-attachments: $file_name";
             $body_top = "--Message-Boundary\n";
             $body_top .= "Content-type: text/html; charset=utf-8\n";
@@ -516,14 +500,13 @@ function DoEmail()
         //Multipart
         $mp_sub = "Backup '".$databases['Name'][$dump['dbindex']]."' - ".date("d\.m\.Y", time());
         $subject = $mp_sub;
-        $header .= 'FROM:'.$config['email_sender']."\n";
+		$phpmailer->Subject = $subject;
+		
+		$phpmailer->From = $config['email_sender'];
         if (isset($config['email_recipient_cc']) && trim((string) $config['email_recipient_cc']) > '') {
-            $header .= 'Cc:     '.$config['email_recipient_cc']."\r\n";
+			$phpmailer->addCC($config['email_recipient_cc']);
         }
-        $header .= "MIME-version: 1.0\n";
-        $header .= 'X-Mailer: PHP/'.phpversion()."\n";
-        $header .= "X-Sender-IP: $REMOTE_ADDR\n";
-        $header .= 'Content-Type: text/html; charset=utf-8';
+
         $dateistamm = substr($dump['backupdatei'], 0, strrpos($dump['backupdatei'], 'part_')).'part_';
         $dateiendung = (1 == $config['compression']) ? '.sql.gz' : '.sql';
         $mpdatei = [];
@@ -557,20 +540,16 @@ function DoEmail()
             $encoded_file = chunk_split(base64_encode($contents));
             fclose($fp);
             $subject = $mp_sub.'  [Part '.($i + 1).' / '.count($mpdatei).']';
-            $header = 'FROM:'.$config['email_sender']."\n";
+
+			$phpmailer->From = $config['email_sender'];
             if (isset($config['email_recipient_cc']) && trim((string) $config['email_recipient_cc']) > '') {
-                $header .= 'Cc:     '.$config['email_recipient_cc']."\r\n";
+				$phpmailer->addCC($config['email_recipient_cc']);
             }
-            $header .= "MIME-version: 1.0\n";
-            $header .= 'Content-type: multipart/mixed; ';
-            $header .= "boundary=\"Message-Boundary\"\n";
-            $header .= "Content-transfer-encoding: 7BIT\n";
+	
+
             $header .= "X-attachments: $file_name";
-            $body_top = "--Message-Boundary\n";
-            $body_top .= "Content-type: text/html; charset=utf-8\n";
-            $body_top .= "Content-transfer-encoding: 7BIT\n";
-            $body_top .= "Content-description: Mail message body\n\n";
-            $msg_body = $body_top.addslashes($lang['L_EMAIL_ONLY_ATTACHMENT'].$lang['L_EMAILBODY_FOOTER']);
+
+            $msg_body =  addslashes($lang['L_EMAIL_ONLY_ATTACHMENT'].$lang['L_EMAILBODY_FOOTER']);
             $msg_body .= "\n\n--Message-Boundary\n";
             $msg_body .= "Content-type: $file_type; name=\"".$mpdatei[$i]."\"\n";
             $msg_body .= "Content-Transfer-Encoding: BASE64\n";

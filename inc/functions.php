@@ -522,6 +522,11 @@ function WriteCronScript($restore_values = false)
     $cronscript .= '$nl="\n";'.$nl;
     $cronscript .= '$cron_dbindex='.$cronDbIndex.';'.$nl;
     $cronscript .= '$cron_printout='.$config['cron_printout'].';'.$nl;
+	
+if ( 3 == $config['cron_use_sendmail'] ) {
+	$cronscript .= '$cronmail=0;'.$nl;
+	$cronscript .= '$cronmail_dump=0;'.$nl;	
+} else {
     $cronscript .= '$cronmail='.$config['send_mail'].';'.$nl;
     $cronscript .= '$cronmail_dump='.$config['send_mail_dump'].';'.$nl;
     $cronscript .= '$cronmailto="'.escape_specialchars($config['email_recipient']).'";'.$nl;
@@ -530,7 +535,7 @@ function WriteCronScript($restore_values = false)
     $cronscript .= '$cron_use_sendmail='.$config['cron_use_sendmail'].';'.$nl;
     $cronscript .= '$cron_smtp="'.escape_specialchars($config['cron_smtp']).'";'.$nl;
     $cronscript .= '$cron_smtp_port="'.$config['cron_smtp_port'].'";'.$nl;
-
+} 
     $cronscript .= '@cron_db_array='.my_implode($cron_db_array);
     $cronscript .= '@cron_dbpraefix_array='.my_implode($cron_dbpraefix_array);
     $cronscript .= '@cron_command_before_dump='.my_implode($cron_command_before_dump);
