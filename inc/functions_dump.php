@@ -335,10 +335,6 @@ function DoEmail()
     global $phpmailer, $config, $dump, $databases, $email, $lang, $out, $REMOTE_ADDR;
 
 
-    if (!is_array($attachments)) {
-        $attachments = explode("\n", str_replace("\r\n", "\n", $attachments));
-    }
-
     $sLang = (isset($_SESSION['iso_639_1']) ? $_SESSION['iso_639_1'] : DEFAULT_LANGUAGE_CODE);
 
     // (Re)create it, if it's gone missing
@@ -462,6 +458,12 @@ function DoEmail()
             }
             include_once './inc/functions.php';
             $msg_body .= '<a href="'.getServerProtocol().$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')).'/'.$config['paths']['backup'].$file.'">'.$file.'</a>';
+			
+			$phpmailer->Body = $msg_body;
+
+			// Send message
+			$phpmailer->Send();	
+			
             $email_log = "Email sent to '".$config['email_recipient']."'";
             $email_out = $lang['L_EMAIL_WAS_SEND'].'`'.$config['email_recipient'].'`<br>';
         } else {
@@ -469,30 +471,22 @@ function DoEmail()
             $msg_body = sprintf(addslashes($lang['L_EMAILBODY_ATTACH']), $databases['Name'][$dump['dbindex']], "$file (".byte_output(filesize($config['paths']['backup'].$file)).')');
             $subject = "Backup '".$databases['Name'][$dump['dbindex']]."' - ".date("d\.m\.Y", time());
 			$phpmailer->Subject = $subject;
-			
-            $fp = fopen($config['paths']['backup'].$file, 'r');
-            $contents = fread($fp, $file_size);
-            $encoded_file = chunk_split(base64_encode($contents));
-            fclose($fp);
 
             $phpmailer->From = $config['email_sender'];
             if (isset($config['email_recipient_cc']) && trim((string) $config['email_recipient_cc']) > '') {
 				$phpmailer->addCC($config['email_recipient_cc']);
             }
 
-
-            $header .= "X-attachments: $file_name";
-            $body_top = "--Message-Boundary\n";
-            $body_top .= "Content-type: text/html; charset=utf-8\n";
-            $body_top .= "Content-transfer-encoding: 7BIT\n";
-            $body_top .= "Content-description: Mail message body\n\n";
             $msg_body = $body_top.$msg_body;
-            $msg_body .= "\n\n--Message-Boundary\n";
-            $msg_body .= "Content-type: $file_type; name=\"$file\"\n";
-            $msg_body .= "Content-Transfer-Encoding: BASE64\n";
-            $msg_body .= "Content-disposition: attachment; filename=\"$file\"\n\n";
-            $msg_body .= "$encoded_file\n";
-            $msg_body .= "--Message-Boundary--\n";
+			
+			$phpmailer->Body = $msg_body;
+			
+			$filename = $config['paths']['backup'].$file;	
+			$phpmailer->addAttachment ($filename);			
+
+			// Send message
+			$phpmailer->Send();
+			
             $email_log = "Email was sent to '".$config['email_recipient']."' with '".$dump['backupdatei']."'.";
             $email_out = $lang['L_EMAIL_WAS_SEND'].'`'.$config['email_recipient'].'`'.$lang['L_WITH'].'`'.$dump['backupdatei'].'`.<br>';
         }
@@ -515,20 +509,35 @@ function DoEmail()
             $mpdatei[$i - 1] = $dateistamm.$i.$dateiendung;
             $sz = byte_output(@filesize($config['paths']['backup'].$mpdatei[$i - 1]));
             $mpfiles .= $mpdatei[$i - 1].' ('.$sz.')<br>';
+	
+			
         }
         $msg_body = (1 == $config['send_mail_dump']) ? sprintf(addslashes($lang['L_EMAILBODY_MP_ATTACH']), $databases['Name'][$dump['dbindex']], $mpfiles) : sprintf(addslashes($lang['L_EMAILBODY_MP_NOATTACH']), $databases['Name'][$dump['dbindex']], $mpfiles);
-        $email_log = "Email was sent to '".$config['email_recipient']."'";
+
+			
+			$filename = $config['paths']['backup'].$mpdatei[$i - 1];
+			$phpmailer->addAttachment ($filename);		
+
+
+		$email_log = "Email was sent to '".$config['email_recipient']."'";
         $email_out = $lang['L_EMAIL_WAS_SEND'].'`'.$config['email_recipient'].'`<br>';
     }
-    if (@mail($config['email_recipient'], stripslashes($subject), $msg_body, $header)) {
-        $out .= '<span class="success">'.$email_out.'</span>';
-        WriteLog("$email_log");
-    } else {
-        $out .= '<span class="error">'.$lang['L_MAILERROR'].'</span><br>';
-        WriteLog("Email to '".$config['email_recipient']."' failed !");
-        ErrorLog('Email ', $databases['Name'][$dump['dbindex']], 'Subject: '.stripslashes($subject), $lang['L_MAILERROR']);
-        ++$dump['errors'];
-    }
+	
+		
+
+			// Send message
+			if(!$phpmailer->Send()) {
+				
+				 $out .= '<span class="error">'.$lang['L_MAILERROR'].'</span><br>';
+				WriteLog("Email to '".$config['email_recipient']."' failed !");
+				ErrorLog('Email ', $databases['Name'][$dump['dbindex']], 'Subject: '.stripslashes($subject), $lang['L_MAILERROR']);
+				ErrorLog('Mailer Error: ' . $phpmailer->ErrorInfo);
+				++$dump['errors'];
+            } else {
+				$out .= '<span class="success">'.$email_out.'</span>';
+				WriteLog("$email_log");
+            }	
+
 
     if (isset($mpdatei) && 1 == $config['send_mail_dump']) { // && ($config['email_maxsize'] ==0 || ($config['email_maxsize']>0 && $config['multipartgroesse2']<= $config['email_maxsize']))) {
         for ($i = 0; $i < count($mpdatei); ++$i) {
@@ -545,17 +554,15 @@ function DoEmail()
             if (isset($config['email_recipient_cc']) && trim((string) $config['email_recipient_cc']) > '') {
 				$phpmailer->addCC($config['email_recipient_cc']);
             }
-	
-
-            $header .= "X-attachments: $file_name";
 
             $msg_body =  addslashes($lang['L_EMAIL_ONLY_ATTACHMENT'].$lang['L_EMAILBODY_FOOTER']);
-            $msg_body .= "\n\n--Message-Boundary\n";
-            $msg_body .= "Content-type: $file_type; name=\"".$mpdatei[$i]."\"\n";
-            $msg_body .= "Content-Transfer-Encoding: BASE64\n";
-            $msg_body .= 'Content-disposition: attachment; filename="'.$mpdatei[$i]."\"\n\n";
-            $msg_body .= "$encoded_file\n";
-            $msg_body .= "--Message-Boundary--\n";
+
+
+			$filename = $config['paths']['backup'].$mpdatei[$i];
+			$phpmailer->addAttachment ($filename);	
+
+
+			
             $email_log = "Email with $mpdatei[$i] was sent to '".$config['email_recipient']."'";
             $email_out = $lang['L_EMAIL_WAS_SEND'].'`'.$config['email_recipient'].'`'.$lang['L_WITH'].'`'.$mpdatei[$i].'`.<br>';
 
