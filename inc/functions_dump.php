@@ -343,9 +343,9 @@ function DoEmail()
         $phpmailer = new PHPMailer\PHPMailer\PHPMailer(true);
     }
 
-    //To load the French version
-	# $sLang = (isset($_SESSION['iso_639_1']) ? $_SESSION['iso_639_1'] : DEFAULT_LANGUAGE_CODE);
-    # $phpmailer->setLanguage($sLang, MOD_INCLUDE_PATH . '/includes/lib/phpmailer/language/');
+    // load the appropriate language version
+	$sLang = (isset($config['language']) ? $config['language'] : 'en');
+    $phpmailer->setLanguage($sLang, MOD_INCLUDE_PATH . '/includes/lib/phpmailer/language/');
 
     // Empty out the values that may be set.
     $phpmailer->clearAllRecipients();
@@ -365,17 +365,14 @@ function DoEmail()
 
 
 	// SMTP for Perl
-	/*
-	if (0 == $config['cron_use_sendmail']) {
+	if (0 == $config['cron_use_mail']) {
 			$phpmailer->IsSMTP();
 			$phpmailer->Host  = $config['cron_smtp'];
-			$phpmailer->Port  = $config['other_smtp_port'] = '25';
-		}
-	}
-	*/
-
-    // Add smtp values if needed
-     if (3 == $config['cron_use_sendmail']) {
+			$phpmailer->Port  = '25';
+	} elseif (1 == $config['cron_use_mail']) {
+			$phpmailer->isSendmail();
+			$phpmailer->Sendmail = $config['cron_sendmail'];
+	} elseif (2 == $config['cron_use_mail']) {
         $phpmailer->IsSMTP(); // set mailer to use SMTP
 		
 		$phpmailer->Host       = $config['other_smtp_host'];                   //Set the SMTP server to send through
@@ -406,12 +403,8 @@ function DoEmail()
 		$phpmailer->Port       = $config['other_smtp_port']; 
   		
 		
-    } else {
-        // Set sendmail path
-        if (1 == $config['cron_use_sendmail']) {
-			$phpmailer->isSendmail();
-			$phpmailer->Sendmail = $config['cron_sendmail'];
-        }
+    } elseif (3 == $config['cron_use_mail']) { {
+        $phpmailer->IsMail();
     }
 
     if (0 == $config['multi_part']) {

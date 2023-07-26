@@ -462,7 +462,7 @@ function WriteCronScript($restore_values = false)
                     'logcompression',
                     'log_maxsize',
                     'cron_completelog',
-                    'cron_use_sendmail',
+                    'cron_use_mail',
                     'cron_smtp_port',
     ];
     foreach ($int_array as $i) {
@@ -523,7 +523,7 @@ function WriteCronScript($restore_values = false)
     $cronscript .= '$cron_dbindex='.$cronDbIndex.';'.$nl;
     $cronscript .= '$cron_printout='.$config['cron_printout'].';'.$nl;
 	
-if ( 3 == $config['cron_use_sendmail'] ) {
+if ( (2 == $config['cron_use_mail']) || (3 == $config['cron_use_mail']) ) {
 	$cronscript .= '$cronmail=0;'.$nl;
 	$cronscript .= '$cronmail_dump=0;'.$nl;	
 } else {
@@ -532,7 +532,7 @@ if ( 3 == $config['cron_use_sendmail'] ) {
     $cronscript .= '$cronmailto="'.escape_specialchars($config['email_recipient']).'";'.$nl;
     $cronscript .= '$cronmailto_cc="'.escape_specialchars($config['email_recipient_cc']).'";'.$nl;
     $cronscript .= '$cronmailfrom="'.escape_specialchars($config['email_sender']).'";'.$nl;
-    $cronscript .= '$cron_use_sendmail='.$config['cron_use_sendmail'].';'.$nl;
+    $cronscript .= '$cron_use_mail='.$config['cron_use_mail'].';'.$nl;
     $cronscript .= '$cron_smtp="'.escape_specialchars($config['cron_smtp']).'";'.$nl;
     $cronscript .= '$cron_smtp_port="'.$config['cron_smtp_port'].'";'.$nl;
 } 

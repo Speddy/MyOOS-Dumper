@@ -380,8 +380,8 @@ if (isset($_POST['save'])) {
         $config['cron_execution_path'] .= '/';
     }
 
-    if (isset($_POST['cron_use_sendmail'])) {
-        $config['cron_use_sendmail'] = $_POST['cron_use_sendmail'];
+    if (isset($_POST['cron_use_mail'])) {
+        $config['cron_use_mail'] = $_POST['cron_use_mail'];
     }
     if (isset($_POST['cron_sendmail'])) {
         $config['cron_sendmail'] = $_POST['cron_sendmail'];
@@ -1153,10 +1153,10 @@ $aus['transfer1'] .= '<select name="email_maxsize2"><option value="1" '.((1 == $
 $aus['transfer1'] .= '<option value="2" '.((2 == $config['email_maxsize2']) ? ' SELECTED' : '').'>Megabytes</option></select></td></tr>';
 
 $aus['transfer1'] .= '<tr><td>'.$lang['L_CRON_MAILPRG'].':&nbsp;</td>';
-$aus['transfer1'] .= '<td><table><tr><td><input type="radio" class="radio" name="cron_use_sendmail" value="1" '.((isset($config['cron_use_sendmail']) && (1 == $config['cron_use_sendmail'])) ? ' checked' : '').'>&nbsp;sendmail</td><td><input type="text" class="text" size="30" name="cron_sendmail" value="'.((isset($config['cron_sendmail'])) ? $config['cron_sendmail'] : '').'"></td><td></td></tr>';
-$aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_sendmail" value="0" '.((isset($config['cron_use_sendmail']) && (0 == $config['cron_use_sendmail'])) ? ' checked' : '').'>&nbsp;SMTP</td><td><input type="text" class="text" size="30" name="cron_smtp" value="'.((isset($config['cron_smtp'])) ? $config['cron_smtp'] : '').'"></td><td></td></tr><tr><td>&nbsp;</td><td>SMTP-Port: <strong>'.$config['cron_smtp_port'].'</strong></td><td></td></tr>';
+$aus['transfer1'] .= '<td><table><tr><td><input type="radio" class="radio" name="cron_use_mail" value="1" '.((isset($config['cron_use_mail']) && (1 == $config['cron_use_mail'])) ? ' checked' : '').'>&nbsp;sendmail</td><td><input type="text" class="text" size="30" name="cron_sendmail" value="'.((isset($config['cron_sendmail'])) ? $config['cron_sendmail'] : '').'"></td><td></td></tr>';
+$aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_mail" value="0" '.((isset($config['cron_use_mail']) && (0 == $config['cron_use_mail'])) ? ' checked' : '').'>&nbsp;SMTP</td><td><input type="text" class="text" size="30" name="cron_smtp" value="'.((isset($config['cron_smtp'])) ? $config['cron_smtp'] : '').'"></td><td></td></tr><tr><td>&nbsp;</td><td>SMTP-Port: <strong>'.$config['cron_smtp_port'].'</strong></td><td></td></tr>';
 
-$aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_sendmail" value="2" '.((isset($config['cron_use_sendmail']) && (2 == $config['cron_use_sendmail'])) ? ' checked' : '').'>&nbsp;Other SMTP</td>
+$aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_mail" value="2" '.((isset($config['cron_use_mail']) && (2 == $config['cron_use_mail'])) ? ' checked' : '').'>&nbsp;Other SMTP</td>
 
 <td>SMTP HOST</td><td><input type="text" class="text" size="30" name="other_smtp_host" value="'.((isset($config['other_smtp_host'])) ? $config['other_smtp_host'] : 'smtp.example.com').'"></td></tr>
 <tr><td></td>
@@ -1187,6 +1187,7 @@ $aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_s
 
 
 $aus['global3'] .= '</td></tr>';
+$aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_mail" value="3" '.((isset($config['cron_use_mail']) && (3 == $config['cron_use_mail'])) ? ' checked' : '').'>&nbsp;PHP Default</td><td>(none)</td><td></td></tr>';
 $aus['transfer1'] .= '</table></td></tr></table></fieldset>'.print_save_button().'</div>';
 
 //FTP-->

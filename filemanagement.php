@@ -455,10 +455,16 @@ switch ($action) {
         }
         echo '<tr><td>'.$lang['L_CRON_PRINTOUT'].':</td><td><strong>'.((isset($config['cron_printout']) && (1 == $config['cron_printout'])) ? $lang['L_ACTIVATED'] : $lang['L_NOT_ACTIVATED']).'</strong></td></tr>';
 
-        if (isset($config['send_mail']) && (1 == $config['send_mail'])) {
-            $t = $config['email_recipient'].((1 == $config['send_mail_dump']) ? $lang['L_WITHATTACH'] : $lang['L_WITHOUTATTACH']);
-        }
-        echo '<tr><td>'.$lang['L_SEND_MAIL_FORM'].':</td><td><strong>'.((isset($config['send_mail']) && (1 == $config['send_mail'])) ? $t : $lang['L_NOT_ACTIVATED']).'</strong></td></tr>';
+		if ( (isset($config['send_mail']) && (1 == $config['send_mail'])) && (isset($config['cron_use_mail']) && (2 > $config['cron_use_mail']))) { 
+			if (isset($config['cron_use_mail']) && (2 > $config['cron_use_mail'])) {
+				$t = $config['email_recipient'].((1 == $config['send_mail_dump']) ? $lang['L_WITHATTACH'] : $lang['L_WITHOUTATTACH']);
+			}
+			echo '<tr><td>'.$lang['L_SEND_MAIL_FORM'].':</td><td><strong>'.((isset($config['cron_use_mail']) && (2 > $config['cron_use_mail'])) ? $t : $lang['L_NOT_ACTIVATED']).'</strong></td></tr>';
+		} else {
+			echo '<tr><td>'.$lang['L_SEND_MAIL_FORM'].':</td><td><strong>'. $lang['L_NOT_ACTIVATED'].'</strong></td></tr>';
+		}
+
+
 
         for ($x = 0; $x < 3; ++$x) {
             if (isset($config['ftp_transfer'][$x]) && $config['ftp_transfer'][$x] > 0) {
