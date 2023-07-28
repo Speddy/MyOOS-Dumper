@@ -424,8 +424,12 @@ function DoEmail()
             }
             include_once './inc/functions.php';
             $msg_body .= '<a href="'.getServerProtocol().$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')).'/'.$config['paths']['backup'].$file.'">'.$file.'</a>';
-			
-			$phpmailer->Body = $msg_body;
+
+			// Build the text version
+			$text = strip_tags($msg_body);
+			$phpmailer->IsHTML(true);
+			$phpmailer->Body = $msg_body;;
+			$phpmailer->AltBody = $text;			
 
 			// Send message
 			$phpmailer->Send();	
@@ -440,7 +444,11 @@ function DoEmail()
 
             $msg_body = $body_top.$msg_body;
 			
-			$phpmailer->Body = $msg_body;
+			// Build the text version
+			$text = strip_tags($msg_body);
+			$phpmailer->IsHTML(true);
+			$phpmailer->Body = $msg_body;;
+			$phpmailer->AltBody = $text;
 			
 			$filename = $config['paths']['backup'].$file;	
 			$phpmailer->addAttachment ($filename);			
@@ -469,7 +477,13 @@ function DoEmail()
 			
         }
         $msg_body = (1 == $config['send_mail_dump']) ? sprintf(addslashes($lang['L_EMAILBODY_MP_ATTACH']), $databases['Name'][$dump['dbindex']], $mpfiles) : sprintf(addslashes($lang['L_EMAILBODY_MP_NOATTACH']), $databases['Name'][$dump['dbindex']], $mpfiles);
-		$phpmailer->Body = $msg_body;
+
+
+		// Build the text version
+		$text = strip_tags($msg_body);
+		$phpmailer->IsHTML(true);
+		$phpmailer->Body = $msg_body;;
+		$phpmailer->AltBody = $text;
 
 			
 		$filename = $config['paths']['backup'].$mpdatei[$i - 1];
@@ -506,7 +520,11 @@ function DoEmail()
 			$phpmailer->Subject = $subject;
 			
             $msg_body =  addslashes($lang['L_EMAIL_ONLY_ATTACHMENT'].$lang['L_EMAILBODY_FOOTER']);
-			$phpmailer->Body = $msg_body;
+			// Build the text version
+			$text = strip_tags($msg_body);
+			$phpmailer->IsHTML(true);
+			$phpmailer->Body = $msg_body;;
+			$phpmailer->AltBody = $text;
 			
 			$filename = $config['paths']['backup'].$mpdatei[$i];
 			$phpmailer->addAttachment ($filename);	
