@@ -431,9 +431,7 @@ function DoEmail()
 			$phpmailer->Body = $msg_body;;
 			$phpmailer->AltBody = $text;			
 
-			// Send message
-			$phpmailer->Send();	
-			
+		
             $email_log = "Email sent to '".$config['email_recipient']."'";
             $email_out = $lang['L_EMAIL_WAS_SEND'].'`'.$config['email_recipient'].'`<br>';
         } else {
@@ -452,9 +450,6 @@ function DoEmail()
 			
 			$filename = $config['paths']['backup'].$file;	
 			$phpmailer->addAttachment ($filename);			
-
-			// Send message
-			$phpmailer->Send();
 			
             $email_log = "Email was sent to '".$config['email_recipient']."' with '".$dump['backupdatei']."'.";
             $email_out = $lang['L_EMAIL_WAS_SEND'].'`'.$config['email_recipient'].'`'.$lang['L_WITH'].'`'.$dump['backupdatei'].'`.<br>';
