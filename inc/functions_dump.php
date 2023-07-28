@@ -403,7 +403,7 @@ function DoEmail()
 		$phpmailer->Port       = $config['other_smtp_port']; 
   		
 		
-    } elseif (3 == $config['cron_use_mail']) { {
+    } elseif (3 == $config['cron_use_mail']) { 
         $phpmailer->IsMail();
     }
 
