@@ -439,8 +439,6 @@ function DoEmail()
             $msg_body = sprintf(addslashes($lang['L_EMAILBODY_ATTACH']), $databases['Name'][$dump['dbindex']], "$file (".byte_output(filesize($config['paths']['backup'].$file)).')');
             $subject = "Backup '".$databases['Name'][$dump['dbindex']]."' - ".date("d\.m\.Y", time());
 			$phpmailer->Subject = $subject;
-
-            $msg_body = $body_top.$msg_body;
 			
 			// Build the text version
 			$text = strip_tags($msg_body);
