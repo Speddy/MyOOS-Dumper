@@ -337,15 +337,15 @@ function DoEmail()
 
     // (Re)create it, if it's gone missing
     if (! ($phpmailer instanceof PHPMailer\PHPMailer\PHPMailer)) {
-        include_once MOD_INCLUDE_PATH . '/includes/lib/phpmailer/src/PHPMailer.php';
-        include_once MOD_INCLUDE_PATH . '/includes/lib/phpmailer/src/SMTP.php';
-        include_once MOD_INCLUDE_PATH . '/includes/lib/phpmailer/src/Exception.php';
+        include_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/PHPMailer.php';
+        include_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/SMTP.php';
+        include_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/Exception.php';
         $phpmailer = new PHPMailer\PHPMailer\PHPMailer(true);
     }
 
     // load the appropriate language version
 	$sLang = (isset($config['language']) ? $config['language'] : 'en');
-    $phpmailer->setLanguage($sLang, MOD_INCLUDE_PATH . '/includes/lib/phpmailer/language/');
+    $phpmailer->setLanguage($sLang, MOD_INCLUDE_PATH . '/inc/lib/phpmailer/language/');
 
     // Empty out the values that may be set.
     $phpmailer->clearAllRecipients();
