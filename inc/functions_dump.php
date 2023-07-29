@@ -19,6 +19,11 @@
 /* ensure this file is being included by a parent file */
 defined('OOS_VALID_MOD') or exit('Direct Access to this location is not allowed.');
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+
 include './inc/functions_global.php';
 
 //Buffer fuer Multipart-Filesizepruefung
@@ -336,11 +341,11 @@ function DoEmail()
 
 
     // (Re)create it, if it's gone missing
-    if (! ($phpmailer instanceof PHPMailer\PHPMailer\PHPMailer)) {
-        include_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/PHPMailer.php';
-        include_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/SMTP.php';
-        include_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/Exception.php';
-        $phpmailer = new PHPMailer\PHPMailer\PHPMailer(true);
+    if (! ($phpmailer instanceof PHPMailer)) {
+		require_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/Exception.php';
+		require_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/PHPMailer.php';
+		require_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/SMTP.php';	
+        $phpmailer = new PHPMailer(true);
     }
 
     // load the appropriate language version
@@ -383,20 +388,9 @@ function DoEmail()
 		//Set the encryption mechanism to use:
 		// - SMTPS (implicit TLS on port 465) or
 		// - STARTTLS (explicit TLS on port 587)
-
-		switch ($config['other_smtp_encryption']) {
-			case 1:
-				$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-				break;
-			case 2:
-				$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-				break;
-			default:
-				$phpmailer->SMTPSecure = '';
-				break;
-		}
-
-
+		$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+		$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+		
 		//Set the SMTP port number:
 		// - 465 for SMTP with implicit TLS, a.k.a. RFC8314 SMTPS or
 		// - 587 for SMTP+STARTTLS
