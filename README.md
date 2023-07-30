@@ -6,7 +6,7 @@ MyOOS [Dumper] is an open source community project. MyOOS [Dumper] is a backup p
 Requirements
 ------------
 
-- PHP version 7.4 or higher.
+- PHP version 8.0.2 or higher.
 - MySQL version 5.6 or higher.
 - Apache version 2.4 or higher.
 
