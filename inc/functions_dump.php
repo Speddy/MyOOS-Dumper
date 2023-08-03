@@ -379,19 +379,22 @@ function DoEmail()
 			$phpmailer->Sendmail = $config['cron_sendmail'];
 	} elseif (2 == $config['cron_use_mail']) {
         $phpmailer->IsSMTP(); // set mailer to use SMTP
-		
-		$phpmailer->Host       = $config['other_smtp_host'];                   //Set the SMTP server to send through
-		$phpmailer->SMTPAuth   = isset($config['other_smtp_username']) || isset($config['other_smtp_password']);   //Enable SMTP authentication
-		$phpmailer->Username   = $config['other_smtp_username'];                     //SMTP username
-		$phpmailer->Password   = $config['other_smtp_password'];                               //SMTP password
 
-		//Set the encryption mechanism to use:
+		// SMTP Debug
+		//	$phpmailer->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+		
+		$phpmailer->Host       = $config['other_smtp_host'];	//Set the SMTP server to send through
+		$phpmailer->SMTPAuth   = isset($config['other_smtp_username']) || isset($config['other_smtp_password']);   //Enable SMTP authentication
+		$phpmailer->Username   = $config['other_smtp_username'];	//SMTP username
+		$phpmailer->Password   = $config['other_smtp_password'];	//SMTP password
+
+		// Set the encryption mechanism to use:
 		// - SMTPS (implicit TLS on port 465) or
 		// - STARTTLS (explicit TLS on port 587)
 		$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
 		$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 		
-		//Set the SMTP port number:
+		// Set the SMTP port number:
 		// - 465 for SMTP with implicit TLS, a.k.a. RFC8314 SMTPS or
 		// - 587 for SMTP+STARTTLS
 		$phpmailer->Port       = $config['other_smtp_port']; 
