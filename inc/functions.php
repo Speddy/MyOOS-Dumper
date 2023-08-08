@@ -726,7 +726,16 @@ function IsWritable($dir)
 function IsAccessProtected()
 {
     $rc = false;
-    $url = sprintf('%s://%s%s', $_SERVER['REQUEST_SCHEME'], $_SERVER['HTTP_HOST'], dirname($_SERVER['PHP_SELF']));
+
+	if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1)) {
+		$scheme = 'https';
+	} elseif (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
+		$scheme = 'https';
+	} else {
+		$scheme = 'http';
+	}
+
+    $url = sprintf('%s://%s%s', $scheme, $_SERVER['HTTP_HOST'], dirname($_SERVER['PHP_SELF']));
     $headers = @get_headers($url);
     if (is_array($headers) && count($headers) > 0) {
         $rc = (preg_match('/\s+(?:401|403)\s+/', $headers[0])) ? 1 : 0;
