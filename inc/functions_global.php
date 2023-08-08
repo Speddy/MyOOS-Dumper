@@ -1085,10 +1085,8 @@ function MODHeader($kind = 0)
 
     //kind 0=main 1=menu
     $r = '<!DOCTYPE HTML>'."\n<html>\n<head>\n";
-    $r .= '<meta charset="utf-8" />'."\n";
-    $r .= '<meta name="robots" content="noindex,nofollow" />'."\n";
-    $r .= '<meta http-equiv="pragma" content="no-cache">'."\n";
-    $r .= '<meta http-equiv="expires" content="0">'."\n";
+    $r .= '<meta charset="utf-8">'."\n";
+    $r .= '<meta name="robots" content="noindex,nofollow">'."\n";
     $r .= '<meta http-equiv="cache-control" content="must-revalidate">'."\n";
     $r .= '<title>MyOOS [Dumper]</title>'."\n";
     $r .= '<link rel="stylesheet" type="text/css" href="css/'.$config['theme'].'/style.css">'."\n";

@@ -1,10 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<meta charset="utf-8" />
-	<meta name="robots" content="noindex,nofollow" />
-	<meta http-equiv="pragma" content="no-cache">
-	<meta http-equiv="expires" content="0">
+	<meta charset="utf-8">
+	<meta name="robots" content="noindex,nofollow">
 	<meta http-equiv="cache-control" content="must-revalidate">
 	<title>MyOOS [Dumper]</title>
 	<link rel="stylesheet" type="text/css" href="css/{THEME}/style.css">

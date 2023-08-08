@@ -33,7 +33,7 @@ if (!file_exists('./work/config/myoosdumper.php')) {
 <!DOCTYPE HTML>
 <html>
 <head>
-	<meta charset="utf-8" />
+	<meta charset="utf-8">
 	<meta name="robots" content="noindex,nofollow" />
 	<title>MyOOS [Dumper]</title>
 </head>
