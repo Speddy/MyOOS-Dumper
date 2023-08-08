@@ -86,7 +86,6 @@ header('content-type: text/html; charset=utf-8');
 <head>
 	<meta charset="utf-8">
 	<meta name="robots" content="noindex,nofollow">
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="expires" content="0">
 	<meta http-equiv="cache-control" content="must-revalidate">

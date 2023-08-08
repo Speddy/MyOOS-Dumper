@@ -35,7 +35,6 @@ if (!file_exists('./work/config/myoosdumper.php')) {
 <head>
 	<meta charset="utf-8" />
 	<meta name="robots" content="noindex,nofollow" />
-	<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 	<title>MyOOS [Dumper]</title>
 </head>
 

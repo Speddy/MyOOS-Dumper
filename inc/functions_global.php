@@ -1087,7 +1087,6 @@ function MODHeader($kind = 0)
     $r = '<!DOCTYPE HTML>'."\n<html>\n<head>\n";
     $r .= '<meta charset="utf-8" />'."\n";
     $r .= '<meta name="robots" content="noindex,nofollow" />'."\n";
-    $r .= '<meta http-equiv="X-UA-Compatible" content="IE=Edge">'."\n";
     $r .= '<meta http-equiv="pragma" content="no-cache">'."\n";
     $r .= '<meta http-equiv="expires" content="0">'."\n";
     $r .= '<meta http-equiv="cache-control" content="must-revalidate">'."\n";
