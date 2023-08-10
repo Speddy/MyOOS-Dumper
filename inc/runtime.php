@@ -144,7 +144,8 @@ function v($t)
     }
 }
 
+
 function getServerProtocol()
 {
-    return (isset($_SERVER['HTTPS']) && 'on' == strtolower($_SERVER['HTTPS'])) ? 'https://' : 'http://';
+	 return (isset($_SERVER['HTTPS']) && 'on' == strtolower($_SERVER['HTTPS'])) ? 'https://' : 'http://';
 }
