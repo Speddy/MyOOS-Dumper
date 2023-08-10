@@ -5,8 +5,6 @@
  *
  * PHP version 5 and 7
  *
- * @category  Math
- * @package   BigInteger
  * @author    Jim Wigginton <terrafrost@php.net>
  * @copyright 2017 Jim Wigginton
  * @license   http://www.opensource.org/licenses/mit-license.html  MIT License
@@ -20,26 +18,22 @@ use phpseclib3\Math\BigInteger\Engines\BCMath\Base;
 /**
  * PHP Barrett Modular Exponentiation Engine
  *
- * @package PHP
  * @author  Jim Wigginton <terrafrost@php.net>
- * @access  public
  */
 abstract class Barrett extends Base
 {
-    /**#@+
-     * @access private
-    */
     /**
      * Cache constants
      *
      * $cache[self::VARIABLE] tells us whether or not the cached data is still valid.
+     *
      */
     const VARIABLE = 0;
     /**
      * $cache[self::DATA] contains the cached data.
+     *
      */
     const DATA = 1;
-    /**#@-*/
 
     /**
      * Barrett Modular Reduction
@@ -61,7 +55,7 @@ abstract class Barrett extends Base
      *
      * @param string $n
      * @param string $m
-     * @return array|string
+     * @return string
      */
     protected static function reduce($n, $m)
     {
@@ -92,7 +86,7 @@ abstract class Barrett extends Base
 
             $cache[self::DATA][] = [
                 'u' => $u, // m.length >> 1 (technically (m.length >> 1) + 1)
-                'm1'=> $m1 // m.length
+                'm1' => $m1 // m.length
             ];
         } else {
             extract($cache[self::DATA][$key]);

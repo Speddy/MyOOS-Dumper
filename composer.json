@@ -8,7 +8,7 @@
 		"ext-zip": "*",
 		"ext-zlib": "*",
 		"visualappeal/php-auto-update": "^1.0.2",
-        "phpseclib/phpseclib": "3",
+        "phpseclib/phpseclib": "3.0.19",
         "league/flysystem-sftp-v3": "^3.10"
     }
 }
