@@ -147,5 +147,15 @@ function v($t)
 
 function getServerProtocol()
 {
-	 return (isset($_SERVER['HTTPS']) && 'on' == strtolower($_SERVER['HTTPS'])) ? 'https://' : 'http://';
+    
+	if (isset($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == 1)) {
+		$scheme = 'https://';
+	} elseif (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
+		$scheme = 'https://';
+	} else {
+		$scheme = 'http://';
+	}
+	
+	
+	return $scheme;
 }
