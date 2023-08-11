@@ -80,7 +80,7 @@ $m = trim((string) str_replace('M', '', ini_get('memory_limit')));
 if (0 == intval($m)) {
     $m = trim((string) str_replace('M', '', get_cfg_var('memory_limit')));
 }
-$config['php_ram'] = $m;
+$config['php_ram'] = floatval($m);
 
 //Ist zlib moeglich?
 $p1 = explode(', ', $config['phpextensions']);
