@@ -311,7 +311,12 @@ switch ($action) {
             DBDetailInfo($databases['db_selected_index']);
         }
         $cext = (isset($config['cron_extender']) && (0 == $config['cron_extender'])) ? 'pl' : 'cgi';
-        $actualUrl = substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/') + 1);
+		
+		$document_root = filter_input(INPUT_SERVER, 'DOCUMENT_ROOT', FILTER_SANITIZE_URL);
+		$script_name = filter_input(INPUT_SERVER, 'SCRIPT_NAME', FILTER_SANITIZE_URL);			
+		$server_name = filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_URL);
+		
+        $actualUrl = substr($script_name, 0, strrpos($script_name, '/') + 1);
         if ('/' != substr($actualUrl, -1)) {
             $actualUrl .= '/';
         }
@@ -323,9 +328,11 @@ switch ($action) {
         $sfile = $config['cron_execution_path']."perltest.$cext";
         $simplefile = $config['cron_execution_path']."simpletest.$cext";
         $scriptentry = Realpfad('./').$config['paths']['config'];
-        $cronabsolute = ('/' == substr($config['cron_execution_path'], 0, 1)) ? $_SERVER['DOCUMENT_ROOT'].$scriptdir : Realpfad('./').$scriptdir;
+        $cronabsolute = ('/' == substr($config['cron_execution_path'], 0, 1)) ? $document_root.$scriptdir : Realpfad('./').$scriptdir;
         $confabsolute = $config['config_file'];
-        $scriptref = getServerProtocol().$_SERVER['SERVER_NAME'].$refdir.$config['cron_execution_path'].'crondump.'.$cext.'?config='.$confabsolute;
+		
+
+        $scriptref = getServerProtocol().$server_name.$refdir.$config['cron_execution_path'].'crondump.'.$cext.'?config='.$confabsolute;
         $cronref = 'perl '.$cronabsolute.' -config='.$confabsolute.' -html_output=0';
 
         //Ausgabe

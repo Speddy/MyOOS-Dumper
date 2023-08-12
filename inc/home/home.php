@@ -67,6 +67,9 @@ if ($is_new_version_available) {
     $update_info = $lang['L_NEW_MOD_VERSION'] . ': ' . $update->getLatestVersion();
 }
 
+
+$server_name = filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_URL);
+
 $tpl = new MODTemplate();
 $tpl->set_filenames([
     'show' => 'tpl/home/home.tpl', ]);
@@ -80,7 +83,7 @@ $tpl->assign_vars([
     'MEMORY' => byte_output($config['php_ram'] * 1024 * 1024),
     'MAX_EXECUTION_TIME' => $config['max_execution_time'],
     'PHP_EXTENSIONS' => $config['phpextensions'],
-    'SERVER_NAME' => $_SERVER['SERVER_NAME'],
+    'SERVER_NAME' => $server_name,
     'MOD_PATH' => $config['paths']['root'],
     'DB' => $databases['db_actual'],
     'NR_OF_BACKUP_FILES' => $Sum_Files,
