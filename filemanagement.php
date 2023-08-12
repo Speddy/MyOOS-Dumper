@@ -36,13 +36,15 @@ if (isset($config['auto_delete']) && (1 == $config['auto_delete'])) {
 }
 get_sql_encodings(); // get possible sql charsets and also get default charset
 //0=Datenbank  1=Struktur
-$action = (isset($_GET['action'])) ? $_GET['action'] : 'files';
-$kind = (isset($_GET['kind'])) ? $_GET['kind'] : 0;
-$expand = (isset($_GET['expand'])) ? $_GET['expand'] : -1;
-$selectfile = (isset($_POST['selectfile'])) ? $_POST['selectfile'] : '';
-$destfile = (isset($_POST['destfile'])) ? $_POST['destfile'] : '';
-$compressed = (isset($_POST['compressed'])) ? $_POST['compressed'] : '';
-$dk = (isset($_POST['dumpKommentar'])) ? $_POST['dumpKommentar'] : '';
+$action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING) ?: 'files'; 
+$kind = filter_input(INPUT_GET, 'kind', FILTER_VALIDATE_INT) ?: 0; 
+$expand = filter_input(INPUT_GET, 'expand', FILTER_VALIDATE_INT) ?: -1;
+
+$selectfile = filter_input(INPUT_POST, 'selectfile', FILTER_SANITIZE_STRING);
+$destfile = filter_input(INPUT_POST, 'destfile', FILTER_SANITIZE_STRING);
+$compressed = filter_input(INPUT_POST, 'compressed', FILTER_SANITIZE_STRING);
+$dk = filter_input(INPUT_POST, 'dk', FILTER_SANITIZE_STRING);
+
 
 $dk = str_replace(':', '|', $dk); // remove : because of statusline
 $dump['sel_dump_encoding'] = (isset($_POST['sel_dump_encoding'])) ? $_POST['sel_dump_encoding'] : get_index($config['mysql_possible_character_sets'], $config['mysql_standard_character_set']);
@@ -80,7 +82,8 @@ echo MODHeader();
 
 $toolboxstring = '';
 $fpath = $config['paths']['backup'];
-$dbactiv = (isset($_GET['dbactiv'])) ? $_GET['dbactiv'] : $databases['db_actual'];
+$dbactiv = filter_input(INPUT_GET, 'dbactiv', FILTER_SANITIZE_STRING) ?: $databases['db_actual']; 
+
 $databases['multi'] = [];
 if ('' == $databases['multisetting']) {
     $databases['multi'][0] = $databases['db_actual'];
