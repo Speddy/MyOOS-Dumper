@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '94426ea01a3c79c80b95925e5cf2b003201c9e08',
+        'reference' => 'd2a78b5b8c1714ad07ab0416ca45adb752924d25',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '94426ea01a3c79c80b95925e5cf2b003201c9e08',
+            'reference' => 'd2a78b5b8c1714ad07ab0416ca45adb752924d25',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -92,9 +92,9 @@
             'dev_requirement' => false,
         ),
         'paragonie/random_compat' => array(
-            'pretty_version' => 'v2.0.21',
-            'version' => '2.0.21.0',
-            'reference' => '96c132c7f2f7bc3230723b66e89f8f150b29d5ae',
+            'pretty_version' => 'v9.99.100',
+            'version' => '9.99.100.0',
+            'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../paragonie/random_compat',
             'aliases' => array(),
@@ -142,7 +142,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'eea8bf94d73239ed2975a39ad4d79fbfb2d15eca',
+            'reference' => '8d05c4f2d63f4d95c9db14599f58872f704a72a9',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
