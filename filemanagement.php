@@ -29,6 +29,7 @@ include_once './language/'.$config['language'].'/lang_config_overview.php';
 include_once './language/'.$config['language'].'/lang_main.php';
 include_once './inc/functions_files.php';
 include_once './inc/functions_sql.php';
+
 $msg = '';
 $dump = [];
 if (isset($config['auto_delete']) && (1 == $config['auto_delete'])) {
@@ -36,16 +37,19 @@ if (isset($config['auto_delete']) && (1 == $config['auto_delete'])) {
 }
 get_sql_encodings(); // get possible sql charsets and also get default charset
 //0=Datenbank  1=Struktur
-$action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING) ?: 'files'; 
+$action = filter_string_polyfill(filter_input(INPUT_GET, 'action')) ?: 'files';
 $kind = filter_input(INPUT_GET, 'kind', FILTER_VALIDATE_INT) ?: 0; 
 $expand = filter_input(INPUT_GET, 'expand', FILTER_VALIDATE_INT) ?: -1;
 
-$selectfile = filter_input(INPUT_POST, 'selectfile', FILTER_SANITIZE_STRING);
-$destfile = filter_input(INPUT_POST, 'destfile', FILTER_SANITIZE_STRING);
-$compressed = filter_input(INPUT_POST, 'compressed', FILTER_SANITIZE_STRING);
-$dk = filter_input(INPUT_POST, 'dk', FILTER_SANITIZE_STRING);
+$selectfile = filter_string_polyfill(filter_input(INPUT_POST, 'selectfile'));
+$destfile = filter_string_polyfill(filter_input(INPUT_POST, 'destfile'));
+$compressed = filter_string_polyfill(filter_input(INPUT_POST, 'compressed'));
+$dk = filter_string_polyfill(filter_input(INPUT_POST, 'dk'));
 
 
+if ($dk === null) {
+  $dk = '';
+}
 $dk = str_replace(':', '|', $dk); // remove : because of statusline
 $dump['sel_dump_encoding'] = (isset($_POST['sel_dump_encoding'])) ? $_POST['sel_dump_encoding'] : get_index($config['mysql_possible_character_sets'], $config['mysql_standard_character_set']);
 $dump['dump_encoding'] = isset($config['mysql_possible_character_sets'][$dump['sel_dump_encoding']]) ? $config['mysql_possible_character_sets'][$dump['sel_dump_encoding']] : 0;
@@ -82,7 +86,7 @@ echo MODHeader();
 
 $toolboxstring = '';
 $fpath = $config['paths']['backup'];
-$dbactiv = filter_input(INPUT_GET, 'dbactiv', FILTER_SANITIZE_STRING) ?: $databases['db_actual']; 
+$dbactiv = filter_string_polyfill(filter_input(INPUT_GET, 'dbactiv')) ?: $databases['db_actual']; 
 
 $databases['multi'] = [];
 if ('' == $databases['multisetting']) {
