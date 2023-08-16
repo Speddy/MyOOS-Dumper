@@ -23,14 +23,15 @@ include './language/'.$config['language'].'/lang.php';
 include './language/'.$config['language'].'/lang_dump.php';
 include './inc/template.php';
 $tblr = ('dump' == $tblfrage_refer) ? 'Backup' : 'Restore';
-$filename = filter_input(INPUT_GET, 'filename', FILTER_SANITIZE_STRING);
+
+$filename = filter_string_polyfill(filter_input(INPUT_GET, 'filename'));
 if (isset($_POST['file'][0])) {
     $filename = $_POST['file'][0];
 }
 
 ob_start();
 $tpl = new MODTemplate();
-$sel_dump_encoding = filter_input(INPUT_POST, 'sel_dump_encoding', FILTER_SANITIZE_STRING);
+$sel_dump_encoding = filter_string_polyfill(filter_input(INPUT_POST, 'sel_dump_encoding'));
 $tpl = new MODtemplate();
 
 //Informationen zusammenstellen
