@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '9727aa817c79b051d3940fd98847ca8da1c8677b',
+        'reference' => 'cc7963e371142fcf04e39463da6f55263f5ed1a0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9727aa817c79b051d3940fd98847ca8da1c8677b',
+            'reference' => 'cc7963e371142fcf04e39463da6f55263f5ed1a0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -138,6 +138,17 @@
             'provided' => array(
                 0 => '1.0',
             ),
+        ),
+        'roave/security-advisories' => array(
+            'pretty_version' => 'dev-latest',
+            'version' => 'dev-latest',
+            'reference' => 'ae0e6ea6df489cfc6dc2c1b5dc2a107ed056ed2d',
+            'type' => 'metapackage',
+            'install_path' => NULL,
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => true,
         ),
         'visualappeal/php-auto-update' => array(
             'pretty_version' => '1.0.2',
