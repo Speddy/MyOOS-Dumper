@@ -19,14 +19,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ParenthesizeNestedTernaryRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Php74\Tokenizer\ParenthesizedNestedTernaryAnalyzer
-     */
-    private $parenthesizedNestedTernaryAnalyzer;
-    public function __construct(ParenthesizedNestedTernaryAnalyzer $parenthesizedNestedTernaryAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ParenthesizedNestedTernaryAnalyzer $parenthesizedNestedTernaryAnalyzer
+    )
     {
-        $this->parenthesizedNestedTernaryAnalyzer = $parenthesizedNestedTernaryAnalyzer;
     }
     public function provideMinPhpVersion() : int
     {

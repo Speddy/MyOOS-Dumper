@@ -47,7 +47,7 @@ include_once './language/'.$config['language'].'/lang_config_overview.php';
 include_once './language/'.$config['language'].'/lang_sql.php';
 
 $msg = '';
-$sel = (isset($_POST['sel'])) ? $_POST['sel'] : 'db';
+$sel = $_POST['sel'] ?? 'db';
 
 if (isset($_GET['sel'])) {
     $sel = $_GET['sel'];
@@ -72,7 +72,7 @@ if (isset($_GET['config'])) {
 }
 
 if (isset($_GET['config_delete'])) {
-    $del_config = urldecode($_GET['config_delete']);
+    $del_config = urldecode((string) $_GET['config_delete']);
     if ($del_config == $config['config_file']) {
         // currently selected configuration was deleted
         $config['config_file'] = 'myoosdumper';
@@ -122,16 +122,16 @@ if ((isset($_POST['testFTP0'])) || (isset($_POST['testFTP1'])) || (isset($_POST[
     $config['ftp_useSSL'] = [];
 
     for ($i = 0; $i < 3; ++$i) {
-        $config['ftp_transfer'][$i] = (isset($_POST['ftp_transfer'][$i])) ? $_POST['ftp_transfer'][$i] : 0;
-        $config['ftp_timeout'][$i] = (isset($_POST['ftp_timeout'][$i])) ? $_POST['ftp_timeout'][$i] : 30;
-        $config['ftp_useSSL'][$i] = (isset($_POST['ftp_useSSL'][$i])) ? $_POST['ftp_useSSL'][$i] : 0;
+        $config['ftp_transfer'][$i] = $_POST['ftp_transfer'][$i] ?? 0;
+        $config['ftp_timeout'][$i] = $_POST['ftp_timeout'][$i] ?? 30;
+        $config['ftp_useSSL'][$i] = $_POST['ftp_useSSL'][$i] ?? 0;
         $config['ftp_mode'][$i] = (isset($_POST['ftp_mode'][$i])) ? 1 : 0;
-        $config['ftp_server'][$i] = (isset($_POST['ftp_server'][$i])) ? $_POST['ftp_server'][$i] : '';
-        $config['ftp_port'][$i] = (isset($_POST['ftp_port'][$i])) ? $_POST['ftp_port'][$i] : 21;
-        $config['ftp_user'][$i] = (isset($_POST['ftp_user'][$i])) ? $_POST['ftp_user'][$i] : '';
-        $config['ftp_pass'][$i] = (isset($_POST['ftp_pass'][$i])) ? $_POST['ftp_pass'][$i] : '';
-        $config['ftp_dir'][$i] = (isset($_POST['ftp_dir'][$i])) ? stripslashes($_POST['ftp_dir'][$i]) : '/';
-        if ('' == $config['ftp_dir'][$i] || (strlen($config['ftp_dir'][$i] ?? '') > 1 && '/' != substr($config['ftp_dir'][$i], -1))) {
+        $config['ftp_server'][$i] = $_POST['ftp_server'][$i] ?? '';
+        $config['ftp_port'][$i] = $_POST['ftp_port'][$i] ?? 21;
+        $config['ftp_user'][$i] = $_POST['ftp_user'][$i] ?? '';
+        $config['ftp_pass'][$i] = $_POST['ftp_pass'][$i] ?? '';
+        $config['ftp_dir'][$i] = (isset($_POST['ftp_dir'][$i])) ? stripslashes((string) $_POST['ftp_dir'][$i]) : '/';
+        if ('' == $config['ftp_dir'][$i] || (strlen($config['ftp_dir'][$i] ?? '') > 1 && !str_ends_with($config['ftp_dir'][$i], '/'))) {
             $config['ftp_dir'][$i] .= '/';
         }
         if (isset($_POST['testFTP'.$i])) {
@@ -155,19 +155,19 @@ if ((isset($_POST['testSFTP0'])) || (isset($_POST['testSFTP1'])) || (isset($_POS
     $config['sftp_timeout'] = [];
 
     for ($i = 0; $i < 3; ++$i) {
-        $config['sftp_transfer'][$i] = (isset($_POST['sftp_transfer'][$i])) ? $_POST['sftp_transfer'][$i] : 0;
-        $config['sftp_timeout'][$i] = (isset($_POST['sftp_timeout'][$i])) ? $_POST['sftp_timeout'][$i] : 30;
-        $config['sftp_server'][$i] = (isset($_POST['sftp_server'][$i])) ? $_POST['sftp_server'][$i] : '';
-        $config['sftp_port'][$i] = (isset($_POST['sftp_port'][$i])) ? $_POST['sftp_port'][$i] : 22;
-        $config['sftp_user'][$i] = (isset($_POST['sftp_user'][$i])) ? $_POST['sftp_user'][$i] : '';
-        $config['sftp_pass'][$i] = (isset($_POST['sftp_pass'][$i])) ? $_POST['sftp_pass'][$i] : '';
-        $config['sftp_dir'][$i] = (isset($_POST['sftp_dir'][$i])) ? stripslashes($_POST['sftp_dir'][$i]) : '/';
+        $config['sftp_transfer'][$i] = $_POST['sftp_transfer'][$i] ?? 0;
+        $config['sftp_timeout'][$i] = $_POST['sftp_timeout'][$i] ?? 30;
+        $config['sftp_server'][$i] = $_POST['sftp_server'][$i] ?? '';
+        $config['sftp_port'][$i] = $_POST['sftp_port'][$i] ?? 22;
+        $config['sftp_user'][$i] = $_POST['sftp_user'][$i] ?? '';
+        $config['sftp_pass'][$i] = $_POST['sftp_pass'][$i] ?? '';
+        $config['sftp_dir'][$i] = (isset($_POST['sftp_dir'][$i])) ? stripslashes((string) $_POST['sftp_dir'][$i]) : '/';
 
-        $config['sftp_path_to_private_key'][$i] = (isset($_POST['sftp_path_to_private_key'][$i])) ? stripslashes($_POST['sftp_path_to_private_key'][$i]) : null;
-        $config['sftp_secret_passphrase_for_private_key'][$i] = (isset($_POST['sftp_secret_passphrase_for_private_key'][$i])) ? stripslashes($_POST['sftp_secret_passphrase_for_private_key'][$i]) : null;
-        $config['sftp_fingerprint'][$i] = (isset($_POST['sftp_fingerprint'][$i])) ? stripslashes($_POST['sftp_fingerprint'][$i]) : null;
+        $config['sftp_path_to_private_key'][$i] = (isset($_POST['sftp_path_to_private_key'][$i])) ? stripslashes((string) $_POST['sftp_path_to_private_key'][$i]) : null;
+        $config['sftp_secret_passphrase_for_private_key'][$i] = (isset($_POST['sftp_secret_passphrase_for_private_key'][$i])) ? stripslashes((string) $_POST['sftp_secret_passphrase_for_private_key'][$i]) : null;
+        $config['sftp_fingerprint'][$i] = (isset($_POST['sftp_fingerprint'][$i])) ? stripslashes((string) $_POST['sftp_fingerprint'][$i]) : null;
 
-        if ('' == $config['sftp_dir'][$i] || (strlen($config['sftp_dir'][$i] ?? '') > 1 && '/' != substr($config['sftp_dir'][$i], -1))) {
+        if ('' == $config['sftp_dir'][$i] || (strlen($config['sftp_dir'][$i] ?? '') > 1 && !str_ends_with((string) $config['sftp_dir'][$i], '/'))) {
             $config['sftp_dir'][$i] .= '/';
         }
 
@@ -189,12 +189,12 @@ if ($ftptested > -1) {
     $ftp_pass[$ftptested] = $_POST['ftp_pass'][$ftptested];
     $ftp_dir_s = 'ftp_dir['.$ftptested.']';
     $f = $_POST['ftp_dir'];
-    $ftp_dir[$ftptested] = stripslashes($f[$ftptested]);
+    $ftp_dir[$ftptested] = stripslashes((string) $f[$ftptested]);
     // Remember inputs
-    $config['ftp_transfer'][$ftptested] = (isset($_POST['ftp_transfer'][$ftptested])) ? $_POST['ftp_transfer'][$ftptested] : 0;
-    $config['sftp'][$ftptested] = (isset($_POST['sftp'][$ftptested])) ? $_POST['sftp'][$ftptested] : 0;
-    $config['ftp_timeout'][$ftptested] = (isset($_POST['ftp_timeout'][$ftptested])) ? $_POST['ftp_timeout'][$ftptested] : 30;
-    $config['ftp_useSSL'][$ftptested] = (isset($_POST['ftp_useSSL'][$ftptested])) ? $_POST['ftp_useSSL'][$ftptested] : 0;
+    $config['ftp_transfer'][$ftptested] = $_POST['ftp_transfer'][$ftptested] ?? 0;
+    $config['sftp'][$ftptested] = $_POST['sftp'][$ftptested] ?? 0;
+    $config['ftp_timeout'][$ftptested] = $_POST['ftp_timeout'][$ftptested] ?? 30;
+    $config['ftp_useSSL'][$ftptested] = $_POST['ftp_useSSL'][$ftptested] ?? 0;
     $config['ftp_mode'][$ftptested] = (isset($_POST['ftp_mode'][$ftptested])) ? 1 : 0;
     $config['ftp_server'][$ftptested] = $ftp_server[$ftptested];
     $config['ftp_port'][$ftptested] = $ftp_port[$ftptested];
@@ -202,7 +202,7 @@ if ($ftptested > -1) {
     $config['ftp_pass'][$ftptested] = $ftp_pass[$ftptested];
     $config['ftp_dir'][$ftptested] = $ftp_dir[$ftptested];
 
-    if ('' == $ftp_dir[$ftptested] || (strlen($ftp_dir[$ftptested] ?? '') > 1 && '/' != substr($ftp_dir[$ftptested], -1))) {
+    if ('' == $ftp_dir[$ftptested] || (strlen($ftp_dir[$ftptested] ?? '') > 1 && !str_ends_with($ftp_dir[$ftptested], '/'))) {
         $ftp_dir[$ftptested] .= '/';
     }
     WriteParams();
@@ -215,18 +215,18 @@ if ($sftptested > -1) {
     $sftp_pass[$sftptested] = $_POST['sftp_pass'][$sftptested];
     $sftp_dir_s = 'sftp_dir['.$sftptested.']';
     $f = $_POST['sftp_dir'];
-    $sftp_dir[$sftptested] = stripslashes($f[$sftptested]);
-    if ('' == $sftp_dir[$sftptested] || (strlen($sftp_dir[$sftptested] ?? '') > 1 && '/' != substr($sftp_dir[$sftptested], -1))) {
+    $sftp_dir[$sftptested] = stripslashes((string) $f[$sftptested]);
+    if ('' == $sftp_dir[$sftptested] || (strlen($sftp_dir[$sftptested] ?? '') > 1 && !str_ends_with($sftp_dir[$sftptested], '/'))) {
         $sftp_dir[$sftptested] .= '/';
     }
 
-    $sftp_path_to_private_key[$sftptested] = stripslashes($_POST['sftp_path_to_private_key'][$sftptested]);
-    $sftp_secret_passphrase_for_private_key[$sftptested] = stripslashes($_POST['sftp_secret_passphrase_for_private_key'][$sftptested]);
-    $sftp_fingerprint[$sftptested] = stripslashes($_POST['sftp_fingerprint'][$sftptested]);
+    $sftp_path_to_private_key[$sftptested] = stripslashes((string) $_POST['sftp_path_to_private_key'][$sftptested]);
+    $sftp_secret_passphrase_for_private_key[$sftptested] = stripslashes((string) $_POST['sftp_secret_passphrase_for_private_key'][$sftptested]);
+    $sftp_fingerprint[$sftptested] = stripslashes((string) $_POST['sftp_fingerprint'][$sftptested]);
 
     // Remember inputs
-    $config['sftp_transfer'][$sftptested] = (isset($_POST['sftp_transfer'][$sftptested])) ? $_POST['sftp_transfer'][$sftptested] : 0;
-    $config['sftp_timeout'][$sftptested] = (isset($_POST['sftp_timeout'][$sftptested])) ? $_POST['sftp_timeout'][$sftptested] : 30;
+    $config['sftp_transfer'][$sftptested] = $_POST['sftp_transfer'][$sftptested] ?? 0;
+    $config['sftp_timeout'][$sftptested] = $_POST['sftp_timeout'][$sftptested] ?? 30;
     $config['sftp_server'][$sftptested] = $sftp_server[$sftptested];
     $config['sftp_port'][$sftptested] = $sftp_port[$sftptested];
     $config['sftp_user'][$sftptested] = $sftp_user[$sftptested];
@@ -243,7 +243,7 @@ echo MODHeader();
 
 if (isset($_POST['load'])) {
     $msg = SetDefault(true);
-    $msg = nl2br($msg).'<br>'.$lang['L_LOAD_SUCCESS'].'<br>';
+    $msg = nl2br((string) $msg).'<br>'.$lang['L_LOAD_SUCCESS'].'<br>';
     echo '<script>parent.MyOOS_Dumper_menu.location.href="menu.php";</script>';
 }
 
@@ -254,10 +254,10 @@ if (isset($_POST['save'])) {
     $config['compression'] = $_POST['compression'] ?? 0;
     $config['language'] = $_POST['language'];
     $config['interface_server_caption'] = $_POST['server_caption'] ?? 0;
-    $config['interface_server_caption_position'] = isset($_POST['server_caption_position']) ? $_POST['server_caption_position'] : 0;
+    $config['interface_server_caption_position'] = $_POST['server_caption_position'] ?? 0;
     $config['interface_sqlboxsize'] = $_POST['sqlboxsize'];
     $config['theme'] = $_POST['theme'];
-    $config['interface_table_compact'] = (isset($_POST['interface_table_compact'])) ? $_POST['interface_table_compact'] : 1;
+    $config['interface_table_compact'] = $_POST['interface_table_compact'] ?? 1;
 
     // if (isset($_POST['selected_config'])) $new_config = $_POST['selected_config'];
 
@@ -270,8 +270,8 @@ if (isset($_POST['save'])) {
     if (isset($_POST['email1'])) {
         $config['email_sender'] = $_POST['email1'];
     }
-    $config['send_mail'] = isset($_POST['send_mail']) ? $_POST['send_mail'] : 0;
-    $config['send_mail_dump'] = isset($_POST['send_mail_dump']) ? $_POST['send_mail_dump'] : 0;
+    $config['send_mail'] = $_POST['send_mail'] ?? 0;
+    $config['send_mail_dump'] = $_POST['send_mail_dump'] ?? 0;
 
     if (isset($_POST['email_maxsize1'])) {
         $config['email_maxsize1'] = $_POST['email_maxsize1'];
@@ -311,9 +311,9 @@ if (isset($_POST['save'])) {
 	$config['update_core'] = isset($_POST['update_core']) ? (int) $_POST['update_core'] : 0;
 
 
-    $config['multi_part'] = isset($_POST['multi_part']) ? $_POST['multi_part'] : 0;
+    $config['multi_part'] = $_POST['multi_part'] ?? 0;
     if (1 == $config['multi_part']) {
-        $config['multipartgroesse1'] = isset($_POST['multipartgroesse1']) ? floatval(str_replace(',', '.', $_POST['multipartgroesse1'])) : 0;
+        $config['multipartgroesse1'] = isset($_POST['multipartgroesse1']) ? floatval(str_replace(',', '.', (string) $_POST['multipartgroesse1'])) : 0;
         $config['multipartgroesse2'] = isset($_POST['multipartgroesse2']) ? intval($_POST['multipartgroesse2']) : 0;
     }
     if ($config['multipartgroesse1'] < 100 && 1 == $config['multipartgroesse2']) {
@@ -323,7 +323,7 @@ if (isset($_POST['save'])) {
         $config['multipartgroesse1'] = 1;
     }
 
-    $config['logcompression'] = isset($config['logcompression']) ? $config['logcompression'] : 0;
+    $config['logcompression'] ??= 0;
     $oldlogcompression = $config['logcompression'];
     $config['logcompression'] = (isset($_POST['logcompression']) && 1 == $_POST['logcompression']) ? 1 : 0;
     if (isset($_POST['log_maxsize1'])) {
@@ -337,14 +337,14 @@ if (isset($_POST['save'])) {
     }
     $config['log_maxsize'] = $config['log_maxsize1'] * ((1 == $config['log_maxsize2']) ? 1024 : 1024 * 1024);
 
-    $config['auto_delete'] = isset($_POST['auto_delete']) ? $_POST['auto_delete'] : 0;
+    $config['auto_delete'] = $_POST['auto_delete'] ?? 0;
     if (isset($_POST['max_backup_files'])) {
         $config['max_backup_files'] = $_POST['max_backup_files'];
     }
 
-    $config['empty_db_before_restore'] = isset($_POST['empty_db_before_restore']) ? $_POST['empty_db_before_restore'] : 0;
-    $config['optimize_tables_beforedump'] = isset($_POST['optimize_tables']) ? $_POST['optimize_tables'] : 0;
-    $config['use_binary_container'] = isset($_POST['binary_container']) ? $_POST['binary_container'] : 0;
+    $config['empty_db_before_restore'] = $_POST['empty_db_before_restore'] ?? 0;
+    $config['optimize_tables_beforedump'] = $_POST['optimize_tables'] ?? 0;
+    $config['use_binary_container'] = $_POST['binary_container'] ?? 0;
     if (isset($_POST['cron_dbindex'])) {
         $config['cron_dbindex'] = $_POST['cron_dbindex'];
     }
@@ -360,7 +360,7 @@ if (isset($_POST['save'])) {
         $_POST['cron_select_savepath'] = $config['config_file'];
     }
     if (isset($_POST['cron_savepath_new']) && !empty($_POST['cron_savepath_new'])) {
-        $tmp_configfilename = utf8_decode(trim((string) $_POST['cron_savepath_new']));
+        $tmp_configfilename = mb_convert_encoding(trim((string) $_POST['cron_savepath_new']), 'ISO-8859-1');
         if (!preg_match('/^[a-z.-_]+$/i', $tmp_configfilename, $matches)) {
             $save_config = false;
             $msg .= '<p class="error">'.sprintf($lang['L_ERROR_CONFIGFILE_NAME'], $_POST['cron_savepath_new']).'</p>';
@@ -376,7 +376,7 @@ if (isset($_POST['save'])) {
     if ('' == $config['cron_execution_path']) {
         $config['cron_execution_path'] = 'mod_cron/';
     }
-    if (strlen($config['cron_execution_path'] ?? '') > 1 && '/' != substr($config['cron_execution_path'], -1)) {
+    if (strlen($config['cron_execution_path'] ?? '') > 1 && !str_ends_with((string) $config['cron_execution_path'], '/')) {
         $config['cron_execution_path'] .= '/';
     }
 
@@ -386,7 +386,7 @@ if (isset($_POST['save'])) {
     if (isset($_POST['cron_sendmail'])) {
         $config['cron_sendmail'] = $_POST['cron_sendmail'];
     }
-    $config['cron_smtp'] = isset($_POST['cron_smtp']) ? $_POST['cron_smtp'] : 'localhost';
+    $config['cron_smtp'] = $_POST['cron_smtp'] ?? 'localhost';
 
 
 	$config['other_smtp_host'] = $_POST['other_smtp_host'] ?? '';
@@ -397,9 +397,9 @@ if (isset($_POST['save'])) {
 	$config['other_smtp_password'] = $_POST['other_smtp_password'] ?? '';
 	$config['other_smtp_auth'] = $_POST['other_smtp_auth'] ?? '';
 
-    $config['cron_printout'] = isset($_POST['cron_printout']) ? $_POST['cron_printout'] : 0;
-    $config['cron_completelog'] = isset($_POST['cron_completelog']) ? $_POST['cron_completelog'] : 0;
-    $config['cron_compression'] = isset($_POST['compression']) ? $_POST['compression'] : 0;
+    $config['cron_printout'] = $_POST['cron_printout'] ?? 0;
+    $config['cron_completelog'] = $_POST['cron_completelog'] ?? 0;
+    $config['cron_compression'] = $_POST['compression'] ?? 0;
     if (isset($_POST['cron_completelog'])) {
         $config['cron_completelog'] = $_POST['cron_completelog'];
     }
@@ -410,8 +410,8 @@ if (isset($_POST['save'])) {
     $databases['multi_commandafterdump'] = [];
 
     if (isset($databases['Name'][0]) && $databases['Name'][0] > '') {
-        for ($i = 0; $i < count($databases['Name']); ++$i) {
-            $databases['praefix'][$i] = isset($_POST['dbpraefix_'.$i]) ? $_POST['dbpraefix_'.$i] : '';
+        for ($i = 0; $i < (is_countable($databases['Name']) ? count($databases['Name']) : 0); ++$i) {
+            $databases['praefix'][$i] = $_POST['dbpraefix_'.$i] ?? '';
             $databases['command_before_dump'][$i] = (!isset($_POST['command_before_'.$i])) ? '' : $_POST['command_before_'.$i];
             $databases['command_after_dump'][$i] = (!isset($_POST['command_after_'.$i])) ? '' : $_POST['command_after_'.$i];
             if (isset($_POST['db_multidump_'.$i]) && $_POST['db_multidump_'.$i] == "db_multidump_$i") {
@@ -422,17 +422,17 @@ if (isset($_POST['save'])) {
             }
         }
     }
-    $databases['multisetting'] = (count($databases['multi']) > 0) ? implode(';', $databases['multi']) : '';
-    $databases['multisetting_praefix'] = (count($databases['multi']) > 0) ? implode(';', $databases['multi_praefix']) : '';
-    $databases['multisetting_commandbeforedump'] = (count($databases['multi']) > 0) ? implode(';', $databases['multi_commandbeforedump']) : '';
-    $databases['multisetting_commandafterdump'] = (count($databases['multi']) > 0) ? implode(';', $databases['multi_commandafterdump']) : '';
+    $databases['multisetting'] = ((is_countable($databases['multi']) ? count($databases['multi']) : 0) > 0) ? implode(';', $databases['multi']) : '';
+    $databases['multisetting_praefix'] = ((is_countable($databases['multi']) ? count($databases['multi']) : 0) > 0) ? implode(';', $databases['multi_praefix']) : '';
+    $databases['multisetting_commandbeforedump'] = ((is_countable($databases['multi']) ? count($databases['multi']) : 0) > 0) ? implode(';', $databases['multi_commandbeforedump']) : '';
+    $databases['multisetting_commandafterdump'] = ((is_countable($databases['multi']) ? count($databases['multi']) : 0) > 0) ? implode(';', $databases['multi_commandafterdump']) : '';
 
 
     if (-2 == $config['cron_dbindex']) {
-        $datenbanken = count($databases['Name']);
-        $cron_db_array = str_replace(';', '|', $databases['multisetting']);
-        $cron_dbpraefix_array = str_replace(';', '|', $databases['multisetting_praefix']);
-        $cron_db_cbd_array = str_replace(';', '|', $databases['multisetting_commandbeforedump']);
+        $datenbanken = is_countable($databases['Name']) ? count($databases['Name']) : 0;
+        $cron_db_array = str_replace(';', '|', (string) $databases['multisetting']);
+        $cron_dbpraefix_array = str_replace(';', '|', (string) $databases['multisetting_praefix']);
+        $cron_db_cbd_array = str_replace(';', '|', (string) $databases['multisetting_commandbeforedump']);
         $cron_db_cad_array = str_replace(';', '|', $databases['multisetting_commandafterdump']);
     } elseif (-3 == $config['cron_dbindex']) {
         $cron_db_array = implode('|', $databases['Name']);
@@ -454,20 +454,20 @@ if (isset($_POST['save'])) {
 
     for ($i = 0; $i < 3; ++$i) {
         $checkFTP[$i] = '';
-        $config['ftp_transfer'][$i] = isset($_POST['ftp_transfer'][$i]) ? $_POST['ftp_transfer'][$i] : 0;
-        $config['ftp_timeout'][$i] = isset($_POST['ftp_timeout'][$i]) ? $_POST['ftp_timeout'][$i] : 30;
+        $config['ftp_transfer'][$i] = $_POST['ftp_transfer'][$i] ?? 0;
+        $config['ftp_timeout'][$i] = $_POST['ftp_timeout'][$i] ?? 30;
         $config['ftp_useSSL'][$i] = isset($_POST['ftp_useSSL'][$i]) ? 1 : 0;
 
         $config['ftp_mode'][$i] = isset($_POST['ftp_mode'][$i]) ? 1 : 0;
-        $config['ftp_server'][$i] = isset($_POST['ftp_server'][$i]) ? $_POST['ftp_server'][$i] : '';
-        $config['ftp_port'][$i] = isset($_POST['ftp_port'][$i]) ? $_POST['ftp_port'][$i] : 0;
-        $config['ftp_user'][$i] = isset($_POST['ftp_user'][$i]) ? $_POST['ftp_user'][$i] : '';
-        $config['ftp_pass'][$i] = isset($_POST['ftp_pass'][$i]) ? $_POST['ftp_pass'][$i] : '';
-        $config['ftp_dir'][$i] = isset($_POST['ftp_dir'][$i]) ? stripslashes($_POST['ftp_dir'][$i]) : '';
+        $config['ftp_server'][$i] = $_POST['ftp_server'][$i] ?? '';
+        $config['ftp_port'][$i] = $_POST['ftp_port'][$i] ?? 0;
+        $config['ftp_user'][$i] = $_POST['ftp_user'][$i] ?? '';
+        $config['ftp_pass'][$i] = $_POST['ftp_pass'][$i] ?? '';
+        $config['ftp_dir'][$i] = isset($_POST['ftp_dir'][$i]) ? stripslashes((string) $_POST['ftp_dir'][$i]) : '';
         if (0 == $config['ftp_port'][$i]) {
             $config['ftp_port'][$i] = 21;
         }
-        if ('' == $config['ftp_dir'][$i] || (strlen($config['ftp_dir'][$i] ?? '') > 1 && '/' != substr($config['ftp_dir'][$i], -1))) {
+        if ('' == $config['ftp_dir'][$i] || (strlen($config['ftp_dir'][$i] ?? '') > 1 && !str_ends_with((string) $config['ftp_dir'][$i], '/'))) {
             $config['ftp_dir'][$i] .= '/';
         }
     }
@@ -487,23 +487,23 @@ if (isset($_POST['save'])) {
 
     for ($i = 0; $i < 3; ++$i) {
         $checkFTP[$i] = '';
-        $config['sftp_transfer'][$i] = isset($_POST['sftp_transfer'][$i]) ? $_POST['sftp_transfer'][$i] : 0;
-        $config['sftp_timeout'][$i] = isset($_POST['sftp_timeout'][$i]) ? $_POST['sftp_timeout'][$i] : 30;
+        $config['sftp_transfer'][$i] = $_POST['sftp_transfer'][$i] ?? 0;
+        $config['sftp_timeout'][$i] = $_POST['sftp_timeout'][$i] ?? 30;
 
-        $config['sftp_server'][$i] = isset($_POST['sftp_server'][$i]) ? $_POST['sftp_server'][$i] : '';
-        $config['sftp_port'][$i] = isset($_POST['sftp_port'][$i]) ? $_POST['sftp_port'][$i] : 0;
-        $config['sftp_user'][$i] = isset($_POST['sftp_user'][$i]) ? $_POST['sftp_user'][$i] : '';
-        $config['sftp_pass'][$i] = isset($_POST['sftp_pass'][$i]) ? $_POST['sftp_pass'][$i] : '';
-        $config['sftp_dir'][$i] = isset($_POST['sftp_dir'][$i]) ? stripslashes($_POST['sftp_dir'][$i]) : '';
+        $config['sftp_server'][$i] = $_POST['sftp_server'][$i] ?? '';
+        $config['sftp_port'][$i] = $_POST['sftp_port'][$i] ?? 0;
+        $config['sftp_user'][$i] = $_POST['sftp_user'][$i] ?? '';
+        $config['sftp_pass'][$i] = $_POST['sftp_pass'][$i] ?? '';
+        $config['sftp_dir'][$i] = isset($_POST['sftp_dir'][$i]) ? stripslashes((string) $_POST['sftp_dir'][$i]) : '';
 
-        $config['sftp_path_to_private_key'][$i] = (isset($_POST['sftp_path_to_private_key'][$i])) ? stripslashes($_POST['sftp_path_to_private_key'][$i]) : null;
-        $config['sftp_secret_passphrase_for_private_key'][$i] = (isset($_POST['sftp_secret_passphrase_for_private_key'][$i])) ? stripslashes($_POST['sftp_secret_passphrase_for_private_key'][$i]) : null;
-        $config['sftp_fingerprint'][$i] = (isset($_POST['sftp_fingerprint'][$i])) ? stripslashes($_POST['sftp_fingerprint'][$i]) : null;
+        $config['sftp_path_to_private_key'][$i] = (isset($_POST['sftp_path_to_private_key'][$i])) ? stripslashes((string) $_POST['sftp_path_to_private_key'][$i]) : null;
+        $config['sftp_secret_passphrase_for_private_key'][$i] = (isset($_POST['sftp_secret_passphrase_for_private_key'][$i])) ? stripslashes((string) $_POST['sftp_secret_passphrase_for_private_key'][$i]) : null;
+        $config['sftp_fingerprint'][$i] = (isset($_POST['sftp_fingerprint'][$i])) ? stripslashes((string) $_POST['sftp_fingerprint'][$i]) : null;
 
         if (0 == $config['sftp_port'][$i]) {
             $config['sftp_port'][$i] = 22;
         }
-        if ('' == $config['sftp_dir'][$i] || (strlen($config['sftp_dir'][$i] ?? '') > 1 && '/' != substr($config['sftp_dir'][$i], -1))) {
+        if ('' == $config['sftp_dir'][$i] || (strlen($config['sftp_dir'][$i] ?? '') > 1 && !str_ends_with((string) $config['sftp_dir'][$i], '/'))) {
             $config['sftp_dir'][$i] .= '/';
         }
     }
@@ -591,7 +591,7 @@ if (isset($_POST['save'])) {
         if (true == WriteParams(false)) {
             // new language? Then also update menu on the left
             if ($_SESSION['config']['language'] != $config['language'] || $_POST['scaption_old'] != $config['interface_server_caption'] || $oldtheme != $config['theme'] || $oldscposition != $config['interface_server_caption_position']) {
-                $msg .= '<script>parent.MyOOS_Dumper_menu.location.href="menu.php?config='.urlencode($config['config_file']).'";</script>';
+                $msg .= '<script>parent.MyOOS_Dumper_menu.location.href="menu.php?config='.urlencode((string) $config['config_file']).'";</script>';
                 if (isset($_POST['cron_savepath_new']) && $_POST['cron_savepath_new'] > '') {
                     $msg .= '<p class="success">'.$lang['L_SUCCESS_CONFIGFILE_CREATED'].'</p>';
                 }
@@ -712,7 +712,7 @@ if (!isset($config['email_maxsize2'])) {
 if (!isset($databases['multisetting'])) {
     $databases['multisetting'] = '';
 }
-$databases['multi'] = explode(';', $databases['multisetting']);
+$databases['multi'] = explode(';', (string) $databases['multisetting']);
 
 // Output parts
 $aus['formstart'] = headline($lang['L_CONFIG_HEADLINE'].': '.$config['config_file']);
@@ -790,7 +790,7 @@ if (sizeof($configs) > 0) {
             foreach ($databases['Name'] as $d) {
                 $aus['conf'] .= '<tr class="'.(($a % 2) ? 'dbrow' : 'dbrow1').'"><td style="text-align:right;">';
                 $aus['conf'] .= $a.'.&nbsp;</td><td>';
-                $aus['conf'] .= '<a href="sql.php?db='.urlencode($d).'">';
+                $aus['conf'] .= '<a href="sql.php?db='.urlencode((string) $d).'">';
                 $aus['conf'] .= $d.'</a></td></tr>';
                 ++$a;
             }
@@ -805,11 +805,11 @@ if (sizeof($configs) > 0) {
         $toolboxstring = '';
         $databases['multi'] = [];
         if (isset($databases['multisetting'])) {
-            $databases['multi'] = explode(';', $databases['multisetting']);
+            $databases['multi'] = explode(';', (string) $databases['multisetting']);
         }
         $multi_praefixe = [];
         if (isset($databases['multisetting_praefix'])) {
-            $multi_praefixe = explode(';', $databases['multisetting_praefix']);
+            $multi_praefixe = explode(';', (string) $databases['multisetting_praefix']);
         }
         if (is_array($databases['multi'])) {
             for ($x = 0; $x < sizeof($databases['multi']); ++$x) {
@@ -828,7 +828,7 @@ if (sizeof($configs) > 0) {
             $aus['conf'] .= table_output($lang['L_BACKUP_DBS_PHP'], $toolboxstring);
         } else {
             // Current DB
-            $text = isset($databases['db_actual']) ? $databases['db_actual'] : '';
+            $text = $databases['db_actual'] ?? '';
             if (isset($databases['db_selected_index']) && isset($databases['praefix'][$databases['db_selected_index']]) && $databases['praefix'][$databases['db_selected_index']] > '') {
                 $text .= " ('<i>".$databases['praefix'][$databases['db_selected_index']]."</i>')";
             }
@@ -846,7 +846,7 @@ if (sizeof($configs) > 0) {
             $text = $lang['L_ALL'];
             $aus['conf'] .= table_output($lang['L_BACKUP_DBS_PERL'], $text);
         } else {
-            $text = isset($databases['Name'][$config['cron_dbindex']]) ? $databases['Name'][$config['cron_dbindex']] : '';
+            $text = $databases['Name'][$config['cron_dbindex']] ?? '';
             if (isset($databases['praefix'][$config['cron_dbindex']]) && $databases['praefix'][$config['cron_dbindex']] > '') {
                 $text .= " ('<i>".$databases['praefix'][$config['cron_dbindex']]."</i>')";
             }
@@ -884,10 +884,10 @@ if (sizeof($configs) > 0) {
             }
         }
         $aus['conf'] .= '</table></td><td>';
-        $aus['conf'] .= '<a href="config_overview.php?config='.urlencode($c).'">'.$icon['edit'].'</a>';
+        $aus['conf'] .= '<a href="config_overview.php?config='.urlencode((string) $c).'">'.$icon['edit'].'</a>';
 
         if ('myoosdumper' != $c) { // && $old_config['config_file']!= $c)
-            $aus['conf'] .= '<a href="config_overview.php?config_delete='.urlencode($c).'" onclick="if(!confirm(\''.sprintf($lang['L_CONFIRM_CONFIGFILE_DELETE'], $c).'\')) return false;">'.$icon['delete'].'</a>';
+            $aus['conf'] .= '<a href="config_overview.php?config_delete='.urlencode((string) $c).'" onclick="if(!confirm(\''.sprintf($lang['L_CONFIRM_CONFIGFILE_DELETE'], $c).'\')) return false;">'.$icon['delete'].'</a>';
         } else {
             $aus['conf'] .= '&nbsp;';
         }
@@ -934,7 +934,7 @@ if (isset($databases['Name'][0]) && $databases['Name'][0] > '') {
     if (!isset($databases['multi']) || (!is_array($databases['multi']))) {
         $databases['multi'] = [];
     }
-    if (1 == count($databases['Name'])) {
+    if (1 == (is_countable($databases['Name']) ? count($databases['Name']) : 0)) {
         $databases['db_actual'] = $databases['Name'][0];
         $databases['db_selected_index'] = 0;
         $aus['db'] .= '<tr><td>'.Help($lang['L_HELP_DB'], 'conf1').$lang['L_LIST_DB'].'</td>';
@@ -952,7 +952,7 @@ if (isset($databases['Name'][0]) && $databases['Name'][0] > '') {
 
         $aus['db'] .= '<tr><td>'.Help($lang['L_HELP_DB'], 'conf1').$lang['L_LIST_DB'].'</td><td><input type="checkbox" class="checkbox" name="MultiDBDump" value="1" '.((isset($config['multi_dump']) && (1 == $config['multi_dump'])) ? 'CHECKED' : '').'>&nbsp;'.$lang['L_ACTIVATE_MULTIDUMP'].'</td>';
         $aus['db'] .= '<tr><td colspan="2"><table class="bdr">';
-        $aus['db'] .= '<tr class="thead"><th>'.$lang['L_DB'].'</th><th>Multidump<br><span class="ssmall">(<a href="javascript:SelectMD(true,'.count($databases['Name']).')" class="small">'.$lang['L_ALL'].'</a>&nbsp;<a href="javascript:SelectMD(false,'.count($databases['Name']).')" class="small">'.$lang['L_NONE'].'</a>)</span></th>';
+        $aus['db'] .= '<tr class="thead"><th>'.$lang['L_DB'].'</th><th>Multidump<br><span class="ssmall">(<a href="javascript:SelectMD(true,'.(is_countable($databases['Name']) ? count($databases['Name']) : 0).')" class="small">'.$lang['L_ALL'].'</a>&nbsp;<a href="javascript:SelectMD(false,'.(is_countable($databases['Name']) ? count($databases['Name']) : 0).')" class="small">'.$lang['L_NONE'].'</a>)</span></th>';
         $aus['db'] .= '<th>'.Help($lang['L_HELP_PRAEFIX'], 'conf2').$lang['L_PRAEFIX'].'</th><th>'.Help($lang['L_HELP_COMMANDS'], '', 11).'Command before Dump</th><th>'.Help($lang['L_HELP_COMMANDS'], '', 11).'Command after Dump</th><th>'.$lang['L_SQL_BEFEHLE'].'</th></tr>';
 
         //erst die aktuelle DB
@@ -968,7 +968,7 @@ if (isset($databases['Name'][0]) && $databases['Name'][0] > '') {
 
         $dbacombo = $dbbcombo = '';
         $j = 0;
-        for ($i = 0; $i < count($databases['Name']); ++$i) {
+        for ($i = 0; $i < (is_countable($databases['Name']) ? count($databases['Name']) : 0); ++$i) {
             if ($i != $databases['db_selected_index']) {
                 ++$j;
                 $disabled = '';
@@ -1002,17 +1002,17 @@ $aus['global1'] = '<div id="global1"><fieldset><legend>'.$lang['L_GENERAL'].'</l
 
 $aus['global1'] .= '<tr><td>'.Help('', '').'Logfiles:&nbsp;</td>';
 $aus['global1'] .= '<td><input type="checkbox" class="checkbox" value="1" name="logcompression" '.(($config['zlib']) ? '' : 'disabled').((isset($config['logcompression']) && (1 == $config['logcompression'])) ? ' checked' : '').'>&nbsp;'.$lang['L_COMPRESSED'].'<br>';
-$aus['global1'] .= ''.$lang['L_MAXSIZE'].':&nbsp;&nbsp;<input type="text" class="text" name="log_maxsize1" size="3" maxlength="3" style="text-align:right;" value="'.((isset($config['log_maxsize1'])) ? $config['log_maxsize1'] : '').'">&nbsp;&nbsp;';
+$aus['global1'] .= ''.$lang['L_MAXSIZE'].':&nbsp;&nbsp;<input type="text" class="text" name="log_maxsize1" size="3" maxlength="3" style="text-align:right;" value="'.($config['log_maxsize1'] ?? '').'">&nbsp;&nbsp;';
 $aus['global1'] .= '<select name="log_maxsize2"><option value="1" '.((isset($config['log_maxsize2']) && (1 == $config['log_maxsize2'])) ? ' SELECTED' : '').'>Kilobytes</option>';
 $aus['global1'] .= '<option value="2" '.((isset($config['log_maxsize2']) && (2 == $config['log_maxsize2'])) ? ' SELECTED' : '').'>Megabytes</option></select>';
 $aus['global1'] .= '</td></tr>';
 
 $aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_MEMORYLIMIT'], '').$lang['L_MEMORY_LIMIT'].':&nbsp;&nbsp;</td>';
-$aus['global1'] .= '<td><input type="text" class="text" size="10" id="mlimit" name="memory_limit" maxlength="10" style="text-align:right;font-size:11px;" value="'.((isset($config['memory_limit'])) ? $config['memory_limit'] : '').'"> Bytes&nbsp;&nbsp;&nbsp;<a href="#" onclick="WriteMem();" class="small">'.$lang['L_AUTODETECT'].'</a>';
+$aus['global1'] .= '<td><input type="text" class="text" size="10" id="mlimit" name="memory_limit" maxlength="10" style="text-align:right;font-size:11px;" value="'.($config['memory_limit'] ?? '').'"> Bytes&nbsp;&nbsp;&nbsp;<a href="#" onclick="WriteMem();" class="small">'.$lang['L_AUTODETECT'].'</a>';
 $aus['global1'] .= '</td></tr>';
 
 $aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_SPEED'], '').$lang['L_SPEED'].':&nbsp;</td>';
-$aus['global1'] .= '<td><input type="text" class="text" size="6" name="minspeed" maxlength="6" style="text-align:right;" value="'.((isset($config['minspeed'])) ? $config['minspeed'] : '').'">&nbsp;'.$lang['L_TO'].'&nbsp;<input type="text" class="text" size="6" name="maxspeed" maxlength="9" style="text-align:right;" value="'.((isset($config['maxspeed'])) ? $config['maxspeed'] : '').'"></td></tr>';
+$aus['global1'] .= '<td><input type="text" class="text" size="6" name="minspeed" maxlength="6" style="text-align:right;" value="'.($config['minspeed'] ?? '').'">&nbsp;'.$lang['L_TO'].'&nbsp;<input type="text" class="text" size="6" name="maxspeed" maxlength="9" style="text-align:right;" value="'.($config['maxspeed'] ?? '').'"></td></tr>';
 
 $aus['global1'] .= '</table></fieldset><fieldset><legend>'.$lang['L_UPDATE'].'</legend><table>';
 
@@ -1033,7 +1033,7 @@ $aus['global1'] .= '<td><input type="checkbox" class="checkbox" value="1" name="
 $aus['global1'] .= '</td></tr>';
 
 $aus['global1'] .= '<tr><td>'.Help($lang['L_HELP_MULTIPARTGROESSE'], '').$lang['L_MULTI_PART_GROESSE'].':&nbsp;</td>';
-$aus['global1'] .= '<td><input type="text" class="text" id="multipartgroesse1" name="multipartgroesse1" size="3" maxlength="8" style="text-align:right;" value="'.((isset($config['multipartgroesse1'])) ? $config['multipartgroesse1'] : '').'"';
+$aus['global1'] .= '<td><input type="text" class="text" id="multipartgroesse1" name="multipartgroesse1" size="3" maxlength="8" style="text-align:right;" value="'.($config['multipartgroesse1'] ?? '').'"';
 if (isset($config['multi_part']) && (0 == $config['multi_part'])) {
     $aus['global1'] .= ' disabled';
 }
@@ -1080,7 +1080,7 @@ $aus['global3'] = '<div id="global3"><fieldset><legend>'.$lang['L_CONFIG_INTERFA
 $aus['global3'] .= '<tr><td>'.Help($lang['L_HELP_LANG'], 'conf11').$lang['L_LANGUAGE'].':&nbsp;</td>';
 $aus['global3'] .= '<td><select name="language">'.GetLanguageCombo('op');
 
-$config['interface_server_caption'] = isset($config['interface_server_caption']) ? $config['interface_server_caption'] : '';
+$config['interface_server_caption'] ??= '';
 $aus['global3'] .= '</select><input type="hidden" name="lang_old" value="'.$config['language'].'"><input type="hidden" name="scaption_old" value="'.$config['interface_server_caption'].'"></td></tr>';
 
 $aus['global3'] .= '<tr><td>'.Help($lang['L_HELP_SERVERCAPTION'], '').$lang['L_SERVERCAPTION'].':</td>';
@@ -1093,7 +1093,7 @@ $aus['global3'] .= '<tr><td>'.Help('', '').'Theme:</td><td><select name="theme">
 $aus['global3'] .= '</table></fieldset><fieldset><legend>'.$lang['L_SQL_BROWSER'].'</legend><table>';
 $aus['global3'] .= '<tr><td>'.Help('', '').$lang['L_SQLBOXHEIGHT'].':&nbsp;</td>';
 
-$config['interface_sqlboxsize'] = isset($config['interface_sqlboxsize']) ? $config['interface_sqlboxsize'] : '';
+$config['interface_sqlboxsize'] ??= '';
 $aus['global3'] .= '<td><input type="text" class="text" name="sqlboxsize" style="text-align:right;" value="'.$config['interface_sqlboxsize'].'" size="3" maxlength="3">&nbsp;Pixel</td></tr>';
 
 $aus['global3'] .= '<tr><td>'.Help('', '').$lang['L_SQLLIMIT'].':&nbsp;</td>';
@@ -1124,7 +1124,7 @@ $aus['global2'] .= '<td><input type="checkbox" class="checkbox" value="1" name="
 $aus['global2'] .= '</td></tr>';
 
 $aus['global2'] .= '<tr><td>'.Help($lang['L_HELP_AD3'], 'conf10').$lang['L_NUMBER_OF_FILES_FORM'].':&nbsp;</td>';
-$aus['global2'] .= '<td><input type="text" class="text" size="3" name="max_backup_files" style="text-align:right;" value="'.((isset($config['max_backup_files'])) ? $config['max_backup_files'] : '').'">   ';
+$aus['global2'] .= '<td><input type="text" class="text" size="3" name="max_backup_files" style="text-align:right;" value="'.($config['max_backup_files'] ?? '').'">   ';
 $aus['global2'] .= '</td></tr></table></fieldset>'.print_save_button().'</div>';
 
 //Email-->
@@ -1136,11 +1136,11 @@ $aus['transfer1'] .= '<tr><td>'.$lang['L_SEND_MAIL_FORM'].':&nbsp;</td>';
 $aus['transfer1'] .= '<td><input type="checkbox" class="checkbox" value="1" name="send_mail" '.((isset($config['send_mail']) && (1 == $config['send_mail'])) ? ' checked' : '').'>';
 $aus['global3'] .= '</td></tr>';
 
-$aus['transfer1'] .= '<tr><td>'.$lang['L_EMAIL_ADRESS'].':&nbsp;</td><td><input type="text" class="text" name="email0" value="'.((isset($config['email_recipient'])) ? $config['email_recipient'] : '').'" size="30"></td></tr>';
-$aus['transfer1'] .= '<tr><td>'.$lang['L_EMAIL_CC'].':&nbsp;</td><td><input type="text" class="text" name="email_recipient_cc" value="'.((isset($config['email_recipient_cc'])) ? $config['email_recipient_cc'] : '').'" size="60" maxlength="255">';
+$aus['transfer1'] .= '<tr><td>'.$lang['L_EMAIL_ADRESS'].':&nbsp;</td><td><input type="text" class="text" name="email0" value="'.($config['email_recipient'] ?? '').'" size="30"></td></tr>';
+$aus['transfer1'] .= '<tr><td>'.$lang['L_EMAIL_CC'].':&nbsp;</td><td><input type="text" class="text" name="email_recipient_cc" value="'.($config['email_recipient_cc'] ?? '').'" size="60" maxlength="255">';
 $aus['global3'] .= '</td></tr>';
 
-$aus['transfer1'] .= '<tr><td>'.$lang['L_EMAIL_SENDER'].':&nbsp;</td><td><input type="text" class="text" name="email1" value="'.((isset($config['email_sender'])) ? $config['email_sender'] : '').'" size="30">';
+$aus['transfer1'] .= '<tr><td>'.$lang['L_EMAIL_SENDER'].':&nbsp;</td><td><input type="text" class="text" name="email1" value="'.($config['email_sender'] ?? '').'" size="30">';
 $aus['global3'] .= '</td></tr>';
 
 $aus['transfer1'] .= '<tr><td>'.$lang['L_SEND_MAIL_DUMP'].':&nbsp;</td><td>';
@@ -1148,17 +1148,17 @@ $aus['transfer1'] .= '<input type="checkbox" class="checkbox" value="1" name="se
 $aus['global3'] .= '</td></tr>';
 
 $aus['transfer1'] .= '<tr><td>'.$lang['L_EMAIL_MAXSIZE'].':&nbsp;</td><td>';
-$aus['transfer1'] .= '<input type="text" class="text" name="email_maxsize1" size="3" maxlength="3" style="text-align:right;" value="'.((isset($config['email_maxsize1'])) ? $config['email_maxsize1'] : '').'">&nbsp;&nbsp;';
+$aus['transfer1'] .= '<input type="text" class="text" name="email_maxsize1" size="3" maxlength="3" style="text-align:right;" value="'.($config['email_maxsize1'] ?? '').'">&nbsp;&nbsp;';
 $aus['transfer1'] .= '<select name="email_maxsize2"><option value="1" '.((1 == $config['email_maxsize2']) ? ' SELECTED' : '').'>Kilobytes</option>';
 $aus['transfer1'] .= '<option value="2" '.((2 == $config['email_maxsize2']) ? ' SELECTED' : '').'>Megabytes</option></select></td></tr>';
 
 $aus['transfer1'] .= '<tr><td>'.$lang['L_CRON_MAILPRG'].':&nbsp;</td>';
-$aus['transfer1'] .= '<td><table><tr><td><input type="radio" class="radio" name="cron_use_mail" value="1" '.((isset($config['cron_use_mail']) && (1 == $config['cron_use_mail'])) ? ' checked' : '').'>&nbsp;sendmail</td><td><input type="text" class="text" size="30" name="cron_sendmail" value="'.((isset($config['cron_sendmail'])) ? $config['cron_sendmail'] : '').'"></td><td></td></tr>';
-$aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_mail" value="0" '.((isset($config['cron_use_mail']) && (0 == $config['cron_use_mail'])) ? ' checked' : '').'>&nbsp;SMTP</td><td><input type="text" class="text" size="30" name="cron_smtp" value="'.((isset($config['cron_smtp'])) ? $config['cron_smtp'] : '').'"></td><td></td></tr><tr><td>&nbsp;</td><td>SMTP-Port: <strong>'.$config['cron_smtp_port'].'</strong></td><td></td></tr>';
+$aus['transfer1'] .= '<td><table><tr><td><input type="radio" class="radio" name="cron_use_mail" value="1" '.((isset($config['cron_use_mail']) && (1 == $config['cron_use_mail'])) ? ' checked' : '').'>&nbsp;sendmail</td><td><input type="text" class="text" size="30" name="cron_sendmail" value="'.($config['cron_sendmail'] ?? '').'"></td><td></td></tr>';
+$aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_mail" value="0" '.((isset($config['cron_use_mail']) && (0 == $config['cron_use_mail'])) ? ' checked' : '').'>&nbsp;SMTP</td><td><input type="text" class="text" size="30" name="cron_smtp" value="'.($config['cron_smtp'] ?? '').'"></td><td></td></tr><tr><td>&nbsp;</td><td>SMTP-Port: <strong>'.$config['cron_smtp_port'].'</strong></td><td></td></tr>';
 
 $aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_mail" value="2" '.((isset($config['cron_use_mail']) && (2 == $config['cron_use_mail'])) ? ' checked' : '').'>&nbsp;Other SMTP</td>
 
-<td>SMTP HOST</td><td><input type="text" class="text" size="30" name="other_smtp_host" value="'.((isset($config['other_smtp_host'])) ? $config['other_smtp_host'] : 'smtp.example.com').'"></td></tr>
+<td>SMTP HOST</td><td><input type="text" class="text" size="30" name="other_smtp_host" value="'.($config['other_smtp_host'] ?? 'smtp.example.com').'"></td></tr>
 <tr><td></td>
 <td>Art der Verschlüsselung</td><td>
 	<input type="radio" class="radio" name="other_smtp_encryption" value="0" '.((isset($config['other_smtp_encryption']) && (0 == $config['other_smtp_encryption'])) ? ' checked' : '').'>&nbsp;Keine&nbsp;
@@ -1168,7 +1168,7 @@ $aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_m
 
 <tr><td></td>
 <td>SMTP-Port</td><td>
-	<input type="text" class="text" size="30" name="other_smtp_port" value="'.((isset($config['other_smtp_port'])) ? $config['other_smtp_port'] : '').'">
+	<input type="text" class="text" size="30" name="other_smtp_port" value="'.($config['other_smtp_port'] ?? '').'">
 </td></tr>
 
 <tr><td></td>
@@ -1178,11 +1178,11 @@ $aus['transfer1'] .= '<tr><td><input type="radio" class="radio" name="cron_use_m
 
 <tr><td></td>
 <td>SMTP-Benutzername</td><td>
-	<input type="text" class="text" size="30" name="other_smtp_username" value="'.((isset($config['other_smtp_username'])) ? $config['other_smtp_username'] : '').'">&nbsp;&nbsp;
+	<input type="text" class="text" size="30" name="other_smtp_username" value="'.($config['other_smtp_username'] ?? '').'">&nbsp;&nbsp;
 </td></tr>
 <tr><td></td>
 <td>SMTP-Passwort</td><td>
-	<input type="text" class="text" size="30" name="other_smtp_password" value="'.((isset($config['other_smtp_password'])) ? $config['other_smtp_password'] : '').'">&nbsp;&nbsp;
+	<input type="text" class="text" size="30" name="other_smtp_password" value="'.($config['other_smtp_password'] ?? '').'">&nbsp;&nbsp;
 </td></tr>';
 
 
@@ -1199,7 +1199,7 @@ for ($i = 0; $i < 3; ++$i) {
     $aus['transfer2'] .= '<td><input type="checkbox" class="checkbox" value="1" name="ftp_transfer['.$i.']" '.((!extension_loaded('ftp')) ? 'disabled ' : '').((isset($config['ftp_transfer'][$i]) && (1 == $config['ftp_transfer'][$i])) ? ' checked' : '').'></td></tr>';
 
     $aus['transfer2'] .= '<tr><td>'.Help($lang['SFTP'], '').$lang['L_FTP_TIMEOUT'].':&nbsp;</td>';
-    $aus['transfer2'] .= '<td><input type="text" class="text" size="10" name="ftp_timeout['.$i.']" maxlength="3" style="text-align:right;" value="'.((isset($config['ftp_timeout'][$i])) ? $config['ftp_timeout'][$i] : '').'">&nbsp;sec</td></tr>';
+    $aus['transfer2'] .= '<td><input type="text" class="text" size="10" name="ftp_timeout['.$i.']" maxlength="3" style="text-align:right;" value="'.($config['ftp_timeout'][$i] ?? '').'">&nbsp;sec</td></tr>';
 
     $aus['transfer2'] .= '<tr><td>'.Help($lang['L_HELP_FTP_MODE'], '').$lang['L_FTP_CHOOSE_MODE'].':&nbsp;</td>';
     $aus['transfer2'] .= '<td><input type="checkbox" class="checkbox" name="ftp_mode['.$i.']" value="1" '.((isset($config['ftp_mode'][$i]) && (1 == $config['ftp_mode'][$i])) ? 'checked' : '').'>&nbsp;';
@@ -1210,11 +1210,11 @@ for ($i = 0; $i < 3; ++$i) {
     $aus['transfer2'] .= '&nbsp;<span '.((!extension_loaded('openssl')) ? 'style="color:#999999;"' : '').'>'.$lang['L_FTP_USESSL'].'</span></td></tr><tr><td colspan="2">';
 
     $aus['transfer2'] .= '<tr><td><input type="submit" name="testFTP'.$i.'" value="'.$lang['L_TESTCONNECTION'].'" class="Formbutton"><br>'.$checkFTP[$i].'</td><td><table>';
-    $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPSERVER'], 'conf14', 12).$lang['L_FTP_SERVER'].':&nbsp;</td><td><input class="text" type="text" size="30" name="ftp_server['.$i.']" value="'.((isset($config['ftp_server'][$i])) ? $config['ftp_server'][$i] : '').'"></td></tr>';
-    $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPPORT'], 'conf15', 12).$lang['L_FTP_PORT'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="ftp_port['.$i.']" style="text-align:right;" value="'.((isset($config['ftp_port'][$i])) ? $config['ftp_port'][$i] : '').'"></td></tr>';
-    $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPUSER'], 'conf16', 12).$lang['L_FTP_USER'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="ftp_user['.$i.']" value="'.((isset($config['ftp_user'][$i])) ? $config['ftp_user'][$i] : '').'"></td></tr>';
-    $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPPASS'], 'conf17', 12).$lang['L_FTP_PASS'].':&nbsp;</td><td class="small"><input class="text" type="password" size="30" name="ftp_pass['.$i.']" value="'.((isset($config['ftp_pass'][$i])) ? $config['ftp_pass'][$i] : '').'"></td></tr>';
-    $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPDIR'], 'conf18', 12).$lang['L_FTP_DIR'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="ftp_dir['.$i.']" value="'.((isset($config['ftp_dir'][$i])) ? $config['ftp_dir'][$i] : '').'"></td></tr>';
+    $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPSERVER'], 'conf14', 12).$lang['L_FTP_SERVER'].':&nbsp;</td><td><input class="text" type="text" size="30" name="ftp_server['.$i.']" value="'.($config['ftp_server'][$i] ?? '').'"></td></tr>';
+    $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPPORT'], 'conf15', 12).$lang['L_FTP_PORT'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="ftp_port['.$i.']" style="text-align:right;" value="'.($config['ftp_port'][$i] ?? '').'"></td></tr>';
+    $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPUSER'], 'conf16', 12).$lang['L_FTP_USER'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="ftp_user['.$i.']" value="'.($config['ftp_user'][$i] ?? '').'"></td></tr>';
+    $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPPASS'], 'conf17', 12).$lang['L_FTP_PASS'].':&nbsp;</td><td class="small"><input class="text" type="password" size="30" name="ftp_pass['.$i.']" value="'.($config['ftp_pass'][$i] ?? '').'"></td></tr>';
+    $aus['transfer2'] .= '<tr><td class="small">'.Help($lang['L_HELP_FTPDIR'], 'conf18', 12).$lang['L_FTP_DIR'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="ftp_dir['.$i.']" value="'.($config['ftp_dir'][$i] ?? '').'"></td></tr>';
     $aus['transfer2'] .= '</table></td></tr></table>'.print_save_button().'</fieldset>';
 }
 $aus['transfer2'] .= '</fieldset></div>';
@@ -1227,20 +1227,20 @@ for ($i = 0; $i < 3; ++$i) {
     $aus['transfer3'] .= '<tr><td>'.Help($lang['L_HELP_SFTPTRANSFER'], '').$lang['L_SFTP_TRANSFER'].':&nbsp;</td>';
     $aus['transfer3'] .= '<td><input type="checkbox" class="checkbox" value="1" name="sftp_transfer['.$i.']" '.((!extension_loaded('ftp')) ? 'disabled ' : '').((isset($config['sftp_transfer'][$i]) && (1 == $config['sftp_transfer'][$i])) ? ' checked' : '').'></td></tr>';
     $aus['transfer3'] .= '<tr><td>'.Help($lang['SFTP'], '').$lang['L_SFTP_TIMEOUT'].':&nbsp;</td>';
-    $aus['transfer3'] .= '<td><input type="text" class="text" size="10" name="sftp_timeout['.$i.']" maxlength="3" style="text-align:right;" value="'.((isset($config['sftp_timeout'][$i])) ? $config['sftp_timeout'][$i] : '').'">&nbsp;sec</td></tr>';
+    $aus['transfer3'] .= '<td><input type="text" class="text" size="10" name="sftp_timeout['.$i.']" maxlength="3" style="text-align:right;" value="'.($config['sftp_timeout'][$i] ?? '').'">&nbsp;sec</td></tr>';
 
     $aus['transfer3'] .= '<tr><td><input type="submit" name="testSFTP'.$i.'" value="'.$lang['L_TESTCONNECTION'].'" class="Formbutton"><br>'.$checkSFTP[$i].'</td><td><table>';
-    $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPSERVER'], 'conf14', 12).$lang['L_SFTP_SERVER'].':&nbsp;</td><td><input class="text" type="text" size="30" name="sftp_server['.$i.']" value="'.((isset($config['sftp_server'][$i])) ? $config['sftp_server'][$i] : '').'"></td></tr>';
-    $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPPORT'], 'conf15', 12).$lang['L_SFTP_PORT'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_port['.$i.']" style="text-align:right;" value="'.((isset($config['sftp_port'][$i])) ? $config['sftp_port'][$i] : '').'"></td></tr>';
-    $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPUSER'], 'conf16', 12).$lang['L_SFTP_USER'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_user['.$i.']" value="'.((isset($config['sftp_user'][$i])) ? $config['sftp_user'][$i] : '').'"></td></tr>';
-    $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPPASS'], 'conf17', 12).$lang['L_SFTP_PASS'].':&nbsp;</td><td class="small"><input class="text" type="password" size="30" name="sftp_pass['.$i.']" value="'.((isset($config['sftp_pass'][$i])) ? $config['sftp_pass'][$i] : '').'"></td></tr>';
-    $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPDIR'], 'conf18', 12).$lang['L_SFTP_DIR'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_dir['.$i.']" value="'.((isset($config['sftp_dir'][$i])) ? $config['sftp_dir'][$i] : '').'"></td></tr>';
+    $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPSERVER'], 'conf14', 12).$lang['L_SFTP_SERVER'].':&nbsp;</td><td><input class="text" type="text" size="30" name="sftp_server['.$i.']" value="'.($config['sftp_server'][$i] ?? '').'"></td></tr>';
+    $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPPORT'], 'conf15', 12).$lang['L_SFTP_PORT'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_port['.$i.']" style="text-align:right;" value="'.($config['sftp_port'][$i] ?? '').'"></td></tr>';
+    $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPUSER'], 'conf16', 12).$lang['L_SFTP_USER'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_user['.$i.']" value="'.($config['sftp_user'][$i] ?? '').'"></td></tr>';
+    $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPPASS'], 'conf17', 12).$lang['L_SFTP_PASS'].':&nbsp;</td><td class="small"><input class="text" type="password" size="30" name="sftp_pass['.$i.']" value="'.($config['sftp_pass'][$i] ?? '').'"></td></tr>';
+    $aus['transfer3'] .= '<tr><td class="small">'.Help($lang['L_HELP_SFTPDIR'], 'conf18', 12).$lang['L_SFTP_DIR'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_dir['.$i.']" value="'.($config['sftp_dir'][$i] ?? '').'"></td></tr>';
 
-    $aus['transfer3'] .= '<tr><td class="small">'.$lang['L_SFTP_SFTP_PATH_TO_PRIVATE_KEY'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_path_to_private_key['.$i.']" value="'.((isset($config['sftp_path_to_private_key'][$i])) ? $config['sftp_path_to_private_key'][$i] : '').'"> (optional, default: null)</td></tr>';
+    $aus['transfer3'] .= '<tr><td class="small">'.$lang['L_SFTP_SFTP_PATH_TO_PRIVATE_KEY'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_path_to_private_key['.$i.']" value="'.($config['sftp_path_to_private_key'][$i] ?? '').'"> (optional, default: null)</td></tr>';
 
-    $aus['transfer3'] .= '<tr><td class="small">'.$lang['L_SFTP_SECRET_PASSPHRASE_FOR_PRIVATE_KEY'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_secret_passphrase_for_private_key['.$i.']" value="'.((isset($config['sftp_secret_passphrase_for_private_key'][$i])) ? $config['sftp_secret_passphrase_for_private_key'][$i] : '').'"> (optional, default: null)</td></tr>';
+    $aus['transfer3'] .= '<tr><td class="small">'.$lang['L_SFTP_SECRET_PASSPHRASE_FOR_PRIVATE_KEY'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_secret_passphrase_for_private_key['.$i.']" value="'.($config['sftp_secret_passphrase_for_private_key'][$i] ?? '').'"> (optional, default: null)</td></tr>';
 
-    $aus['transfer3'] .= '<tr><td class="small">'.$lang['L_SFTP_FINGERPRINT'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_fingerprint['.$i.']" value="'.((isset($config['sftp_fingerprint'][$i])) ? $config['sftp_fingerprint'][$i] : '').'"> (optional, default: null)</td></tr>';
+    $aus['transfer3'] .= '<tr><td class="small">'.$lang['L_SFTP_FINGERPRINT'].':&nbsp;</td><td class="small"><input class="text" type="text" size="30" name="sftp_fingerprint['.$i.']" value="'.($config['sftp_fingerprint'][$i] ?? '').'"> (optional, default: null)</td></tr>';
 
     $aus['transfer3'] .= '</table></td></tr></table>'.print_save_button().'</fieldset>';
 }
@@ -1275,7 +1275,7 @@ if (-2 == $config['cron_dbindex']) {
 $aus['cron'] .= '>'.$lang['L_MULTIDUMPCONF']."</option>\n";
 
 if (isset($databases['Name'][0]) && $databases['Name'][0] > '') {
-    $datenbanken = count($databases['Name']);
+    $datenbanken = is_countable($databases['Name']) ? count($databases['Name']) : 0;
     for ($i = 0; $i < $datenbanken; ++$i) {
         $aus['cron'] .= '<option value="'.$i.'"';
         if ($i == $config['cron_dbindex']) {
@@ -1294,9 +1294,9 @@ $aus['cron'] .= '</select>'."\n";
 $aus['cron'] .= '</td></tr>';
 
 // comment
-$config['cron_comment'] = isset($config['cron_comment']) ? $config['cron_comment'] : '';
+$config['cron_comment'] ??= '';
 $aus['cron'] .= '<tr><td>'.$lang['L_CRON_COMMENT'].':&nbsp;</td>';
-$aus['cron'] .= '<td><input type="text" class="text" name="cron_comment" size="30" maxlength="100" value="'.htmlspecialchars($config['cron_comment']).'"></td></tr>';
+$aus['cron'] .= '<td><input type="text" class="text" name="cron_comment" size="30" maxlength="100" value="'.htmlspecialchars((string) $config['cron_comment']).'"></td></tr>';
 $aus['cron'] .= '</table></fieldset>'.print_save_button().'</div>';
 
 //Formular-Buttons -->
@@ -1320,7 +1320,7 @@ echo '<script>show_pardivs("'.$sel.'");';
 
 // If something is wrong when changing a user or no DB was found or a DB could
 // not be added --> poke user with nose and show connection data
-if (($showVP) || (!isset($databases['Name'])) || (isset($databases['name']) && count(0 == $databases['Name'])) || (isset($add_db_message))) {
+if (($showVP) || (!isset($databases['Name'])) || (isset($databases['name']) && (is_countable(0 == $databases['Name']) ? count(0 == $databases['Name']) : 0)) || (isset($add_db_message))) {
     echo 'SwitchVP();';
 }
 ?>

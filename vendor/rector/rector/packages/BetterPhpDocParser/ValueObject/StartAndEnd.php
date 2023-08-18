@@ -4,22 +4,16 @@ declare (strict_types=1);
 namespace Rector\BetterPhpDocParser\ValueObject;
 
 use Rector\Core\Exception\ShouldNotHappenException;
-final class StartAndEnd
+final readonly class StartAndEnd
 {
-    /**
+    public function __construct(/**
      * @readonly
-     * @var int
      */
-    private $start;
-    /**
+    private int $start, /**
      * @readonly
-     * @var int
      */
-    private $end;
-    public function __construct(int $start, int $end)
+    private int $end)
     {
-        $this->start = $start;
-        $this->end = $end;
         if ($end < $start) {
             throw new ShouldNotHappenException();
         }

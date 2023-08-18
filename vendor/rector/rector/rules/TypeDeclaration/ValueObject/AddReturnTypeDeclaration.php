@@ -9,28 +9,19 @@ use Rector\Core\Validation\RectorAssert;
 /**
  * @api
  */
-final class AddReturnTypeDeclaration
+final readonly class AddReturnTypeDeclaration
 {
-    /**
+    public function __construct(/**
      * @readonly
-     * @var string
      */
-    private $class;
-    /**
+    private string $class, /**
      * @readonly
-     * @var string
      */
-    private $method;
-    /**
+    private string $method, /**
      * @readonly
-     * @var \PHPStan\Type\Type
      */
-    private $returnType;
-    public function __construct(string $class, string $method, Type $returnType)
+    private Type $returnType)
     {
-        $this->class = $class;
-        $this->method = $method;
-        $this->returnType = $returnType;
         RectorAssert::className($class);
     }
     public function getClass() : string

@@ -76,8 +76,7 @@ class TestHandler extends AbstractProcessingHandler
     protected $records = [];
     /** @var array<Level, Record[]> */
     protected $recordsByLevel = [];
-    /** @var bool */
-    private $skipReset = false;
+    private bool $skipReset = false;
 
     /**
      * @return array
@@ -136,7 +135,7 @@ class TestHandler extends AbstractProcessingHandler
     public function hasRecord($record, $level): bool
     {
         if (is_string($record)) {
-            $record = array('message' => $record);
+            $record = ['message' => $record];
         }
 
         return $this->hasRecordThatPasses(function ($rec) use ($record) {
@@ -158,9 +157,7 @@ class TestHandler extends AbstractProcessingHandler
      */
     public function hasRecordThatContains(string $message, $level): bool
     {
-        return $this->hasRecordThatPasses(function ($rec) use ($message) {
-            return strpos($rec['message'], $message) !== false;
-        }, $level);
+        return $this->hasRecordThatPasses(fn($rec) => str_contains($rec['message'], $message), $level);
     }
 
     /**
@@ -170,9 +167,7 @@ class TestHandler extends AbstractProcessingHandler
      */
     public function hasRecordThatMatches(string $regex, $level): bool
     {
-        return $this->hasRecordThatPasses(function (array $rec) use ($regex): bool {
-            return preg_match($regex, $rec['message']) > 0;
-        }, $level);
+        return $this->hasRecordThatPasses(fn(array $rec): bool => preg_match($regex, (string) $rec['message']) > 0, $level);
     }
 
     /**
@@ -226,6 +221,6 @@ class TestHandler extends AbstractProcessingHandler
             }
         }
 
-        throw new \BadMethodCallException('Call to undefined method ' . get_class($this) . '::' . $method . '()');
+        throw new \BadMethodCallException('Call to undefined method ' . static::class . '::' . $method . '()');
     }
 }

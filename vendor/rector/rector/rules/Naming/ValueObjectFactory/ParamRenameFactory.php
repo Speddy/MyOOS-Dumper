@@ -8,16 +8,15 @@ use PhpParser\Node\FunctionLike;
 use PhpParser\Node\Param;
 use Rector\Naming\ValueObject\ParamRename;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class ParamRenameFactory
+final readonly class ParamRenameFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    public function __construct(NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function createFromResolvedExpectedName(FunctionLike $functionLike, Param $param, string $expectedName) : ?ParamRename
     {

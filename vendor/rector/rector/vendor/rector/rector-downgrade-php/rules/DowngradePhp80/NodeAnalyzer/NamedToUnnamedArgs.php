@@ -14,22 +14,19 @@ use Rector\DowngradePhp80\Reflection\DefaultParameterValueResolver;
 use Rector\DowngradePhp80\Reflection\SimplePhpParameterReflection;
 use Rector\NodeNameResolver\NodeNameResolver;
 use ReflectionFunction;
-final class NamedToUnnamedArgs
+final readonly class NamedToUnnamedArgs
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\DowngradePhp80\Reflection\DefaultParameterValueResolver
-     */
-    private $defaultParameterValueResolver;
-    public function __construct(NodeNameResolver $nodeNameResolver, DefaultParameterValueResolver $defaultParameterValueResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private DefaultParameterValueResolver $defaultParameterValueResolver
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->defaultParameterValueResolver = $defaultParameterValueResolver;
     }
     /**
      * @param ParameterReflection[]|PhpParameterReflection[] $parameters

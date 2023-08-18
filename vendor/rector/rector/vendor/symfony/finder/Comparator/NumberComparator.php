@@ -57,13 +57,13 @@ class NumberComparator extends Comparator
                     $target *= 1024;
                     break;
                 case 'm':
-                    $target *= 1000000;
+                    $target *= 1_000_000;
                     break;
                 case 'mi':
                     $target *= 1024 * 1024;
                     break;
                 case 'g':
-                    $target *= 1000000000;
+                    $target *= 1_000_000_000;
                     break;
                 case 'gi':
                     $target *= 1024 * 1024 * 1024;

@@ -24,29 +24,19 @@ final class LogoutSuccessHandlerToLogoutEventSubscriberRector extends AbstractRe
 {
     /**
      * @readonly
-     * @var \Rector\Symfony\NodeFactory\OnSuccessLogoutClassMethodFactory
      */
-    private $onSuccessLogoutClassMethodFactory;
-    /**
+    private readonly \PHPStan\Type\ObjectType $successHandlerObjectType;
+    public function __construct(/**
      * @readonly
-     * @var \Rector\Symfony\NodeFactory\GetSubscribedEventsClassMethodFactory
      */
-    private $getSubscribedEventsClassMethodFactory;
-    /**
+    private readonly OnSuccessLogoutClassMethodFactory $onSuccessLogoutClassMethodFactory, /**
      * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\ClassAnalyzer
      */
-    private $classAnalyzer;
-    /**
+    private readonly GetSubscribedEventsClassMethodFactory $getSubscribedEventsClassMethodFactory, /**
      * @readonly
-     * @var \PHPStan\Type\ObjectType
      */
-    private $successHandlerObjectType;
-    public function __construct(OnSuccessLogoutClassMethodFactory $onSuccessLogoutClassMethodFactory, GetSubscribedEventsClassMethodFactory $getSubscribedEventsClassMethodFactory, ClassAnalyzer $classAnalyzer)
+    private readonly ClassAnalyzer $classAnalyzer)
     {
-        $this->onSuccessLogoutClassMethodFactory = $onSuccessLogoutClassMethodFactory;
-        $this->getSubscribedEventsClassMethodFactory = $getSubscribedEventsClassMethodFactory;
-        $this->classAnalyzer = $classAnalyzer;
         $this->successHandlerObjectType = new ObjectType('Symfony\\Component\\Security\\Http\\Logout\\LogoutSuccessHandlerInterface');
     }
     public function getRuleDefinition() : RuleDefinition

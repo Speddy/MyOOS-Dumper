@@ -7,22 +7,19 @@ use Rector\Renaming\Contract\RenameAnnotationInterface;
 /**
  * @api
  */
-final class RenameAnnotation implements RenameAnnotationInterface
+final readonly class RenameAnnotation implements RenameAnnotationInterface
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $oldAnnotation;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $newAnnotation;
-    public function __construct(string $oldAnnotation, string $newAnnotation)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $oldAnnotation,
+        /**
+         * @readonly
+         */
+        private string $newAnnotation
+    )
     {
-        $this->oldAnnotation = $oldAnnotation;
-        $this->newAnnotation = $newAnnotation;
     }
     public function getOldAnnotation() : string
     {

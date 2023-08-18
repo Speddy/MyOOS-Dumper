@@ -21,45 +21,36 @@ use Rector\Php80\ValueObject\NestedAnnotationToAttribute;
 use Rector\PhpAttribute\AnnotationToAttributeMapper;
 use Rector\PhpAttribute\AttributeArrayNameInliner;
 use Rector\PhpAttribute\NodeAnalyzer\ExprParameterReflectionTypeCorrector;
-final class PhpNestedAttributeGroupFactory
+final readonly class PhpNestedAttributeGroupFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\AnnotationToAttributeMapper
-     */
-    private $annotationToAttributeMapper;
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\NodeFactory\AttributeNameFactory
-     */
-    private $attributeNameFactory;
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\NodeFactory\NamedArgsFactory
-     */
-    private $namedArgsFactory;
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\NodeAnalyzer\ExprParameterReflectionTypeCorrector
-     */
-    private $exprParameterReflectionTypeCorrector;
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\AttributeArrayNameInliner
-     */
-    private $attributeArrayNameInliner;
     /**
      * @var string
      * @see https://regex101.com/r/g3d9jy/1
      */
     private const SHORT_ORM_ALIAS_REGEX = '#^@ORM#';
-    public function __construct(AnnotationToAttributeMapper $annotationToAttributeMapper, \Rector\PhpAttribute\NodeFactory\AttributeNameFactory $attributeNameFactory, \Rector\PhpAttribute\NodeFactory\NamedArgsFactory $namedArgsFactory, ExprParameterReflectionTypeCorrector $exprParameterReflectionTypeCorrector, AttributeArrayNameInliner $attributeArrayNameInliner)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private AnnotationToAttributeMapper $annotationToAttributeMapper,
+        /**
+         * @readonly
+         */
+        private \Rector\PhpAttribute\NodeFactory\AttributeNameFactory $attributeNameFactory,
+        /**
+         * @readonly
+         */
+        private \Rector\PhpAttribute\NodeFactory\NamedArgsFactory $namedArgsFactory,
+        /**
+         * @readonly
+         */
+        private ExprParameterReflectionTypeCorrector $exprParameterReflectionTypeCorrector,
+        /**
+         * @readonly
+         */
+        private AttributeArrayNameInliner $attributeArrayNameInliner
+    )
     {
-        $this->annotationToAttributeMapper = $annotationToAttributeMapper;
-        $this->attributeNameFactory = $attributeNameFactory;
-        $this->namedArgsFactory = $namedArgsFactory;
-        $this->exprParameterReflectionTypeCorrector = $exprParameterReflectionTypeCorrector;
-        $this->attributeArrayNameInliner = $attributeArrayNameInliner;
     }
     /**
      * @param Use_[] $uses
@@ -135,7 +126,7 @@ final class PhpNestedAttributeGroupFactory
             return new Name('ORM\\' . $shortDoctrineAttributeName);
         }
         // short alias
-        if (\strpos($originalIdentifier, '\\') === \false) {
+        if (!str_contains($originalIdentifier, '\\')) {
             return new Name($shortDoctrineAttributeName);
         }
         return new FullyQualified($annotationPropertyToAttributeClass->getAttributeClass());

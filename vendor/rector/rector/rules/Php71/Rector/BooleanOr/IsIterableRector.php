@@ -19,26 +19,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class IsIterableRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Php71\IsArrayAndDualCheckToAble
-     */
-    private $isArrayAndDualCheckToAble;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    public function __construct(IsArrayAndDualCheckToAble $isArrayAndDualCheckToAble, ReflectionProvider $reflectionProvider, PhpVersionProvider $phpVersionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly IsArrayAndDualCheckToAble $isArrayAndDualCheckToAble,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private readonly PhpVersionProvider $phpVersionProvider
+    )
     {
-        $this->isArrayAndDualCheckToAble = $isArrayAndDualCheckToAble;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->phpVersionProvider = $phpVersionProvider;
     }
     public function provideMinPhpVersion() : int
     {

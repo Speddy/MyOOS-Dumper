@@ -29,28 +29,23 @@ use Rector\StaticTypeMapper\ValueObject\Type\SelfStaticType;
 /**
  * @implements PhpParserNodeMapperInterface<Name>
  */
-final class NameNodeMapper implements PhpParserNodeMapperInterface
+final readonly class NameNodeMapper implements PhpParserNodeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Configuration\RenamedClassesDataCollector
-     */
-    private $renamedClassesDataCollector;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(RenamedClassesDataCollector $renamedClassesDataCollector, ReflectionProvider $reflectionProvider, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private RenamedClassesDataCollector $renamedClassesDataCollector,
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private ReflectionResolver $reflectionResolver
+    )
     {
-        $this->renamedClassesDataCollector = $renamedClassesDataCollector;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function getNodeType() : string
     {

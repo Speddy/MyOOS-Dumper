@@ -18,23 +18,13 @@ namespace RectorPrefix202308\Symfony\Component\Finder;
 class SplFileInfo extends \SplFileInfo
 {
     /**
-     * @var string
-     */
-    private $relativePath;
-    /**
-     * @var string
-     */
-    private $relativePathname;
-    /**
      * @param string $file             The file name
      * @param string $relativePath     The relative path
      * @param string $relativePathname The relative path name
      */
-    public function __construct(string $file, string $relativePath, string $relativePathname)
+    public function __construct(string $file, private readonly string $relativePath, private readonly string $relativePathname)
     {
         parent::__construct($file);
-        $this->relativePath = $relativePath;
-        $this->relativePathname = $relativePathname;
     }
     /**
      * Returns the relative path.

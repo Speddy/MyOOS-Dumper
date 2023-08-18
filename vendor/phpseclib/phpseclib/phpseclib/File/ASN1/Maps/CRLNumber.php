@@ -22,5 +22,5 @@ use phpseclib3\File\ASN1;
  */
 abstract class CRLNumber
 {
-    const MAP = ['type' => ASN1::TYPE_INTEGER];
+    final public const MAP = ['type' => ASN1::TYPE_INTEGER];
 }

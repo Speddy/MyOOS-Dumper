@@ -15,14 +15,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 class KernelTestCaseContainerPropertyDeprecationRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\SymfonyTestCaseAnalyzer
-     */
-    private $symfonyTestCaseAnalyzer;
-    public function __construct(SymfonyTestCaseAnalyzer $symfonyTestCaseAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly SymfonyTestCaseAnalyzer $symfonyTestCaseAnalyzer
+    )
     {
-        $this->symfonyTestCaseAnalyzer = $symfonyTestCaseAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

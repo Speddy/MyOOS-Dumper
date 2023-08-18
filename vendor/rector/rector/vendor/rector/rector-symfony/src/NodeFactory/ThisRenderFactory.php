@@ -22,40 +22,31 @@ use Rector\Core\PhpParser\Node\NodeFactory;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\Symfony\Helper\TemplateGuesser;
-final class ThisRenderFactory
+final readonly class ThisRenderFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeFactory\ArrayFromCompactFactory
-     */
-    private $arrayFromCompactFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\Helper\TemplateGuesser
-     */
-    private $templateGuesser;
-    public function __construct(\Rector\Symfony\NodeFactory\ArrayFromCompactFactory $arrayFromCompactFactory, NodeFactory $nodeFactory, NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver, TemplateGuesser $templateGuesser)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private \Rector\Symfony\NodeFactory\ArrayFromCompactFactory $arrayFromCompactFactory,
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver,
+        /**
+         * @readonly
+         */
+        private TemplateGuesser $templateGuesser
+    )
     {
-        $this->arrayFromCompactFactory = $arrayFromCompactFactory;
-        $this->nodeFactory = $nodeFactory;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->nodeTypeResolver = $nodeTypeResolver;
-        $this->templateGuesser = $templateGuesser;
     }
     public function create(?Return_ $return, DoctrineAnnotationTagValueNode $templateDoctrineAnnotationTagValueNode, ClassMethod $classMethod) : MethodCall
     {

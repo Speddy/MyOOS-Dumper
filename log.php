@@ -29,10 +29,10 @@ echo MODHeader();
 if (isset($_POST['r'])) {
     $r = $_POST['r'];
 } else {
-    $r = (isset($_GET['r'])) ? $_GET['r'] : 0;
+    $r = $_GET['r'] ?? 0;
 }
 
-$revers = (isset($_GET['revers'])) ? $_GET['revers'] : 0;
+$revers = $_GET['revers'] ?? 0;
 
 //loeschen
 if (isset($_POST['kill'])) {
@@ -71,7 +71,7 @@ if (isset($config['logcompression']) && 1 == $config['logcompression']) {
 if (!file_exists($lfile) && 0 == $r) {
     DeleteLog();
 }
-$nLogcompression = isset($config['logcompression']) ? $config['logcompression'] : 0;
+$nLogcompression = $config['logcompression'] ?? 0;
 $loginfo = LogFileInfo($nLogcompression);
 
 echo headline($lcap);
@@ -101,14 +101,14 @@ echo "\n".$errorbutton."\n".$perlbutton."\n".$perlbutton2."\n";
 echo '</tr></table><br>';
 
 //Status Logfiles
-$icon['blank'] = isset($icon['blank']) ? $icon['blank'] : $config['files']['iconpath'].'blank.gif';
+$icon['blank'] ??= $config['files']['iconpath'].'blank.gif';
 echo '<div align="left"><table class="bdr"><tr><td><table><tr><td valign="top"><strong>'.$lang['L_LOGFILEFORMAT'].'</strong><br><br>'.((isset($config['logcompression']) && (1 == $config['logcompression'])) ? '<img src="'.$config['files']['iconpath'].'gz.gif" width="32" height="32" alt="compressed" align="left">' : '<img src="'.$icon['blank'].'" width="32" height="32" alt="" align="left">');
 echo ''.(((isset($config['logcompression']) && 1 == $config['logcompression'])) ? $lang['L_COMPRESSED'] : $lang['L_NOTCOMPRESSED']).'</td>';
 echo '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td valign="top" align="right">';
-echo '<a href="'.$loginfo['log'].'">'.substr($loginfo['log'], strrpos($loginfo['log'], '/') + 1).'</a><br>';
-echo ($loginfo['errorlog_size'] > 0) ? '<a href="'.$loginfo['errorlog'].'">'.substr($loginfo['errorlog'], strrpos($loginfo['errorlog'], '/') + 1).'</a><br>' : substr($loginfo['errorlog'], strrpos($loginfo['errorlog'], '/') + 1).'<br>';
-echo ($loginfo['perllog_size'] > 0) ? '<a href="'.$loginfo['perllog'].'">'.substr($loginfo['perllog'], strrpos($loginfo['perllog'], '/') + 1).'</a><br>' : substr($loginfo['perllog'], strrpos($loginfo['perllog'], '/') + 1).'<br>';
-echo ($loginfo['perllogcomplete_size'] > 0) ? '<a href="'.$loginfo['perllogcomplete'].'">'.substr($loginfo['perllogcomplete'], strrpos($loginfo['perllogcomplete'], '/') + 1).'</a><br>' : substr($loginfo['perllogcomplete'], strrpos($loginfo['perllogcomplete'], '/') + 1).'<br>';
+echo '<a href="'.$loginfo['log'].'">'.substr((string) $loginfo['log'], strrpos((string) $loginfo['log'], '/') + 1).'</a><br>';
+echo ($loginfo['errorlog_size'] > 0) ? '<a href="'.$loginfo['errorlog'].'">'.substr((string) $loginfo['errorlog'], strrpos((string) $loginfo['errorlog'], '/') + 1).'</a><br>' : substr((string) $loginfo['errorlog'], strrpos((string) $loginfo['errorlog'], '/') + 1).'<br>';
+echo ($loginfo['perllog_size'] > 0) ? '<a href="'.$loginfo['perllog'].'">'.substr((string) $loginfo['perllog'], strrpos((string) $loginfo['perllog'], '/') + 1).'</a><br>' : substr((string) $loginfo['perllog'], strrpos((string) $loginfo['perllog'], '/') + 1).'<br>';
+echo ($loginfo['perllogcomplete_size'] > 0) ? '<a href="'.$loginfo['perllogcomplete'].'">'.substr((string) $loginfo['perllogcomplete'], strrpos((string) $loginfo['perllogcomplete'], '/') + 1).'</a><br>' : substr((string) $loginfo['perllogcomplete'], strrpos((string) $loginfo['perllogcomplete'], '/') + 1).'<br>';
 echo '<strong>total</strong></td><td valign="top" align="right">'.byte_output($loginfo['log_size']).'<br>'.byte_output($loginfo['errorlog_size']).'<br>'.byte_output($loginfo['perllog_size']).'<br>'.byte_output($loginfo['perllogcomplete_size']).'<br><strong>'.byte_output($loginfo['log_totalsize']).'</strong></td>';
 echo '</tr><tr><td colspan="3" align="center"><a class="small" href="log.php?r='.$r.'&amp;revers=0">'.$lang['L_NOREVERSE'].'</a>&nbsp;&nbsp;&nbsp;<a class="small" href="log.php?r='.$r.'&amp;revers=1">'.$lang['L_REVERSE'].'</a></td></tr></table></td></tr></table></div>';
 
@@ -130,7 +130,7 @@ if (file_exists($lfile)) {
         if (2 == $r) {
             $out .= $zeile.'<br>';
         } elseif (3 == $r) {
-            $z = explode('|:|', $zeile);
+            $z = explode('|:|', (string) $zeile);
             for ($i = 0; $i < count($z); ++$i) {
                 $out .= '<span>'.substr($z[$i], 0, strpos($z[$i], ': ')).'</span> '.substr($z[$i], strpos($z[$i], ': ')).'<br>';
             }

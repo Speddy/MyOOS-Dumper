@@ -6,16 +6,15 @@ namespace Rector\VersionBonding;
 use Rector\Core\Contract\Rector\PhpRectorInterface;
 use Rector\Core\Php\PhpVersionProvider;
 use Rector\VersionBonding\Contract\MinPhpVersionInterface;
-final class PhpVersionedFilter
+final readonly class PhpVersionedFilter
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    public function __construct(PhpVersionProvider $phpVersionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PhpVersionProvider $phpVersionProvider
+    )
     {
-        $this->phpVersionProvider = $phpVersionProvider;
     }
     /**
      * @param array<PhpRectorInterface> $rectors

@@ -10,16 +10,15 @@ use PhpParser\Node\Stmt\Return_;
 use PHPStan\Reflection\FunctionReflection;
 use PHPStan\Reflection\MethodReflection;
 use Rector\Core\Reflection\ReflectionResolver;
-final class ExclusiveNativeCallLikeReturnMatcher
+final readonly class ExclusiveNativeCallLikeReturnMatcher
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ReflectionResolver $reflectionResolver
+    )
     {
-        $this->reflectionResolver = $reflectionResolver;
     }
     /**
      * @param Return_[] $returns

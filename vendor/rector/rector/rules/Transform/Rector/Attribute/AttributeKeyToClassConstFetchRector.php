@@ -23,7 +23,7 @@ final class AttributeKeyToClassConstFetchRector extends AbstractRector implement
     /**
      * @var AttributeKeyToClassConstFetch[]
      */
-    private $attributeKeysToClassConstFetches = [];
+    private array $attributeKeysToClassConstFetches = [];
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Replace key value on specific attribute to class constant', [new ConfiguredCodeSample(<<<'CODE_SAMPLE'

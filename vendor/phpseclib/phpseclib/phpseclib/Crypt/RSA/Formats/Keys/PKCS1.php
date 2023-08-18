@@ -48,9 +48,9 @@ abstract class PKCS1 extends Progenitor
             throw new \UnexpectedValueException('Key should be a string - not a ' . gettype($key));
         }
 
-        if (strpos($key, 'PUBLIC') !== false) {
+        if (str_contains($key, 'PUBLIC')) {
             $components = ['isPublicKey' => true];
-        } elseif (strpos($key, 'PRIVATE') !== false) {
+        } elseif (str_contains($key, 'PRIVATE')) {
             $components = ['isPublicKey' => false];
         } else {
             $components = [];
@@ -102,12 +102,6 @@ abstract class PKCS1 extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
-     * @param \phpseclib3\Math\BigInteger $d
-     * @param array $primes
-     * @param array $exponents
-     * @param array $coefficients
      * @param string $password optional
      * @param array $options optional
      * @return string
@@ -142,8 +136,6 @@ abstract class PKCS1 extends Progenitor
     /**
      * Convert a public key to the appropriate format
      *
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
      * @return string
      */
     public static function savePublicKey(BigInteger $n, BigInteger $e)

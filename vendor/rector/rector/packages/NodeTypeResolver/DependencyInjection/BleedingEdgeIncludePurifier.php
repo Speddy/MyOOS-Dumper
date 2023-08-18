@@ -25,7 +25,7 @@ final class BleedingEdgeIncludePurifier
     public function purifyConfigFile(string $filePath) : ?string
     {
         // must be neon file
-        if (\substr_compare($filePath, '.neon', -\strlen('.neon')) !== 0) {
+        if (!str_ends_with($filePath, '.neon')) {
             return null;
         }
         $fileContents = FileSystem::read($filePath);

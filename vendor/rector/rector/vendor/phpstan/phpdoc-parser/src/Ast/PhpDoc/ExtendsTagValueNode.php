@@ -6,7 +6,7 @@ namespace PHPStan\PhpDocParser\Ast\PhpDoc;
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use PHPStan\PhpDocParser\Ast\Type\GenericTypeNode;
 use function trim;
-class ExtendsTagValueNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode
+class ExtendsTagValueNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode, \Stringable
 {
     use NodeAttributes;
     /** @var GenericTypeNode */

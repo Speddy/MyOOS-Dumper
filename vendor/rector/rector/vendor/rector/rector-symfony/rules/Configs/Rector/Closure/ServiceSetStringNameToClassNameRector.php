@@ -16,20 +16,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ServiceSetStringNameToClassNameRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\SymfonyPhpClosureDetector
-     */
-    private $symfonyPhpClosureDetector;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\DataProvider\ServiceNameToTypeUniqueProvider
-     */
-    private $serviceNameToTypeUniqueProvider;
-    public function __construct(SymfonyPhpClosureDetector $symfonyPhpClosureDetector, ServiceNameToTypeUniqueProvider $serviceNameToTypeUniqueProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly SymfonyPhpClosureDetector $symfonyPhpClosureDetector,
+        /**
+         * @readonly
+         */
+        private readonly ServiceNameToTypeUniqueProvider $serviceNameToTypeUniqueProvider
+    )
     {
-        $this->symfonyPhpClosureDetector = $symfonyPhpClosureDetector;
-        $this->serviceNameToTypeUniqueProvider = $serviceNameToTypeUniqueProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

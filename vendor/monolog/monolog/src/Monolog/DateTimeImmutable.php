@@ -19,17 +19,10 @@ use DateTimeZone;
  * @author Menno Holtkamp
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class DateTimeImmutable extends \DateTimeImmutable implements \JsonSerializable
+class DateTimeImmutable extends \DateTimeImmutable implements \JsonSerializable, \Stringable
 {
-    /**
-     * @var bool
-     */
-    private $useMicroseconds;
-
-    public function __construct(bool $useMicroseconds, ?DateTimeZone $timezone = null)
+    public function __construct(private readonly bool $useMicroseconds, ?DateTimeZone $timezone = null)
     {
-        $this->useMicroseconds = $useMicroseconds;
-
         parent::__construct('now', $timezone);
     }
 

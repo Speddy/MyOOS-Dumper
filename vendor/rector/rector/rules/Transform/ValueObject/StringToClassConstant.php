@@ -4,28 +4,19 @@ declare (strict_types=1);
 namespace Rector\Transform\ValueObject;
 
 use Rector\Core\Validation\RectorAssert;
-final class StringToClassConstant
+final readonly class StringToClassConstant
 {
-    /**
+    public function __construct(/**
      * @readonly
-     * @var string
      */
-    private $string;
-    /**
+    private string $string, /**
      * @readonly
-     * @var string
      */
-    private $class;
-    /**
+    private string $class, /**
      * @readonly
-     * @var string
      */
-    private $constant;
-    public function __construct(string $string, string $class, string $constant)
+    private string $constant)
     {
-        $this->string = $string;
-        $this->class = $class;
-        $this->constant = $constant;
         RectorAssert::className($class);
     }
     public function getString() : string

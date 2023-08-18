@@ -36,35 +36,28 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class NestedAnnotationToAttributeRector extends AbstractRector implements ConfigurableRectorInterface, MinPhpVersionInterface
 {
     /**
-     * @readonly
-     * @var \Rector\Naming\Naming\UseImportsResolver
-     */
-    private $useImportsResolver;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
-     */
-    private $phpDocTagRemover;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeFactory\NestedAttrGroupsFactory
-     */
-    private $nestedAttrGroupsFactory;
-    /**
-     * @readonly
-     * @var \Rector\PostRector\Collector\UseNodesToAddCollector
-     */
-    private $useNodesToAddCollector;
-    /**
      * @var NestedAnnotationToAttribute[]
      */
-    private $nestedAnnotationsToAttributes = [];
-    public function __construct(UseImportsResolver $useImportsResolver, PhpDocTagRemover $phpDocTagRemover, NestedAttrGroupsFactory $nestedAttrGroupsFactory, UseNodesToAddCollector $useNodesToAddCollector)
+    private array $nestedAnnotationsToAttributes = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly UseImportsResolver $useImportsResolver,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTagRemover $phpDocTagRemover,
+        /**
+         * @readonly
+         */
+        private readonly NestedAttrGroupsFactory $nestedAttrGroupsFactory,
+        /**
+         * @readonly
+         */
+        private readonly UseNodesToAddCollector $useNodesToAddCollector
+    )
     {
-        $this->useImportsResolver = $useImportsResolver;
-        $this->phpDocTagRemover = $phpDocTagRemover;
-        $this->nestedAttrGroupsFactory = $nestedAttrGroupsFactory;
-        $this->useNodesToAddCollector = $useNodesToAddCollector;
     }
     public function getRuleDefinition() : RuleDefinition
     {

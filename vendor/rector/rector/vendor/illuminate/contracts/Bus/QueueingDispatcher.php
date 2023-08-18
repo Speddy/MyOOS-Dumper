@@ -7,7 +7,6 @@ interface QueueingDispatcher extends Dispatcher
     /**
      * Attempt to find the batch with the given ID.
      *
-     * @param  string  $batchId
      * @return \Illuminate\Bus\Batch|null
      */
     public function findBatch(string $batchId);
@@ -21,8 +20,7 @@ interface QueueingDispatcher extends Dispatcher
     /**
      * Dispatch a command to its appropriate handler behind a queue.
      *
-     * @param  mixed  $command
      * @return mixed
      */
-    public function dispatchToQueue($command);
+    public function dispatchToQueue(mixed $command);
 }

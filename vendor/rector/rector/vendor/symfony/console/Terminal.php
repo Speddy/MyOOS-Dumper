@@ -13,23 +13,14 @@ namespace RectorPrefix202308\Symfony\Component\Console;
 use RectorPrefix202308\Symfony\Component\Console\Output\AnsiColorMode;
 class Terminal
 {
-    public const DEFAULT_COLOR_MODE = AnsiColorMode::Ansi4;
+    final public const DEFAULT_COLOR_MODE = AnsiColorMode::Ansi4;
     /**
      * @var \Symfony\Component\Console\Output\AnsiColorMode|null
      */
-    private static $colorMode;
-    /**
-     * @var int|null
-     */
-    private static $width;
-    /**
-     * @var int|null
-     */
-    private static $height;
-    /**
-     * @var bool|null
-     */
-    private static $stty;
+    private static ?string $colorMode = null;
+    private static ?int $width = null;
+    private static ?int $height = null;
+    private static ?bool $stty = null;
     /**
      * About Ansi color types: https://en.wikipedia.org/wiki/ANSI_escape_code#Colors
      * For more information about true color support with terminals https://github.com/termstandard/colors/.
@@ -43,11 +34,11 @@ class Terminal
         // Try with $COLORTERM first
         if (\is_string($colorterm = \getenv('COLORTERM'))) {
             $colorterm = \strtolower($colorterm);
-            if (\strpos($colorterm, 'truecolor') !== \false) {
+            if (str_contains($colorterm, 'truecolor')) {
                 self::setColorMode(AnsiColorMode::Ansi24);
                 return self::$colorMode;
             }
-            if (\strpos($colorterm, '256color') !== \false) {
+            if (str_contains($colorterm, '256color')) {
                 self::setColorMode(AnsiColorMode::Ansi8);
                 return self::$colorMode;
             }
@@ -55,11 +46,11 @@ class Terminal
         // Try with $TERM
         if (\is_string($term = \getenv('TERM'))) {
             $term = \strtolower($term);
-            if (\strpos($term, 'truecolor') !== \false) {
+            if (str_contains($term, 'truecolor')) {
                 self::setColorMode(AnsiColorMode::Ansi24);
                 return self::$colorMode;
             }
-            if (\strpos($term, '256color') !== \false) {
+            if (str_contains($term, '256color')) {
                 self::setColorMode(AnsiColorMode::Ansi8);
                 return self::$colorMode;
             }

@@ -24,20 +24,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class MergeMethodAnnotationToRouteAnnotationRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
-     */
-    private $phpDocTagRemover;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\Printer\PhpDocInfoPrinter
-     */
-    private $phpDocInfoPrinter;
-    public function __construct(PhpDocTagRemover $phpDocTagRemover, PhpDocInfoPrinter $phpDocInfoPrinter)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTagRemover $phpDocTagRemover,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocInfoPrinter $phpDocInfoPrinter
+    )
     {
-        $this->phpDocTagRemover = $phpDocTagRemover;
-        $this->phpDocInfoPrinter = $phpDocInfoPrinter;
     }
     public function getRuleDefinition() : RuleDefinition
     {

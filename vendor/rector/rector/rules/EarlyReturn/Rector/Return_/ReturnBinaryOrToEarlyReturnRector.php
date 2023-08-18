@@ -20,20 +20,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReturnBinaryOrToEarlyReturnRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\AssignAndBinaryMap
-     */
-    private $assignAndBinaryMap;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\CallAnalyzer
-     */
-    private $callAnalyzer;
-    public function __construct(AssignAndBinaryMap $assignAndBinaryMap, CallAnalyzer $callAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly AssignAndBinaryMap $assignAndBinaryMap,
+        /**
+         * @readonly
+         */
+        private readonly CallAnalyzer $callAnalyzer
+    )
     {
-        $this->assignAndBinaryMap = $assignAndBinaryMap;
-        $this->callAnalyzer = $callAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

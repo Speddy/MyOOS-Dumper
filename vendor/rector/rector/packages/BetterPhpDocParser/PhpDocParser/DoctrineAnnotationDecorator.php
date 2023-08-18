@@ -21,28 +21,8 @@ use Rector\BetterPhpDocParser\ValueObject\DoctrineAnnotation\SilentKeyMap;
 use Rector\BetterPhpDocParser\ValueObject\PhpDocAttributeKey;
 use Rector\BetterPhpDocParser\ValueObject\StartAndEnd;
 use Rector\Core\Util\StringUtils;
-final class DoctrineAnnotationDecorator implements PhpDocNodeDecoratorInterface
+final readonly class DoctrineAnnotationDecorator implements PhpDocNodeDecoratorInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocParser\ClassAnnotationMatcher
-     */
-    private $classAnnotationMatcher;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser
-     */
-    private $staticDoctrineAnnotationParser;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\TokenIteratorFactory
-     */
-    private $tokenIteratorFactory;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\Attributes\AttributeMirrorer
-     */
-    private $attributeMirrorer;
     /**
      * Special short annotations, that are resolved as FQN by Doctrine annotation parser
      * @var string[]
@@ -58,12 +38,25 @@ final class DoctrineAnnotationDecorator implements PhpDocNodeDecoratorInterface
      * @var string
      */
     private const NESTED_ANNOTATION_END_REGEX = '#(\\s+)?\\}\\)(\\s+)?#';
-    public function __construct(\Rector\BetterPhpDocParser\PhpDocParser\ClassAnnotationMatcher $classAnnotationMatcher, \Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser $staticDoctrineAnnotationParser, TokenIteratorFactory $tokenIteratorFactory, AttributeMirrorer $attributeMirrorer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private \Rector\BetterPhpDocParser\PhpDocParser\ClassAnnotationMatcher $classAnnotationMatcher,
+        /**
+         * @readonly
+         */
+        private \Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser $staticDoctrineAnnotationParser,
+        /**
+         * @readonly
+         */
+        private TokenIteratorFactory $tokenIteratorFactory,
+        /**
+         * @readonly
+         */
+        private AttributeMirrorer $attributeMirrorer
+    )
     {
-        $this->classAnnotationMatcher = $classAnnotationMatcher;
-        $this->staticDoctrineAnnotationParser = $staticDoctrineAnnotationParser;
-        $this->tokenIteratorFactory = $tokenIteratorFactory;
-        $this->attributeMirrorer = $attributeMirrorer;
     }
     public function decorate(PhpDocNode $phpDocNode, Node $phpNode) : void
     {
@@ -112,7 +105,7 @@ final class DoctrineAnnotationDecorator implements PhpDocNodeDecoratorInterface
                 if (!$nextPhpDocChildNode->value instanceof GenericTagValueNode) {
                     continue;
                 }
-                $isNewLinedGenericTagValueNode = \strncmp($genericTagValueNode->value, '(', \strlen('(')) === 0 && \substr_compare($genericTagValueNode->value, ')', -\strlen(')')) !== 0;
+                $isNewLinedGenericTagValueNode = str_starts_with($genericTagValueNode->value, '(') && !str_ends_with($genericTagValueNode->value, ')');
                 if ($this->isClosedContent($genericTagValueNode->value, $isNewLinedGenericTagValueNode)) {
                     break;
                 }
@@ -160,7 +153,7 @@ final class DoctrineAnnotationDecorator implements PhpDocNodeDecoratorInterface
             // known doc tag to annotation class
             $fullyQualifiedAnnotationClass = $this->classAnnotationMatcher->resolveTagFullyQualifiedName($phpDocChildNode->name, $currentPhpNode);
             // not an annotations class
-            if (\strpos($fullyQualifiedAnnotationClass, '\\') === \false && !\in_array($fullyQualifiedAnnotationClass, self::ALLOWED_SHORT_ANNOTATIONS, \true)) {
+            if (!str_contains($fullyQualifiedAnnotationClass, '\\') && !\in_array($fullyQualifiedAnnotationClass, self::ALLOWED_SHORT_ANNOTATIONS, \true)) {
                 continue;
             }
             $spacelessPhpDocTagNode = $this->createSpacelessPhpDocTagNode($phpDocChildNode->name, $phpDocChildNode->value, $fullyQualifiedAnnotationClass);
@@ -182,10 +175,10 @@ final class DoctrineAnnotationDecorator implements PhpDocNodeDecoratorInterface
             return \true;
         }
         do {
-            if ($composedTokenIterator->isCurrentTokenType(Lexer::TOKEN_CLOSE_CURLY_BRACKET, Lexer::TOKEN_CLOSE_PARENTHESES) || \strpos($composedTokenIterator->currentTokenValue(), ')') !== \false) {
+            if ($composedTokenIterator->isCurrentTokenType(Lexer::TOKEN_CLOSE_CURLY_BRACKET, Lexer::TOKEN_CLOSE_PARENTHESES) || str_contains($composedTokenIterator->currentTokenValue(), ')')) {
                 ++$closeBracketCount;
             }
-            if ($composedTokenIterator->isCurrentTokenType(Lexer::TOKEN_OPEN_CURLY_BRACKET, Lexer::TOKEN_OPEN_PARENTHESES) || \strpos($composedTokenIterator->currentTokenValue(), '(') !== \false) {
+            if ($composedTokenIterator->isCurrentTokenType(Lexer::TOKEN_OPEN_CURLY_BRACKET, Lexer::TOKEN_OPEN_PARENTHESES) || str_contains($composedTokenIterator->currentTokenValue(), '(')) {
                 ++$openBracketCount;
             }
             if ($composedTokenIterator->isCurrentTokenType(Lexer::TOKEN_PHPDOC_EOL) && $composedTokenIterator->getContentBetween($composedTokenIterator->currentPosition() - 1, $composedTokenIterator->currentPosition()) === '(' && $isNewLined && $openBracketCount > $closeBracketCount) {

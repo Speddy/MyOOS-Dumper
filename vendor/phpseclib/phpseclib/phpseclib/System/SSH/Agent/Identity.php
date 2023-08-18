@@ -43,16 +43,15 @@ class Identity implements PrivateKey
 
     // Signature Flags
     // See https://tools.ietf.org/html/draft-miller-ssh-agent-00#section-5.3
-    const SSH_AGENT_RSA2_256 = 2;
-    const SSH_AGENT_RSA2_512 = 4;
+    final public const SSH_AGENT_RSA2_256 = 2;
+    final public const SSH_AGENT_RSA2_512 = 4;
 
     /**
      * Key Object
      *
-     * @var PublicKey
      * @see self::getPublicKey()
      */
-    private $key;
+    private ?\phpseclib3\Crypt\Common\PublicKey $key = null;
 
     /**
      * Key Blob
@@ -73,18 +72,16 @@ class Identity implements PrivateKey
     /**
      * Signature flags
      *
-     * @var int
      * @see self::sign()
      * @see self::setHash()
      */
-    private $flags = 0;
+    private int $flags = 0;
 
     /**
      * Curve Aliases
      *
-     * @var array
      */
-    private static $curveAliases = [
+    private static array $curveAliases = [
         'secp256r1' => 'nistp256',
         'secp384r1' => 'nistp384',
         'secp521r1' => 'nistp521',
@@ -106,7 +103,6 @@ class Identity implements PrivateKey
      *
      * Called by \phpseclib3\System\SSH\Agent::requestIdentities()
      *
-     * @param \phpseclib3\Crypt\Common\PublicKey $key
      */
     public function withPublicKey(PublicKey $key)
     {
@@ -176,18 +172,11 @@ class Identity implements PrivateKey
             }
         }
         if ($this->key instanceof EC) {
-            switch ($this->key->getCurve()) {
-                case 'secp256r1':
-                    $expectedHash = 'sha256';
-                    break;
-                case 'secp384r1':
-                    $expectedHash = 'sha384';
-                    break;
-                //case 'secp521r1':
-                //case 'Ed25519':
-                default:
-                    $expectedHash = 'sha512';
-            }
+            $expectedHash = match ($this->key->getCurve()) {
+                'secp256r1' => 'sha256',
+                'secp384r1' => 'sha384',
+                default => 'sha512',
+            };
             if ($hash != $expectedHash) {
                 throw new UnsupportedAlgorithmException('The only supported hash for ' . self::$curveAliases[$this->key->getCurve()] . ' is ' . $expectedHash);
             }
@@ -278,10 +267,10 @@ class Identity implements PrivateKey
             throw new \RuntimeException('Connection closed during signing');
         }
 
-        $length = current(unpack('N', $this->readBytes(4)));
+        $length = current(unpack('N', (string) $this->readBytes(4)));
         $packet = $this->readBytes($length);
 
-        list($type, $signature_blob) = Strings::unpackSSH2('Cs', $packet);
+        [$type, $signature_blob] = Strings::unpackSSH2('Cs', $packet);
         if ($type != Agent::SSH_AGENT_SIGN_RESPONSE) {
             throw new \RuntimeException('Unable to retrieve signature');
         }
@@ -290,7 +279,7 @@ class Identity implements PrivateKey
             return $signature_blob;
         }
 
-        list($type, $signature_blob) = Strings::unpackSSH2('ss', $signature_blob);
+        [$type, $signature_blob] = Strings::unpackSSH2('ss', $signature_blob);
 
         return $signature_blob;
     }
@@ -302,7 +291,7 @@ class Identity implements PrivateKey
      * @param array $options optional
      * @return string
      */
-    public function toString($type, array $options = [])
+    public function toString($type, array $options = []): never
     {
         throw new \RuntimeException('ssh-agent does not provide a mechanism to get the private key');
     }
@@ -313,7 +302,7 @@ class Identity implements PrivateKey
      * @param string|bool $password
      * @return never
      */
-    public function withPassword($password = false)
+    public function withPassword($password = false): never
     {
         throw new \RuntimeException('ssh-agent does not provide a mechanism to get the private key');
     }

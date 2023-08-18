@@ -16,16 +16,15 @@ use Rector\NodeTypeResolver\Contract\NodeTypeResolverInterface;
  *
  * @implements NodeTypeResolverInterface<Trait_>
  */
-final class TraitTypeResolver implements NodeTypeResolverInterface
+final readonly class TraitTypeResolver implements NodeTypeResolverInterface
 {
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    public function __construct(ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
     }
     /**
      * @return array<class-string<Node>>

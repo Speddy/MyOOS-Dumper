@@ -27,35 +27,28 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class AddAllowDynamicPropertiesAttributeRector extends AbstractRector implements MinPhpVersionInterface, ConfigurableRectorInterface
 {
     /**
-     * @readonly
-     * @var \Rector\FamilyTree\Reflection\FamilyRelationsAnalyzer
-     */
-    private $familyRelationsAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
-     */
-    private $phpAttributeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\NodeFactory\PhpAttributeGroupFactory
-     */
-    private $phpAttributeGroupFactory;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
      * @var array<array-key, string>
      */
-    private $transformOnNamespaces = [];
-    public function __construct(FamilyRelationsAnalyzer $familyRelationsAnalyzer, PhpAttributeAnalyzer $phpAttributeAnalyzer, PhpAttributeGroupFactory $phpAttributeGroupFactory, ReflectionProvider $reflectionProvider)
+    private array $transformOnNamespaces = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly FamilyRelationsAnalyzer $familyRelationsAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly PhpAttributeAnalyzer $phpAttributeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly PhpAttributeGroupFactory $phpAttributeGroupFactory,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider
+    )
     {
-        $this->familyRelationsAnalyzer = $familyRelationsAnalyzer;
-        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
-        $this->phpAttributeGroupFactory = $phpAttributeGroupFactory;
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

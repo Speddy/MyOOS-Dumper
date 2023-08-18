@@ -6,7 +6,7 @@ namespace PHPStan\PhpDocParser\Ast\Type;
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use function array_map;
 use function implode;
-class UnionTypeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode
+class UnionTypeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode, \Stringable
 {
     use NodeAttributes;
     /** @var TypeNode[] */

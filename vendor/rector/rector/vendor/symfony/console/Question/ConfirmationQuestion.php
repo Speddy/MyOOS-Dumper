@@ -18,18 +18,13 @@ namespace RectorPrefix202308\Symfony\Component\Console\Question;
 class ConfirmationQuestion extends Question
 {
     /**
-     * @var string
-     */
-    private $trueAnswerRegex;
-    /**
      * @param string $question        The question to ask to the user
      * @param bool   $default         The default answer to return, true or false
      * @param string $trueAnswerRegex A regex to match the "yes" answer
      */
-    public function __construct(string $question, bool $default = \true, string $trueAnswerRegex = '/^y/i')
+    public function __construct(string $question, bool $default = \true, private string $trueAnswerRegex = '/^y/i')
     {
         parent::__construct($question, $default);
-        $this->trueAnswerRegex = $trueAnswerRegex;
         $this->setNormalizer($this->getDefaultNormalizer());
     }
     /**

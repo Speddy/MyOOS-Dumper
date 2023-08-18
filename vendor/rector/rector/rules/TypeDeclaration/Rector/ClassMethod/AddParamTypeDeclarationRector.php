@@ -27,27 +27,21 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class AddParamTypeDeclarationRector extends AbstractRector implements ConfigurableRectorInterface
 {
     /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\TypeComparator\TypeComparator
-     */
-    private $typeComparator;
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    /**
      * @var AddParamTypeDeclaration[]
      */
-    private $addParamTypeDeclarations = [];
-    /**
-     * @var bool
-     */
-    private $hasChanged = \false;
-    public function __construct(TypeComparator $typeComparator, PhpVersionProvider $phpVersionProvider)
+    private array $addParamTypeDeclarations = [];
+    private bool $hasChanged = \false;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly TypeComparator $typeComparator,
+        /**
+         * @readonly
+         */
+        private readonly PhpVersionProvider $phpVersionProvider
+    )
     {
-        $this->typeComparator = $typeComparator;
-        $this->phpVersionProvider = $phpVersionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

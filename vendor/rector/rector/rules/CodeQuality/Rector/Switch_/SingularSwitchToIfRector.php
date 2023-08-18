@@ -17,14 +17,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class SingularSwitchToIfRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Renaming\NodeManipulator\SwitchManipulator
-     */
-    private $switchManipulator;
-    public function __construct(SwitchManipulator $switchManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly SwitchManipulator $switchManipulator
+    )
     {
-        $this->switchManipulator = $switchManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {

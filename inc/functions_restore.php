@@ -64,7 +64,7 @@ function get_sqlbefehl()
                 $sqlparser_status = 4;
             } elseif ('COMMIT' == $sub6) {
                 $sqlparser_status = 7;
-            } elseif ('BEGIN' == substr($sub6, 0, 5)) {
+            } elseif (str_starts_with($sub6, 'BEGIN')) {
                 $sqlparser_status = 7;
             } elseif ('UNLOCK TA' == $sub9) {
                 $sqlparser_status = 4;
@@ -89,7 +89,7 @@ function get_sqlbefehl()
             } //Indexaktion
 
             //Condition?
-            elseif ((5 != $sqlparser_status) && ('/*' == substr($zeile2, 0, 2))) {
+            elseif ((5 != $sqlparser_status) && (str_starts_with($zeile2, '/*'))) {
                 $sqlparser_status = 6;
             }
 
@@ -133,7 +133,7 @@ function get_sqlbefehl()
             if ((0 == $sqlparser_status) && (trim((string) $complete_sql) > '') && (-1 == $restore['flag'])) {
                 // Unbekannten Befehl entdeckt
                 v($restore);
-                echo '<br>Sql: '.htmlspecialchars($complete_sql);
+                echo '<br>Sql: '.htmlspecialchars((string) $complete_sql);
                 echo '<br>Erweiterte Inserts: '.$restore['erweiterte_inserts'];
                 exit('<br>'.$lang['L_UNKNOWN_SQLCOMMAND'].': '.$zeile.'<br><br>'.$complete_sql);
             }
@@ -150,24 +150,24 @@ function get_sqlbefehl()
             if (SQL_Is_Complete($complete_sql)) {
                 $sqlparser_status = 100;
                 $complete_sql = trim((string) $complete_sql);
-                if ('*/' == substr($complete_sql, -2)) {
+                if (str_ends_with($complete_sql, '*/')) {
                     $complete_sql = remove_comment_at_eol($complete_sql);
                 }
 
                 // letzter Ausdruck des erweiterten Inserts erreicht?
-                if (');' == substr($complete_sql, -2)) {
+                if (str_ends_with((string) $complete_sql, ');')) {
                     $restore['flag'] = -1;
                 }
 
                 // Wenn am Ende der Zeile ein Klammer Komma -> erweiterter Insert-Modus -> Steuerflag setzen
-                elseif ('),' == substr($complete_sql, -2)) {
+                elseif (str_ends_with((string) $complete_sql, '),')) {
                     // letztes Komme gegen Semikolon tauschen
-                    $complete_sql = substr($complete_sql, 0, -1).';';
+                    $complete_sql = substr((string) $complete_sql, 0, -1).';';
                     $restore['erweiterte_inserts'] = 1;
                     $restore['flag'] = 1;
                 }
 
-                if ('INSERT ' != substr(strtoupper($complete_sql), 0, 7)) {
+                if (!str_starts_with(strtoupper((string) $complete_sql), 'INSERT ')) {
                     // wenn der Syntax aufgrund eines Reloads verloren ging - neu ermitteln
                     if (!isset($restore['insert_syntax'])) {
                         $restore['insert_syntax'] = get_insert_syntax($restore['actual_table']);
@@ -175,9 +175,9 @@ function get_sqlbefehl()
                     $complete_sql = $restore['insert_syntax'].' VALUES '.$complete_sql.';';
                 } else {
                     // INSERT Syntax ermitteln und merken
-                    $ipos = strpos(strtoupper($complete_sql), ' VALUES');
+                    $ipos = strpos(strtoupper((string) $complete_sql), ' VALUES');
                     if (false === !$ipos) {
-                        $restore['insert_syntax'] = substr($complete_sql, 0, $ipos);
+                        $restore['insert_syntax'] = substr((string) $complete_sql, 0, $ipos);
                     } else {
                         $restore['insert_syntax'] = 'INSERT INTO `'.$restore['actual_table'].'`';
                     }
@@ -279,9 +279,9 @@ function submit_create_action($sql)
 
     //executes a create command
     $tablename = get_tablename($sql);
-    if ('CREATE ALGORITHM' == strtoupper(substr($sql, 0, 16))) {
+    if ('CREATE ALGORITHM' == strtoupper(substr((string) $sql, 0, 16))) {
         // It`s a VIEW. We need to substitute the original DEFINER with the actual MySQL-User
-        $parts = explode(' ', $sql);
+        $parts = explode(' ', (string) $sql);
         for ($i = 0, $count = sizeof($parts); $i < $count; ++$i) {
             if ('DEFINER=' == strtoupper(substr($parts[$i], 0, 8))) {
                 $parts[$i] = 'DEFINER=`'.$config['dbuser'].'`@`'.$config['dbhost'].'`';
@@ -330,9 +330,9 @@ function del_inline_comments($sql)
 {
     //$sql=str_replace("\n",'<br>', $sql);
     $array = [];
-    preg_match_all("/(\/\*(.+)\*\/)/U", $sql, $array);
+    preg_match_all("/(\/\*(.+)\*\/)/U", (string) $sql, $array);
     if (is_array($array[0])) {
-        $sql = str_replace($array[0], '', $sql);
+        $sql = str_replace($array[0], '', (string) $sql);
         if (DEBUG) {
             echo 'Nachher: :<br>'.$sql.'<br><hr>';
         }
@@ -349,7 +349,7 @@ function del_inline_comments($sql)
 function get_tablename($t)
 {
     // alle Schluesselbegriffe entfernen, bis der Tabellenname am Anfang steht
-    $t = substr($t, 0, 150); // verkuerzen, um Speicher zu sparen - wir brauchenhier nur den Tabellennamen
+    $t = substr((string) $t, 0, 150); // verkuerzen, um Speicher zu sparen - wir brauchenhier nur den Tabellennamen
     $t = str_ireplace('DROP TABLE', '', $t);
     $t = str_ireplace('DROP VIEW', '', $t);
     $t = str_ireplace('CREATE TABLE', '', $t);
@@ -357,7 +357,7 @@ function get_tablename($t)
     $t = str_ireplace('REPLACE INTO', '', $t);
     $t = str_ireplace('IF NOT EXISTS', '', $t);
     $t = str_ireplace('IF EXISTS', '', $t);
-    if ('CREATE ALGORITHM' == substr(strtoupper($t), 0, 16)) {
+    if (str_starts_with(strtoupper($t), 'CREATE ALGORITHM')) {
         $pos = strpos($t, 'DEFINER VIEW ');
         $t = substr($t, $pos, strlen($t) - $pos);
     }
@@ -410,10 +410,10 @@ function SQL_Is_Complete($string)
 function remove_comment_at_eol($string)
 {
     // check for Inline-Comments at the end of the line
-    if ('*/' == substr(trim((string) $string), -2)) {
-        $pos = strrpos($string, '/*');
+    if (str_ends_with(trim((string) $string), '*/')) {
+        $pos = strrpos((string) $string, '/*');
         if ($pos > 0) {
-            $string = trim(substr($string, 0, $pos));
+            $string = trim(substr((string) $string, 0, $pos));
         }
     }
     return $string;

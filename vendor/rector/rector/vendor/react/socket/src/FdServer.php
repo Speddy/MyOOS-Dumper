@@ -34,8 +34,8 @@ final class FdServer extends EventEmitter implements ServerInterface
 {
     private $master;
     private $loop;
-    private $unix = \false;
-    private $listening = \false;
+    private bool $unix = \false;
+    private bool $listening = \false;
     /**
      * Creates a socket server and starts listening on the given file descriptor
      *
@@ -89,7 +89,7 @@ final class FdServer extends EventEmitter implements ServerInterface
             // fopen(php://fd/3): Failed to open stream: Error duping file descriptor 3; possibly it doesn't exist: [9]: Bad file descriptor
             \preg_match('/\\[(\\d+)\\]: (.*)/', $error, $m);
             $errno = isset($m[1]) ? (int) $m[1] : 0;
-            $errstr = isset($m[2]) ? $m[2] : $error;
+            $errstr = $m[2] ?? $error;
         });
         $this->master = \fopen('php://fd/' . $fd, 'r+');
         \restore_error_handler();
@@ -128,7 +128,7 @@ final class FdServer extends EventEmitter implements ServerInterface
         }
         // check if this is an IPv6 address which includes multiple colons but no square brackets
         $pos = \strrpos($address, ':');
-        if ($pos !== \false && \strpos($address, ':') < $pos && \substr($address, 0, 1) !== '[') {
+        if ($pos !== \false && \strpos($address, ':') < $pos && !str_starts_with($address, '[')) {
             $address = '[' . \substr($address, 0, $pos) . ']:' . \substr($address, $pos + 1);
             // @codeCoverageIgnore
         }
@@ -152,7 +152,7 @@ final class FdServer extends EventEmitter implements ServerInterface
             try {
                 $newSocket = SocketServer::accept($master);
             } catch (\RuntimeException $e) {
-                $that->emit('error', array($e));
+                $that->emit('error', [$e]);
                 return;
             }
             $that->handleConnection($newSocket);
@@ -173,6 +173,6 @@ final class FdServer extends EventEmitter implements ServerInterface
     {
         $connection = new Connection($socket, $this->loop);
         $connection->unix = $this->unix;
-        $this->emit('connection', array($connection));
+        $this->emit('connection', [$connection]);
     }
 }

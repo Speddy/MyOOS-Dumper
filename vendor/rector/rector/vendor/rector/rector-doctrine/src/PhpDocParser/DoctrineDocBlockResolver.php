@@ -5,16 +5,15 @@ namespace Rector\Doctrine\PhpDocParser;
 
 use PhpParser\Node\Stmt\Class_;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
-final class DoctrineDocBlockResolver
+final readonly class DoctrineDocBlockResolver
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    public function __construct(PhpDocInfoFactory $phpDocInfoFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PhpDocInfoFactory $phpDocInfoFactory
+    )
     {
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
     public function isDoctrineEntityClass(Class_ $class) : bool
     {

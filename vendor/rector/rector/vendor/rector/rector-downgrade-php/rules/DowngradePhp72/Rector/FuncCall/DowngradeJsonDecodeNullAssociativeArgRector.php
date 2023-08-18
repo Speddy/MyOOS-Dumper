@@ -21,14 +21,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeJsonDecodeNullAssociativeArgRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ArgsAnalyzer
-     */
-    private $argsAnalyzer;
-    public function __construct(ArgsAnalyzer $argsAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ArgsAnalyzer $argsAnalyzer
+    )
     {
-        $this->argsAnalyzer = $argsAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

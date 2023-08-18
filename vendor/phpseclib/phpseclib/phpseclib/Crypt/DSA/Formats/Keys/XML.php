@@ -50,7 +50,7 @@ abstract class XML
         $use_errors = libxml_use_internal_errors(true);
 
         $dom = new \DOMDocument();
-        if (substr($key, 0, 5) != '<?xml') {
+        if (!str_starts_with($key, '<?xml')) {
             $key = '<xml>' . $key . '</xml>';
         }
         if (!$dom->loadXML($key)) {
@@ -98,15 +98,10 @@ abstract class XML
         if (!isset($components['y'])) {
             throw new \UnexpectedValueException('Key is missing y component');
         }
-
-        switch (true) {
-            case !isset($components['p']):
-            case !isset($components['q']):
-            case !isset($components['g']):
-                return ['y' => $components['y']];
-        }
-
-        return $components;
+        return match (true) {
+            !isset($components['p']), !isset($components['q']), !isset($components['g']) => ['y' => $components['y']],
+            default => $components,
+        };
     }
 
     /**
@@ -114,10 +109,6 @@ abstract class XML
      *
      * See https://www.w3.org/TR/xmldsig-core/#sec-DSAKeyValue
      *
-     * @param \phpseclib3\Math\BigInteger $p
-     * @param \phpseclib3\Math\BigInteger $q
-     * @param \phpseclib3\Math\BigInteger $g
-     * @param \phpseclib3\Math\BigInteger $y
      * @return string
      */
     public static function savePublicKey(BigInteger $p, BigInteger $q, BigInteger $g, BigInteger $y)

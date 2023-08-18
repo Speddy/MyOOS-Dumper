@@ -5,31 +5,22 @@ namespace Rector\Symfony\ValueObject;
 
 use Rector\Core\Validation\RectorAssert;
 use RectorPrefix202308\Webmozart\Assert\Assert;
-final class IntlBundleClassToNewClass
+final readonly class IntlBundleClassToNewClass
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $oldClass;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $newClass;
-    /**
-     * @var array<string, string>
-     * @readonly
-     */
-    private $oldToNewMethods;
     /**
      * @param array<string, string> $oldToNewMethods
      */
-    public function __construct(string $oldClass, string $newClass, array $oldToNewMethods)
+    public function __construct(/**
+     * @readonly
+     */
+    private string $oldClass, /**
+     * @readonly
+     */
+    private string $newClass, /**
+     * @readonly
+     */
+    private array $oldToNewMethods)
     {
-        $this->oldClass = $oldClass;
-        $this->newClass = $newClass;
-        $this->oldToNewMethods = $oldToNewMethods;
         RectorAssert::className($oldClass);
         RectorAssert::className($newClass);
         Assert::allString($oldToNewMethods);

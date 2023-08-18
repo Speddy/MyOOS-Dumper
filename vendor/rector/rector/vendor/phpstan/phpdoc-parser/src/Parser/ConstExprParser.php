@@ -11,22 +11,15 @@ use function substr;
 class ConstExprParser
 {
     /** @var bool */
-    private $unescapeStrings;
-    /** @var bool */
-    private $quoteAwareConstExprString;
-    /** @var bool */
     private $useLinesAttributes;
     /** @var bool */
     private $useIndexAttributes;
-    /** @var bool */
-    private $parseDoctrineStrings = \false;
+    private bool $parseDoctrineStrings = \false;
     /**
      * @param array{lines?: bool, indexes?: bool} $usedAttributes
      */
-    public function __construct(bool $unescapeStrings = \false, bool $quoteAwareConstExprString = \false, array $usedAttributes = [])
+    public function __construct(private readonly bool $unescapeStrings = \false, private readonly bool $quoteAwareConstExprString = \false, array $usedAttributes = [])
     {
-        $this->unescapeStrings = $unescapeStrings;
-        $this->quoteAwareConstExprString = $quoteAwareConstExprString;
         $this->useLinesAttributes = $usedAttributes['lines'] ?? \false;
         $this->useIndexAttributes = $usedAttributes['indexes'] ?? \false;
     }

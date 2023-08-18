@@ -9,22 +9,19 @@ use PHPStan\Type\IntersectionType;
 use PHPStan\Type\UnionType;
 use Rector\NodeTypeResolver\TypeComparator\TypeComparator;
 use Rector\StaticTypeMapper\StaticTypeMapper;
-final class DeadVarTagValueNodeAnalyzer
+final readonly class DeadVarTagValueNodeAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\TypeComparator\TypeComparator
-     */
-    private $typeComparator;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\StaticTypeMapper
-     */
-    private $staticTypeMapper;
-    public function __construct(TypeComparator $typeComparator, StaticTypeMapper $staticTypeMapper)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private TypeComparator $typeComparator,
+        /**
+         * @readonly
+         */
+        private StaticTypeMapper $staticTypeMapper
+    )
     {
-        $this->typeComparator = $typeComparator;
-        $this->staticTypeMapper = $staticTypeMapper;
     }
     public function isDead(VarTagValueNode $varTagValueNode, Property $property) : bool
     {

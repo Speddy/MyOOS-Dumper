@@ -17,17 +17,16 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class DowngradeFlexibleHeredocSyntaxRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\DowngradePhp73\Tokenizer\FollowedByNewlineOnlyMaybeWithSemicolonAnalyzer
-     */
-    private $followedByNewlineOnlyMaybeWithSemicolonAnalyzer;
-    /**
      * @var int[]
      */
     private const HERENOW_DOC_KINDS = [String_::KIND_HEREDOC, String_::KIND_NOWDOC];
-    public function __construct(FollowedByNewlineOnlyMaybeWithSemicolonAnalyzer $followedByNewlineOnlyMaybeWithSemicolonAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly FollowedByNewlineOnlyMaybeWithSemicolonAnalyzer $followedByNewlineOnlyMaybeWithSemicolonAnalyzer
+    )
     {
-        $this->followedByNewlineOnlyMaybeWithSemicolonAnalyzer = $followedByNewlineOnlyMaybeWithSemicolonAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

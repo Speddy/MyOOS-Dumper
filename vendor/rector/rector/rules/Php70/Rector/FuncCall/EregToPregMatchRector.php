@@ -29,17 +29,16 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class EregToPregMatchRector extends AbstractRector implements MinPhpVersionInterface
 {
     /**
-     * @readonly
-     * @var \Rector\Php70\EregToPcreTransformer
-     */
-    private $eregToPcreTransformer;
-    /**
      * @var array<string, string>
      */
     private const OLD_NAMES_TO_NEW_ONES = ['ereg' => 'preg_match', 'eregi' => 'preg_match', 'ereg_replace' => 'preg_replace', 'eregi_replace' => 'preg_replace', 'split' => 'preg_split', 'spliti' => 'preg_split'];
-    public function __construct(EregToPcreTransformer $eregToPcreTransformer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly EregToPcreTransformer $eregToPcreTransformer
+    )
     {
-        $this->eregToPcreTransformer = $eregToPcreTransformer;
     }
     public function provideMinPhpVersion() : int
     {
@@ -117,7 +116,7 @@ final class EregToPregMatchRector extends AbstractRector implements MinPhpVersio
         if (!$funcCall->args[2] instanceof Arg) {
             return;
         }
-        if (\strncmp($functionName, 'split', \strlen('split')) !== 0) {
+        if (!str_starts_with($functionName, 'split')) {
             return;
         }
         // 3rd argument - $limit, 0 → 1
@@ -140,10 +139,10 @@ final class EregToPregMatchRector extends AbstractRector implements MinPhpVersio
     }
     private function isCaseInsensitiveFunction(string $functionName) : bool
     {
-        if (\strpos($functionName, 'eregi') !== \false) {
+        if (str_contains($functionName, 'eregi')) {
             return \true;
         }
-        return \strpos($functionName, 'spliti') !== \false;
+        return str_contains($functionName, 'spliti');
     }
     private function isEregFuncCallWithThreeArgs(Expr $expr) : bool
     {

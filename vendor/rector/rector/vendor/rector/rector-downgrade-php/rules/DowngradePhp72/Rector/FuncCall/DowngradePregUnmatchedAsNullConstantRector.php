@@ -30,24 +30,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class DowngradePregUnmatchedAsNullConstantRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\DowngradePhp72\NodeManipulator\BitwiseFlagCleaner
-     */
-    private $bitwiseFlagCleaner;
-    /**
-     * @readonly
-     * @var \Rector\DowngradePhp72\NodeAnalyzer\RegexFuncAnalyzer
-     */
-    private $regexFuncAnalyzer;
-    /**
      * @see https://www.php.net/manual/en/function.preg-match.php
      * @var string
      */
     private const UNMATCHED_NULL_FLAG = 'PREG_UNMATCHED_AS_NULL';
-    public function __construct(BitwiseFlagCleaner $bitwiseFlagCleaner, RegexFuncAnalyzer $regexFuncAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly BitwiseFlagCleaner $bitwiseFlagCleaner,
+        /**
+         * @readonly
+         */
+        private readonly RegexFuncAnalyzer $regexFuncAnalyzer
+    )
     {
-        $this->bitwiseFlagCleaner = $bitwiseFlagCleaner;
-        $this->regexFuncAnalyzer = $regexFuncAnalyzer;
     }
     /**
      * @return array<class-string<Node>>

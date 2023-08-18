@@ -7,7 +7,7 @@ namespace League\Flysystem\UrlGeneration;
 use League\Flysystem\Config;
 use League\Flysystem\UnableToGeneratePublicUrl;
 
-final class ChainedPublicUrlGenerator implements PublicUrlGenerator
+final readonly class ChainedPublicUrlGenerator implements PublicUrlGenerator
 {
     /**
      * @param PublicUrlGenerator[] $generators

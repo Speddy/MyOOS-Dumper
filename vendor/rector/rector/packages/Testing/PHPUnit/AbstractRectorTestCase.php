@@ -30,19 +30,16 @@ abstract class AbstractRectorTestCase extends \Rector\Testing\PHPUnit\AbstractLa
     /**
      * @var \Rector\NodeTypeResolver\Reflection\BetterReflection\SourceLocatorProvider\DynamicSourceLocatorProvider
      */
-    private $dynamicSourceLocatorProvider;
+    private object $dynamicSourceLocatorProvider;
     /**
      * @var \Rector\Core\Application\ApplicationFileProcessor
      */
-    private $applicationFileProcessor;
-    /**
-     * @var string|null
-     */
-    private $inputFilePath;
+    private object $applicationFileProcessor;
+    private ?string $inputFilePath = null;
     /**
      * @var array<string, true>
      */
-    private static $cacheByRuleAndConfig = [];
+    private static array $cacheByRuleAndConfig = [];
     /**
      * Restore default parameters
      */
@@ -157,7 +154,7 @@ abstract class AbstractRectorTestCase extends \Rector\Testing\PHPUnit\AbstractLa
         $failureMessage = \sprintf('Failed on fixture file "%s"', $fixtureFilename);
         try {
             $this->assertSame($expectedFileContents, $changedContent, $failureMessage);
-        } catch (ExpectationFailedException $exception) {
+        } catch (ExpectationFailedException) {
             FixtureFileUpdater::updateFixtureContent($originalFilePath, $changedContent, $fixtureFilePath);
             // if not exact match, check the regex version (useful for generated hashes/uuids in the code)
             $this->assertStringMatchesFormat($expectedFileContents, $changedContent, $failureMessage);
@@ -180,7 +177,7 @@ abstract class AbstractRectorTestCase extends \Rector\Testing\PHPUnit\AbstractLa
     {
         $inputFileDirectory = \dirname($fixtureFilePath);
         // remove ".inc" suffix
-        if (\substr_compare($fixtureFilePath, '.inc', -\strlen('.inc')) === 0) {
+        if (str_ends_with($fixtureFilePath, '.inc')) {
             $trimmedFixtureFilePath = Strings::substring($fixtureFilePath, 0, -4);
         } else {
             $trimmedFixtureFilePath = $fixtureFilePath;

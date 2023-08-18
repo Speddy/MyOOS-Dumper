@@ -5,11 +5,8 @@ namespace RectorPrefix202308\Doctrine\Inflector\Rules;
 
 class Word
 {
-    /** @var string */
-    private $word;
-    public function __construct(string $word)
+    public function __construct(private readonly string $word)
     {
-        $this->word = $word;
     }
     public function getWord() : string
     {

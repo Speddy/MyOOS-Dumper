@@ -69,7 +69,6 @@ abstract class AbstractFile extends AbstractCache
     /**
      * Get the contents of the cache file.
      *
-     * @param string $cacheFile
      * @return string
      */
     protected function readFile(string $cacheFile): string
@@ -80,7 +79,6 @@ abstract class AbstractFile extends AbstractCache
     /**
      * Read the first line of the cache file.
      *
-     * @param string $cacheFile
      * @return string
      */
     protected function readLine(string $cacheFile): string
@@ -95,8 +93,6 @@ abstract class AbstractFile extends AbstractCache
     /**
      * Create a cache file
      *
-     * @param string $cacheFile
-     * @param string $contents
      * @return bool
      */
     protected function writeFile(string $cacheFile, string $contents): bool
@@ -113,7 +109,6 @@ abstract class AbstractFile extends AbstractCache
     /**
      * Delete a cache file
      *
-     * @param string $file
      * @return bool
      */
     protected function deleteFile(string $file): bool
@@ -141,7 +136,6 @@ abstract class AbstractFile extends AbstractCache
     /**
      * Recursive delete an empty directory.
      *
-     * @param string $dir
      */
     protected function removeRecursively(string $dir): bool
     {
@@ -191,8 +185,6 @@ abstract class AbstractFile extends AbstractCache
     /**
      * Glob that is safe with streams (vfs for example)
      *
-     * @param string $directory
-     * @param string $filePattern
      * @return array
      */
     protected function streamSafeGlob(string $directory, string $filePattern): array

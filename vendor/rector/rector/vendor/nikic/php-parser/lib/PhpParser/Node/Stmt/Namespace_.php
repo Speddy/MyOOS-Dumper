@@ -8,12 +8,10 @@ use Rector\Core\Contract\PhpParser\Node\StmtsAwareInterface;
 class Namespace_ extends Node\Stmt implements StmtsAwareInterface
 {
     /* For use in the "kind" attribute */
-    const KIND_SEMICOLON = 1;
-    const KIND_BRACED = 2;
+    final public const KIND_SEMICOLON = 1;
+    final public const KIND_BRACED = 2;
     /** @var null|Node\Name Name */
     public $name;
-    /** @var Node\Stmt[] Statements */
-    public $stmts;
     /**
      * Constructs a namespace node.
      *
@@ -21,11 +19,10 @@ class Namespace_ extends Node\Stmt implements StmtsAwareInterface
      * @param null|Node\Stmt[] $stmts      Statements
      * @param array            $attributes Additional attributes
      */
-    public function __construct(Node\Name $name = null, $stmts = [], array $attributes = [])
+    public function __construct(Node\Name $name = null, public $stmts = [], array $attributes = [])
     {
         $this->attributes = $attributes;
         $this->name = $name;
-        $this->stmts = $stmts;
     }
     public function getSubNodeNames() : array
     {

@@ -11,22 +11,19 @@ use PHPStan\Reflection\Native\NativeFunctionReflection;
 use PHPStan\Reflection\ParametersAcceptorSelector;
 use Rector\NodeNameResolver\NodeNameResolver;
 use ReflectionFunction;
-final class UnnamedArgumentResolver
+final readonly class UnnamedArgumentResolver
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\DowngradePhp80\NodeAnalyzer\NamedToUnnamedArgs
-     */
-    private $namedToUnnamedArgs;
-    public function __construct(NodeNameResolver $nodeNameResolver, \Rector\DowngradePhp80\NodeAnalyzer\NamedToUnnamedArgs $namedToUnnamedArgs)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private \Rector\DowngradePhp80\NodeAnalyzer\NamedToUnnamedArgs $namedToUnnamedArgs
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->namedToUnnamedArgs = $namedToUnnamedArgs;
     }
     /**
      * @param Arg[] $currentArgs

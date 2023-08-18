@@ -96,7 +96,7 @@ abstract class AbstractCache implements CacheInterface
     protected function assertKey($key): void
     {
         if (!is_string($key)) {
-            $type = (is_object($key) ? get_class($key) . ' ' : '') . gettype($key);
+            $type = (is_object($key) ? $key::class . ' ' : '') . gettype($key);
             throw new InvalidArgumentException("Expected key to be a string, not $type");
         }
 
@@ -117,7 +117,7 @@ abstract class AbstractCache implements CacheInterface
     {
         $iterable = function_exists('is_iterable')
             ? is_iterable($subject)
-            : is_array($subject) || $subject instanceof Traversable;
+            : is_iterable($subject);
         
         if (!$iterable) {
             throw new InvalidArgumentException($msg);
@@ -163,7 +163,6 @@ abstract class AbstractCache implements CacheInterface
     /**
      * Pack all values and turn keys into ids
      *
-     * @param iterable $values
      * @return array
      */
     protected function packValues(iterable $values): array
@@ -260,7 +259,7 @@ abstract class AbstractCache implements CacheInterface
         }
 
         if (!is_int($ttl)) {
-            $type = (is_object($ttl) ? get_class($ttl) . ' ' : '') . gettype($ttl);
+            $type = (is_object($ttl) ? $ttl::class . ' ' : '') . gettype($ttl);
             throw new InvalidArgumentException("ttl should be of type int or DateInterval, not $type");
         }
 
@@ -290,7 +289,7 @@ abstract class AbstractCache implements CacheInterface
             return isset($this->ttl) ? min($timestamp, time() + $this->ttl) : $timestamp;
         }
 
-        $type = (is_object($ttl) ? get_class($ttl) . ' ' : '') . gettype($ttl);
+        $type = (is_object($ttl) ? $ttl::class . ' ' : '') . gettype($ttl);
         throw new InvalidArgumentException("ttl should be of type int or DateInterval, not $type");
     }
 }

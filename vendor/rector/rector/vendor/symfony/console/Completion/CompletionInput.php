@@ -22,16 +22,16 @@ use RectorPrefix202308\Symfony\Component\Console\Input\InputOption;
  *
  * @author Wouter de Jong <wouter@wouterj.nl>
  */
-final class CompletionInput extends ArgvInput
+final class CompletionInput extends ArgvInput implements \Stringable
 {
     public const TYPE_ARGUMENT_VALUE = 'argument_value';
     public const TYPE_OPTION_VALUE = 'option_value';
     public const TYPE_OPTION_NAME = 'option_name';
     public const TYPE_NONE = 'none';
-    private $tokens;
-    private $currentIndex;
-    private $completionType;
-    private $completionName;
+    private ?array $tokens = null;
+    private ?int $currentIndex = null;
+    private ?string $completionType = null;
+    private ?string $completionName = null;
     private $completionValue = '';
     /**
      * Converts a terminal string into tokens.
@@ -72,12 +72,12 @@ final class CompletionInput extends ArgvInput
             if (($nullsafeVariable1 = $option) ? $nullsafeVariable1->acceptValue() : null) {
                 $this->completionType = self::TYPE_OPTION_VALUE;
                 $this->completionName = $option->getName();
-                $this->completionValue = $optionValue ?: (\strncmp($optionToken, '--', \strlen('--')) !== 0 ? \substr($optionToken, 2) : '');
+                $this->completionValue = $optionValue ?: (!str_starts_with($optionToken, '--') ? \substr($optionToken, 2) : '');
                 return;
             }
         }
         $previousToken = $this->tokens[$this->currentIndex - 1];
-        if ('-' === $previousToken[0] && '' !== \trim($previousToken, '-')) {
+        if ('-' === $previousToken[0] && '' !== \trim((string) $previousToken, '-')) {
             // check if previous option accepted a value
             $previousOption = $this->getOptionFromToken($previousToken);
             if (($nullsafeVariable2 = $previousOption) ? $nullsafeVariable2->acceptValue() : null) {
@@ -96,13 +96,12 @@ final class CompletionInput extends ArgvInput
             $argumentValue = $this->arguments[$argumentName];
             $this->completionName = $argumentName;
             if (\is_array($argumentValue)) {
-                \end($argumentValue);
-                $this->completionValue = $argumentValue ? $argumentValue[\key($argumentValue)] : null;
+                $this->completionValue = $argumentValue ? $argumentValue[array_key_last($argumentValue)] : null;
             } else {
                 $this->completionValue = $argumentValue;
             }
         }
-        if ($this->currentIndex >= \count($this->tokens)) {
+        if ($this->currentIndex >= (is_countable($this->tokens) ? \count($this->tokens) : 0)) {
             if (!isset($this->arguments[$argumentName]) || $this->definition->getArgument($argumentName)->isArray()) {
                 $this->completionName = $argumentName;
                 $this->completionValue = '';
@@ -156,7 +155,7 @@ final class CompletionInput extends ArgvInput
     {
         try {
             return parent::parseToken($token, $parseOptions);
-        } catch (RuntimeException $exception) {
+        } catch (RuntimeException) {
             // suppress errors, completed input is almost never valid
         }
         return $parseOptions;
@@ -186,7 +185,7 @@ final class CompletionInput extends ArgvInput
      */
     private function isCursorFree() : bool
     {
-        $nrOfTokens = \count($this->tokens);
+        $nrOfTokens = is_countable($this->tokens) ? \count($this->tokens) : 0;
         if ($this->currentIndex > $nrOfTokens) {
             throw new \LogicException('Current index is invalid, it must be the number of input tokens or one more.');
         }

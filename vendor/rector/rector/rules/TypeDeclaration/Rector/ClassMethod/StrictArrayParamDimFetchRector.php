@@ -26,14 +26,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class StrictArrayParamDimFetchRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\VendorLocker\ParentClassMethodTypeOverrideGuard
-     */
-    private $parentClassMethodTypeOverrideGuard;
-    public function __construct(ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard
+    )
     {
-        $this->parentClassMethodTypeOverrideGuard = $parentClassMethodTypeOverrideGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {

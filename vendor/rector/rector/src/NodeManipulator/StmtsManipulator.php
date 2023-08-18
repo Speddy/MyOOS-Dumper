@@ -11,36 +11,30 @@ use Rector\Core\Contract\PhpParser\Node\StmtsAwareInterface;
 use Rector\Core\PhpParser\Comparing\NodeComparator;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
-final class StmtsManipulator
+final readonly class StmtsManipulator
 {
-    /**
-     * @readonly
-     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
-     */
-    private $simpleCallableNodeTraverser;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
-     */
-    private $nodeComparator;
-    public function __construct(SimpleCallableNodeTraverser $simpleCallableNodeTraverser, BetterNodeFinder $betterNodeFinder, NodeComparator $nodeComparator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
+        /**
+         * @readonly
+         */
+        private BetterNodeFinder $betterNodeFinder,
+        /**
+         * @readonly
+         */
+        private NodeComparator $nodeComparator
+    )
     {
-        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
-        $this->betterNodeFinder = $betterNodeFinder;
-        $this->nodeComparator = $nodeComparator;
     }
     /**
      * @param Stmt[] $stmts
      */
     public function getUnwrappedLastStmt(array $stmts) : ?Node
     {
-        \end($stmts);
-        $lastStmtKey = \key($stmts);
+        $lastStmtKey = array_key_last($stmts);
         $lastStmt = $stmts[$lastStmtKey];
         if ($lastStmt instanceof Expression) {
             return $lastStmt->expr;

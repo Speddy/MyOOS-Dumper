@@ -30,62 +30,45 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ImproveDoctrineCollectionDocTypeInEntityRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\TypeAnalyzer\CollectionTypeFactory
-     */
-    private $collectionTypeFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\AssignManipulator
-     */
-    private $assignManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\TypeAnalyzer\CollectionTypeResolver
-     */
-    private $collectionTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\TypeAnalyzer\CollectionVarTagValueNodeResolver
-     */
-    private $collectionVarTagValueNodeResolver;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
-     */
-    private $phpDocTypeChanger;
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\PhpDocParser\DoctrineDocBlockResolver
-     */
-    private $doctrineDocBlockResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\NodeAnalyzer\AttributeFinder
-     */
-    private $attributeFinder;
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\NodeAnalyzer\TargetEntityResolver
-     */
-    private $targetEntityResolver;
-    public function __construct(CollectionTypeFactory $collectionTypeFactory, AssignManipulator $assignManipulator, CollectionTypeResolver $collectionTypeResolver, CollectionVarTagValueNodeResolver $collectionVarTagValueNodeResolver, PhpDocTypeChanger $phpDocTypeChanger, DoctrineDocBlockResolver $doctrineDocBlockResolver, ReflectionResolver $reflectionResolver, AttributeFinder $attributeFinder, TargetEntityResolver $targetEntityResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly CollectionTypeFactory $collectionTypeFactory,
+        /**
+         * @readonly
+         */
+        private readonly AssignManipulator $assignManipulator,
+        /**
+         * @readonly
+         */
+        private readonly CollectionTypeResolver $collectionTypeResolver,
+        /**
+         * @readonly
+         */
+        private readonly CollectionVarTagValueNodeResolver $collectionVarTagValueNodeResolver,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTypeChanger $phpDocTypeChanger,
+        /**
+         * @readonly
+         */
+        private readonly DoctrineDocBlockResolver $doctrineDocBlockResolver,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private readonly AttributeFinder $attributeFinder,
+        /**
+         * @readonly
+         */
+        private readonly TargetEntityResolver $targetEntityResolver
+    )
     {
-        $this->collectionTypeFactory = $collectionTypeFactory;
-        $this->assignManipulator = $assignManipulator;
-        $this->collectionTypeResolver = $collectionTypeResolver;
-        $this->collectionVarTagValueNodeResolver = $collectionVarTagValueNodeResolver;
-        $this->phpDocTypeChanger = $phpDocTypeChanger;
-        $this->doctrineDocBlockResolver = $doctrineDocBlockResolver;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->attributeFinder = $attributeFinder;
-        $this->targetEntityResolver = $targetEntityResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

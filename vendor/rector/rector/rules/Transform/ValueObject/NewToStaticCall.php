@@ -5,28 +5,19 @@ namespace Rector\Transform\ValueObject;
 
 use PHPStan\Type\ObjectType;
 use Rector\Core\Validation\RectorAssert;
-final class NewToStaticCall
+final readonly class NewToStaticCall
 {
-    /**
+    public function __construct(/**
      * @readonly
-     * @var string
      */
-    private $type;
-    /**
+    private string $type, /**
      * @readonly
-     * @var string
      */
-    private $staticCallClass;
-    /**
+    private string $staticCallClass, /**
      * @readonly
-     * @var string
      */
-    private $staticCallMethod;
-    public function __construct(string $type, string $staticCallClass, string $staticCallMethod)
+    private string $staticCallMethod)
     {
-        $this->type = $type;
-        $this->staticCallClass = $staticCallClass;
-        $this->staticCallMethod = $staticCallMethod;
         RectorAssert::className($type);
         RectorAssert::className($staticCallClass);
         RectorAssert::methodName($staticCallMethod);

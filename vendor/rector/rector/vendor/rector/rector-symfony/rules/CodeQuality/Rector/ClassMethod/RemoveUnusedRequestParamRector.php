@@ -19,26 +19,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveUnusedRequestParamRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\TypeAnalyzer\ControllerAnalyzer
-     */
-    private $controllerAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\FamilyTree\NodeAnalyzer\ClassChildAnalyzer
-     */
-    private $classChildAnalyzer;
-    public function __construct(ControllerAnalyzer $controllerAnalyzer, ReflectionResolver $reflectionResolver, ClassChildAnalyzer $classChildAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ControllerAnalyzer $controllerAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private readonly ClassChildAnalyzer $classChildAnalyzer
+    )
     {
-        $this->controllerAnalyzer = $controllerAnalyzer;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->classChildAnalyzer = $classChildAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

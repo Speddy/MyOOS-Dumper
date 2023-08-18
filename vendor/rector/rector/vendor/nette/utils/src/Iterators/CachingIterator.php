@@ -23,8 +23,7 @@ use RectorPrefix202308\Nette;
 class CachingIterator extends \CachingIterator implements \Countable
 {
     use Nette\SmartObject;
-    /** @var int */
-    private $counter = 0;
+    private int $counter = 0;
     public function __construct($iterator)
     {
         if (\is_array($iterator) || $iterator instanceof \stdClass) {
@@ -38,7 +37,7 @@ class CachingIterator extends \CachingIterator implements \Countable
         } elseif ($iterator instanceof \Traversable) {
             $iterator = new \IteratorIterator($iterator);
         } else {
-            throw new Nette\InvalidArgumentException(\sprintf('Invalid argument passed to %s; array or Traversable expected, %s given.', self::class, \is_object($iterator) ? \get_class($iterator) : \gettype($iterator)));
+            throw new Nette\InvalidArgumentException(\sprintf('Invalid argument passed to %s; array or Traversable expected, %s given.', self::class, get_debug_type($iterator)));
         }
         parent::__construct($iterator, 0);
     }

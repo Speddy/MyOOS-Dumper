@@ -17,7 +17,7 @@ abstract class AbstractFalsyScalarRuleFixerRector extends AbstractScopeAwareRect
      * @api
      * @var string
      */
-    public const TREAT_AS_NON_EMPTY = 'treat_as_non_empty';
+    final public const TREAT_AS_NON_EMPTY = 'treat_as_non_empty';
     /**
      * @var bool
      */

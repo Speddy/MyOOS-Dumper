@@ -40,12 +40,12 @@ final class StringAnnotationToAttributeMapper implements AnnotationToAttributeMa
         if (\is_numeric($value) && \strlen((string) (int) $value) === \strlen($value)) {
             return LNumber::fromString($value);
         }
-        if (\strpos($value, "'") !== \false && \strpos($value, "\n") === \false) {
+        if (str_contains($value, "'") && !str_contains($value, "\n")) {
             $kind = String_::KIND_DOUBLE_QUOTED;
         } else {
             $kind = String_::KIND_SINGLE_QUOTED;
         }
-        if (\strncmp($value, '"', \strlen('"')) === 0 && \substr_compare($value, '"', -\strlen('"')) === 0) {
+        if (str_starts_with($value, '"') && str_ends_with($value, '"')) {
             $value = \trim($value, '"');
         }
         return new String_($value, [AttributeKey::KIND => $kind]);

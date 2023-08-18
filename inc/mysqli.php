@@ -319,7 +319,7 @@ function GetMySQLVersion()
     $res = mod_query('SELECT VERSION()');
     $row = mysqli_fetch_array($res);
     $str = $row[0];
-    $version = str_replace(':', '--', $str);
+    $version = str_replace(':', '--', (string) $str);
     if (!defined('MOD_MYSQL_VERSION')) {
         define('MOD_MYSQL_VERSION', $version);
     }
@@ -447,7 +447,7 @@ function Fieldlist($db, $tbl)
 function getDBInfos()
 {
     global $databases, $dump, $config, $tbl_sel, $flipped;
-    for ($ii = 0; $ii < count($databases['multi']); ++$ii) {
+    for ($ii = 0; $ii < (is_countable($databases['multi']) ? count($databases['multi']) : 0); ++$ii) {
         $dump['dbindex'] = $flipped[$databases['multi'][$ii]];
         $tabellen = mysqli_query($config['dbconnection'], 'SHOW TABLE STATUS FROM `'.$databases['Name'][$dump['dbindex']].'`') or exit('getDBInfos: '.mysqli_error($config['dbconnection']));
         $num_tables = mysqli_num_rows($tabellen);
@@ -458,13 +458,13 @@ function getDBInfos()
                 if (isset($row['Type'])) {
                     $row['Engine'] = $row['Type'];
                 }
-                if (isset($row['Comment']) && 'VIEW' == substr(strtoupper($row['Comment']), 0, 4)) {
+                if (isset($row['Comment']) && str_starts_with(strtoupper((string) $row['Comment']), 'VIEW')) {
                     $dump['table_types'][] = 'VIEW';
                 } else {
-                    $dump['table_types'][] = strtoupper($row['Engine']);
+                    $dump['table_types'][] = strtoupper((string) $row['Engine']);
                 }
                 // check if data needs to be backed up
-                if ('VIEW' == strtoupper($row['Comment']) || (isset($row['Engine']) && in_array(strtoupper($row['Engine']), [
+                if ('VIEW' == strtoupper((string) $row['Comment']) || (isset($row['Engine']) && in_array(strtoupper((string) $row['Engine']), [
                     'MEMORY',
                 ]))) {
                     $dump['skip_data'][] = $databases['Name'][$dump['dbindex']].'|'.$row['Name'];
@@ -486,7 +486,7 @@ function getDBInfos()
                         $dump['totalrecords'] += $row['Rows'];
                     }
                 } elseif ('' != $databases['praefix'][$dump['dbindex']] && !isset($tbl_sel)) {
-                    if (substr($row['Name'], 0, strlen($databases['praefix'][$dump['dbindex']] ?? '')) == $databases['praefix'][$dump['dbindex']]) {
+                    if (substr((string) $row['Name'], 0, strlen($databases['praefix'][$dump['dbindex']] ?? '')) == $databases['praefix'][$dump['dbindex']]) {
                         $dump['tables'][] = $databases['Name'][$dump['dbindex']].'|'.$row['Name'];
                         $dump['records'][] = $databases['Name'][$dump['dbindex']].'|'.$row['Rows'];
                         $dump['totalrecords'] += $row['Rows'];
@@ -521,7 +521,7 @@ function getDBInfos()
                 for ($a = 0; $a < $count; ++$a) {
                     if ($dump['tables'][$a] == $skip_data) {
                         $index = $a;
-                        $t = explode('|', $dump['records'][$a]);
+                        $t = explode('|', (string) $dump['records'][$a]);
                         $rekords_to_skip = $t[1];
                         break;
                     }

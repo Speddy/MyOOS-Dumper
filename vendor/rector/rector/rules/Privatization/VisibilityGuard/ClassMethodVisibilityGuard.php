@@ -6,16 +6,15 @@ namespace Rector\Privatization\VisibilityGuard;
 use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Reflection\ClassReflection;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class ClassMethodVisibilityGuard
+final readonly class ClassMethodVisibilityGuard
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    public function __construct(NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function isClassMethodVisibilityGuardedByParent(ClassMethod $classMethod, ClassReflection $classReflection) : bool
     {

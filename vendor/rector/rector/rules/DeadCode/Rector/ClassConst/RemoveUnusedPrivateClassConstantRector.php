@@ -18,20 +18,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveUnusedPrivateClassConstantRector extends AbstractScopeAwareRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\ClassConstManipulator
-     */
-    private $classConstManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(ClassConstManipulator $classConstManipulator, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ClassConstManipulator $classConstManipulator,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver
+    )
     {
-        $this->classConstManipulator = $classConstManipulator;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -96,7 +93,7 @@ CODE_SAMPLE
     private function hasParentClassOfEnumSuffix(ClassReflection $classReflection) : bool
     {
         foreach ($classReflection->getParentClassesNames() as $parentClassesName) {
-            if (\substr_compare($parentClassesName, 'Enum', -\strlen('Enum')) === 0) {
+            if (str_ends_with($parentClassesName, 'Enum')) {
                 return \true;
             }
         }

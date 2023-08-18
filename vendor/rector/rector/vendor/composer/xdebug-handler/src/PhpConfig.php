@@ -72,7 +72,6 @@ class PhpConfig
     /**
      * Updates a restart settings value in the environment
      *
-     * @param string $name
      * @param string|false $value
      */
     private function updateEnv(string $name, $value) : void

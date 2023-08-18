@@ -25,7 +25,7 @@ class ChromePHPFormatter implements FormatterInterface
      *
      * @var array<int, 'log'|'info'|'warn'|'error'>
      */
-    private $logLevels = [
+    private array $logLevels = [
         Logger::DEBUG     => 'log',
         Logger::INFO      => 'info',
         Logger::NOTICE    => 'info',

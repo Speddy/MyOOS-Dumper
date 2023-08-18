@@ -4,26 +4,23 @@ declare (strict_types=1);
 namespace Rector\Core\PhpParser\ValueObject;
 
 use PhpParser\Node\Stmt;
-final class StmtsAndTokens
+final readonly class StmtsAndTokens
 {
-    /**
-     * @var Stmt[]
-     * @readonly
-     */
-    private $stmts;
-    /**
-     * @var mixed[]
-     * @readonly
-     */
-    private $tokens;
     /**
      * @param Stmt[] $stmts
      * @param mixed[] $tokens
      */
-    public function __construct(array $stmts, array $tokens)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private array $stmts,
+        /**
+         * @readonly
+         */
+        private array $tokens
+    )
     {
-        $this->stmts = $stmts;
-        $this->tokens = $tokens;
     }
     /**
      * @return Stmt[]

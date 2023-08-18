@@ -36,26 +36,20 @@ class Table
     private const DISPLAY_ORIENTATION_DEFAULT = 'default';
     private const DISPLAY_ORIENTATION_HORIZONTAL = 'horizontal';
     private const DISPLAY_ORIENTATION_VERTICAL = 'vertical';
-    /**
-     * @var string|null
-     */
-    private $headerTitle;
-    /**
-     * @var string|null
-     */
-    private $footerTitle;
+    private ?string $headerTitle = null;
+    private ?string $footerTitle = null;
     /**
      * @var mixed[]
      */
-    private $headers = [];
+    private array $headers = [];
     /**
      * @var mixed[]
      */
-    private $rows = [];
+    private array $rows = [];
     /**
      * @var mixed[]
      */
-    private $effectiveColumnWidths = [];
+    private array $effectiveColumnWidths = [];
     /**
      * @var int
      */
@@ -71,23 +65,17 @@ class Table
     /**
      * @var mixed[]
      */
-    private $columnStyles = [];
+    private array $columnStyles = [];
     /**
      * @var mixed[]
      */
-    private $columnWidths = [];
+    private array $columnWidths = [];
     /**
      * @var mixed[]
      */
-    private $columnMaxWidths = [];
-    /**
-     * @var bool
-     */
-    private $rendered = \false;
-    /**
-     * @var string
-     */
-    private $displayOrientation = self::DISPLAY_ORIENTATION_DEFAULT;
+    private array $columnMaxWidths = [];
+    private bool $rendered = \false;
+    private string $displayOrientation = self::DISPLAY_ORIENTATION_DEFAULT;
     /**
      * @var mixed[]
      */
@@ -95,7 +83,7 @@ class Table
     public function __construct(OutputInterface $output)
     {
         $this->output = $output;
-        self::$styles = self::$styles ?? self::initStyles();
+        self::$styles ??= self::initStyles();
         $this->setStyle('default');
     }
     /**
@@ -105,7 +93,7 @@ class Table
      */
     public static function setStyleDefinition(string $name, TableStyle $style)
     {
-        self::$styles = self::$styles ?? self::initStyles();
+        self::$styles ??= self::initStyles();
         self::$styles[$name] = $style;
     }
     /**
@@ -113,7 +101,7 @@ class Table
      */
     public static function getStyleDefinition(string $name) : TableStyle
     {
-        self::$styles = self::$styles ?? self::initStyles();
+        self::$styles ??= self::initStyles();
         if (!isset(self::$styles[$name])) {
             throw new InvalidArgumentException(\sprintf('Style "%s" is not defined.', $name));
         }
@@ -317,9 +305,7 @@ class Table
     public function render()
     {
         $divider = new TableSeparator();
-        $isCellWithColspan = static function ($cell) {
-            return $cell instanceof TableCell && $cell->getColspan() >= 2;
-        };
+        $isCellWithColspan = static fn($cell) => $cell instanceof TableCell && $cell->getColspan() >= 2;
         $horizontal = self::DISPLAY_ORIENTATION_HORIZONTAL === $this->displayOrientation;
         $vertical = self::DISPLAY_ORIENTATION_VERTICAL === $this->displayOrientation;
         $rows = [];
@@ -341,9 +327,7 @@ class Table
             }
         } elseif ($vertical) {
             $formatter = $this->output->getFormatter();
-            $maxHeaderLength = \array_reduce($this->headers[0] ?? [], static function ($max, $header) use($formatter) {
-                return \max($max, Helper::width(Helper::removeDecoration($formatter, $header)));
-            }, 0);
+            $maxHeaderLength = \array_reduce($this->headers[0] ?? [], static fn($max, $header) => \max($max, Helper::width(Helper::removeDecoration($formatter, $header))), 0);
             foreach ($this->rows as $row) {
                 if ($row instanceof TableSeparator) {
                     continue;
@@ -358,7 +342,7 @@ class Table
                     }
                 }
                 $headers = $this->headers[0] ?? [];
-                $maxRows = \max(\count($headers), \count($row));
+                $maxRows = \max(is_countable($headers) ? \count($headers) : 0, is_countable($row) ? \count($row) : 0);
                 for ($i = 0; $i < $maxRows; ++$i) {
                     $cell = (string) ($row[$i] ?? '');
                     if ($headers && !$containsColspan) {
@@ -445,7 +429,7 @@ class Table
         }
         $markup = $leftChar;
         for ($column = 0; $column < $count; ++$column) {
-            $markup .= \str_repeat($horizontal, $this->effectiveColumnWidths[$column]);
+            $markup .= \str_repeat((string) $horizontal, $this->effectiveColumnWidths[$column]);
             $markup .= $column === $count - 1 ? $rightChar : $midChar;
         }
         if (null !== $title) {
@@ -457,10 +441,10 @@ class Table
                 $formattedTitle = \sprintf($titleFormat, Helper::substr($title, 0, $limit - $formatLength - 3) . '...');
             }
             $titleStart = \intdiv($markupLength - $titleLength, 2);
-            if (\false === \mb_detect_encoding($markup, null, \true)) {
-                $markup = \substr_replace($markup, $formattedTitle, $titleStart, $titleLength);
+            if (\false === \mb_detect_encoding((string) $markup, null, \true)) {
+                $markup = \substr_replace((string) $markup, $formattedTitle, $titleStart, $titleLength);
             } else {
-                $markup = \mb_substr($markup, 0, $titleStart) . $formattedTitle . \mb_substr($markup, $titleStart + $titleLength);
+                $markup = \mb_substr((string) $markup, 0, $titleStart) . $formattedTitle . \mb_substr((string) $markup, $titleStart + $titleLength);
             }
         }
         $this->output->writeln(\sprintf($this->style->getBorderFormat(), $markup));
@@ -509,12 +493,12 @@ class Table
             }
         }
         // str_pad won't work properly with multi-byte strings, we need to fix the padding
-        if (\false !== ($encoding = \mb_detect_encoding($cell, null, \true))) {
-            $width += \strlen($cell) - \mb_strwidth($cell, $encoding);
+        if (\false !== ($encoding = \mb_detect_encoding((string) $cell, null, \true))) {
+            $width += \strlen((string) $cell) - \mb_strwidth((string) $cell, $encoding);
         }
         $style = $this->getColumnStyle($column);
         if ($cell instanceof TableSeparator) {
-            return \sprintf($style->getBorderFormat(), \str_repeat($style->getBorderChars()[2], $width));
+            return \sprintf($style->getBorderFormat(), \str_repeat((string) $style->getBorderChars()[2], $width));
         }
         $width += Helper::length($cell) - Helper::length(Helper::removeDecoration($this->output->getFormatter(), $cell));
         $content = \sprintf($style->getCellRowContentFormat(), $cell);
@@ -527,11 +511,11 @@ class Table
                     $tag = \http_build_query($cell->getStyle()->getTagOptions(), '', ';');
                     $cellFormat = '<' . $tag . '>%s</>';
                 }
-                if (\strpos($content, '</>') !== \false) {
+                if (str_contains($content, '</>')) {
                     $content = \str_replace('</>', '', $content);
                     $width -= 3;
                 }
-                if (\strpos($content, '<fg=default;bg=default>') !== \false) {
+                if (str_contains($content, '<fg=default;bg=default>')) {
                     $content = \str_replace('<fg=default;bg=default>', '', $content);
                     $width -= \strlen('<fg=default;bg=default>');
                 }
@@ -567,10 +551,10 @@ class Table
                 if (isset($this->columnMaxWidths[$column]) && Helper::width(Helper::removeDecoration($formatter, $cell)) > $this->columnMaxWidths[$column]) {
                     $cell = $formatter->formatAndWrap($cell, $this->columnMaxWidths[$column] * $colspan);
                 }
-                if (\strpos($cell ?? '', "\n") === \false) {
+                if (!str_contains($cell ?? '', "\n")) {
                     continue;
                 }
-                $escaped = \implode("\n", \array_map(\Closure::fromCallable([OutputFormatter::class, 'escapeTrailingBackslash']), \explode("\n", $cell)));
+                $escaped = \implode("\n", \array_map(\Closure::fromCallable(OutputFormatter::escapeTrailingBackslash(...)), \explode("\n", (string) $cell)));
                 $cell = $cell instanceof TableCell ? new TableCell($escaped, ['colspan' => $cell->getColspan()]) : $escaped;
                 $lines = \explode("\n", \str_replace("\n", "<fg=default;bg=default></>\n", $cell));
                 foreach ($lines as $lineKey => $line) {
@@ -628,7 +612,7 @@ class Table
             if ($cell instanceof TableCell && $cell->getRowspan() > 1) {
                 $nbLines = $cell->getRowspan() - 1;
                 $lines = [$cell];
-                if (\strpos($cell, "\n") !== \false) {
+                if (str_contains($cell, "\n")) {
                     $lines = \explode("\n", \str_replace("\n", "<fg=default;bg=default>\n</>", $cell));
                     $nbLines = \count($lines) > $nbLines ? \substr_count($cell, "\n") : $nbLines;
                     $rows[$line][$column] = new TableCell($lines[0], ['colspan' => $cell->getColspan(), 'style' => $cell->getStyle()]);

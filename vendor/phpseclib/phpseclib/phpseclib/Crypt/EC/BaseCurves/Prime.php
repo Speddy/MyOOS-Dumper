@@ -187,8 +187,8 @@ class Prime extends Base
      */
     protected function jacobianAddPointMixedXY(array $p, array $q)
     {
-        list($u1, $s1) = $p;
-        list($u2, $s2) = $q;
+        [$u1, $s1] = $p;
+        [$u2, $s2] = $q;
         if ($u1->equals($u2)) {
             if (!$s1->equals($s2)) {
                 return [];
@@ -219,8 +219,8 @@ class Prime extends Base
      */
     protected function jacobianAddPointMixedX(array $p, array $q)
     {
-        list($u1, $s1, $z1) = $p;
-        list($x2, $y2) = $q;
+        [$u1, $s1, $z1] = $p;
+        [$x2, $y2] = $q;
 
         $z12 = $z1->multiply($z1);
 
@@ -255,8 +255,8 @@ class Prime extends Base
      */
     protected function jacobianAddPoint(array $p, array $q)
     {
-        list($x1, $y1, $z1) = $p;
-        list($x2, $y2, $z2) = $q;
+        [$x1, $y1, $z1] = $p;
+        [$x2, $y2, $z2] = $q;
 
         $z12 = $z1->multiply($z1);
         $z22 = $z2->multiply($z2);
@@ -330,7 +330,7 @@ class Prime extends Base
             if (!$p[1]->equals($q[1])) {
                 return [];
             } else { // eg. doublePoint
-                list($numerator, $denominator) = $this->doublePointHelper($p);
+                [$numerator, $denominator] = $this->doublePointHelper($p);
             }
         } else {
             $numerator = $q[1]->subtract($p[1]);
@@ -362,7 +362,7 @@ class Prime extends Base
      */
     protected function jacobianDoublePoint(array $p)
     {
-        list($x, $y, $z) = $p;
+        [$x, $y, $z] = $p;
         $x2 = $x->multiply($x);
         $y2 = $y->multiply($y);
         $z2 = $z->multiply($z);
@@ -385,7 +385,7 @@ class Prime extends Base
      */
     protected function jacobianDoublePointMixed(array $p)
     {
-        list($x, $y) = $p;
+        [$x, $y] = $p;
         $x2 = $x->multiply($x);
         $y2 = $y->multiply($y);
         $s = $this->four->multiply($x)->multiply($y2);
@@ -422,7 +422,7 @@ class Prime extends Base
             return $this->jacobianDoublePoint($p);
         }
 
-        list($numerator, $denominator) = $this->doublePointHelper($p);
+        [$numerator, $denominator] = $this->doublePointHelper($p);
 
         $slope = $numerator->divide($denominator);
 
@@ -442,16 +442,11 @@ class Prime extends Base
         $y = ord(Strings::shift($m));
         $x = new BigInteger($m, 256);
         $xp = $this->convertInteger($x);
-        switch ($y) {
-            case 2:
-                $ypn = false;
-                break;
-            case 3:
-                $ypn = true;
-                break;
-            default:
-                throw new \RuntimeException('Coordinate not in recognized format');
-        }
+        $ypn = match ($y) {
+            2 => false,
+            3 => true,
+            default => throw new \RuntimeException('Coordinate not in recognized format'),
+        };
         $temp = $xp->multiply($this->a);
         $temp = $xp->multiply($xp)->multiply($xp)->add($temp);
         $temp = $temp->add($this->b);
@@ -471,7 +466,7 @@ class Prime extends Base
      */
     public function verifyPoint(array $p)
     {
-        list($x, $y) = $p;
+        [$x, $y] = $p;
         $lhs = $y->multiply($y);
         $temp = $x->multiply($this->a);
         $temp = $x->multiply($x)->multiply($x)->add($temp);
@@ -527,10 +522,10 @@ class Prime extends Base
         }
 
         $wnd = [$this->getNAFPoints($points[0], 7)];
-        $wndWidth = [isset($points[0]['nafwidth']) ? $points[0]['nafwidth'] : 7];
+        $wndWidth = [$points[0]['nafwidth'] ?? 7];
         for ($i = 1; $i < $length; $i++) {
             $wnd[] = $this->getNAFPoints($points[$i], 1);
-            $wndWidth[] = isset($points[$i]['nafwidth']) ? $points[$i]['nafwidth'] : 1;
+            $wndWidth[] = $points[$i]['nafwidth'] ?? 1;
         }
 
         $naf = [];
@@ -544,7 +539,7 @@ class Prime extends Base
             if ($wndWidth[$a] != 1 || $wndWidth[$b] != 1) {
                 $naf[$a] = $scalars[$a]->getNAF($wndWidth[$a]);
                 $naf[$b] = $scalars[$b]->getNAF($wndWidth[$b]);
-                $max = max(count($naf[$a]), count($naf[$b]), $max);
+                $max = max(is_countable($naf[$a]) ? count($naf[$a]) : 0, is_countable($naf[$b]) ? count($naf[$b]) : 0, $max);
                 continue;
             }
 
@@ -572,7 +567,7 @@ class Prime extends Base
 
             $jsf = self::getJSFPoints($scalars[$a], $scalars[$b]);
 
-            $max = max(count($jsf[0]), $max);
+            $max = max(is_countable($jsf[0]) ? count($jsf[0]) : 0, $max);
             if ($max > 0) {
                 $naf[$a] = array_fill(0, $max, 0);
                 $naf[$b] = array_fill(0, $max, 0);
@@ -582,8 +577,8 @@ class Prime extends Base
             }
 
             for ($j = 0; $j < $max; $j++) {
-                $ja = isset($jsf[0][$j]) ? $jsf[0][$j] : 0;
-                $jb = isset($jsf[1][$j]) ? $jsf[1][$j] : 0;
+                $ja = $jsf[0][$j] ?? 0;
+                $jb = $jsf[1][$j] ?? 0;
 
                 $naf[$a][$j] = $index[3 * ($ja + 1) + $jb + 1];
                 $naf[$b][$j] = 0;
@@ -598,7 +593,7 @@ class Prime extends Base
             while ($i >= 0) {
                 $zero = true;
                 for ($j = 0; $j < $length; $j++) {
-                    $temp[$j] = isset($naf[$j][$i]) ? $naf[$j][$i] : 0;
+                    $temp[$j] = $naf[$j][$i] ?? 0;
                     if ($temp[$j] != 0) {
                         $zero = false;
                     }
@@ -758,7 +753,7 @@ class Prime extends Base
         if (!isset($p[2])) {
             return $p;
         }
-        list($x, $y, $z) = $p;
+        [$x, $y, $z] = $p;
         $z = $this->one->divide($z);
         $z2 = $z->multiply($z);
         return [

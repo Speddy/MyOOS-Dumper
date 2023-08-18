@@ -7,16 +7,15 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\PhpDocParser\Ast\PhpDoc\ReturnTagValueNode;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
 use Rector\DeadCode\PhpDoc\DeadReturnTagValueNodeAnalyzer;
-final class ReturnTagRemover
+final readonly class ReturnTagRemover
 {
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\PhpDoc\DeadReturnTagValueNodeAnalyzer
-     */
-    private $deadReturnTagValueNodeAnalyzer;
-    public function __construct(DeadReturnTagValueNodeAnalyzer $deadReturnTagValueNodeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private DeadReturnTagValueNodeAnalyzer $deadReturnTagValueNodeAnalyzer
+    )
     {
-        $this->deadReturnTagValueNodeAnalyzer = $deadReturnTagValueNodeAnalyzer;
     }
     public function removeReturnTagIfUseless(PhpDocInfo $phpDocInfo, ClassMethod $classMethod) : bool
     {

@@ -5,80 +5,59 @@ namespace Rector\Core\ValueObject;
 
 use Rector\ChangesReporting\Output\ConsoleOutputFormatter;
 use RectorPrefix202308\Webmozart\Assert\Assert;
-final class Configuration
+final readonly class Configuration
 {
-    /**
-     * @readonly
-     * @var bool
-     */
-    private $isDryRun = \false;
-    /**
-     * @readonly
-     * @var bool
-     */
-    private $showProgressBar = \true;
-    /**
-     * @readonly
-     * @var bool
-     */
-    private $shouldClearCache = \false;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $outputFormat = ConsoleOutputFormatter::NAME;
-    /**
-     * @var string[]
-     * @readonly
-     */
-    private $fileExtensions = ['php'];
-    /**
-     * @var string[]
-     * @readonly
-     */
-    private $paths = [];
-    /**
-     * @readonly
-     * @var bool
-     */
-    private $showDiffs = \true;
-    /**
-     * @readonly
-     * @var string|null
-     */
-    private $parallelPort = null;
-    /**
-     * @readonly
-     * @var string|null
-     */
-    private $parallelIdentifier = null;
-    /**
-     * @readonly
-     * @var bool
-     */
-    private $isParallel = \false;
-    /**
-     * @readonly
-     * @var string|null
-     */
-    private $memoryLimit = null;
     /**
      * @param string[] $fileExtensions
      * @param string[] $paths
      */
-    public function __construct(bool $isDryRun = \false, bool $showProgressBar = \true, bool $shouldClearCache = \false, string $outputFormat = ConsoleOutputFormatter::NAME, array $fileExtensions = ['php'], array $paths = [], bool $showDiffs = \true, ?string $parallelPort = null, ?string $parallelIdentifier = null, bool $isParallel = \false, ?string $memoryLimit = null)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private bool $isDryRun = \false,
+        /**
+         * @readonly
+         */
+        private bool $showProgressBar = \true,
+        /**
+         * @readonly
+         */
+        private bool $shouldClearCache = \false,
+        /**
+         * @readonly
+         */
+        private string $outputFormat = ConsoleOutputFormatter::NAME,
+        /**
+         * @readonly
+         */
+        private array $fileExtensions = ['php'],
+        /**
+         * @readonly
+         */
+        private array $paths = [],
+        /**
+         * @readonly
+         */
+        private bool $showDiffs = \true,
+        /**
+         * @readonly
+         */
+        private ?string $parallelPort = null,
+        /**
+         * @readonly
+         */
+        private ?string $parallelIdentifier = null,
+        /**
+         * @readonly
+         */
+        private bool $isParallel = \false,
+        /**
+         * @readonly
+         */
+        private ?string $memoryLimit = null
+    )
     {
-        $this->isDryRun = $isDryRun;
-        $this->showProgressBar = $showProgressBar;
-        $this->shouldClearCache = $shouldClearCache;
-        $this->outputFormat = $outputFormat;
-        $this->fileExtensions = $fileExtensions;
-        $this->paths = $paths;
-        $this->showDiffs = $showDiffs;
-        $this->parallelPort = $parallelPort;
-        $this->parallelIdentifier = $parallelIdentifier;
-        $this->isParallel = $isParallel;
-        $this->memoryLimit = $memoryLimit;
     }
     public function isDryRun() : bool
     {

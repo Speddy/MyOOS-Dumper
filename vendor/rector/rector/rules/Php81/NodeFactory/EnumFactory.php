@@ -22,40 +22,31 @@ use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\Core\PhpParser\Node\Value\ValueResolver;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final class EnumFactory
+final readonly class EnumFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    /**
-     * @readonly
-     * @var \PhpParser\BuilderFactory
-     */
-    private $builderFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
-     */
-    private $valueResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    public function __construct(NodeNameResolver $nodeNameResolver, PhpDocInfoFactory $phpDocInfoFactory, BuilderFactory $builderFactory, ValueResolver $valueResolver, BetterNodeFinder $betterNodeFinder)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private PhpDocInfoFactory $phpDocInfoFactory,
+        /**
+         * @readonly
+         */
+        private BuilderFactory $builderFactory,
+        /**
+         * @readonly
+         */
+        private ValueResolver $valueResolver,
+        /**
+         * @readonly
+         */
+        private BetterNodeFinder $betterNodeFinder
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
-        $this->builderFactory = $builderFactory;
-        $this->valueResolver = $valueResolver;
-        $this->betterNodeFinder = $betterNodeFinder;
     }
     public function createFromClass(Class_ $class) : Enum_
     {
@@ -160,9 +151,7 @@ final class EnumFactory
      */
     private function getIdentifierTypeFromMappings(array $mapping) : string
     {
-        $callableGetType = static function ($value) : string {
-            return \gettype($value);
-        };
+        $callableGetType = static fn($value): string => \gettype($value);
         $valueTypes = \array_map($callableGetType, $mapping);
         $uniqueValueTypes = \array_unique($valueTypes);
         if (\count($uniqueValueTypes) === 1) {

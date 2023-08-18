@@ -11,22 +11,19 @@ use PHPStan\Type\TypeWithClassName;
 use Rector\Core\Enum\ObjectReference;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final class CallCollectionAnalyzer
+final readonly class CallCollectionAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    public function __construct(NodeTypeResolver $nodeTypeResolver, NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->nodeTypeResolver = $nodeTypeResolver;
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @param StaticCall[]|MethodCall[] $calls

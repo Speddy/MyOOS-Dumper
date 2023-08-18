@@ -32,14 +32,13 @@ use Rector\NodeTypeResolver\PHPStan\Scope\Contract\NodeVisitor\ScopeResolverNode
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
 final class ContextNodeVisitor extends NodeVisitorAbstract implements ScopeResolverNodeVisitorInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
-     */
-    private $simpleCallableNodeTraverser;
-    public function __construct(SimpleCallableNodeTraverser $simpleCallableNodeTraverser)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly SimpleCallableNodeTraverser $simpleCallableNodeTraverser
+    )
     {
-        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
     }
     public function enterNode(Node $node) : ?Node
     {

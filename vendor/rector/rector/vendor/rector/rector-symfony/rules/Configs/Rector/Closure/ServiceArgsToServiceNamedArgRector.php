@@ -25,20 +25,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ServiceArgsToServiceNamedArgRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\SymfonyPhpClosureDetector
-     */
-    private $symfonyPhpClosureDetector;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    public function __construct(SymfonyPhpClosureDetector $symfonyPhpClosureDetector, ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly SymfonyPhpClosureDetector $symfonyPhpClosureDetector,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider
+    )
     {
-        $this->symfonyPhpClosureDetector = $symfonyPhpClosureDetector;
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

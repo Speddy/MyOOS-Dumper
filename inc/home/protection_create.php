@@ -40,9 +40,9 @@ if ('WIN' == strtoupper(substr(MOD_OS, 0, 3))) {
 if (isset($_POST['type'])) {
     $type = intval($_POST['type']);
 }
-$username = (isset($_POST['username'])) ? $_POST['username'] : '';
-$userpass1 = (isset($_POST['userpass1'])) ? $_POST['userpass1'] : '';
-$userpass2 = (isset($_POST['userpass2'])) ? $_POST['userpass2'] : '';
+$username = $_POST['username'] ?? '';
+$userpass1 = $_POST['userpass1'] ?? '';
+$userpass2 = $_POST['userpass2'] ?? '';
 
 header('Pragma: no-cache');
 header('Cache-Control: no-cache, must-revalidate');
@@ -77,7 +77,7 @@ if (isset($_POST['username'])) {
         switch ($type) {
             // CRYPT
             case 0:
-                $userpass = crypt($userpass1, 'rl');
+                $userpass = crypt((string) $userpass1, 'rl');
                 break;
             // MD5(APR)
             case 1:
@@ -89,11 +89,11 @@ if (isset($_POST['username'])) {
                 break;
             // SHA1
             case 3:
-                $userpass = '{SHA}'.base64_encode(sha1($userpass1, true));
+                $userpass = '{SHA}'.base64_encode(sha1((string) $userpass1, true));
                 break;
             // BCRYPT
             case 4:
-                $userpass = password_hash($userpass1, PASSWORD_BCRYPT);
+                $userpass = password_hash((string) $userpass1, PASSWORD_BCRYPT);
                 break;
         }
         $htpasswd = $username.':'.$userpass;
@@ -141,9 +141,9 @@ if (sizeof($error) > 0 || !isset($_POST['username'])) {
     ]);
 
     $tpl->assign_block_vars('INPUT', [
-        'USERNAME' => htmlspecialchars($username),
-        'USERPASS1' => htmlspecialchars($userpass1),
-        'USERPASS2' => htmlspecialchars($userpass2),
+        'USERNAME' => htmlspecialchars((string) $username),
+        'USERPASS1' => htmlspecialchars((string) $userpass1),
+        'USERPASS2' => htmlspecialchars((string) $userpass2),
         'TYPE0_CHECKED' => 0 == $type ? ' checked="checked"' : '',
         'TYPE1_CHECKED' => 1 == $type ? ' checked="checked"' : '',
         'TYPE2_CHECKED' => 2 == $type ? ' checked="checked"' : '',

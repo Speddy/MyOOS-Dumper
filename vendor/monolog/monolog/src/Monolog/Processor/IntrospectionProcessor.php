@@ -30,14 +30,11 @@ use Psr\Log\LogLevel;
  */
 class IntrospectionProcessor implements ProcessorInterface
 {
-    /** @var int */
-    private $level;
+    private readonly int $level;
     /** @var string[] */
-    private $skipClassesPartials;
-    /** @var int */
-    private $skipStackFramesCount;
+    private readonly array $skipClassesPartials;
     /** @var string[] */
-    private $skipFunctions = [
+    private array $skipFunctions = [
         'call_user_func',
         'call_user_func_array',
     ];
@@ -48,11 +45,10 @@ class IntrospectionProcessor implements ProcessorInterface
      *
      * @phpstan-param Level|LevelName|LogLevel::* $level
      */
-    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], int $skipStackFramesCount = 0)
+    public function __construct($level = Logger::DEBUG, array $skipClassesPartials = [], private readonly int $skipStackFramesCount = 0)
     {
         $this->level = Logger::toMonologLevel($level);
         $this->skipClassesPartials = array_merge(['Monolog\\'], $skipClassesPartials);
-        $this->skipStackFramesCount = $skipStackFramesCount;
     }
 
     /**
@@ -77,7 +73,7 @@ class IntrospectionProcessor implements ProcessorInterface
         while ($this->isTraceClassOrSkippedFunction($trace, $i)) {
             if (isset($trace[$i]['class'])) {
                 foreach ($this->skipClassesPartials as $part) {
-                    if (strpos($trace[$i]['class'], $part) !== false) {
+                    if (str_contains($trace[$i]['class'], $part)) {
                         $i++;
 
                         continue 2;
@@ -98,11 +94,11 @@ class IntrospectionProcessor implements ProcessorInterface
         $record['extra'] = array_merge(
             $record['extra'],
             [
-                'file'      => isset($trace[$i - 1]['file']) ? $trace[$i - 1]['file'] : null,
-                'line'      => isset($trace[$i - 1]['line']) ? $trace[$i - 1]['line'] : null,
-                'class'     => isset($trace[$i]['class']) ? $trace[$i]['class'] : null,
-                'callType'  => isset($trace[$i]['type']) ? $trace[$i]['type'] : null,
-                'function'  => isset($trace[$i]['function']) ? $trace[$i]['function'] : null,
+                'file'      => $trace[$i - 1]['file'] ?? null,
+                'line'      => $trace[$i - 1]['line'] ?? null,
+                'class'     => $trace[$i]['class'] ?? null,
+                'callType'  => $trace[$i]['type'] ?? null,
+                'function'  => $trace[$i]['function'] ?? null,
             ]
         );
 

@@ -4,25 +4,16 @@ declare (strict_types=1);
 namespace Rector\Symfony\ValueObject;
 
 use PhpParser\Node\Expr;
-final class ReplaceServiceArgument
+final readonly class ReplaceServiceArgument
 {
-    /**
-     * @readonly
-     * @var mixed
-     */
-    private $oldValue;
-    /**
-     * @readonly
-     * @var \PhpParser\Node\Expr
-     */
-    private $newValueExpr;
-    /**
-     * @param mixed $oldValue
-     */
-    public function __construct($oldValue, Expr $newValueExpr)
+    public function __construct(
+        private mixed $oldValue,
+        /**
+         * @readonly
+         */
+        private Expr $newValueExpr
+    )
     {
-        $this->oldValue = $oldValue;
-        $this->newValueExpr = $newValueExpr;
     }
     /**
      * @return mixed

@@ -5,17 +5,8 @@ namespace RectorPrefix202308\Doctrine\Inflector\Rules;
 
 class Ruleset
 {
-    /** @var Transformations */
-    private $regular;
-    /** @var Patterns */
-    private $uninflected;
-    /** @var Substitutions */
-    private $irregular;
-    public function __construct(Transformations $regular, Patterns $uninflected, Substitutions $irregular)
+    public function __construct(private readonly Transformations $regular, private readonly Patterns $uninflected, private readonly Substitutions $irregular)
     {
-        $this->regular = $regular;
-        $this->uninflected = $uninflected;
-        $this->irregular = $irregular;
     }
     public function getRegular() : Transformations
     {

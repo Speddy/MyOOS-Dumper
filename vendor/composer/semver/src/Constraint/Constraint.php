@@ -14,66 +14,45 @@ namespace Composer\Semver\Constraint;
 /**
  * Defines a constraint.
  */
-class Constraint implements ConstraintInterface
+class Constraint implements ConstraintInterface, \Stringable
 {
     /* operator integer values */
-    const OP_EQ = 0;
-    const OP_LT = 1;
-    const OP_LE = 2;
-    const OP_GT = 3;
-    const OP_GE = 4;
-    const OP_NE = 5;
+    final public const OP_EQ = 0;
+    final public const OP_LT = 1;
+    final public const OP_LE = 2;
+    final public const OP_GT = 3;
+    final public const OP_GE = 4;
+    final public const OP_NE = 5;
 
     /* operator string values */
-    const STR_OP_EQ = '==';
-    const STR_OP_EQ_ALT = '=';
-    const STR_OP_LT = '<';
-    const STR_OP_LE = '<=';
-    const STR_OP_GT = '>';
-    const STR_OP_GE = '>=';
-    const STR_OP_NE = '!=';
-    const STR_OP_NE_ALT = '<>';
+    final public const STR_OP_EQ = '==';
+    final public const STR_OP_EQ_ALT = '=';
+    final public const STR_OP_LT = '<';
+    final public const STR_OP_LE = '<=';
+    final public const STR_OP_GT = '>';
+    final public const STR_OP_GE = '>=';
+    final public const STR_OP_NE = '!=';
+    final public const STR_OP_NE_ALT = '<>';
 
     /**
      * Operator to integer translation table.
      *
-     * @var array
      * @phpstan-var array<self::STR_OP_*, self::OP_*>
      */
-    private static $transOpStr = array(
-        '=' => self::OP_EQ,
-        '==' => self::OP_EQ,
-        '<' => self::OP_LT,
-        '<=' => self::OP_LE,
-        '>' => self::OP_GT,
-        '>=' => self::OP_GE,
-        '<>' => self::OP_NE,
-        '!=' => self::OP_NE,
-    );
+    private static array $transOpStr = ['=' => self::OP_EQ, '==' => self::OP_EQ, '<' => self::OP_LT, '<=' => self::OP_LE, '>' => self::OP_GT, '>=' => self::OP_GE, '<>' => self::OP_NE, '!=' => self::OP_NE];
 
     /**
      * Integer to operator translation table.
      *
-     * @var array
      * @phpstan-var array<self::OP_*, self::STR_OP_*>
      */
-    private static $transOpInt = array(
-        self::OP_EQ => '==',
-        self::OP_LT => '<',
-        self::OP_LE => '<=',
-        self::OP_GT => '>',
-        self::OP_GE => '>=',
-        self::OP_NE => '!=',
-    );
+    private static array $transOpInt = [self::OP_EQ => '==', self::OP_LT => '<', self::OP_LE => '<=', self::OP_GT => '>', self::OP_GE => '>=', self::OP_NE => '!='];
 
     /**
      * @var int
      * @phpstan-var self::OP_*
      */
     protected $operator;
-
-    /** @var string */
-    protected $version;
 
     /** @var string|null */
     protected $prettyString;
@@ -94,7 +73,7 @@ class Constraint implements ConstraintInterface
      *
      * @phpstan-param self::STR_OP_* $operator
      */
-    public function __construct($operator, $version)
+    public function __construct($operator, protected $version)
     {
         if (!isset(self::$transOpStr[$operator])) {
             throw new \InvalidArgumentException(sprintf(
@@ -105,7 +84,6 @@ class Constraint implements ConstraintInterface
         }
 
         $this->operator = self::$transOpStr[$operator];
-        $this->version = $version;
     }
 
     /**
@@ -207,8 +185,8 @@ class Constraint implements ConstraintInterface
             ));
         }
 
-        $aIsBranch = strpos($a, 'dev-') === 0;
-        $bIsBranch = strpos($b, 'dev-') === 0;
+        $aIsBranch = str_starts_with($a, 'dev-');
+        $bIsBranch = str_starts_with($b, 'dev-');
 
         if ($operator === '!=' && ($aIsBranch || $bIsBranch)) {
             return $a !== $b;
@@ -231,7 +209,7 @@ class Constraint implements ConstraintInterface
      */
     public function compile($otherOperator)
     {
-        if (strpos($this->version, 'dev-') === 0) {
+        if (str_starts_with($this->version, 'dev-')) {
             if (self::OP_EQ === $this->operator) {
                 if (self::OP_EQ === $otherOperator) {
                     return sprintf('$b && $v === %s', \var_export($this->version, true));
@@ -306,7 +284,6 @@ class Constraint implements ConstraintInterface
     }
 
     /**
-     * @param Constraint $provider
      * @param bool       $compareBranches
      *
      * @return bool
@@ -324,11 +301,11 @@ class Constraint implements ConstraintInterface
         // '!=' operator is match when other operator is not '==' operator or version is not match
         // these kinds of comparisons always have a solution
         if ($isNonEqualOp || $isProviderNonEqualOp) {
-            if ($isNonEqualOp && !$isProviderNonEqualOp && !$isProviderEqualOp && strpos($provider->version, 'dev-') === 0) {
+            if ($isNonEqualOp && !$isProviderNonEqualOp && !$isProviderEqualOp && str_starts_with($provider->version, 'dev-')) {
                 return false;
             }
 
-            if ($isProviderNonEqualOp && !$isNonEqualOp && !$isEqualOp && strpos($this->version, 'dev-') === 0) {
+            if ($isProviderNonEqualOp && !$isNonEqualOp && !$isEqualOp && str_starts_with($this->version, 'dev-')) {
                 return false;
             }
 
@@ -341,7 +318,7 @@ class Constraint implements ConstraintInterface
         // an example for the condition is <= 2.0 & < 1.0
         // these kinds of comparisons always have a solution
         if ($this->operator !== self::OP_EQ && $noEqualOp === $providerNoEqualOp) {
-            return !(strpos($this->version, 'dev-') === 0 || strpos($provider->version, 'dev-') === 0);
+            return !(str_starts_with($this->version, 'dev-') || str_starts_with($provider->version, 'dev-'));
         }
 
         $version1 = $isEqualOp ? $this->version : $provider->version;
@@ -363,7 +340,7 @@ class Constraint implements ConstraintInterface
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return self::$transOpInt[$this->operator] . ' ' . $this->version;
     }
@@ -398,7 +375,7 @@ class Constraint implements ConstraintInterface
         }
 
         // Branches
-        if (strpos($this->version, 'dev-') === 0) {
+        if (str_starts_with($this->version, 'dev-')) {
             $this->lowerBound = Bound::zero();
             $this->upperBound = Bound::positiveInfinity();
 

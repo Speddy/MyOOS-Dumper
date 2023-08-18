@@ -40,6 +40,6 @@ final class FullyQualifiedNodeMapper implements PhpParserNodeMapperInterface
         if ($originalName === $fullyQualifiedName) {
             return \false;
         }
-        return \substr_compare($fullyQualifiedName, '\\' . $originalName, -\strlen('\\' . $originalName)) !== 0;
+        return !str_ends_with($fullyQualifiedName, '\\' . $originalName);
     }
 }

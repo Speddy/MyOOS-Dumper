@@ -37,20 +37,20 @@ if (1 == $import) {
     if (empty($sql['import']['endline'])) {
         $sql['import']['endline'] = $nl;
     } else {
-        $sql['import']['endline'] = str_replace('\\r', "\015", $sql['import']['endline']);
+        $sql['import']['endline'] = str_replace('\\r', "\015", (string) $sql['import']['endline']);
         $sql['import']['endline'] = str_replace('\\n', "\012", $sql['import']['endline']);
         $sql['import']['endline'] = str_replace('\\t', "\011", $sql['import']['endline']);
     }
-    $sql['import']['endline'] = str_replace('\\t', "\011", $sql['import']['endline']);
+    $sql['import']['endline'] = str_replace('\\t', "\011", (string) $sql['import']['endline']);
     if (isset($_POST['f_import_csvnull'])) {
         $sql['import']['null'] = $_POST['f_import_csvnull'];
     }
-    $sql['import']['namefirstline'] = (isset($_POST['f_import_namefirstline'])) ? $_POST['f_import_namefirstline'] : 0;
+    $sql['import']['namefirstline'] = $_POST['f_import_namefirstline'] ?? 0;
     $sql['import']['emptydb'] = (isset($_POST['import_emptydb'])) ? 1 : 0;
     $sql['import']['createindex'] = (isset($_POST['import_createindex'])) ? 1 : 0;
-    $sql['import']['table'] = (isset($_POST['import_table'])) ? $_POST['import_table'] : '';
-    $sql['import']['import_source'] = isset($_POST['import_source']) ? $_POST['import_source'] : 0;
-    $sql['import']['text'] = isset($_POST['import_text']) ? $_POST['import_text'] : '';
+    $sql['import']['table'] = $_POST['import_table'] ?? '';
+    $sql['import']['import_source'] = $_POST['import_source'] ?? 0;
+    $sql['import']['text'] = $_POST['import_text'] ?? '';
     $sql['import']['csv'] = '';
 
     if (isset($_POST['do_import'])) {
@@ -64,14 +64,14 @@ if (1 == $import) {
         } else {
             if (0 == $_POST['import_source']) {
                 //Import aus textbox
-                $sql['import']['csv'] = explode($sql['import']['endline'], $sql['import']['text']);
+                $sql['import']['csv'] = explode($sql['import']['endline'], (string) $sql['import']['text']);
             } else {
                 if (!isset($_FILES['upfile']['name']) || empty($_FILES['upfile']['name'])) {
                     $aus .= '<span class="error">'.$lang['L_FM_UPLOADFILEREQUEST'].'</span>';
                 } else {
                     $fn = $_FILES['upfile']['tmp_name'];
 
-                    $sql['import']['csv'] = ('.gz' == substr($_FILES['upfile']['name'], -3)) ? gzfile($fn) : file($fn);
+                    $sql['import']['csv'] = (str_ends_with((string) $_FILES['upfile']['name'], '.gz')) ? gzfile($fn) : file($fn);
                     $sql['import']['text'] = implode('', $sql['import']['csv']);
                     $aus .= '<span>'.$lang['L_SQL_UPLOADEDFILE'].'<strong>'.$_FILES['upfile']['name'].'</strong>&nbsp;&nbsp;&nbsp;'.byte_output(filesize($_FILES['upfile']['tmp_name'])).'</span>';
                 }
@@ -107,7 +107,7 @@ if (1 == $import) {
     $impaus .= '<table cellpadding="0" cellspacing="0">'.$nl;
     $impaus .= '<tr><td colspan="2"><input type="checkbox" class="checkbox" name="f_import_namefirstline0" value="1" '.((1 == $sql['import']['namefirstline']) ? 'checked' : '').'>'.$lang['L_CSV_NAMEFIRSTLINE'].'</td></tr>'.$nl;
     $impaus .= '<tr><td>'.$lang['L_CSV_FIELDSEPERATE'].'</td><td><input type="text" class="text" name="f_import_csvtrenn" size="4" maxlength="12" value="'.$sql['import']['trenn'].'"></td></tr>'.$nl;
-    $impaus .= '<tr><td>'.$lang['L_CSV_FIELDSENCLOSED'].'</td><td><input type="text" class="text" name="f_import_csvenc" size="4" maxlength="12" value="'.htmlspecialchars($sql['import']['enc']).'"></td></tr>'.$nl;
+    $impaus .= '<tr><td>'.$lang['L_CSV_FIELDSENCLOSED'].'</td><td><input type="text" class="text" name="f_import_csvenc" size="4" maxlength="12" value="'.htmlspecialchars((string) $sql['import']['enc']).'"></td></tr>'.$nl;
     $impaus .= '<tr><td>'.$lang['L_CSV_FIELDSESCAPE'].'</td><td><input type="text" class="text" name="f_import_csvesc" size="4" maxlength="12" value="'.$sql['import']['esc'].'"></td></tr>'.$nl;
     $impaus .= '<tr><td>'.$lang['L_CSV_EOL'].'</td><td><input type="text" class="text" name="f_import_csvztrenn" size="4" maxlength="12" value="'.$sql['import']['ztrenn'].'"></td></tr>'.$nl;
     $impaus .= '<tr><td>'.$lang['L_CSV_NULL'].'</td><td><input type="text" class="text" name="f_import_csvnull" size="4" maxlength="12" value="'.$sql['import']['null'].'"></td></tr>'.$nl;
@@ -152,11 +152,11 @@ if (1 == $import) {
             if (empty($sql['export']['endline'])) {
                 $sql['export']['endline'] = $nl;
             } else {
-                $sql['export']['endline'] = str_replace('\\r', "\015", $sql['export']['endline']);
+                $sql['export']['endline'] = str_replace('\\r', "\015", (string) $sql['export']['endline']);
                 $sql['export']['endline'] = str_replace('\\n', "\012", $sql['export']['endline']);
                 $sql['export']['endline'] = str_replace('\\t', "\011", $sql['export']['endline']);
             }
-            $sql['export']['endline'] = str_replace('\\t', "\011", $sql['export']['endline']);
+            $sql['export']['endline'] = str_replace('\\t', "\011", (string) $sql['export']['endline']);
         } elseif (1 == $sql['export']['format']) {
             //EXCEL
             $format = 1;
@@ -183,14 +183,14 @@ if (1 == $import) {
         if ($format < 3) {
             $sql['export']['null'] = $_POST['f_export_csvnull'.$format];
         }
-        $sql['export']['namefirstline'] = (isset($_POST['f_export_namefirstline'.$format])) ? $_POST['f_export_namefirstline'.$format] : 0;
+        $sql['export']['namefirstline'] = $_POST['f_export_namefirstline'.$format] ?? 0;
 
         $sql['export']['sendfile'] = $_POST['f_export_sendresult'];
-        $sql['export']['compressed'] = (isset($_POST['f_export_compressed'])) ? $_POST['f_export_compressed'] : 0;
+        $sql['export']['compressed'] = $_POST['f_export_compressed'] ?? 0;
 
         $sql['export']['exportfile'] = '';
-        $sql['export']['xmlstructure'] = (isset($_POST['f_export_xmlstructure'])) ? $_POST['f_export_xmlstructure'] : 0;
-        $sql['export']['htmlstructure'] = (isset($_POST['f_export_htmlstructure'])) ? $_POST['f_export_htmlstructure'] : 0;
+        $sql['export']['xmlstructure'] = $_POST['f_export_xmlstructure'] ?? 0;
+        $sql['export']['htmlstructure'] = $_POST['f_export_htmlstructure'] ?? 0;
 
         //ausgewählte Tabellen
         if (isset($_POST['f_export_tables'])) {
@@ -237,7 +237,7 @@ if (1 == $import) {
     $exaus .= '<div id="csv0"><fieldset><legend>CSV-Optionen</legend><table cellpadding="0" cellspacing="0"><tr><td colspan="2">'.$nl;
     $exaus .= '<input type="checkbox" class="checkbox" name="f_export_namefirstline0" value="1" '.((1 == $sql['export']['namefirstline']) ? 'checked' : '').'>'.$lang['L_CSV_NAMEFIRSTLINE'].'</td></tr>'.$nl;
     $exaus .= '<tr><td>'.$lang['L_CSV_FIELDSEPERATE'].'</td><td><input type="text" class="text" name="f_export_csvtrenn" size="4" maxlength="12" value="'.$sql['export']['trenn'].'"></td></tr>'.$nl;
-    $exaus .= '<tr><td>'.$lang['L_CSV_FIELDSENCLOSED'].'</td><td><input type="text" class="text" name="f_export_csvenc" size="4" maxlength="12" value="'.htmlspecialchars($sql['export']['enc']).'"></td></tr>'.$nl;
+    $exaus .= '<tr><td>'.$lang['L_CSV_FIELDSENCLOSED'].'</td><td><input type="text" class="text" name="f_export_csvenc" size="4" maxlength="12" value="'.htmlspecialchars((string) $sql['export']['enc']).'"></td></tr>'.$nl;
     $exaus .= '<tr><td>'.$lang['L_CSV_FIELDSESCAPE'].'</td><td><input type="text" class="text" name="f_export_csvesc" size="4" maxlength="12" value="'.$sql['export']['esc'].'"></td></tr>'.$nl;
     $exaus .= '<tr><td>'.$lang['L_CSV_EOL'].'</td><td><input type="text" class="text" name="f_export_csvztrenn" size="4" maxlength="12" value="'.$sql['export']['ztrenn'].'"></td></tr>'.$nl;
     $exaus .= '<tr><td>'.$lang['L_CSV_NULL'].'</td><td><input type="text" class="text" name="f_export_csvnull0" size="4" maxlength="12" value="'.$sql['export']['null'].'"></td></tr>'.$nl;

@@ -41,22 +41,20 @@ abstract class SSH2
         if ($result === false) {
             return false;
         }
-        list($type, $blob) = $result;
-        if ($type != 'ssh-dss' || strlen($blob) != 40) {
+        [$type, $blob] = $result;
+        if ($type != 'ssh-dss' || strlen((string) $blob) != 40) {
             return false;
         }
 
         return [
-            'r' => new BigInteger(substr($blob, 0, 20), 256),
-            's' => new BigInteger(substr($blob, 20), 256)
+            'r' => new BigInteger(substr((string) $blob, 0, 20), 256),
+            's' => new BigInteger(substr((string) $blob, 20), 256)
         ];
     }
 
     /**
      * Returns a signature in the appropriate format
      *
-     * @param \phpseclib3\Math\BigInteger $r
-     * @param \phpseclib3\Math\BigInteger $s
      * @return string
      */
     public static function save(BigInteger $r, BigInteger $s)

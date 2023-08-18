@@ -15,22 +15,19 @@ namespace RectorPrefix202308\Symfony\Component\Console\Completion;
  *
  * @author Wouter de Jong <wouter@wouterj.nl>
  */
-class Suggestion
+class Suggestion implements \Stringable
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $value;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $description = '';
-    public function __construct(string $value, string $description = '')
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly string $value,
+        /**
+         * @readonly
+         */
+        private readonly string $description = ''
+    )
     {
-        $this->value = $value;
-        $this->description = $description;
     }
     public function getValue() : string
     {

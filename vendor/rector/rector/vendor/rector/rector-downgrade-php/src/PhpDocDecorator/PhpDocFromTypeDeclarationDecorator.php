@@ -36,59 +36,35 @@ use Rector\ValueObject\ClassMethodWillChangeReturnType;
 final class PhpDocFromTypeDeclarationDecorator
 {
     /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\StaticTypeMapper
-     */
-    private $staticTypeMapper;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
-     */
-    private $phpDocTypeChanger;
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\NodeFactory\PhpAttributeGroupFactory
-     */
-    private $phpAttributeGroupFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
-     */
-    private $phpAttributeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    /**
      * @var ClassMethodWillChangeReturnType[]
      */
-    private $classMethodWillChangeReturnTypes = [];
-    public function __construct(StaticTypeMapper $staticTypeMapper, PhpDocInfoFactory $phpDocInfoFactory, NodeNameResolver $nodeNameResolver, PhpDocTypeChanger $phpDocTypeChanger, PhpAttributeGroupFactory $phpAttributeGroupFactory, ReflectionResolver $reflectionResolver, PhpAttributeAnalyzer $phpAttributeAnalyzer, PhpVersionProvider $phpVersionProvider)
+    private array $classMethodWillChangeReturnTypes = [];
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly StaticTypeMapper $staticTypeMapper, /**
+     * @readonly
+     */
+    private readonly PhpDocInfoFactory $phpDocInfoFactory, /**
+     * @readonly
+     */
+    private readonly NodeNameResolver $nodeNameResolver, /**
+     * @readonly
+     */
+    private readonly PhpDocTypeChanger $phpDocTypeChanger, /**
+     * @readonly
+     */
+    private readonly PhpAttributeGroupFactory $phpAttributeGroupFactory, /**
+     * @readonly
+     */
+    private readonly ReflectionResolver $reflectionResolver, /**
+     * @readonly
+     */
+    private readonly PhpAttributeAnalyzer $phpAttributeAnalyzer, /**
+     * @readonly
+     */
+    private readonly PhpVersionProvider $phpVersionProvider)
     {
-        $this->staticTypeMapper = $staticTypeMapper;
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->phpDocTypeChanger = $phpDocTypeChanger;
-        $this->phpAttributeGroupFactory = $phpAttributeGroupFactory;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
-        $this->phpVersionProvider = $phpVersionProvider;
         $this->classMethodWillChangeReturnTypes = [
             // @todo how to make list complete? is the method list needed or can we use just class names?
             new ClassMethodWillChangeReturnType('ArrayAccess', 'offsetGet'),
@@ -216,7 +192,7 @@ final class PhpDocFromTypeDeclarationDecorator
         if ($returnType instanceof ObjectType) {
             return $returnType->equals($requireType);
         }
-        return \get_class($returnType) === \get_class($requireType);
+        return $returnType::class === $requireType::class;
     }
     /**
      * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Stmt\Function_|\PhpParser\Node\Expr\Closure|\PhpParser\Node\Expr\ArrowFunction $functionLike
@@ -233,7 +209,7 @@ final class PhpDocFromTypeDeclarationDecorator
      */
     private function isMatchingType(Type $type, array $requiredTypes) : bool
     {
-        return \in_array(\get_class($type), $requiredTypes, \true);
+        return \in_array($type::class, $requiredTypes, \true);
     }
     private function isNullableSupportedAndPossible(Type $type) : bool
     {

@@ -22,7 +22,7 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
-define('MOD_INCLUDE_PATH', dirname(__FILE__)=='/' ? '' : dirname(__FILE__));
+define('MOD_INCLUDE_PATH', __DIR__=='/' ? '' : __DIR__);
 
 session_name('MyOOSDumperID');
 session_start();
@@ -39,7 +39,7 @@ if (isset($_GET['config'])) {
     '/', '\\', ':', '@', ];
     $replace = [
     '', '', '', '', ];
-    $config_file = str_replace($search, $replace, $_GET['config']);
+    $config_file = str_replace($search, $replace, (string) $_GET['config']);
     if (is_readable($config['paths']['config'].$config_file.'.php')) {
         $config['files']['parameter'] = $config['paths']['config'].$config_file.'.php';
         $_SESSION['config_file'] = $config_file;
@@ -71,29 +71,29 @@ if (isset($_SESSION['dump']) && !isset($_GET['config'])) {
     $dump['totalrecords'] = 0;
     $dump['dbindex'] = 0;
     // Read $_POST parameter
-    $dump['kommentar'] = (isset($_GET['comment'])) ? urldecode($_GET['comment']) : '';
+    $dump['kommentar'] = (isset($_GET['comment'])) ? urldecode((string) $_GET['comment']) : '';
     if (isset($_POST['kommentar'])) {
-        $dump['kommentar'] = urldecode($_POST['kommentar']);
+        $dump['kommentar'] = urldecode((string) $_POST['kommentar']);
     }
 
-    $dump['backupdatei'] = (isset($_POST['backupdatei'])) ? $_POST['backupdatei'] : '';
-    $dump['part'] = (isset($_POST['part'])) ? $_POST['part'] : 1;
-    $dump['part_offset'] = (isset($_POST['part_offset'])) ? $_POST['part_offset'] : 0;
-    $dump['verbraucht'] = (isset($_POST['verbraucht'])) ? $_POST['verbraucht'] : 0;
-    $dump['errors'] = (isset($_POST['errors'])) ? $_POST['errors'] : 0;
-    $dump['table_offset'] = (isset($_POST['table_offset'])) ? $_POST['table_offset'] : -1;
-    $dump['zeilen_offset'] = (isset($_POST['zeilen_offset'])) ? $_POST['zeilen_offset'] : 0;
-    $dump['filename_stamp'] = (isset($_POST['filename_stamp'])) ? $_POST['filename_stamp'] : '';
-    $dump['anzahl_zeilen'] = (isset($_POST['anzahl_zeilen'])) ? $_POST['anzahl_zeilen'] : (((isset($config['minspeed']) && $config['minspeed'] > 0)) ? $config['minspeed'] : 50);
-    $dump['dump_encoding'] = (isset($_POST['dump_encoding'])) ? urldecode($_POST['dump_encoding']) : '';
+    $dump['backupdatei'] = $_POST['backupdatei'] ?? '';
+    $dump['part'] = $_POST['part'] ?? 1;
+    $dump['part_offset'] = $_POST['part_offset'] ?? 0;
+    $dump['verbraucht'] = $_POST['verbraucht'] ?? 0;
+    $dump['errors'] = $_POST['errors'] ?? 0;
+    $dump['table_offset'] = $_POST['table_offset'] ?? -1;
+    $dump['zeilen_offset'] = $_POST['zeilen_offset'] ?? 0;
+    $dump['filename_stamp'] = $_POST['filename_stamp'] ?? '';
+    $dump['anzahl_zeilen'] = $_POST['anzahl_zeilen'] ?? (((isset($config['minspeed']) && $config['minspeed'] > 0)) ? $config['minspeed'] : 50);
+    $dump['dump_encoding'] = (isset($_POST['dump_encoding'])) ? urldecode((string) $_POST['dump_encoding']) : '';
 
     if (isset($_GET['sel_dump_encoding'])) {
         // First call -> evaluate encoding
         include_once './inc/functions_sql.php';
         get_sql_encodings();
         $encodingline = $config['mysql_possible_character_sets'][$_GET['sel_dump_encoding']];
-        $encoding = explode(' ', $encodingline);
-        $dump['dump_encoding'] = isset($encoding[0]) ? $encoding[0] : $encodingline;
+        $encoding = explode(' ', (string) $encodingline);
+        $dump['dump_encoding'] = $encoding[0] ?? $encodingline;
     }
     include './inc/define_icons.php';
     $dump['tabellen_gesamt'] = 0;
@@ -104,7 +104,7 @@ $mp2 = [
 
 FillMultiDBarrays();
 if ('' != $databases['db_actual_tableselected'] && 0 == $config['multi_dump']) {
-    $dump['tblArray'] = explode('|', $databases['db_actual_tableselected']);
+    $dump['tblArray'] = explode('|', (string) $databases['db_actual_tableselected']);
     $tbl_sel = true;
     $msgTbl = sprintf($lang['L_NR_TABLES_SELECTED'], count($dump['tblArray']));
 }
@@ -126,7 +126,7 @@ if (isset($config['multi_dump']) && (0 == $config['multi_dump'])) {
 // Activate time counter
 $dump['max_zeit'] = intval($config['max_execution_time'] * $config['time_buffer']);
 $dump['startzeit'] = time();
-$xtime = (isset($_POST['xtime'])) ? $_POST['xtime'] : time();
+$xtime = $_POST['xtime'] ?? time();
 $dump['countdata'] = (!empty($_POST['countdata'])) ? $_POST['countdata'] : 0;
 $dump['aufruf'] = (!empty($_POST['aufruf'])) ? $_POST['aufruf'] : 0;
 mod_mysqli_connect($dump['dump_encoding']);
@@ -140,17 +140,17 @@ if (!isset($_SESSION['dump'])) {
     getDBInfos();
 }
 
-$num_tables = count($dump['tables']);
+$num_tables = is_countable($dump['tables']) ? count($dump['tables']) : 0;
 
 if ((isset($config['optimize_tables_beforedump']) && (1 == $config['optimize_tables_beforedump'])) && -1 == $dump['table_offset']) {
     $out .= sprintf($lang['L_NR_TABLES_OPTIMIZED'], $num_tables).'<br>';
 }
 $dump['data'] = '';
-$dump['dbindex'] = (isset($_POST['dbindex'])) ? $_POST['dbindex'] : $flipped[$databases['multi'][0]];
+$dump['dbindex'] = $_POST['dbindex'] ?? $flipped[$databases['multi'][0]];
 
 // Build output header
-$aus_header[] = headline('Backup: '.((isset($config['multi_dump']) && (1 == $config['multi_dump'])) ? 'Multidump ('.count($databases['multi']).' '.$lang['L_DBS'].')' : $lang['L_DB'].': '.$databases['Name'][$dump['dbindex']].(('' != $databases['praefix'][$dump['dbindex']]) ? ' ('.$lang['L_WITHPRAEFIX'].' <span>'.$databases['praefix'][$dump['dbindex']].'</span>)' : '')));
-if (isset($aus_error) && count($aus_error) > 0) {
+$aus_header[] = headline('Backup: '.((isset($config['multi_dump']) && (1 == $config['multi_dump'])) ? 'Multidump ('.(is_countable($databases['multi']) ? count($databases['multi']) : 0).' '.$lang['L_DBS'].')' : $lang['L_DB'].': '.$databases['Name'][$dump['dbindex']].(('' != $databases['praefix'][$dump['dbindex']]) ? ' ('.$lang['L_WITHPRAEFIX'].' <span>'.$databases['praefix'][$dump['dbindex']].'</span>)' : '')));
+if (isset($aus_error) && (is_countable($aus_error) ? count($aus_error) : 0) > 0) {
     $aus_header = array_merge($aus_header, $aus_error);
 }
 
@@ -174,8 +174,8 @@ if (0 == $num_tables) {
         // Determine SQL commands
         $dump['restzeilen'] = $dump['anzahl_zeilen'];
         while (($dump['table_offset'] < $num_tables) && ($dump['restzeilen'] > 0)) {
-            $table = substr($dump['tables'][$dump['table_offset']], strpos($dump['tables'][$dump['table_offset']], '|') + 1);
-            $adbname = substr($dump['tables'][$dump['table_offset']], 0, strpos($dump['tables'][$dump['table_offset']], '|'));
+            $table = substr((string) $dump['tables'][$dump['table_offset']], strpos((string) $dump['tables'][$dump['table_offset']], '|') + 1);
+            $adbname = substr((string) $dump['tables'][$dump['table_offset']], 0, strpos((string) $dump['tables'][$dump['table_offset']], '|'));
             if ($databases['Name'][$dump['dbindex']] != $adbname) {
                 //neue Datenbank
                 $dump['data'] .= "\nSET FOREIGN_KEY_CHECKS=1;";
@@ -185,7 +185,7 @@ if (0 == $num_tables) {
                 ExecuteCommand('a');
                 if (1 == $config['multi_part']) {
                     $out .= $lang['L_FINISHED'].'<br><div class="backupmsg">';
-                    $dateistamm = substr($dump['backupdatei'], 0, strrpos($dump['backupdatei'], 'part_')).'part_';
+                    $dateistamm = substr((string) $dump['backupdatei'], 0, strrpos((string) $dump['backupdatei'], 'part_')).'part_';
                     $dateiendung = (1 == $config['compression']) ? '.sql.gz' : '.sql';
                     for ($i = 1; $i < ($dump['part'] - $dump['part_offset']); ++$i) {
                         $mpdatei = $dateistamm.$i.$dateiendung;
@@ -265,7 +265,7 @@ if (0 == $num_tables) {
      */
     if (isset($config['multi_dump']) && (1 == $config['multi_dump'])) {
         $mudbs = '';
-        $count_dbs = count($databases['multi']);
+        $count_dbs = is_countable($databases['multi']) ? count($databases['multi']) : 0;
         for ($i = 0; $i < $count_dbs; ++$i) {
             if ($databases['Name'][$dump['dbindex']] == $databases['multi'][$i]) {
                 $mudbs .= '<span class="active_db">'.$databases['multi'][$i].'&nbsp;&nbsp;</span> ';
@@ -303,12 +303,12 @@ if (0 == $num_tables) {
     }
 
     if (isset($dump['tables'][$dump['table_offset']])) {
-        $table = substr($dump['tables'][$dump['table_offset']], strpos($dump['tables'][$dump['table_offset']], '|') + 1);
-        $adbname = substr($dump['tables'][$dump['table_offset']], 0, strpos($dump['tables'][$dump['table_offset']], '|'));
+        $table = substr((string) $dump['tables'][$dump['table_offset']], strpos((string) $dump['tables'][$dump['table_offset']], '|') + 1);
+        $adbname = substr((string) $dump['tables'][$dump['table_offset']], 0, strpos((string) $dump['tables'][$dump['table_offset']], '|'));
 
         // get nr of recorsd from dump-array
         $record_string = $dump['records'][$dump['table_offset']];
-        $record_string = explode('|', $record_string);
+        $record_string = explode('|', (string) $record_string);
         $dump['zeilen_total'] = $record_string[1];
 
         if ($dump['zeilen_total'] > 0) {
@@ -334,7 +334,7 @@ if (0 == $num_tables) {
 
         $aus[] = '</tr><tr>'.'<td colspan="3">'.$lang['L_ENTRY'].' <b>'.number_format($eintrag, 0, ',', '.').'</b> '.$lang['L_UPTO'].' <b>'.number_format(($zeilen_gesamt), 0, ',', '.').'</b> '.$lang['L_OF'].' <b>'.number_format($dump['zeilen_total'], 0, ',', '.').'</b></td></tr></table>';
 
-        $dump['tabellen_gesamt'] = (isset($dump['tables'])) ? count($dump['tables']) : 0;
+        $dump['tabellen_gesamt'] = (isset($dump['tables'])) ? is_countable($dump['tables']) ? count($dump['tables']) : 0 : 0;
 
         $noch_zu_speichern = $dump['totalrecords'] - $dump['countdata'];
         $prozent = ($dump['totalrecords'] > 0) ? round(((100 * $noch_zu_speichern) / $dump['totalrecords']), 0) : 100;
@@ -345,8 +345,8 @@ if (0 == $num_tables) {
         $aus[] = "\n".'<br>'.$lang['L_PROGRESS_OVER_ALL'].':'."\n".'<table border="0" width="550" cellpadding="0" cellspacing="0"><tr>'.'<td width="'.(5 * (100 - $prozent)).'"><img src="'.$config['files']['iconpath'].'progressbar_dump.gif" alt="" width="'.(5 * (100 - $prozent)).'" height="16" border="0"></td>'.'<td width="'.($prozent * 5).'" align="center"></td>'.'<td width="50">'.(100 - $prozent).'%</td></tr></table>';
 
         //Speed-Anzeige
-        $config['maxspeed'] = isset($config['maxspeed']) ? $config['maxspeed'] : '1';
-        $config['minspeed'] = isset($config['minspeed']) ? $config['minspeed'] : '1';
+        $config['maxspeed'] ??= '1';
+        $config['minspeed'] ??= '1';
         $fw = ($config['maxspeed'] == $config['minspeed']) ? 300 : round(($dump['anzahl_zeilen'] - $config['minspeed']) / ($config['maxspeed'] - $config['minspeed']) * 300, 0);
         if ($fw > 300) {
             $fw = 300;
@@ -397,7 +397,7 @@ if (0 == $num_tables) {
         chmod($config['paths']['backup'].$dump['backupdatei'], 0777);
         if (isset($config['multi_part']) && (1 == $config['multi_part'])) {
             $out .= "\n".'<br><div class="backupmsg">';
-            $dateistamm = substr($dump['backupdatei'], 0, strrpos($dump['backupdatei'], 'part_')).'part_';
+            $dateistamm = substr((string) $dump['backupdatei'], 0, strrpos((string) $dump['backupdatei'], 'part_')).'part_';
             $dateiendung = (1 == $config['compression']) ? '.sql.gz' : '.sql';
             clearstatcache();
             for ($i = 1; $i < ($dump['part'] - $dump['part_offset']); ++$i) {
@@ -414,7 +414,7 @@ if (0 == $num_tables) {
         $aus[] = '<br>'."\n";
         if (isset($config['multi_dump']) && (1 == $config['multi_dump'])) {
             WriteLog('Dump \''.$dump['backupdatei'].'\' finished.');
-            WriteLog('Multidump: '.count($databases['multi']).' Databases in '.zeit_format($xtime).'.');
+            WriteLog('Multidump: '.(is_countable($databases['multi']) ? count($databases['multi']) : 0).' Databases in '.zeit_format($xtime).'.');
         } else {
             WriteLog('Dump \''.$dump['backupdatei'].'\' finished in '.zeit_format($xtime).'.');
         }
@@ -434,7 +434,7 @@ if (0 == $num_tables) {
         $aus[] = '<strong>'.$lang['L_DONE'].'</strong><br>';
 
         if (isset($config['multi_dump']) && (1 == $config['multi_dump'])) {
-            $aus[] = sprintf($lang['L_MULTIDUMP'], count($databases['multi'])).': ';
+            $aus[] = sprintf($lang['L_MULTIDUMP'], is_countable($databases['multi']) ? count($databases['multi']) : 0).': ';
             $aus[] = '<strong>'.implode(', ', $databases['multi']).'</strong>';
             $aus2 = '';
             $out = '';

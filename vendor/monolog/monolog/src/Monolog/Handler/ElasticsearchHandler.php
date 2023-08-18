@@ -56,10 +56,7 @@ class ElasticsearchHandler extends AbstractProcessingHandler
      */
     protected $options = [];
 
-    /**
-     * @var bool
-     */
-    private $needsType;
+    private ?bool $needsType = null;
 
     /**
      * @param Client|Client8 $client  Elasticsearch Client object

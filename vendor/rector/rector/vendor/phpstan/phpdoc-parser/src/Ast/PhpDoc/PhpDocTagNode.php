@@ -6,7 +6,7 @@ namespace PHPStan\PhpDocParser\Ast\PhpDoc;
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use PHPStan\PhpDocParser\Ast\PhpDoc\Doctrine\DoctrineTagValueNode;
 use function trim;
-class PhpDocTagNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocChildNode
+class PhpDocTagNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocChildNode, \Stringable
 {
     use NodeAttributes;
     /** @var string */

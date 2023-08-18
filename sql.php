@@ -33,7 +33,7 @@ include './inc/define_icons.php';
 $key = '';
 // stripslashes and trimming is done in runtime.php which is included and executet above
 if (isset($_GET['rk'])) {
-    $rk = urldecode($_GET['rk']);
+    $rk = urldecode((string) $_GET['rk']);
     $key = urldecode($rk);
     if (!$rk = @unserialize($key)) {
         $rk = $key;
@@ -41,7 +41,7 @@ if (isset($_GET['rk'])) {
 } else {
     $rk = '';
 }
-$mode = isset($_GET['mode']) ? $_GET['mode'] : '';
+$mode = $_GET['mode'] ?? '';
 
 if (isset($_GET['recordkey'])) {
     $recordkey = $_GET['recordkey'];
@@ -74,8 +74,8 @@ if (!$download) {
 $mysql_help_ref = 'http://dev.mysql.com/doc/';
 $mysqli_errorhelp_ref = 'http://dev.mysql.com/doc/mysql/en/error-handling.html';
 $no_order = false;
-$config['interface_table_compact'] = isset($config['interface_table_compact']) ? $config['interface_table_compact'] : 1;
-$tdcompact = (isset($_GET['tdc'])) ? $_GET['tdc'] : $config['interface_table_compact'];
+$config['interface_table_compact'] ??= 1;
+$tdcompact = $_GET['tdc'] ?? $config['interface_table_compact'];
 $db = (!isset($_GET['db'])) ? $databases['db_actual'] : $_GET['db'];
 $dbid = (!isset($_GET['dbid'])) ? $databases['db_selected_index'] : $_GET['dbid'];
 $context = (!isset($_GET['context'])) ? 0 : $_GET['context'];
@@ -90,22 +90,22 @@ $order = (!isset($_GET['order'])) ? '' : $_GET['order'];
 $sqlconfig = (isset($_GET['sqlconfig'])) ? 1 : 0;
 $norder = ('DESC' == $orderdir) ? 'ASC' : 'DESC';
 $sql['order_statement'] = ('' != $order) ? ' ORDER BY `'.$order.'` '.$norder : '';
-$sql['sql_statement'] = (isset($_GET['sql_statement'])) ? urldecode($_GET['sql_statement']) : '';
+$sql['sql_statement'] = (isset($_GET['sql_statement'])) ? urldecode((string) $_GET['sql_statement']) : '';
 if (isset($_POST['sql_statement'])) {
     $sql['sql_statement'] = $_POST['sql_statement'];
 }
 
 $showtables = (!isset($_GET['showtables'])) ? 0 : $_GET['showtables'];
 $limit = $add_sql = '';
-$bb = (isset($_GET['bb'])) ? $_GET['bb'] : -1;
+$bb = $_GET['bb'] ?? -1;
 if (isset($_POST['tablename'])) {
     $tablename = $_POST['tablename'];
 }
-$search = (isset($_GET['search'])) ? $_GET['search'] : 0;
+$search = $_GET['search'] ?? 0;
 
 //SQL-Statement geposted
 if (isset($_POST['execsql'])) {
-    $sql['sql_statement'] = (isset($_POST['sqltextarea'])) ? $_POST['sqltextarea'] : '';
+    $sql['sql_statement'] = $_POST['sqltextarea'] ?? '';
     $db = $_POST['db'];
     $dbid = $_POST['dbid'];
     $tablename = $_POST['tablename'];
@@ -142,20 +142,20 @@ if (1 == $sql_to_display_data) {
     $limitende = ($limitstart + $config['sql_limit']);
 
     // Is it allowed to edit?
-    $no_edit = ('SELECT' != strtoupper(substr($sql['sql_statement'], 0, 6)) || 1 == $showtables || preg_match('@^((-- |#)[^\n]*\n|/\*.*?\*/)*(UNION|JOIN)@im', $sql['sql_statement']));
+    $no_edit = ('SELECT' != strtoupper(substr((string) $sql['sql_statement'], 0, 6)) || 1 == $showtables || preg_match('@^((-- |#)[^\n]*\n|/\*.*?\*/)*(UNION|JOIN)@im', (string) $sql['sql_statement']));
     if ($no_edit) {
         $no_order = true;
     }
 
     // May be sorted?
-    $op = strpos(strtoupper($sql['sql_statement']), ' ORDER ');
+    $op = strpos(strtoupper((string) $sql['sql_statement']), ' ORDER ');
     if ($op > 0) {
         //is order by last ?
-        $sql['order_statement'] = substr($sql['sql_statement'], $op);
+        $sql['order_statement'] = substr((string) $sql['sql_statement'], $op);
         if (strpos($sql['order_statement'], ')') > 0) {
             $sql['order_statement'] = '';
         } else {
-            $sql['sql_statement'] = substr($sql['sql_statement'], 0, $op);
+            $sql['sql_statement'] = substr((string) $sql['sql_statement'], 0, $op);
         }
     }
 }
@@ -172,7 +172,7 @@ mysqli_select_db($config['dbconnection'], $db);
 // handle update action after submitting it
 if (isset($_POST['update']) || isset($_GET['update'])) {
     GetPostParams();
-    $f = explode('|', $_POST['feldnamen']);
+    $f = explode('|', (string) $_POST['feldnamen']);
     $sqlu = 'UPDATE `'.$_POST['db'].'`.`'.$tablename.'` SET ';
     for ($i = 0; $i < count($f); ++$i) {
         $index = isset($_POST[$f[$i]]) ? $f[$i] : correct_post_index($f[$i]);
@@ -195,7 +195,7 @@ if (isset($_POST['update']) || isset($_GET['update'])) {
 // handle insert action after submitting it
 if (isset($_POST['insert'])) {
     GetPostParams();
-    $f = explode('|', $_POST['feldnamen']);
+    $f = explode('|', (string) $_POST['feldnamen']);
     $sqlu = 'INSERT INTO `'.$tablename.'` SET ';
     for ($i = 0; $i < count($f); ++$i) {
         $index = isset($_POST[$f[$i]]) ? $f[$i] : correct_post_index($f[$i]);
@@ -217,18 +217,18 @@ if (isset($_POST['cancel'])) {
 }
 
 //Tabellenansicht
-$showtables = ('SHOW TABLE' == substr(strtoupper($sql['sql_statement']), 0, 10)) ? 1 : 0;
-$tabellenansicht = ('SHOW ' == substr(strtoupper($sql['sql_statement']), 0, 5)) ? 1 : 0;
+$showtables = (str_starts_with(strtoupper((string) $sql['sql_statement']), 'SHOW TABLE')) ? 1 : 0;
+$tabellenansicht = (str_starts_with(strtoupper((string) $sql['sql_statement']), 'SHOW ')) ? 1 : 0;
 
 if (!isset($limitstart)) {
     $limitstart = 0;
 }
 $limitende = $config['sql_limit'];
-if ('select' == strtolower(substr($sql['sql_statement'], 0, 6))) {
+if ('select' == strtolower(substr((string) $sql['sql_statement'], 0, 6))) {
     $limit = ' LIMIT '.$limitstart.', '.$limitende.';';
 }
 
-$params = 'sql.php?db='.$db.'&amp;tablename='.$tablename.'&amp;dbid='.$dbid.'&amp;context='.$context.'&amp;sql_statement='.urlencode($sql['sql_statement']).'&amp;tdc='.$tdcompact.'&amp;showtables='.$showtables;
+$params = 'sql.php?db='.$db.'&amp;tablename='.$tablename.'&amp;dbid='.$dbid.'&amp;context='.$context.'&amp;sql_statement='.urlencode((string) $sql['sql_statement']).'&amp;tdc='.$tdcompact.'&amp;showtables='.$showtables;
 if ('' != $order) {
     $params .= '&amp;order='.$order.'&amp;orderdir='.$orderdir.'&amp;context='.$context;
 }
@@ -245,7 +245,7 @@ if (0 == $search && !$download) {
 
     if ($mode > '' && 0 == $context) {
         if (isset($recordkey) && $recordkey > '') {
-            $rk = urldecode($recordkey);
+            $rk = urldecode((string) $recordkey);
         }
         if (isset($_GET['tablename'])) {
             $tablename = $_GET['tablename'];

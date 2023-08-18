@@ -14,22 +14,19 @@ use PHPStan\Type\StringType;
 use PHPStan\Type\Type;
 use Rector\Core\PhpParser\AstResolver;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final class EnumAnalyzer
+final readonly class EnumAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    public function __construct(AstResolver $astResolver, NodeTypeResolver $nodeTypeResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private AstResolver $astResolver,
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver
+    )
     {
-        $this->astResolver = $astResolver;
-        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     public function resolveType(ClassReflection $classReflection) : ?Identifier
     {
@@ -45,7 +42,7 @@ final class EnumAnalyzer
         $enumExprTypes = $this->resolveEnumExprTypes($class);
         $enumExprTypeClasses = [];
         foreach ($enumExprTypes as $enumExprType) {
-            $enumExprTypeClasses[] = \get_class($enumExprType);
+            $enumExprTypeClasses[] = $enumExprType::class;
         }
         $uniqueEnumExprTypeClasses = \array_unique($enumExprTypeClasses);
         if (\count($uniqueEnumExprTypeClasses) === 1) {

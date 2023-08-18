@@ -15,25 +15,19 @@ namespace PHPStan\PhpDocParser\Printer;
  */
 class DiffElem
 {
-    public const TYPE_KEEP = 0;
-    public const TYPE_REMOVE = 1;
-    public const TYPE_ADD = 2;
-    public const TYPE_REPLACE = 3;
+    final public const TYPE_KEEP = 0;
+    final public const TYPE_REMOVE = 1;
+    final public const TYPE_ADD = 2;
+    final public const TYPE_REPLACE = 3;
     /** @var self::TYPE_* */
     public $type;
-    /** @var mixed Is null for add operations */
-    public $old;
-    /** @var mixed Is null for remove operations */
-    public $new;
     /**
      * @param self::TYPE_* $type
      * @param mixed $old Is null for add operations
      * @param mixed $new Is null for remove operations
      */
-    public function __construct(int $type, $old, $new)
+    public function __construct(int $type, public mixed $old, public mixed $new)
     {
         $this->type = $type;
-        $this->old = $old;
-        $this->new = $new;
     }
 }

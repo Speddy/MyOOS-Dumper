@@ -5,16 +5,15 @@ namespace Rector\Php74\Guard;
 
 use PhpParser\Node\Stmt\Property;
 use PHPStan\Reflection\ClassReflection;
-final class MakePropertyTypedGuard
+final readonly class MakePropertyTypedGuard
 {
-    /**
-     * @readonly
-     * @var \Rector\Php74\Guard\PropertyTypeChangeGuard
-     */
-    private $propertyTypeChangeGuard;
-    public function __construct(\Rector\Php74\Guard\PropertyTypeChangeGuard $propertyTypeChangeGuard)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private \Rector\Php74\Guard\PropertyTypeChangeGuard $propertyTypeChangeGuard
+    )
     {
-        $this->propertyTypeChangeGuard = $propertyTypeChangeGuard;
     }
     public function isLegal(Property $property, ClassReflection $classReflection, bool $inlinePublic = \true) : bool
     {

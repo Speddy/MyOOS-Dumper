@@ -19,18 +19,13 @@ final class OnlyOnOSFamilyFinder implements CpuCoreFinder
     /**
      * @var list<string>
      */
-    private $skippedOSFamilies;
-    /**
-     * @var CpuCoreFinder
-     */
-    private $decoratedFinder;
+    private readonly array $skippedOSFamilies;
     /**
      * @param string|list<string> $skippedOSFamilyOrFamilies
      */
-    public function __construct($skippedOSFamilyOrFamilies, CpuCoreFinder $decoratedFinder)
+    public function __construct($skippedOSFamilyOrFamilies, private readonly CpuCoreFinder $decoratedFinder)
     {
         $this->skippedOSFamilies = (array) $skippedOSFamilyOrFamilies;
-        $this->decoratedFinder = $decoratedFinder;
     }
     public static function forWindows(CpuCoreFinder $decoratedFinder) : self
     {

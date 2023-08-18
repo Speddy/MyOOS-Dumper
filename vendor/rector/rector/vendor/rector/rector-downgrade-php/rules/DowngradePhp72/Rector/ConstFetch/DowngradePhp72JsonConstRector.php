@@ -22,23 +22,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class DowngradePhp72JsonConstRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\DowngradePhp72\NodeManipulator\JsonConstCleaner
-     */
-    private $jsonConstCleaner;
-    /**
-     * @readonly
-     * @var \Rector\NodeAnalyzer\DefineFuncCallAnalyzer
-     */
-    private $defineFuncCallAnalyzer;
-    /**
      * @var string
      */
     private const PHP72_JSON_CONSTANT_IS_KNOWN = 'php72_json_constant_is_known';
-    public function __construct(JsonConstCleaner $jsonConstCleaner, DefineFuncCallAnalyzer $defineFuncCallAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly JsonConstCleaner $jsonConstCleaner,
+        /**
+         * @readonly
+         */
+        private readonly DefineFuncCallAnalyzer $defineFuncCallAnalyzer
+    )
     {
-        $this->jsonConstCleaner = $jsonConstCleaner;
-        $this->defineFuncCallAnalyzer = $defineFuncCallAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

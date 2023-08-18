@@ -20,20 +20,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class MakeInheritedMethodVisibilitySameAsParentRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
-     */
-    private $visibilityManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(VisibilityManipulator $visibilityManipulator, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly VisibilityManipulator $visibilityManipulator,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver
+    )
     {
-        $this->visibilityManipulator = $visibilityManipulator;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

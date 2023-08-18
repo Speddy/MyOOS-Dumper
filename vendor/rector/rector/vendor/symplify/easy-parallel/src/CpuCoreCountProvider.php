@@ -18,7 +18,7 @@ final class CpuCoreCountProvider
     {
         try {
             return (new CpuCoreCounter())->getCount();
-        } catch (NumberOfCpuCoreNotFound $exception) {
+        } catch (NumberOfCpuCoreNotFound) {
             return self::DEFAULT_CORE_COUNT;
         }
     }

@@ -21,26 +21,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveUnusedPrivateMethodParameterRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\NodeManipulator\VariadicFunctionLikeDetector
-     */
-    private $variadicFunctionLikeDetector;
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\NodeCollector\UnusedParameterResolver
-     */
-    private $unusedParameterResolver;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
-     */
-    private $phpDocTagRemover;
-    public function __construct(VariadicFunctionLikeDetector $variadicFunctionLikeDetector, UnusedParameterResolver $unusedParameterResolver, PhpDocTagRemover $phpDocTagRemover)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly VariadicFunctionLikeDetector $variadicFunctionLikeDetector,
+        /**
+         * @readonly
+         */
+        private readonly UnusedParameterResolver $unusedParameterResolver,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTagRemover $phpDocTagRemover
+    )
     {
-        $this->variadicFunctionLikeDetector = $variadicFunctionLikeDetector;
-        $this->unusedParameterResolver = $unusedParameterResolver;
-        $this->phpDocTagRemover = $phpDocTagRemover;
     }
     public function getRuleDefinition() : RuleDefinition
     {

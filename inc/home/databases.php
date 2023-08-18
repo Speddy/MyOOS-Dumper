@@ -20,10 +20,10 @@ if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
 include './language/'.$config['language'].'/lang_sql.php';
-$checkit = (isset($_GET['checkit'])) ? urldecode($_GET['checkit']) : '';
-$repair = (isset($_GET['repair'])) ? $_GET['repair'] : 0;
-$enableKeys = (isset($_GET['enableKeys'])) ? $_GET['enableKeys'] : '';
-for ($i = 0; $i < count($databases['Name']); ++$i) {
+$checkit = (isset($_GET['checkit'])) ? urldecode((string) $_GET['checkit']) : '';
+$repair = $_GET['repair'] ?? 0;
+$enableKeys = $_GET['enableKeys'] ?? '';
+for ($i = 0; $i < (is_countable($databases['Name']) ? count($databases['Name']) : 0); ++$i) {
     if (isset($_POST['empty'.$i])) {
         EmptyDB($databases['Name'][$i]);
         $dba = '<p class="green">'.$lang['L_DB'].' '.$databases['Name'][$i].' '.$lang['L_INFO_CLEARED'].'</p>';
@@ -73,7 +73,7 @@ $tpl->assign_vars([
 if (!isset($config['dbconnection'])) {
     mod_mysqli_connect();
 }
-for ($i = 0; $i < count($databases['Name']); ++$i) {
+for ($i = 0; $i < (is_countable($databases['Name']) ? count($databases['Name']) : 0); ++$i) {
     $rowclass = ($i % 2) ? 'dbrow' : 'dbrow1';
     if ($i == $databases['db_selected_index']) {
         $rowclass = 'dbrowsel';
@@ -123,7 +123,7 @@ if (isset($_GET['dbid'])) {
     }
     $tpl->assign_vars([
         'DB_NAME' => $databases['Name'][$dbid],
-        'DB_NAME_URLENCODED' => urlencode($databases['Name'][$dbid]),
+        'DB_NAME_URLENCODED' => urlencode((string) $databases['Name'][$dbid]),
         'DB_ID' => $dbid,
         'TABLE_COUNT' => $numrows,
         'ICONPATH' => $config['files']['iconpath'], ]);
@@ -152,7 +152,7 @@ if (isset($_GET['dbid'])) {
                 $rowclass = ($i % 2) ? 'dbrow' : 'dbrow1';
             }
 
-            if (isset($row['Update_time']) && strtotime($row['Update_time']) > strtotime($last_update)) {
+            if (isset($row['Update_time']) && strtotime((string) $row['Update_time']) > strtotime((string) $last_update)) {
                 $last_update = $row['Update_time'];
             }
             $sum_records += $row['Rows'];
@@ -165,7 +165,7 @@ if (isset($_GET['dbid'])) {
                 'ROWCLASS' => $rowclass,
                 'NR' => ($i + 1),
                 'TABLE_NAME' => $row['Name'],
-                'TABLE_NAME_URLENCODED' => urlencode($row['Name']),
+                'TABLE_NAME_URLENCODED' => urlencode((string) $row['Name']),
                 'RECORDS' => $row['Rows'],
                 'SIZE' => byte_output($row['Data_length'] + $row['Index_length']),
                 'LAST_UPDATE' => $row['Update_time'],

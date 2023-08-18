@@ -17,34 +17,27 @@ use Rector\Core\PhpParser\Comparing\NodeComparator;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\Php80\ValueObject\PropertyPromotionCandidate;
-final class PromotedPropertyCandidateResolver
+final readonly class PromotedPropertyCandidateResolver
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
-     */
-    private $nodeComparator;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
-     */
-    private $propertyFetchAnalyzer;
-    public function __construct(NodeNameResolver $nodeNameResolver, BetterNodeFinder $betterNodeFinder, NodeComparator $nodeComparator, PropertyFetchAnalyzer $propertyFetchAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private BetterNodeFinder $betterNodeFinder,
+        /**
+         * @readonly
+         */
+        private NodeComparator $nodeComparator,
+        /**
+         * @readonly
+         */
+        private PropertyFetchAnalyzer $propertyFetchAnalyzer
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->betterNodeFinder = $betterNodeFinder;
-        $this->nodeComparator = $nodeComparator;
-        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
     }
     /**
      * @return PropertyPromotionCandidate[]

@@ -22,14 +22,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ArrowFunctionToAnonymousFunctionRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Php72\NodeFactory\AnonymousFunctionFactory
-     */
-    private $anonymousFunctionFactory;
-    public function __construct(AnonymousFunctionFactory $anonymousFunctionFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly AnonymousFunctionFactory $anonymousFunctionFactory
+    )
     {
-        $this->anonymousFunctionFactory = $anonymousFunctionFactory;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -72,9 +71,7 @@ CODE_SAMPLE
         $stmts = [new Return_($node->expr)];
         $anonymousFunctionFactory = $this->anonymousFunctionFactory->create($node->params, $stmts, $node->returnType, $node->static);
         if ($node->expr instanceof Assign && $node->expr->expr instanceof Variable) {
-            $isFound = (bool) $this->betterNodeFinder->findFirst($anonymousFunctionFactory->uses, function (Node $subNode) use($node) : bool {
-                return $subNode instanceof Variable && $this->nodeComparator->areNodesEqual($subNode, $node->expr->expr);
-            });
+            $isFound = (bool) $this->betterNodeFinder->findFirst($anonymousFunctionFactory->uses, fn(Node $subNode): bool => $subNode instanceof Variable && $this->nodeComparator->areNodesEqual($subNode, $node->expr->expr));
             if (!$isFound) {
                 $anonymousFunctionFactory->uses[] = new ClosureUse($node->expr->expr);
             }

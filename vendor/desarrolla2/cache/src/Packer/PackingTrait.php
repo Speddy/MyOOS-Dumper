@@ -36,7 +36,6 @@ trait PackingTrait
     /**
      * Set a packer to pack (serialialize) and unpack (unserialize) the data.
      *
-     * @param PackerInterface $packer
      * @return static
      */
     public function withPacker(PackerInterface $packer)
@@ -64,10 +63,9 @@ trait PackingTrait
     /**
      * Pack the value
      *
-     * @param mixed $value
      * @return string|mixed
      */
-    protected function pack($value)
+    protected function pack(mixed $value)
     {
         return $this->getPacker()->pack($value);
     }

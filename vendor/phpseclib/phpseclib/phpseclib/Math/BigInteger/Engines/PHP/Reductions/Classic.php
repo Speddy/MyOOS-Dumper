@@ -25,8 +25,6 @@ abstract class Classic extends Base
     /**
      * Regular Division
      *
-     * @param array $x
-     * @param array $n
      * @param string $class
      * @return array
      */
@@ -36,7 +34,7 @@ abstract class Classic extends Base
         $lhs->value = $x;
         $rhs = new $class();
         $rhs->value = $n;
-        list(, $temp) = $lhs->divide($rhs);
+        [, $temp] = $lhs->divide($rhs);
         return $temp->value;
     }
 }

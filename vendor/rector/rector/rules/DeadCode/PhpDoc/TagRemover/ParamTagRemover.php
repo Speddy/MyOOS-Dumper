@@ -11,16 +11,15 @@ use PHPStan\PhpDocParser\Ast\Type\UnionTypeNode;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
 use Rector\DeadCode\PhpDoc\DeadParamTagValueNodeAnalyzer;
 use Rector\PhpDocParser\PhpDocParser\PhpDocNodeTraverser;
-final class ParamTagRemover
+final readonly class ParamTagRemover
 {
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\PhpDoc\DeadParamTagValueNodeAnalyzer
-     */
-    private $deadParamTagValueNodeAnalyzer;
-    public function __construct(DeadParamTagValueNodeAnalyzer $deadParamTagValueNodeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private DeadParamTagValueNodeAnalyzer $deadParamTagValueNodeAnalyzer
+    )
     {
-        $this->deadParamTagValueNodeAnalyzer = $deadParamTagValueNodeAnalyzer;
     }
     public function removeParamTagsIfUseless(PhpDocInfo $phpDocInfo, FunctionLike $functionLike) : bool
     {

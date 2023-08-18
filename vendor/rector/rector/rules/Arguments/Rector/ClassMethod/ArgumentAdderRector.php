@@ -36,39 +36,29 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class ArgumentAdderRector extends AbstractRector implements ConfigurableRectorInterface
 {
     /**
-     * @readonly
-     * @var \Rector\Arguments\NodeAnalyzer\ArgumentAddingScope
-     */
-    private $argumentAddingScope;
-    /**
-     * @readonly
-     * @var \Rector\Arguments\NodeAnalyzer\ChangedArgumentsDetector
-     */
-    private $changedArgumentsDetector;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Printer\BetterStandardPrinter
-     */
-    private $betterStandardPrinter;
-    /**
      * @var ArgumentAdder[]
      */
-    private $addedArguments = [];
-    /**
-     * @var bool
-     */
-    private $hasChanged = \false;
-    public function __construct(ArgumentAddingScope $argumentAddingScope, ChangedArgumentsDetector $changedArgumentsDetector, AstResolver $astResolver, BetterStandardPrinter $betterStandardPrinter)
+    private array $addedArguments = [];
+    private bool $hasChanged = \false;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ArgumentAddingScope $argumentAddingScope,
+        /**
+         * @readonly
+         */
+        private readonly ChangedArgumentsDetector $changedArgumentsDetector,
+        /**
+         * @readonly
+         */
+        private readonly AstResolver $astResolver,
+        /**
+         * @readonly
+         */
+        private readonly BetterStandardPrinter $betterStandardPrinter
+    )
     {
-        $this->argumentAddingScope = $argumentAddingScope;
-        $this->changedArgumentsDetector = $changedArgumentsDetector;
-        $this->astResolver = $astResolver;
-        $this->betterStandardPrinter = $betterStandardPrinter;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -161,10 +151,7 @@ CODE_SAMPLE
         }
         $this->processMethodCall($node, $defaultValue, $position);
     }
-    /**
-     * @param mixed $defaultValue
-     */
-    private function processMethodCall(MethodCall $methodCall, $defaultValue, int $position) : void
+    private function processMethodCall(MethodCall $methodCall, mixed $defaultValue, int $position) : void
     {
         $arg = new Arg(BuilderHelpers::normalizeValue($defaultValue));
         if (isset($methodCall->args[$position])) {
@@ -245,10 +232,7 @@ CODE_SAMPLE
         }
         return \true;
     }
-    /**
-     * @param mixed $defaultValue
-     */
-    private function addClassMethodParam(ClassMethod $classMethod, ArgumentAdder $argumentAdder, $defaultValue, ?Type $type, int $position) : void
+    private function addClassMethodParam(ClassMethod $classMethod, ArgumentAdder $argumentAdder, mixed $defaultValue, ?Type $type, int $position) : void
     {
         $argumentName = $argumentAdder->getArgumentName();
         if ($argumentName === null) {

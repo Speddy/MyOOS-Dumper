@@ -227,7 +227,7 @@ use function is_array, is_float, is_object, is_string;
  * @method self width(?int $val)
  * @method self wrap(?string $val)
  */
-class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringable
+class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringable, \Stringable
 {
     use Nette\SmartObject;
     /** @var array<string, mixed>  element's attributes */
@@ -240,8 +240,7 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
     protected $children = [];
     /** @var string  element's name */
     private $name;
-    /** @var bool  is element empty? */
-    private $isEmpty;
+    private ?bool $isEmpty = null;
     /**
      * Constructs new HTML element.
      * @param  array|string $attrs element's attributes or plain text content
@@ -334,11 +333,9 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
     }
     /**
      * Appends value to element's attribute.
-     * @param  mixed  $value
-     * @param  mixed  $option
      * @return static
      */
-    public function appendAttribute(string $name, $value, $option = \true)
+    public function appendAttribute(string $name, mixed $value, mixed $option = \true)
     {
         if (is_array($value)) {
             $prev = isset($this->attrs[$name]) ? (array) $this->attrs[$name] : [];
@@ -356,10 +353,9 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
     }
     /**
      * Sets element's attribute.
-     * @param  mixed  $value
      * @return static
      */
-    public function setAttribute(string $name, $value)
+    public function setAttribute(string $name, mixed $value)
     {
         $this->attrs[$name] = $value;
         return $this;
@@ -394,9 +390,8 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
     }
     /**
      * Overloaded setter for element's attribute.
-     * @param  mixed  $value
      */
-    public final function __set(string $name, $value) : void
+    public final function __set(string $name, mixed $value) : void
     {
         $this->attrs[$name] = $value;
     }
@@ -466,15 +461,14 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
     }
     /**
      * Setter for data-* attributes. Booleans are converted to 'true' resp. 'false'.
-     * @param  mixed  $value
      * @return static
      */
-    public function data(string $name, $value = null)
+    public function data(string $name, mixed $value = null)
     {
         if (\func_num_args() === 1) {
             $this->attrs['data'] = $name;
         } else {
-            $this->attrs["data-{$name}"] = \is_bool($value) ? \json_encode($value) : $value;
+            $this->attrs["data-{$name}"] = \is_bool($value) ? \json_encode($value, JSON_THROW_ON_ERROR) : $value;
         }
         return $this;
     }
@@ -703,7 +697,7 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
                 }
                 continue;
             } elseif (is_array($value)) {
-                if (\strncmp($key, 'data-', 5) === 0) {
+                if (str_starts_with($key, 'data-')) {
                     $value = Json::encode($value);
                 } else {
                     $tmp = null;
@@ -724,8 +718,8 @@ class Html implements \ArrayAccess, \Countable, \IteratorAggregate, HtmlStringab
             } else {
                 $value = (string) $value;
             }
-            $q = \strpos($value, '"') === \false ? '"' : "'";
-            $s .= ' ' . $key . '=' . $q . \str_replace(['&', $q, '<'], ['&amp;', $q === '"' ? '&quot;' : '&#39;', self::$xhtml ? '&lt;' : '<'], $value) . (\strpos($value, '`') !== \false && \strpbrk($value, ' <>"\'') === \false ? ' ' : '') . $q;
+            $q = !str_contains($value, '"') ? '"' : "'";
+            $s .= ' ' . $key . '=' . $q . \str_replace(['&', $q, '<'], ['&amp;', $q === '"' ? '&quot;' : '&#39;', self::$xhtml ? '&lt;' : '<'], $value) . (str_contains($value, '`') && \strpbrk($value, ' <>"\'') === \false ? ' ' : '') . $q;
         }
         $s = \str_replace('@', '&#64;', $s);
         return $s;

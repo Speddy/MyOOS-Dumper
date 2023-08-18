@@ -8,28 +8,23 @@ use Rector\Naming\ExpectedNameResolver\MatchPropertyTypeExpectedNameResolver;
 use Rector\Naming\PhpArray\ArrayFilter;
 use Rector\Naming\ValueObject\PropertyRename;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class MatchPropertyTypeConflictingNameGuard
+final readonly class MatchPropertyTypeConflictingNameGuard
 {
-    /**
-     * @readonly
-     * @var \Rector\Naming\ExpectedNameResolver\MatchPropertyTypeExpectedNameResolver
-     */
-    private $matchPropertyTypeExpectedNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Naming\PhpArray\ArrayFilter
-     */
-    private $arrayFilter;
-    public function __construct(MatchPropertyTypeExpectedNameResolver $matchPropertyTypeExpectedNameResolver, NodeNameResolver $nodeNameResolver, ArrayFilter $arrayFilter)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private MatchPropertyTypeExpectedNameResolver $matchPropertyTypeExpectedNameResolver,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private ArrayFilter $arrayFilter
+    )
     {
-        $this->matchPropertyTypeExpectedNameResolver = $matchPropertyTypeExpectedNameResolver;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->arrayFilter = $arrayFilter;
     }
     public function isConflicting(PropertyRename $propertyRename) : bool
     {

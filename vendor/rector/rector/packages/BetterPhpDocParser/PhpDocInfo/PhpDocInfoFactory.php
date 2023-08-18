@@ -21,59 +21,44 @@ use Rector\StaticTypeMapper\StaticTypeMapper;
 final class PhpDocInfoFactory
 {
     /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocNodeMapper
-     */
-    private $phpDocNodeMapper;
-    /**
-     * @readonly
-     * @var \Rector\Core\Configuration\CurrentNodeProvider
-     */
-    private $currentNodeProvider;
-    /**
-     * @readonly
-     * @var \PHPStan\PhpDocParser\Lexer\Lexer
-     */
-    private $lexer;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocParser\BetterPhpDocParser
-     */
-    private $betterPhpDocParser;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\StaticTypeMapper
-     */
-    private $staticTypeMapper;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\Annotation\AnnotationNaming
-     */
-    private $annotationNaming;
-    /**
-     * @readonly
-     * @var \Rector\ChangesReporting\Collector\RectorChangeCollector
-     */
-    private $rectorChangeCollector;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocNodeFinder\PhpDocNodeByTypeFinder
-     */
-    private $phpDocNodeByTypeFinder;
-    /**
      * @var array<string, PhpDocInfo>
      */
-    private $phpDocInfosByObjectHash = [];
-    public function __construct(PhpDocNodeMapper $phpDocNodeMapper, CurrentNodeProvider $currentNodeProvider, Lexer $lexer, BetterPhpDocParser $betterPhpDocParser, StaticTypeMapper $staticTypeMapper, AnnotationNaming $annotationNaming, RectorChangeCollector $rectorChangeCollector, PhpDocNodeByTypeFinder $phpDocNodeByTypeFinder)
+    private array $phpDocInfosByObjectHash = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PhpDocNodeMapper $phpDocNodeMapper,
+        /**
+         * @readonly
+         */
+        private readonly CurrentNodeProvider $currentNodeProvider,
+        /**
+         * @readonly
+         */
+        private readonly Lexer $lexer,
+        /**
+         * @readonly
+         */
+        private readonly BetterPhpDocParser $betterPhpDocParser,
+        /**
+         * @readonly
+         */
+        private readonly StaticTypeMapper $staticTypeMapper,
+        /**
+         * @readonly
+         */
+        private readonly AnnotationNaming $annotationNaming,
+        /**
+         * @readonly
+         */
+        private readonly RectorChangeCollector $rectorChangeCollector,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocNodeByTypeFinder $phpDocNodeByTypeFinder
+    )
     {
-        $this->phpDocNodeMapper = $phpDocNodeMapper;
-        $this->currentNodeProvider = $currentNodeProvider;
-        $this->lexer = $lexer;
-        $this->betterPhpDocParser = $betterPhpDocParser;
-        $this->staticTypeMapper = $staticTypeMapper;
-        $this->annotationNaming = $annotationNaming;
-        $this->rectorChangeCollector = $rectorChangeCollector;
-        $this->phpDocNodeByTypeFinder = $phpDocNodeByTypeFinder;
     }
     public function createFromNodeOrEmpty(Node $node) : \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo
     {

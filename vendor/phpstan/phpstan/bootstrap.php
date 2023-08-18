@@ -14,7 +14,7 @@ final class PharAutoloader
 			return;
 		}
 
-		if (strpos($class, '_PHPStan_') === 0) {
+		if (str_starts_with($class, '_PHPStan_')) {
 			if (!in_array('phar', stream_get_wrappers(), true)) {
 				throw new \Exception('Phar wrapper is not registered. Please review your php.ini settings.');
 			}
@@ -31,7 +31,7 @@ final class PharAutoloader
 
 			return;
 		}
-		if (strpos($class, 'PHPStan\\') !== 0 || strpos($class, 'PHPStan\\PhpDocParser\\') === 0) {
+		if (!str_starts_with($class, 'PHPStan\\') || str_starts_with($class, 'PHPStan\\PhpDocParser\\')) {
 			return;
 		}
 
@@ -40,7 +40,7 @@ final class PharAutoloader
 		}
 
 		$filename = str_replace('\\', DIRECTORY_SEPARATOR, $class);
-		if (strpos($class, 'PHPStan\\BetterReflection\\') === 0) {
+		if (str_starts_with($class, 'PHPStan\\BetterReflection\\')) {
 			$filename = substr($filename, strlen('PHPStan\\BetterReflection\\'));
 			$filepath = 'phar://' . __DIR__ . '/phpstan.phar/vendor/ondrejmirtes/better-reflection/src/' . $filename . '.php';
 		} else {
@@ -56,4 +56,4 @@ final class PharAutoloader
 	}
 }
 
-spl_autoload_register([PharAutoloader::class, 'loadClass']);
+spl_autoload_register(PharAutoloader::loadClass(...));

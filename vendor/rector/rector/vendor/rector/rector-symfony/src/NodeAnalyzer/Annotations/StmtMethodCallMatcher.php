@@ -7,16 +7,15 @@ use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Expression;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class StmtMethodCallMatcher
+final readonly class StmtMethodCallMatcher
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    public function __construct(NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function match(Stmt $stmt, string $methodName) : ?MethodCall
     {

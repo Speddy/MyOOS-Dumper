@@ -57,7 +57,7 @@ final class FilePathHelper
         }
         $normalizedPath = \str_replace('\\', '/', (string) $path);
         $path = Strings::replace($normalizedPath, self::TWO_AND_MORE_SLASHES_REGEX, '/');
-        $pathRoot = \strncmp($path, '/', \strlen('/')) === 0 ? $directorySeparator : '';
+        $pathRoot = str_starts_with($path, '/') ? $directorySeparator : '';
         $pathParts = \explode('/', \trim($path, '/'));
         $normalizedPathParts = $this->normalizePathParts($pathParts, $scheme);
         $pathStart = $scheme !== self::SCHEME_UNDEFINED ? $scheme . '://' : '';
@@ -68,7 +68,7 @@ final class FilePathHelper
         Assert::directory($directory);
         $normalizedFileRealPath = $this->normalizePath($fileRealPath);
         $relativeFilePath = $this->filesystem->makePathRelative($normalizedFileRealPath, $directory);
-        return \rtrim($relativeFilePath, '/');
+        return \rtrim((string) $relativeFilePath, '/');
     }
     private function normalizePath(string $filePath) : string
     {
@@ -94,7 +94,7 @@ final class FilePathHelper
             if ($scheme !== 'phar') {
                 continue;
             }
-            if (\substr_compare($removedPart, '.phar', -\strlen('.phar')) !== 0) {
+            if (!str_ends_with($removedPart, '.phar')) {
                 continue;
             }
             $scheme = self::SCHEME_UNDEFINED;

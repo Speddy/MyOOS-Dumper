@@ -18,34 +18,27 @@ use Rector\Core\PhpParser\Printer\BetterStandardPrinter;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\Php80\Enum\MatchKind;
 use Rector\Php80\ValueObject\CondAndExpr;
-final class MatchSwitchAnalyzer
+final readonly class MatchSwitchAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\SwitchAnalyzer
-     */
-    private $switchAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
-     */
-    private $nodeComparator;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Printer\BetterStandardPrinter
-     */
-    private $betterStandardPrinter;
-    public function __construct(\Rector\Php80\NodeAnalyzer\SwitchAnalyzer $switchAnalyzer, NodeNameResolver $nodeNameResolver, NodeComparator $nodeComparator, BetterStandardPrinter $betterStandardPrinter)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private \Rector\Php80\NodeAnalyzer\SwitchAnalyzer $switchAnalyzer,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private NodeComparator $nodeComparator,
+        /**
+         * @readonly
+         */
+        private BetterStandardPrinter $betterStandardPrinter
+    )
     {
-        $this->switchAnalyzer = $switchAnalyzer;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->nodeComparator = $nodeComparator;
-        $this->betterStandardPrinter = $betterStandardPrinter;
     }
     /**
      * @param CondAndExpr[] $condAndExprs
@@ -103,7 +96,7 @@ final class MatchSwitchAnalyzer
             if ($expr->var instanceof ArrayDimFetch) {
                 $assignVariableNames[] = $this->betterStandardPrinter->print($expr->var);
             } else {
-                $assignVariableNames[] = \get_class($expr->var) . $this->nodeNameResolver->getName($expr->var);
+                $assignVariableNames[] = $expr->var::class . $this->nodeNameResolver->getName($expr->var);
             }
         }
         $assignVariableNames = \array_unique($assignVariableNames);
@@ -158,9 +151,7 @@ final class MatchSwitchAnalyzer
         }
         foreach ($switch->cases as $case) {
             /** @var Expression[] $expressions */
-            $expressions = \array_filter($case->stmts, static function (Node $node) : bool {
-                return $node instanceof Expression;
-            });
+            $expressions = \array_filter($case->stmts, static fn(Node $node): bool => $node instanceof Expression);
             foreach ($expressions as $expression) {
                 if (!$expression->expr instanceof Assign) {
                     continue;

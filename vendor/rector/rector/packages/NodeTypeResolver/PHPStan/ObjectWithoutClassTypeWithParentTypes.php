@@ -9,16 +9,13 @@ use PHPStan\Type\TypeWithClassName;
 final class ObjectWithoutClassTypeWithParentTypes extends ObjectWithoutClassType
 {
     /**
-     * @var TypeWithClassName[]
-     * @readonly
-     */
-    private $parentTypes;
-    /**
      * @param TypeWithClassName[] $parentTypes
      */
-    public function __construct(array $parentTypes, ?Type $subtractedType = null)
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly array $parentTypes, ?Type $subtractedType = null)
     {
-        $this->parentTypes = $parentTypes;
         parent::__construct($subtractedType);
     }
     /**

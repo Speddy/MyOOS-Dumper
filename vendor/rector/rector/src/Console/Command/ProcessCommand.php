@@ -28,66 +28,39 @@ final class ProcessCommand extends Command
 {
     /**
      * @readonly
-     * @var \Rector\Core\Autoloading\AdditionalAutoloader
-     */
-    private $additionalAutoloader;
-    /**
-     * @readonly
-     * @var \Rector\Caching\Detector\ChangedFilesDetector
-     */
-    private $changedFilesDetector;
-    /**
-     * @readonly
-     * @var \Rector\Core\Configuration\ConfigInitializer
-     */
-    private $configInitializer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Application\ApplicationFileProcessor
-     */
-    private $applicationFileProcessor;
-    /**
-     * @readonly
-     * @var \Rector\Core\ValueObjectFactory\ProcessResultFactory
-     */
-    private $processResultFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\StaticReflection\DynamicSourceLocatorDecorator
-     */
-    private $dynamicSourceLocatorDecorator;
-    /**
-     * @readonly
-     * @var \Rector\Core\Console\Output\OutputFormatterCollector
-     */
-    private $outputFormatterCollector;
-    /**
-     * @readonly
      * @var \Symfony\Component\Console\Style\SymfonyStyle
      */
     private $symfonyStyle;
-    /**
+    public function __construct(/**
      * @readonly
-     * @var \Rector\Core\Util\MemoryLimiter
      */
-    private $memoryLimiter;
-    /**
+    private readonly AdditionalAutoloader $additionalAutoloader, /**
      * @readonly
-     * @var \Rector\Core\Configuration\ConfigurationFactory
      */
-    private $configurationFactory;
-    public function __construct(AdditionalAutoloader $additionalAutoloader, ChangedFilesDetector $changedFilesDetector, ConfigInitializer $configInitializer, ApplicationFileProcessor $applicationFileProcessor, ProcessResultFactory $processResultFactory, DynamicSourceLocatorDecorator $dynamicSourceLocatorDecorator, OutputFormatterCollector $outputFormatterCollector, SymfonyStyle $symfonyStyle, MemoryLimiter $memoryLimiter, ConfigurationFactory $configurationFactory)
+    private readonly ChangedFilesDetector $changedFilesDetector, /**
+     * @readonly
+     */
+    private readonly ConfigInitializer $configInitializer, /**
+     * @readonly
+     */
+    private readonly ApplicationFileProcessor $applicationFileProcessor, /**
+     * @readonly
+     */
+    private readonly ProcessResultFactory $processResultFactory, /**
+     * @readonly
+     */
+    private readonly DynamicSourceLocatorDecorator $dynamicSourceLocatorDecorator, /**
+     * @readonly
+     */
+    private readonly OutputFormatterCollector $outputFormatterCollector, SymfonyStyle $symfonyStyle, /**
+     * @readonly
+     */
+    private readonly MemoryLimiter $memoryLimiter, /**
+     * @readonly
+     */
+    private readonly ConfigurationFactory $configurationFactory)
     {
-        $this->additionalAutoloader = $additionalAutoloader;
-        $this->changedFilesDetector = $changedFilesDetector;
-        $this->configInitializer = $configInitializer;
-        $this->applicationFileProcessor = $applicationFileProcessor;
-        $this->processResultFactory = $processResultFactory;
-        $this->dynamicSourceLocatorDecorator = $dynamicSourceLocatorDecorator;
-        $this->outputFormatterCollector = $outputFormatterCollector;
         $this->symfonyStyle = $symfonyStyle;
-        $this->memoryLimiter = $memoryLimiter;
-        $this->configurationFactory = $configurationFactory;
         parent::__construct();
     }
     protected function configure() : void

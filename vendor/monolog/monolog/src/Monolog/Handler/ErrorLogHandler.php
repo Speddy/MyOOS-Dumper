@@ -23,8 +23,8 @@ use Monolog\Utils;
  */
 class ErrorLogHandler extends AbstractProcessingHandler
 {
-    public const OPERATING_SYSTEM = 0;
-    public const SAPI = 4;
+    final public const OPERATING_SYSTEM = 0;
+    final public const SAPI = 4;
 
     /** @var int */
     protected $messageType;

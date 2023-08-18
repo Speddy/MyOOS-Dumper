@@ -11,28 +11,23 @@ use PHPStan\Reflection\ClassReflection;
 use Rector\Core\PhpParser\AstResolver;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class ClassConstManipulator
+final readonly class ClassConstManipulator
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    public function __construct(BetterNodeFinder $betterNodeFinder, NodeNameResolver $nodeNameResolver, AstResolver $astResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private BetterNodeFinder $betterNodeFinder,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private AstResolver $astResolver
+    )
     {
-        $this->betterNodeFinder = $betterNodeFinder;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->astResolver = $astResolver;
     }
     public function hasClassConstFetch(ClassConst $classConst, ClassReflection $classReflection) : bool
     {

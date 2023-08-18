@@ -23,7 +23,7 @@ if (!@ob_start('ob_gzhandler')) {
 }
 
 include './inc/functions.php';
-$page = (isset($_GET['page'])) ? $_GET['page'] : 'main.php';
+$page = $_GET['page'] ?? 'main.php';
 if (!file_exists('./work/config/myoosdumper.php')) {
     header('location: install.php');
     ob_end_flush();

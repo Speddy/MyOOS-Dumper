@@ -24,7 +24,7 @@ use phpseclib3\File\ASN1;
  */
 abstract class DHParameter
 {
-    const MAP = [
+    final public const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'prime' => ['type' => ASN1::TYPE_INTEGER],

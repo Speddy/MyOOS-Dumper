@@ -31,7 +31,7 @@ abstract class Montgomery extends Base
      */
     public static function isValidEngine()
     {
-        return static::class != __CLASS__;
+        return static::class != self::class;
     }
 
     /**
@@ -53,7 +53,7 @@ abstract class Montgomery extends Base
         // if it's not, it's even
 
         // find the lowest set bit (eg. the max pow of 2 that divides $n)
-        for ($i = 0; $i < count($n->value); ++$i) {
+        for ($i = 0; $i < (is_countable($n->value) ? count($n->value) : 0); ++$i) {
             if ($n->value[$i]) {
                 $temp = decbin($n->value[$i]);
                 $j = strlen($temp) - strrpos($temp, '1') - 1;
@@ -82,7 +82,7 @@ abstract class Montgomery extends Base
         $temp = $temp->multiply($y2);
 
         $result = $result->add($temp);
-        list(, $result) = $result->divide($n);
+        [, $result] = $result->divide($n);
 
         return $result;
     }

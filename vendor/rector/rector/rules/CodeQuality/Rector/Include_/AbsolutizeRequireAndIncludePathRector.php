@@ -70,18 +70,18 @@ CODE_SAMPLE
         /** @var string $includeValue */
         $includeValue = $this->valueResolver->getValue($node->expr);
         // skip phar
-        if (\strncmp($includeValue, 'phar://', \strlen('phar://')) === 0) {
+        if (str_starts_with($includeValue, 'phar://')) {
             return null;
         }
         // skip absolute paths
-        if (\strncmp($includeValue, '/', \strlen('/')) === 0) {
+        if (str_starts_with($includeValue, '/')) {
             return null;
         }
-        if (\strpos($includeValue, 'config/') !== \false) {
+        if (str_contains($includeValue, 'config/')) {
             return null;
         }
         // add preslash to string
-        if (\strncmp($includeValue, './', \strlen('./')) === 0) {
+        if (str_starts_with($includeValue, './')) {
             $node->expr->value = Strings::substring($includeValue, 1);
         } else {
             $node->expr->value = '/' . $includeValue;
@@ -91,7 +91,7 @@ CODE_SAMPLE
     }
     private function isRefactorableStringPath(String_ $string) : bool
     {
-        return \strncmp($string->value, 'phar://', \strlen('phar://')) !== 0;
+        return !str_starts_with($string->value, 'phar://');
     }
     private function prefixWithDirConstant(String_ $string) : Concat
     {
@@ -104,14 +104,14 @@ CODE_SAMPLE
      */
     private function removeExtraDotSlash(String_ $string) : void
     {
-        if (\strncmp($string->value, './', \strlen('./')) !== 0) {
+        if (!str_starts_with($string->value, './')) {
             return;
         }
         $string->value = Strings::replace($string->value, '#^\\.\\/#', '/');
     }
     private function prependSlashIfMissing(String_ $string) : void
     {
-        if (\strncmp($string->value, '/', \strlen('/')) === 0) {
+        if (str_starts_with($string->value, '/')) {
             return;
         }
         $string->value = '/' . $string->value;

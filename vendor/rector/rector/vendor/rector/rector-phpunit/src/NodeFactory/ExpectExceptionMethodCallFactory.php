@@ -13,22 +13,19 @@ use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use Rector\Core\Exception\ShouldNotHappenException;
 use Rector\Core\PhpParser\Node\NodeFactory;
 use Rector\PHPUnit\PhpDoc\PhpDocValueToNodeMapper;
-final class ExpectExceptionMethodCallFactory
+final readonly class ExpectExceptionMethodCallFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\PhpDoc\PhpDocValueToNodeMapper
-     */
-    private $phpDocValueToNodeMapper;
-    public function __construct(NodeFactory $nodeFactory, PhpDocValueToNodeMapper $phpDocValueToNodeMapper)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory,
+        /**
+         * @readonly
+         */
+        private PhpDocValueToNodeMapper $phpDocValueToNodeMapper
+    )
     {
-        $this->nodeFactory = $nodeFactory;
-        $this->phpDocValueToNodeMapper = $phpDocValueToNodeMapper;
     }
     /**
      * @param PhpDocTagNode[] $phpDocTagNodes

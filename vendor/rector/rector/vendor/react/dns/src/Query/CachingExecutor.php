@@ -12,13 +12,9 @@ final class CachingExecutor implements ExecutorInterface
      *
      * @internal
      */
-    const TTL = 60;
-    private $executor;
-    private $cache;
-    public function __construct(ExecutorInterface $executor, CacheInterface $cache)
+    public const TTL = 60;
+    public function __construct(private ExecutorInterface $executor, private CacheInterface $cache)
     {
-        $this->executor = $executor;
-        $this->cache = $cache;
     }
     public function query(Query $query)
     {
@@ -52,7 +48,6 @@ final class CachingExecutor implements ExecutorInterface
         });
     }
     /**
-     * @param Message $message
      * @return int
      * @internal
      */

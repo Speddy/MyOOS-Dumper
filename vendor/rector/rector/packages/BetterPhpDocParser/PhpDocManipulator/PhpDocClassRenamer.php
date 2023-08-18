@@ -12,16 +12,15 @@ use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
 use Rector\BetterPhpDocParser\PhpDocParser\ClassAnnotationMatcher;
 use Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\CurlyListNode;
 use Rector\BetterPhpDocParser\ValueObject\PhpDocAttributeKey;
-final class PhpDocClassRenamer
+final readonly class PhpDocClassRenamer
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocParser\ClassAnnotationMatcher
-     */
-    private $classAnnotationMatcher;
-    public function __construct(ClassAnnotationMatcher $classAnnotationMatcher)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ClassAnnotationMatcher $classAnnotationMatcher
+    )
     {
-        $this->classAnnotationMatcher = $classAnnotationMatcher;
     }
     /**
      * Covers annotations like @ORM, @Serializer, @Assert etc

@@ -11,28 +11,23 @@ use PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger;
 use Rector\StaticTypeMapper\StaticTypeMapper;
-final class PropertyDecorator
+final readonly class PropertyDecorator
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\StaticTypeMapper
-     */
-    private $staticTypeMapper;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
-     */
-    private $phpDocTypeChanger;
-    public function __construct(PhpDocInfoFactory $phpDocInfoFactory, StaticTypeMapper $staticTypeMapper, PhpDocTypeChanger $phpDocTypeChanger)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PhpDocInfoFactory $phpDocInfoFactory,
+        /**
+         * @readonly
+         */
+        private StaticTypeMapper $staticTypeMapper,
+        /**
+         * @readonly
+         */
+        private PhpDocTypeChanger $phpDocTypeChanger
+    )
     {
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
-        $this->staticTypeMapper = $staticTypeMapper;
-        $this->phpDocTypeChanger = $phpDocTypeChanger;
     }
     /**
      * @param \PhpParser\Node\ComplexType|\PhpParser\Node\Identifier|\PhpParser\Node\Name $typeNode

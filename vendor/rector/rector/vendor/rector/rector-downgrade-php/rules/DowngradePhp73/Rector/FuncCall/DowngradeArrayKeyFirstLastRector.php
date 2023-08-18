@@ -35,20 +35,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeArrayKeyFirstLastRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\VariableNaming
-     */
-    private $variableNaming;
-    /**
-     * @readonly
-     * @var \Rector\NodeAnalyzer\ExprInTopStmtMatcher
-     */
-    private $exprInTopStmtMatcher;
-    public function __construct(VariableNaming $variableNaming, ExprInTopStmtMatcher $exprInTopStmtMatcher)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly VariableNaming $variableNaming,
+        /**
+         * @readonly
+         */
+        private readonly ExprInTopStmtMatcher $exprInTopStmtMatcher
+    )
     {
-        $this->variableNaming = $variableNaming;
-        $this->exprInTopStmtMatcher = $exprInTopStmtMatcher;
     }
     public function getRuleDefinition() : RuleDefinition
     {

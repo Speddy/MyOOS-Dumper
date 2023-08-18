@@ -22,7 +22,7 @@ final class AddInterfaceByTraitRector extends AbstractScopeAwareRector implement
     /**
      * @var array<string, string>
      */
-    private $interfaceByTrait = [];
+    private array $interfaceByTrait = [];
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Add interface by used trait', [new ConfiguredCodeSample(<<<'CODE_SAMPLE'

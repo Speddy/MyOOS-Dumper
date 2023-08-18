@@ -9,22 +9,19 @@ use PHPStan\Reflection\ClassReflection;
 use Rector\Core\Reflection\ReflectionResolver;
 use Rector\Core\ValueObject\MethodName;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class ClassMethodManipulator
+final readonly class ClassMethodManipulator
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(NodeNameResolver $nodeNameResolver, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private ReflectionResolver $reflectionResolver
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function isNamedConstructor(ClassMethod $classMethod) : bool
     {

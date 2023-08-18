@@ -12,16 +12,15 @@ use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
 use Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeAnalyzer;
-final class StaticTypeAnalyzer
+final readonly class StaticTypeAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeAnalyzer
-     */
-    private $unionTypeAnalyzer;
-    public function __construct(UnionTypeAnalyzer $unionTypeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private UnionTypeAnalyzer $unionTypeAnalyzer
+    )
     {
-        $this->unionTypeAnalyzer = $unionTypeAnalyzer;
     }
     public function isAlwaysTruableType(Type $type) : bool
     {

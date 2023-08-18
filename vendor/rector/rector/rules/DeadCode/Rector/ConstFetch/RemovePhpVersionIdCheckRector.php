@@ -24,17 +24,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class RemovePhpVersionIdCheckRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    /**
      * @var PhpVersion::*|null
      */
     private $phpVersion = null;
-    public function __construct(PhpVersionProvider $phpVersionProvider)
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly PhpVersionProvider $phpVersionProvider)
     {
-        $this->phpVersionProvider = $phpVersionProvider;
         $this->phpVersion = $this->phpVersionProvider->provide();
     }
     public function getRuleDefinition() : RuleDefinition

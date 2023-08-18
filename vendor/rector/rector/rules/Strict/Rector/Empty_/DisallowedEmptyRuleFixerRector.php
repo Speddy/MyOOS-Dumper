@@ -22,20 +22,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DisallowedEmptyRuleFixerRector extends AbstractFalsyScalarRuleFixerRector implements ConfigurableRectorInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Strict\NodeFactory\ExactCompareFactory
-     */
-    private $exactCompareFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ExprAnalyzer
-     */
-    private $exprAnalyzer;
-    public function __construct(ExactCompareFactory $exactCompareFactory, ExprAnalyzer $exprAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ExactCompareFactory $exactCompareFactory,
+        /**
+         * @readonly
+         */
+        private readonly ExprAnalyzer $exprAnalyzer
+    )
     {
-        $this->exactCompareFactory = $exactCompareFactory;
-        $this->exprAnalyzer = $exprAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

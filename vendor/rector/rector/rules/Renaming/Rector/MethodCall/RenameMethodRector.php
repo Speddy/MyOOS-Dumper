@@ -30,29 +30,24 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class RenameMethodRector extends AbstractScopeAwareRector implements ConfigurableRectorInterface
 {
     /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\ClassManipulator
-     */
-    private $classManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
      * @var MethodCallRenameInterface[]
      */
-    private $methodCallRenames = [];
-    public function __construct(ClassManipulator $classManipulator, ReflectionResolver $reflectionResolver, ReflectionProvider $reflectionProvider)
+    private array $methodCallRenames = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ClassManipulator $classManipulator,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider
+    )
     {
-        $this->classManipulator = $classManipulator;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -9,7 +9,7 @@ use Stringable;
  * Useful for annotation class based annotation, e.g. @ORM\Entity to prevent space
  * between the @ORM\Entity and (someContent)
  */
-final class SpacelessPhpDocTagNode extends PhpDocTagNode
+final class SpacelessPhpDocTagNode extends PhpDocTagNode implements \Stringable
 {
     public function __toString() : string
     {

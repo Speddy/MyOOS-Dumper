@@ -21,16 +21,11 @@ use RectorPrefix202308\Symfony\Component\Finder\Comparator\DateComparator;
 class DateRangeFilterIterator extends \FilterIterator
 {
     /**
-     * @var mixed[]
-     */
-    private $comparators = [];
-    /**
      * @param \Iterator<string, \SplFileInfo> $iterator
      * @param DateComparator[]                $comparators
      */
-    public function __construct(\Iterator $iterator, array $comparators)
+    public function __construct(\Iterator $iterator, private readonly array $comparators)
     {
-        $this->comparators = $comparators;
         parent::__construct($iterator);
     }
     /**

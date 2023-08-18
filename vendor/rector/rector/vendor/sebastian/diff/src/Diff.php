@@ -14,26 +14,18 @@ namespace RectorPrefix202308\SebastianBergmann\Diff;
 final class Diff
 {
     /**
-     * @var string
-     */
-    private $from;
-    /**
-     * @var string
-     */
-    private $to;
-    /**
-     * @psalm-var list<Chunk>
-     * @var mixed[]
-     */
-    private $chunks;
-    /**
      * @psalm-param list<Chunk> $chunks
+     * @param mixed[] $chunks
      */
-    public function __construct(string $from, string $to, array $chunks = [])
+    public function __construct(
+        private readonly string $from,
+        private readonly string $to,
+        /**
+         * @psalm-var
+         */
+        private array $chunks = []
+    )
     {
-        $this->from = $from;
-        $this->to = $to;
-        $this->chunks = $chunks;
     }
     public function getFrom() : string
     {

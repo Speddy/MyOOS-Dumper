@@ -24,19 +24,9 @@ use RectorPrefix202308\Symfony\Component\Console\Output\OutputInterface;
  */
 final class LazyCommand extends Command
 {
-    /**
-     * @var \Closure|\Symfony\Component\Console\Command\Command
-     */
-    private $command;
-    /**
-     * @var bool|null
-     */
-    private $isEnabled;
-    public function __construct(string $name, array $aliases, string $description, bool $isHidden, \Closure $commandFactory, ?bool $isEnabled = \true)
+    public function __construct(string $name, array $aliases, string $description, bool $isHidden, private \Closure $command, private readonly ?bool $isEnabled = \true)
     {
         $this->setName($name)->setAliases($aliases)->setHidden($isHidden)->setDescription($description);
-        $this->command = $commandFactory;
-        $this->isEnabled = $isEnabled;
     }
     public function ignoreValidationErrors() : void
     {

@@ -31,7 +31,7 @@ final class UseAliasNameMatcher
                     continue;
                 }
                 $alias = $originalUseUseNode->alias->toString();
-                if (\strncmp($shortAnnotationName, $alias, \strlen($alias)) !== 0) {
+                if (!str_starts_with($shortAnnotationName, $alias)) {
                     continue;
                 }
                 $fullyQualifiedAnnotationName = $originalUseUseNode->name->toString() . \ltrim($shortAnnotationName, $alias);

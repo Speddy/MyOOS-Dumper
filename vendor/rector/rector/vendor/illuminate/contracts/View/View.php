@@ -15,10 +15,9 @@ interface View extends Renderable
      * Add a piece of data to the view.
      *
      * @param  string|array  $key
-     * @param  mixed  $value
      * @return $this
      */
-    public function with($key, $value = null);
+    public function with($key, mixed $value = null);
     /**
      * Get the array of view data.
      *

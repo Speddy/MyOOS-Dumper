@@ -39,44 +39,33 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class TemplateAnnotationToThisRenderRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\TypeAnalyzer\ArrayUnionResponseTypeAnalyzer
-     */
-    private $arrayUnionResponseTypeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\TypeDeclaration\ReturnTypeDeclarationUpdater
-     */
-    private $returnTypeDeclarationUpdater;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeFactory\ThisRenderFactory
-     */
-    private $thisRenderFactory;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
-     */
-    private $phpDocTagRemover;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeFinder\EmptyReturnNodeFinder
-     */
-    private $emptyReturnNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\Annotation\AnnotationAnalyzer
-     */
-    private $annotationAnalyzer;
-    public function __construct(ArrayUnionResponseTypeAnalyzer $arrayUnionResponseTypeAnalyzer, ReturnTypeDeclarationUpdater $returnTypeDeclarationUpdater, ThisRenderFactory $thisRenderFactory, PhpDocTagRemover $phpDocTagRemover, EmptyReturnNodeFinder $emptyReturnNodeFinder, AnnotationAnalyzer $annotationAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ArrayUnionResponseTypeAnalyzer $arrayUnionResponseTypeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ReturnTypeDeclarationUpdater $returnTypeDeclarationUpdater,
+        /**
+         * @readonly
+         */
+        private readonly ThisRenderFactory $thisRenderFactory,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTagRemover $phpDocTagRemover,
+        /**
+         * @readonly
+         */
+        private readonly EmptyReturnNodeFinder $emptyReturnNodeFinder,
+        /**
+         * @readonly
+         */
+        private readonly AnnotationAnalyzer $annotationAnalyzer
+    )
     {
-        $this->arrayUnionResponseTypeAnalyzer = $arrayUnionResponseTypeAnalyzer;
-        $this->returnTypeDeclarationUpdater = $returnTypeDeclarationUpdater;
-        $this->thisRenderFactory = $thisRenderFactory;
-        $this->phpDocTagRemover = $phpDocTagRemover;
-        $this->emptyReturnNodeFinder = $emptyReturnNodeFinder;
-        $this->annotationAnalyzer = $annotationAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

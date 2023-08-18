@@ -27,18 +27,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ConsoleExecuteReturnIntRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\TerminatedNodeAnalyzer
-     */
-    private $terminatedNodeAnalyzer;
-    /**
-     * @var bool
-     */
-    private $hasChanged = \false;
-    public function __construct(TerminatedNodeAnalyzer $terminatedNodeAnalyzer)
+    private bool $hasChanged = \false;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly TerminatedNodeAnalyzer $terminatedNodeAnalyzer
+    )
     {
-        $this->terminatedNodeAnalyzer = $terminatedNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -151,8 +147,7 @@ CODE_SAMPLE
     private function processReturn0ToMethod(ClassMethod $classMethod) : void
     {
         $stmts = (array) $classMethod->stmts;
-        \end($stmts);
-        $lastKey = \key($stmts);
+        $lastKey = array_key_last($stmts);
         $return = new Return_(new LNumber(0));
         if ($lastKey !== null && (isset($classMethod->stmts[$lastKey]) && $this->terminatedNodeAnalyzer->isAlwaysTerminated($classMethod, $classMethod->stmts[$lastKey], $return))) {
             return;

@@ -33,28 +33,21 @@ final class ServiceSettersToSettersAutodiscoveryRector extends AbstractRector
 {
     /**
      * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\SymfonyPhpClosureDetector
-     */
-    private $symfonyPhpClosureDetector;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
      * @var \Symfony\Component\Filesystem\Filesystem
      */
     private $filesystem;
     /**
      * @readonly
-     * @var \Rector\Symfony\MinimalSharedStringSolver
      */
-    private $minimalSharedStringSolver;
-    public function __construct(SymfonyPhpClosureDetector $symfonyPhpClosureDetector, ReflectionProvider $reflectionProvider, Filesystem $filesystem)
+    private readonly \Rector\Symfony\MinimalSharedStringSolver $minimalSharedStringSolver;
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly SymfonyPhpClosureDetector $symfonyPhpClosureDetector, /**
+     * @readonly
+     */
+    private readonly ReflectionProvider $reflectionProvider, Filesystem $filesystem)
     {
-        $this->symfonyPhpClosureDetector = $symfonyPhpClosureDetector;
-        $this->reflectionProvider = $reflectionProvider;
         $this->filesystem = $filesystem;
         $this->minimalSharedStringSolver = new MinimalSharedStringSolver();
     }
@@ -109,9 +102,7 @@ CODE_SAMPLE
             return null;
         }
         $classNamesAndFilesPaths = $this->createClassNamesAndFilePaths($bareServicesSetMethodCallExpressions);
-        $classNames = \array_map(function (ClassNameAndFilePath $classNameAndFilePath) {
-            return $classNameAndFilePath->getClassName();
-        }, $classNamesAndFilesPaths);
+        $classNames = \array_map(fn(ClassNameAndFilePath $classNameAndFilePath) => $classNameAndFilePath->getClassName(), $classNamesAndFilesPaths);
         $sharedNamespace = $this->minimalSharedStringSolver->solve(...$classNames);
         $firstClassNameAndFilePath = $classNamesAndFilesPaths[0];
         $classFilePath = $firstClassNameAndFilePath->getFilePath();

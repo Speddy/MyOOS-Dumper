@@ -9,9 +9,9 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt;
 class TraitUseAdaptation implements Builder
 {
-    const TYPE_UNDEFINED = 0;
-    const TYPE_ALIAS = 1;
-    const TYPE_PRECEDENCE = 2;
+    final public const TYPE_UNDEFINED = 0;
+    final public const TYPE_ALIAS = 1;
+    final public const TYPE_PRECEDENCE = 2;
     /** @var int Type of building adaptation */
     protected $type = self::TYPE_UNDEFINED;
     protected $trait;
@@ -122,13 +122,10 @@ class TraitUseAdaptation implements Builder
      */
     public function getNode() : Node
     {
-        switch ($this->type) {
-            case self::TYPE_ALIAS:
-                return new Stmt\TraitUseAdaptation\Alias($this->trait, $this->method, $this->modifier, $this->alias);
-            case self::TYPE_PRECEDENCE:
-                return new Stmt\TraitUseAdaptation\Precedence($this->trait, $this->method, $this->insteadof);
-            default:
-                throw new \LogicException('Type of adaptation is not defined');
-        }
+        return match ($this->type) {
+            self::TYPE_ALIAS => new Stmt\TraitUseAdaptation\Alias($this->trait, $this->method, $this->modifier, $this->alias),
+            self::TYPE_PRECEDENCE => new Stmt\TraitUseAdaptation\Precedence($this->trait, $this->method, $this->insteadof),
+            default => throw new \LogicException('Type of adaptation is not defined'),
+        };
     }
 }

@@ -7,16 +7,15 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\Type;
 use Rector\StaticTypeMapper\StaticTypeMapper;
-final class FunctionLikeReturnTypeResolver
+final readonly class FunctionLikeReturnTypeResolver
 {
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\StaticTypeMapper
-     */
-    private $staticTypeMapper;
-    public function __construct(StaticTypeMapper $staticTypeMapper)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private StaticTypeMapper $staticTypeMapper
+    )
     {
-        $this->staticTypeMapper = $staticTypeMapper;
     }
     public function resolveFunctionLikeReturnTypeToPHPStanType(ClassMethod $classMethod) : Type
     {

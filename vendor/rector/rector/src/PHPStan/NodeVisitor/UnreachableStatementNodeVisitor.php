@@ -14,26 +14,21 @@ use Rector\NodeTypeResolver\PHPStan\Scope\PHPStanNodeScopeResolver;
 use Rector\NodeTypeResolver\PHPStan\Scope\ScopeFactory;
 final class UnreachableStatementNodeVisitor extends NodeVisitorAbstract
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PHPStan\Scope\PHPStanNodeScopeResolver
-     */
-    private $phpStanNodeScopeResolver;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $filePath;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PHPStan\Scope\ScopeFactory
-     */
-    private $scopeFactory;
-    public function __construct(PHPStanNodeScopeResolver $phpStanNodeScopeResolver, string $filePath, ScopeFactory $scopeFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PHPStanNodeScopeResolver $phpStanNodeScopeResolver,
+        /**
+         * @readonly
+         */
+        private readonly string $filePath,
+        /**
+         * @readonly
+         */
+        private readonly ScopeFactory $scopeFactory
+    )
     {
-        $this->phpStanNodeScopeResolver = $phpStanNodeScopeResolver;
-        $this->filePath = $filePath;
-        $this->scopeFactory = $scopeFactory;
     }
     public function enterNode(Node $node) : ?Node
     {

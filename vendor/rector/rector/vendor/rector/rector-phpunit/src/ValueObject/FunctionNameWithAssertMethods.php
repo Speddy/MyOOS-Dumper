@@ -3,28 +3,23 @@
 declare (strict_types=1);
 namespace Rector\PHPUnit\ValueObject;
 
-final class FunctionNameWithAssertMethods
+final readonly class FunctionNameWithAssertMethods
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $functionName;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $assetMethodName;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $notAssertMethodName;
-    public function __construct(string $functionName, string $assetMethodName, string $notAssertMethodName)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $functionName,
+        /**
+         * @readonly
+         */
+        private string $assetMethodName,
+        /**
+         * @readonly
+         */
+        private string $notAssertMethodName
+    )
     {
-        $this->functionName = $functionName;
-        $this->assetMethodName = $assetMethodName;
-        $this->notAssertMethodName = $notAssertMethodName;
     }
     public function getFunctionName() : string
     {

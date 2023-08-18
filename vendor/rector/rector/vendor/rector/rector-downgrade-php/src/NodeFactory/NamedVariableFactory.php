@@ -7,16 +7,15 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Stmt\Expression;
 use Rector\Naming\Naming\VariableNaming;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final class NamedVariableFactory
+final readonly class NamedVariableFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\VariableNaming
-     */
-    private $variableNaming;
-    public function __construct(VariableNaming $variableNaming)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private VariableNaming $variableNaming
+    )
     {
-        $this->variableNaming = $variableNaming;
     }
     public function createVariable(string $variableName, Expression $expression) : Variable
     {

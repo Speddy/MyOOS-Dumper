@@ -13,28 +13,23 @@ use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\TypeCombinator;
 use Rector\Core\PhpParser\Node\NodeFactory;
 use Rector\StaticTypeMapper\StaticTypeMapper;
-final class ExprParameterReflectionTypeCorrector
+final readonly class ExprParameterReflectionTypeCorrector
 {
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\StaticTypeMapper
-     */
-    private $staticTypeMapper;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    public function __construct(StaticTypeMapper $staticTypeMapper, ReflectionProvider $reflectionProvider, NodeFactory $nodeFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private StaticTypeMapper $staticTypeMapper,
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory
+    )
     {
-        $this->staticTypeMapper = $staticTypeMapper;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->nodeFactory = $nodeFactory;
     }
     /**
      * @param array<string|int, Expr|mixed> $items
@@ -69,9 +64,8 @@ final class ExprParameterReflectionTypeCorrector
     }
     /**
      * @param string|int $name
-     * @param mixed $item
      */
-    private function correctItemByParameterReflection($name, $item, ParameterReflection $parameterReflection) : ?\PhpParser\Node\Expr
+    private function correctItemByParameterReflection($name, mixed $item, ParameterReflection $parameterReflection) : ?\PhpParser\Node\Expr
     {
         if (!$item instanceof Expr) {
             return null;

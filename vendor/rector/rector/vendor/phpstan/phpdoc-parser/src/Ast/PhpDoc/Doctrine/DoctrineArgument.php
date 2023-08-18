@@ -10,20 +10,17 @@ use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
 /**
  * @phpstan-type ValueType = DoctrineAnnotation|IdentifierTypeNode|DoctrineArray|ConstExprNode
  */
-class DoctrineArgument implements Node
+class DoctrineArgument implements Node, \Stringable
 {
     use NodeAttributes;
     /** @var IdentifierTypeNode|null */
     public $key;
-    /** @var ValueType */
-    public $value;
     /**
      * @param ValueType $value
      */
-    public function __construct(?IdentifierTypeNode $key, $value)
+    public function __construct(?IdentifierTypeNode $key, public $value)
     {
         $this->key = $key;
-        $this->value = $value;
     }
     public function __toString() : string
     {

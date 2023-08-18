@@ -31,9 +31,8 @@ abstract class PKCS1 extends PKCS
     /**
      * Default encryption algorithm
      *
-     * @var string
      */
-    private static $defaultEncryptionAlgorithm = 'AES-128-CBC';
+    private static string $defaultEncryptionAlgorithm = 'AES-128-CBC';
 
     /**
      * Sets the default encryption algorithm
@@ -54,15 +53,10 @@ abstract class PKCS1 extends PKCS
      */
     private static function getEncryptionMode($mode)
     {
-        switch ($mode) {
-            case 'CBC':
-            case 'ECB':
-            case 'CFB':
-            case 'OFB':
-            case 'CTR':
-                return $mode;
-        }
-        throw new \UnexpectedValueException('Unsupported block cipher mode of operation');
+        return match ($mode) {
+            'CBC', 'ECB', 'CFB', 'OFB', 'CTR' => $mode,
+            default => throw new \UnexpectedValueException('Unsupported block cipher mode of operation'),
+        };
     }
 
     /**
@@ -178,7 +172,7 @@ abstract class PKCS1 extends PKCS
                    "-----END $type PRIVATE KEY-----";
         }
 
-        $encryptionAlgorithm = isset($options['encryptionAlgorithm']) ? $options['encryptionAlgorithm'] : self::$defaultEncryptionAlgorithm;
+        $encryptionAlgorithm = $options['encryptionAlgorithm'] ?? self::$defaultEncryptionAlgorithm;
 
         $cipher = self::getEncryptionObject($encryptionAlgorithm);
         $iv = Random::string($cipher->getBlockLength() >> 3);

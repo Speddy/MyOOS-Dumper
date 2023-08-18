@@ -11,16 +11,15 @@ use Rector\PHPStanStaticTypeMapper\Contract\TypeMapperInterface;
 /**
  * @implements TypeMapperInterface<HasMethodType>
  */
-final class HasMethodTypeMapper implements TypeMapperInterface
+final readonly class HasMethodTypeMapper implements TypeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\TypeMapper\ObjectWithoutClassTypeMapper
-     */
-    private $objectWithoutClassTypeMapper;
-    public function __construct(\Rector\PHPStanStaticTypeMapper\TypeMapper\ObjectWithoutClassTypeMapper $objectWithoutClassTypeMapper)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private \Rector\PHPStanStaticTypeMapper\TypeMapper\ObjectWithoutClassTypeMapper $objectWithoutClassTypeMapper
+    )
     {
-        $this->objectWithoutClassTypeMapper = $objectWithoutClassTypeMapper;
     }
     /**
      * @return class-string<Type>

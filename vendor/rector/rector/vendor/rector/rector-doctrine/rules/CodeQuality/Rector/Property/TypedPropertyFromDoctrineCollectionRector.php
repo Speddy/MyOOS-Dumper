@@ -19,14 +19,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class TypedPropertyFromDoctrineCollectionRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\TypeAnalyzer\DoctrineCollectionTypeAnalyzer
-     */
-    private $doctrineCollectionTypeAnalyzer;
-    public function __construct(DoctrineCollectionTypeAnalyzer $doctrineCollectionTypeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly DoctrineCollectionTypeAnalyzer $doctrineCollectionTypeAnalyzer
+    )
     {
-        $this->doctrineCollectionTypeAnalyzer = $doctrineCollectionTypeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

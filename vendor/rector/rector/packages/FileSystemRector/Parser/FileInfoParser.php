@@ -12,28 +12,23 @@ use Rector\NodeTypeResolver\NodeScopeAndMetadataDecorator;
 /**
  * Only for testing, @todo move to testing
  */
-final class FileInfoParser
+final readonly class FileInfoParser
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeScopeAndMetadataDecorator
-     */
-    private $nodeScopeAndMetadataDecorator;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Parser\RectorParser
-     */
-    private $rectorParser;
-    /**
-     * @readonly
-     * @var \Rector\Core\Provider\CurrentFileProvider
-     */
-    private $currentFileProvider;
-    public function __construct(NodeScopeAndMetadataDecorator $nodeScopeAndMetadataDecorator, RectorParser $rectorParser, CurrentFileProvider $currentFileProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeScopeAndMetadataDecorator $nodeScopeAndMetadataDecorator,
+        /**
+         * @readonly
+         */
+        private RectorParser $rectorParser,
+        /**
+         * @readonly
+         */
+        private CurrentFileProvider $currentFileProvider
+    )
     {
-        $this->nodeScopeAndMetadataDecorator = $nodeScopeAndMetadataDecorator;
-        $this->rectorParser = $rectorParser;
-        $this->currentFileProvider = $currentFileProvider;
     }
     /**
      * @api tests only

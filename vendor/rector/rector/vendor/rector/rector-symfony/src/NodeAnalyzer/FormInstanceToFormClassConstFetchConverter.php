@@ -14,34 +14,27 @@ use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\Symfony\NodeAnalyzer\FormType\CreateFormTypeOptionsArgMover;
 use Rector\Symfony\NodeAnalyzer\FormType\FormTypeClassResolver;
 use ReflectionMethod;
-final class FormInstanceToFormClassConstFetchConverter
+final readonly class FormInstanceToFormClassConstFetchConverter
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\FormType\CreateFormTypeOptionsArgMover
-     */
-    private $createFormTypeOptionsArgMover;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\FormType\FormTypeClassResolver
-     */
-    private $formTypeClassResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    public function __construct(CreateFormTypeOptionsArgMover $createFormTypeOptionsArgMover, NodeFactory $nodeFactory, FormTypeClassResolver $formTypeClassResolver, NodeTypeResolver $nodeTypeResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private CreateFormTypeOptionsArgMover $createFormTypeOptionsArgMover,
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory,
+        /**
+         * @readonly
+         */
+        private FormTypeClassResolver $formTypeClassResolver,
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver
+    )
     {
-        $this->createFormTypeOptionsArgMover = $createFormTypeOptionsArgMover;
-        $this->nodeFactory = $nodeFactory;
-        $this->formTypeClassResolver = $formTypeClassResolver;
-        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     public function processNewInstance(MethodCall $methodCall, int $position, int $optionsPosition) : ?MethodCall
     {

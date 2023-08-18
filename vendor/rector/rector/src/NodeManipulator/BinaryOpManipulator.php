@@ -12,16 +12,15 @@ use PhpParser\Node\Expr\BooleanNot;
 use Rector\Core\Exception\ShouldNotHappenException;
 use Rector\Core\PhpParser\Node\AssignAndBinaryMap;
 use Rector\Php71\ValueObject\TwoNodeMatch;
-final class BinaryOpManipulator
+final readonly class BinaryOpManipulator
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\AssignAndBinaryMap
-     */
-    private $assignAndBinaryMap;
-    public function __construct(AssignAndBinaryMap $assignAndBinaryMap)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private AssignAndBinaryMap $assignAndBinaryMap
+    )
     {
-        $this->assignAndBinaryMap = $assignAndBinaryMap;
     }
     /**
      * Tries to match left or right parts (xor),
@@ -117,9 +116,7 @@ final class BinaryOpManipulator
         if (\is_callable($condition)) {
             return $condition;
         }
-        return static function (Node $node) use($condition) : bool {
-            return $node instanceof $condition;
-        };
+        return static fn(Node $node): bool => $node instanceof $condition;
     }
     /**
      * @return class-string<BinaryOp>|null

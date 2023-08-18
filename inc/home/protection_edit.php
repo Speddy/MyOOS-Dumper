@@ -32,7 +32,7 @@ if (isset($_POST['hta_dir']) && isset($_POST['hta_file']) && is_dir($_POST['hta_
     $hta_dir = $config['paths']['root'];
     $hta_file = '.htaccess';
 }
-if ('' != $hta_dir & '/' != substr($hta_dir, -1)) {
+if ('' != $hta_dir & !str_ends_with((string) $hta_dir, '/')) {
     $hta_dir .= '/';
 }
 $hta_complete = $hta_dir.$hta_file;
@@ -45,7 +45,7 @@ if ((isset($_GET['create']) && 1 == $_GET['create']) || (isset($_POST['create'])
 
 if (isset($_POST['submit']) && isset($_POST['thta'])) {
     $fp = fopen($hta_complete, 'w');
-    fwrite($fp, $_POST['thta']);
+    fwrite($fp, (string) $_POST['thta']);
     fclose($fp);
 }
 if (file_exists($hta_complete)) {

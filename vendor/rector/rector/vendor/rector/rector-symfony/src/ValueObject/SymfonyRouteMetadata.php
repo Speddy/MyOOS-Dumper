@@ -6,51 +6,6 @@ namespace Rector\Symfony\ValueObject;
 final class SymfonyRouteMetadata
 {
     /**
-     * @readonly
-     * @var string
-     */
-    private $name;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $path;
-    /**
-     * @var array<string, mixed>
-     * @readonly
-     */
-    private $defaults;
-    /**
-     * @var array<string, mixed>
-     * @readonly
-     */
-    private $requirements;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $host;
-    /**
-     * @var string[]
-     * @readonly
-     */
-    private $schemes;
-    /**
-     * @var string[]
-     * @readonly
-     */
-    private $methods;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $condition;
-    /**
-     * @var array<string, mixed>
-     * @readonly
-     */
-    private $options;
-    /**
      * Format <class>::<method>
      * @readonly
      * @var string|null
@@ -63,17 +18,35 @@ final class SymfonyRouteMetadata
      * @param string[] $methods
      * @param array<string, mixed> $options
      */
-    public function __construct(string $name, string $path, array $defaults, array $requirements, string $host, array $schemes, array $methods, string $condition, array $options)
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly string $name, /**
+     * @readonly
+     */
+    private readonly string $path, /**
+     * @readonly
+     */
+    private array $defaults, /**
+     * @readonly
+     */
+    private readonly array $requirements, /**
+     * @readonly
+     */
+    private readonly string $host, /**
+     * @readonly
+     */
+    private readonly array $schemes, /**
+     * @readonly
+     */
+    private readonly array $methods, /**
+     * @readonly
+     */
+    private readonly string $condition, /**
+     * @readonly
+     */
+    private array $options)
     {
-        $this->name = $name;
-        $this->path = $path;
-        $this->defaults = $defaults;
-        $this->requirements = $requirements;
-        $this->host = $host;
-        $this->schemes = $schemes;
-        $this->methods = $methods;
-        $this->condition = $condition;
-        $this->options = $options;
         $this->controllerReference = $defaults['_controller'] ?? null;
     }
     public function getName() : string

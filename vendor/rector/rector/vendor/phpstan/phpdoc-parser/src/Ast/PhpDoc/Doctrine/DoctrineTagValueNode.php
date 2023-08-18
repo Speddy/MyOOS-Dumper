@@ -6,7 +6,7 @@ namespace PHPStan\PhpDocParser\Ast\PhpDoc\Doctrine;
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode;
 use function trim;
-class DoctrineTagValueNode implements PhpDocTagValueNode
+class DoctrineTagValueNode implements PhpDocTagValueNode, \Stringable
 {
     use NodeAttributes;
     /** @var DoctrineAnnotation */

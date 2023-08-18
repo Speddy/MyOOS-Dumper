@@ -35,7 +35,7 @@ final class TcpServer extends EventEmitter implements ServerInterface
 {
     private $master;
     private $loop;
-    private $listening = \false;
+    private bool $listening = \false;
     /**
      * Creates a plaintext TCP/IP socket server and starts listening on the given address
      *
@@ -122,11 +122,10 @@ final class TcpServer extends EventEmitter implements ServerInterface
      *
      * @param string|int     $uri
      * @param ?LoopInterface $loop
-     * @param array          $context
      * @throws InvalidArgumentException if the listening address is invalid
      * @throws RuntimeException if listening on this address fails (already in use etc.)
      */
-    public function __construct($uri, LoopInterface $loop = null, array $context = array())
+    public function __construct($uri, LoopInterface $loop = null, array $context = [])
     {
         $this->loop = $loop ?: Loop::get();
         // a single port has been given => assume localhost
@@ -134,11 +133,11 @@ final class TcpServer extends EventEmitter implements ServerInterface
             $uri = '127.0.0.1:' . $uri;
         }
         // assume default scheme if none has been given
-        if (\strpos($uri, '://') === \false) {
+        if (!str_contains($uri, '://')) {
             $uri = 'tcp://' . $uri;
         }
         // parse_url() does not accept null ports (random port assignment) => manually remove
-        if (\substr($uri, -2) === ':0') {
+        if (str_ends_with($uri, ':0')) {
             $parts = \parse_url(\substr($uri, 0, -2));
             if ($parts) {
                 $parts['port'] = 0;
@@ -153,7 +152,7 @@ final class TcpServer extends EventEmitter implements ServerInterface
         if (@\inet_pton(\trim($parts['host'], '[]')) === \false) {
             throw new \InvalidArgumentException('Given URI "' . $uri . '" does not contain a valid host IP (EINVAL)', \defined('SOCKET_EINVAL') ? \SOCKET_EINVAL : (\defined('PCNTL_EINVAL') ? \PCNTL_EINVAL : 22));
         }
-        $this->master = @\stream_socket_server($uri, $errno, $errstr, \STREAM_SERVER_BIND | \STREAM_SERVER_LISTEN, \stream_context_create(array('socket' => $context + array('backlog' => 511))));
+        $this->master = @\stream_socket_server($uri, $errno, $errstr, \STREAM_SERVER_BIND | \STREAM_SERVER_LISTEN, \stream_context_create(['socket' => $context + ['backlog' => 511]]));
         if (\false === $this->master) {
             if ($errno === 0) {
                 // PHP does not seem to report errno, so match errno from errstr
@@ -173,7 +172,7 @@ final class TcpServer extends EventEmitter implements ServerInterface
         $address = \stream_socket_get_name($this->master, \false);
         // check if this is an IPv6 address which includes multiple colons but no square brackets
         $pos = \strrpos($address, ':');
-        if ($pos !== \false && \strpos($address, ':') < $pos && \substr($address, 0, 1) !== '[') {
+        if ($pos !== \false && \strpos($address, ':') < $pos && !str_starts_with($address, '[')) {
             $address = '[' . \substr($address, 0, $pos) . ']:' . \substr($address, $pos + 1);
             // @codeCoverageIgnore
         }
@@ -197,7 +196,7 @@ final class TcpServer extends EventEmitter implements ServerInterface
             try {
                 $newSocket = SocketServer::accept($master);
             } catch (\RuntimeException $e) {
-                $that->emit('error', array($e));
+                $that->emit('error', [$e]);
                 return;
             }
             $that->handleConnection($newSocket);
@@ -216,6 +215,6 @@ final class TcpServer extends EventEmitter implements ServerInterface
     /** @internal */
     public function handleConnection($socket)
     {
-        $this->emit('connection', array(new Connection($socket, $this->loop)));
+        $this->emit('connection', [new Connection($socket, $this->loop)]);
     }
 }

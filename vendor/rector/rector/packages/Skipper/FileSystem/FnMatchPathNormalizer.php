@@ -10,10 +10,10 @@ final class FnMatchPathNormalizer
 {
     public function normalizeForFnmatch(string $path) : string
     {
-        if (\substr_compare($path, '*', -\strlen('*')) === 0 || \strncmp($path, '*', \strlen('*')) === 0) {
+        if (str_ends_with($path, '*') || str_starts_with($path, '*')) {
             return '*' . \trim($path, '*') . '*';
         }
-        if (\strpos($path, '..') !== \false) {
+        if (str_contains($path, '..')) {
             $path = \realpath($path);
             if ($path === \false) {
                 return '';

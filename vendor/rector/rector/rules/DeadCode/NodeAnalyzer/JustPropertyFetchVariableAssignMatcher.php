@@ -11,16 +11,15 @@ use PhpParser\Node\Stmt\Expression;
 use Rector\Core\Contract\PhpParser\Node\StmtsAwareInterface;
 use Rector\Core\PhpParser\Comparing\NodeComparator;
 use Rector\DeadCode\ValueObject\VariableAndPropertyFetchAssign;
-final class JustPropertyFetchVariableAssignMatcher
+final readonly class JustPropertyFetchVariableAssignMatcher
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
-     */
-    private $nodeComparator;
-    public function __construct(NodeComparator $nodeComparator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeComparator $nodeComparator
+    )
     {
-        $this->nodeComparator = $nodeComparator;
     }
     public function match(StmtsAwareInterface $stmtsAware) : ?VariableAndPropertyFetchAssign
     {

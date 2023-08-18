@@ -18,7 +18,7 @@ namespace Desarrolla2\Cache\File;
 /**
  * Create a path for a key
  */
-class BasicFilename
+class BasicFilename implements \Stringable
 {
     /**
      * @var string
@@ -28,7 +28,6 @@ class BasicFilename
     /**
      * BasicFilename constructor.
      *
-     * @param string $format
      */
     public function __construct(string $format)
     {
@@ -48,7 +47,6 @@ class BasicFilename
     /**
      * Create the path for a key
      *
-     * @param string $key
      * @return string
      */
     public function __invoke(string $key): string

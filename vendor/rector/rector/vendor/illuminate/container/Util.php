@@ -14,10 +14,9 @@ class Util
      *
      * From Arr::wrap() in Illuminate\Support.
      *
-     * @param  mixed  $value
      * @return array
      */
-    public static function arrayWrap($value)
+    public static function arrayWrap(mixed $value)
     {
         if (\is_null($value)) {
             return [];
@@ -29,11 +28,9 @@ class Util
      *
      * From global value() helper in Illuminate\Support.
      *
-     * @param  mixed  $value
-     * @param  mixed  ...$args
      * @return mixed
      */
-    public static function unwrapIfClosure($value, ...$args)
+    public static function unwrapIfClosure(mixed $value, mixed ...$args)
     {
         return $value instanceof Closure ? $value(...$args) : $value;
     }

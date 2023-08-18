@@ -28,26 +28,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ChangeSwitchToMatchRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeResolver\SwitchExprsResolver
-     */
-    private $switchExprsResolver;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\MatchSwitchAnalyzer
-     */
-    private $matchSwitchAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeFactory\MatchFactory
-     */
-    private $matchFactory;
-    public function __construct(SwitchExprsResolver $switchExprsResolver, MatchSwitchAnalyzer $matchSwitchAnalyzer, MatchFactory $matchFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly SwitchExprsResolver $switchExprsResolver,
+        /**
+         * @readonly
+         */
+        private readonly MatchSwitchAnalyzer $matchSwitchAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly MatchFactory $matchFactory
+    )
     {
-        $this->switchExprsResolver = $switchExprsResolver;
-        $this->matchSwitchAnalyzer = $matchSwitchAnalyzer;
-        $this->matchFactory = $matchFactory;
     }
     public function getRuleDefinition() : RuleDefinition
     {

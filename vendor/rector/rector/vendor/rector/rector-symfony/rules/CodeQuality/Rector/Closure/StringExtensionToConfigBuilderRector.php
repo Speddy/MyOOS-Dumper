@@ -27,29 +27,24 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class StringExtensionToConfigBuilderRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\SymfonyPhpClosureDetector
-     */
-    private $symfonyPhpClosureDetector;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\SymfonyClosureExtensionMatcher
-     */
-    private $symfonyClosureExtensionMatcher;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\PropertyNaming
-     */
-    private $propertyNaming;
-    /**
      * @var array<string, string>
      */
     private const EXTENSION_KEY_TO_CLASS_MAP = ['security' => 'Symfony\\Config\\SecurityConfig', 'framework' => 'Symfony\\Config\\FrameworkConfig'];
-    public function __construct(SymfonyPhpClosureDetector $symfonyPhpClosureDetector, SymfonyClosureExtensionMatcher $symfonyClosureExtensionMatcher, PropertyNaming $propertyNaming)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly SymfonyPhpClosureDetector $symfonyPhpClosureDetector,
+        /**
+         * @readonly
+         */
+        private readonly SymfonyClosureExtensionMatcher $symfonyClosureExtensionMatcher,
+        /**
+         * @readonly
+         */
+        private readonly PropertyNaming $propertyNaming
+    )
     {
-        $this->symfonyPhpClosureDetector = $symfonyPhpClosureDetector;
-        $this->symfonyClosureExtensionMatcher = $symfonyClosureExtensionMatcher;
-        $this->propertyNaming = $propertyNaming;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -155,10 +150,7 @@ CODE_SAMPLE
         }
         return $methodCallStmts;
     }
-    /**
-     * @param mixed $value
-     */
-    private function createNextMethodCall($value, Variable $configVariable, string $methodCallName) : MethodCall
+    private function createNextMethodCall(mixed $value, Variable $configVariable, string $methodCallName) : MethodCall
     {
         $args = $this->nodeFactory->createArgs($value);
         return new MethodCall($configVariable, $methodCallName, $args);

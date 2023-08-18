@@ -31,44 +31,33 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ChangeAndIfToEarlyReturnRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\IfManipulator
-     */
-    private $ifManipulator;
-    /**
-     * @readonly
-     * @var \Rector\EarlyReturn\NodeFactory\InvertedIfFactory
-     */
-    private $invertedIfFactory;
-    /**
-     * @readonly
-     * @var \Rector\NodeNestingScope\ContextAnalyzer
-     */
-    private $contextAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\NodeCollector\BinaryOpConditionsCollector
-     */
-    private $binaryOpConditionsCollector;
-    /**
-     * @readonly
-     * @var \Rector\EarlyReturn\NodeAnalyzer\SimpleScalarAnalyzer
-     */
-    private $simpleScalarAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\EarlyReturn\NodeAnalyzer\IfAndAnalyzer
-     */
-    private $ifAndAnalyzer;
-    public function __construct(IfManipulator $ifManipulator, InvertedIfFactory $invertedIfFactory, ContextAnalyzer $contextAnalyzer, BinaryOpConditionsCollector $binaryOpConditionsCollector, SimpleScalarAnalyzer $simpleScalarAnalyzer, IfAndAnalyzer $ifAndAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly IfManipulator $ifManipulator,
+        /**
+         * @readonly
+         */
+        private readonly InvertedIfFactory $invertedIfFactory,
+        /**
+         * @readonly
+         */
+        private readonly ContextAnalyzer $contextAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly BinaryOpConditionsCollector $binaryOpConditionsCollector,
+        /**
+         * @readonly
+         */
+        private readonly SimpleScalarAnalyzer $simpleScalarAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly IfAndAnalyzer $ifAndAnalyzer
+    )
     {
-        $this->ifManipulator = $ifManipulator;
-        $this->invertedIfFactory = $invertedIfFactory;
-        $this->contextAnalyzer = $contextAnalyzer;
-        $this->binaryOpConditionsCollector = $binaryOpConditionsCollector;
-        $this->simpleScalarAnalyzer = $simpleScalarAnalyzer;
-        $this->ifAndAnalyzer = $ifAndAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

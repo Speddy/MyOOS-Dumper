@@ -19,20 +19,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ChangeNestedIfsToEarlyReturnRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\EarlyReturn\NodeTransformer\ConditionInverter
-     */
-    private $conditionInverter;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\IfManipulator
-     */
-    private $ifManipulator;
-    public function __construct(ConditionInverter $conditionInverter, IfManipulator $ifManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ConditionInverter $conditionInverter,
+        /**
+         * @readonly
+         */
+        private readonly IfManipulator $ifManipulator
+    )
     {
-        $this->conditionInverter = $conditionInverter;
-        $this->ifManipulator = $ifManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {

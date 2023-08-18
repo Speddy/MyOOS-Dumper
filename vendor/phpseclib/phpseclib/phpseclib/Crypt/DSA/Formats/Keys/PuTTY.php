@@ -34,7 +34,7 @@ abstract class PuTTY extends Progenitor
      *
      * @var string
      */
-    const PUBLIC_HANDLER = 'phpseclib3\Crypt\DSA\Formats\Keys\OpenSSH';
+    final public const PUBLIC_HANDLER = 'phpseclib3\Crypt\DSA\Formats\Keys\OpenSSH';
 
     /**
      * Algorithm Identifier
@@ -59,8 +59,8 @@ abstract class PuTTY extends Progenitor
         extract($components);
         unset($components['public'], $components['private']);
 
-        list($p, $q, $g, $y) = Strings::unpackSSH2('iiii', $public);
-        list($x) = Strings::unpackSSH2('i', $private);
+        [$p, $q, $g, $y] = Strings::unpackSSH2('iiii', $public);
+        [$x] = Strings::unpackSSH2('i', $private);
 
         return compact('p', 'q', 'g', 'y', 'x', 'comment');
     }
@@ -68,11 +68,6 @@ abstract class PuTTY extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
-     * @param \phpseclib3\Math\BigInteger $p
-     * @param \phpseclib3\Math\BigInteger $q
-     * @param \phpseclib3\Math\BigInteger $g
-     * @param \phpseclib3\Math\BigInteger $y
-     * @param \phpseclib3\Math\BigInteger $x
      * @param string $password optional
      * @param array $options optional
      * @return string
@@ -92,10 +87,6 @@ abstract class PuTTY extends Progenitor
     /**
      * Convert a public key to the appropriate format
      *
-     * @param \phpseclib3\Math\BigInteger $p
-     * @param \phpseclib3\Math\BigInteger $q
-     * @param \phpseclib3\Math\BigInteger $g
-     * @param \phpseclib3\Math\BigInteger $y
      * @return string
      */
     public static function savePublicKey(BigInteger $p, BigInteger $q, BigInteger $g, BigInteger $y)

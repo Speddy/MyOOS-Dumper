@@ -29,15 +29,12 @@ class InstalledVersions
      * @psalm-var array{root: array{name: string, pretty_version: string, version: string, reference: string|null, type: string, install_path: string, aliases: string[], dev: bool}, versions: array<string, array{pretty_version?: string, version?: string, reference?: string|null, type?: string, install_path?: string, aliases?: string[], dev_requirement: bool, replaced?: string[], provided?: string[]}>}|array{}|null
      */
     private static $installed;
-    /**
-     * @var bool|null
-     */
-    private static $canGetVendors;
+    private static ?bool $canGetVendors = null;
     /**
      * @var array[]
      * @psalm-var array<string, array{root: array{name: string, pretty_version: string, version: string, reference: string|null, type: string, install_path: string, aliases: string[], dev: bool}, versions: array<string, array{pretty_version?: string, version?: string, reference?: string|null, type?: string, install_path?: string, aliases?: string[], dev_requirement: bool, replaced?: string[], provided?: string[]}>}>
      */
-    private static $installedByVendor = array();
+    private static array $installedByVendor = [];
     /**
      * Returns a list of all package names which are present, either by being installed, replaced or provided
      *
@@ -46,7 +43,7 @@ class InstalledVersions
      */
     public static function getInstalledPackages()
     {
-        $packages = array();
+        $packages = [];
         foreach (self::getInstalled() as $installed) {
             $packages[] = \array_keys($installed['versions']);
         }
@@ -64,7 +61,7 @@ class InstalledVersions
      */
     public static function getInstalledPackagesByType($type)
     {
-        $packagesByType = array();
+        $packagesByType = [];
         foreach (self::getInstalled() as $installed) {
             foreach ($installed['versions'] as $name => $package) {
                 if (isset($package['type']) && $package['type'] === $type) {
@@ -125,7 +122,7 @@ class InstalledVersions
             if (!isset($installed['versions'][$packageName])) {
                 continue;
             }
-            $ranges = array();
+            $ranges = [];
             if (isset($installed['versions'][$packageName]['pretty_version'])) {
                 $ranges[] = $installed['versions'][$packageName]['pretty_version'];
             }
@@ -203,7 +200,7 @@ class InstalledVersions
             if (!isset($installed['versions'][$packageName])) {
                 continue;
             }
-            return isset($installed['versions'][$packageName]['install_path']) ? $installed['versions'][$packageName]['install_path'] : null;
+            return $installed['versions'][$packageName]['install_path'] ?? null;
         }
         throw new \OutOfBoundsException('Package "' . $packageName . '" is not installed');
     }
@@ -232,7 +229,7 @@ class InstalledVersions
             if (\substr(__DIR__, -8, 1) !== 'C') {
                 self::$installed = (include __DIR__ . '/installed.php');
             } else {
-                self::$installed = array();
+                self::$installed = [];
             }
         }
         return self::$installed;
@@ -268,7 +265,7 @@ class InstalledVersions
     public static function reload($data)
     {
         self::$installed = $data;
-        self::$installedByVendor = array();
+        self::$installedByVendor = [];
     }
     /**
      * @return array[]
@@ -279,7 +276,7 @@ class InstalledVersions
         if (null === self::$canGetVendors) {
             self::$canGetVendors = \method_exists('RectorPrefix202308\\Composer\\Autoload\\ClassLoader', 'getRegisteredLoaders');
         }
-        $installed = array();
+        $installed = [];
         if (self::$canGetVendors) {
             foreach (ClassLoader::getRegisteredLoaders() as $vendorDir => $loader) {
                 if (isset(self::$installedByVendor[$vendorDir])) {
@@ -302,10 +299,10 @@ class InstalledVersions
                 $required = (require __DIR__ . '/installed.php');
                 self::$installed = $required;
             } else {
-                self::$installed = array();
+                self::$installed = [];
             }
         }
-        if (self::$installed !== array()) {
+        if (self::$installed !== []) {
             $installed[] = self::$installed;
         }
         return $installed;

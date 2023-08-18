@@ -9,28 +9,23 @@ use PHPStan\Type\Type;
 use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\NodeTypeResolver\PHPStan\Type\TypeFactory;
 use Rector\TypeDeclaration\NodeAnalyzer\ReturnTypeAnalyzer\AlwaysStrictReturnAnalyzer;
-final class StrictReturnClassConstReturnTypeAnalyzer
+final readonly class StrictReturnClassConstReturnTypeAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\NodeAnalyzer\ReturnTypeAnalyzer\AlwaysStrictReturnAnalyzer
-     */
-    private $alwaysStrictReturnAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
-     */
-    private $typeFactory;
-    public function __construct(AlwaysStrictReturnAnalyzer $alwaysStrictReturnAnalyzer, NodeTypeResolver $nodeTypeResolver, TypeFactory $typeFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private AlwaysStrictReturnAnalyzer $alwaysStrictReturnAnalyzer,
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver,
+        /**
+         * @readonly
+         */
+        private TypeFactory $typeFactory
+    )
     {
-        $this->alwaysStrictReturnAnalyzer = $alwaysStrictReturnAnalyzer;
-        $this->nodeTypeResolver = $nodeTypeResolver;
-        $this->typeFactory = $typeFactory;
     }
     public function matchAlwaysReturnConstFetch(ClassMethod $classMethod) : ?Type
     {

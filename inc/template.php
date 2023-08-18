@@ -141,7 +141,7 @@ class MODTemplate
 
         // Run the compiled code.
         if (defined(TPL_DEBUG) && TPL_DEBUG > 0) {
-            echo '<pre>'.htmlspecialchars($this->compiled_code[$handle]).'</pre>';
+            echo '<pre>'.htmlspecialchars((string) $this->compiled_code[$handle]).'</pre>';
         }
         eval($this->compiled_code[$handle]);
         return true;
@@ -180,9 +180,9 @@ class MODTemplate
      */
     public function assign_block_vars($blockname, $vararray)
     {
-        if (strstr($blockname, '.')) {
+        if (strstr((string) $blockname, '.')) {
             // Nested block.
-            $blocks = explode('.', $blockname);
+            $blocks = explode('.', (string) $blockname);
             $blockcount = sizeof($blocks) - 1;
             $str = '$this->_tpldata';
             for ($i = 0; $i < $blockcount; ++$i) {
@@ -291,7 +291,7 @@ class MODTemplate
     public function compile($code, $do_not_echo = false, $retvar = '')
     {
         // replace \ with \\ and then ' with \'.
-        $code = str_replace('\\', '\\\\', $code);
+        $code = str_replace('\\', '\\\\', (string) $code);
         $code = str_replace('\'', '\\\'', $code);
 
         // change template varrefs into PHP varrefs
@@ -412,7 +412,7 @@ class MODTemplate
     public function generate_block_varref($namespace, $varname)
     {
         // Strip the trailing period.
-        $namespace = substr($namespace, 0, strlen($namespace ?? '') - 1);
+        $namespace = substr((string) $namespace, 0, strlen($namespace ?? '') - 1);
 
         // Get a reference to the data block for this namespace.
         $varref = $this->generate_block_data_ref($namespace, true);
@@ -437,7 +437,7 @@ class MODTemplate
     public function generate_block_data_ref($blockname, $include_last_iterator)
     {
         // Get an array of the blocks involved.
-        $blocks = explode('.', $blockname);
+        $blocks = explode('.', (string) $blockname);
         $blockcount = sizeof($blocks) - 1;
         $varref = '$this->_tpldata';
         // Build up the string with everything but the last child.

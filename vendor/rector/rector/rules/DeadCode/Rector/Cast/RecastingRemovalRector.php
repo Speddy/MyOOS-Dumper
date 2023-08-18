@@ -40,35 +40,28 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class RecastingRemovalRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
-     */
-    private $propertyFetchAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ExprAnalyzer
-     */
-    private $exprAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    /**
      * @var array<class-string<Node>, class-string<Type>>
      */
     private const CAST_CLASS_TO_NODE_TYPE = [String_::class => StringType::class, Bool_::class => BooleanType::class, Array_::class => ArrayType::class, Int_::class => IntegerType::class, Object_::class => ObjectType::class, Double::class => FloatType::class];
-    public function __construct(PropertyFetchAnalyzer $propertyFetchAnalyzer, ReflectionResolver $reflectionResolver, ExprAnalyzer $exprAnalyzer, AstResolver $astResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PropertyFetchAnalyzer $propertyFetchAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private readonly ExprAnalyzer $exprAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly AstResolver $astResolver
+    )
     {
-        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->exprAnalyzer = $exprAnalyzer;
-        $this->astResolver = $astResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -100,7 +93,7 @@ CODE_SAMPLE
      */
     public function refactor(Node $node) : ?Node
     {
-        $nodeClass = \get_class($node);
+        $nodeClass = $node::class;
         if (!isset(self::CAST_CLASS_TO_NODE_TYPE[$nodeClass])) {
             return null;
         }

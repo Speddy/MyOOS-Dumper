@@ -28,50 +28,37 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class CompleteDynamicPropertiesRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\CodeQuality\NodeFactory\MissingPropertiesFactory
-     */
-    private $missingPropertiesFactory;
-    /**
-     * @readonly
-     * @var \Rector\CodeQuality\NodeAnalyzer\LocalPropertyAnalyzer
-     */
-    private $localPropertyAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\CodeQuality\NodeAnalyzer\ClassLikeAnalyzer
-     */
-    private $classLikeAnalyzer;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ClassAnalyzer
-     */
-    private $classAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\PropertyPresenceChecker
-     */
-    private $propertyPresenceChecker;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
-     */
-    private $phpAttributeAnalyzer;
-    public function __construct(MissingPropertiesFactory $missingPropertiesFactory, LocalPropertyAnalyzer $localPropertyAnalyzer, ClassLikeAnalyzer $classLikeAnalyzer, ReflectionProvider $reflectionProvider, ClassAnalyzer $classAnalyzer, PropertyPresenceChecker $propertyPresenceChecker, PhpAttributeAnalyzer $phpAttributeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly MissingPropertiesFactory $missingPropertiesFactory,
+        /**
+         * @readonly
+         */
+        private readonly LocalPropertyAnalyzer $localPropertyAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ClassLikeAnalyzer $classLikeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private readonly ClassAnalyzer $classAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly PropertyPresenceChecker $propertyPresenceChecker,
+        /**
+         * @readonly
+         */
+        private readonly PhpAttributeAnalyzer $phpAttributeAnalyzer
+    )
     {
-        $this->missingPropertiesFactory = $missingPropertiesFactory;
-        $this->localPropertyAnalyzer = $localPropertyAnalyzer;
-        $this->classLikeAnalyzer = $classLikeAnalyzer;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->classAnalyzer = $classAnalyzer;
-        $this->propertyPresenceChecker = $propertyPresenceChecker;
-        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -18,14 +18,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class CombineIfRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\Comment\CommentsMerger
-     */
-    private $commentsMerger;
-    public function __construct(CommentsMerger $commentsMerger)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly CommentsMerger $commentsMerger
+    )
     {
-        $this->commentsMerger = $commentsMerger;
     }
     public function getRuleDefinition() : RuleDefinition
     {

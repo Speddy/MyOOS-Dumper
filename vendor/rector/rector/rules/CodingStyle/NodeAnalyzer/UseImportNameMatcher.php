@@ -14,18 +14,8 @@ use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\Core\Util\StringUtils;
 use Rector\Naming\Naming\UseImportsResolver;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final class UseImportNameMatcher
+final readonly class UseImportNameMatcher
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\UseImportsResolver
-     */
-    private $useImportsResolver;
     /**
      * @var string
      *
@@ -33,10 +23,17 @@ final class UseImportNameMatcher
      * @see https://regex101.com/r/OLO0Un/1 for inside namespace, eg: ORM for ORM\Id or ORM\Column
      */
     private const SHORT_NAME_REGEX = '#^%s(\\\\[\\w]+)?$#i';
-    public function __construct(BetterNodeFinder $betterNodeFinder, UseImportsResolver $useImportsResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private BetterNodeFinder $betterNodeFinder,
+        /**
+         * @readonly
+         */
+        private UseImportsResolver $useImportsResolver
+    )
     {
-        $this->betterNodeFinder = $betterNodeFinder;
-        $this->useImportsResolver = $useImportsResolver;
     }
     /**
      * @param Stmt[] $stmts
@@ -74,7 +71,7 @@ final class UseImportNameMatcher
             return $prefix . $originalUseUseNode->name->toString();
         }
         $unaliasedShortClass = Strings::substring($tag, Strings::length($originalUseUseNode->alias->toString()));
-        if (\strncmp($unaliasedShortClass, '\\', \strlen('\\')) === 0) {
+        if (str_starts_with($unaliasedShortClass, '\\')) {
             return $prefix . $originalUseUseNode->name . $unaliasedShortClass;
         }
         return $prefix . $originalUseUseNode->name . '\\' . $unaliasedShortClass;

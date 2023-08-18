@@ -14,18 +14,8 @@ use Rector\Symfony\BundleClassResolver;
 /**
  * @see \Rector\Symfony\Tests\Rector\ClassMethod\TemplateAnnotationToThisRenderRector\TemplateAnnotationToThisRenderRectorTest
  */
-final class TemplateGuesser
+final readonly class TemplateGuesser
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\BundleClassResolver
-     */
-    private $bundleClassResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
     /**
      * @var string
      * @see https://regex101.com/r/yZAUAC/1
@@ -51,10 +41,17 @@ final class TemplateGuesser
      * @see https://regex101.com/r/nj8Ojf/1
      */
     private const ACTION_MATCH_REGEX = '#Action$#';
-    public function __construct(BundleClassResolver $bundleClassResolver, NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private BundleClassResolver $bundleClassResolver,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->bundleClassResolver = $bundleClassResolver;
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function resolveFromClassMethod(ClassMethod $classMethod) : string
     {

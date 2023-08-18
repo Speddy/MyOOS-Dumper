@@ -13,14 +13,8 @@ namespace RectorPrefix202308\Composer\Semver;
 use RectorPrefix202308\Composer\Semver\Constraint\Constraint;
 class Interval
 {
-    /** @var Constraint */
-    private $start;
-    /** @var Constraint */
-    private $end;
-    public function __construct(Constraint $start, Constraint $end)
+    public function __construct(private readonly Constraint $start, private readonly Constraint $end)
     {
-        $this->start = $start;
-        $this->end = $end;
     }
     /**
      * @return Constraint
@@ -71,7 +65,7 @@ class Interval
     public static function anyDev()
     {
         // any == exclude nothing
-        return array('names' => array(), 'exclude' => \true);
+        return ['names' => [], 'exclude' => \true];
     }
     /**
      * @return array{'names': string[], 'exclude': bool}
@@ -79,6 +73,6 @@ class Interval
     public static function noDev()
     {
         // nothing == no names included
-        return array('names' => array(), 'exclude' => \false);
+        return ['names' => [], 'exclude' => \false];
     }
 }

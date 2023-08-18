@@ -17,28 +17,23 @@ use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\Php80\Contract\StrStartWithMatchAndRefactorInterface;
 use Rector\Php80\NodeFactory\StrStartsWithFuncCallFactory;
 use Rector\Php80\ValueObject\StrStartsWith;
-final class StrposMatchAndRefactor implements StrStartWithMatchAndRefactorInterface
+final readonly class StrposMatchAndRefactor implements StrStartWithMatchAndRefactorInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
-     */
-    private $valueResolver;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeFactory\StrStartsWithFuncCallFactory
-     */
-    private $strStartsWithFuncCallFactory;
-    public function __construct(NodeNameResolver $nodeNameResolver, ValueResolver $valueResolver, StrStartsWithFuncCallFactory $strStartsWithFuncCallFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private ValueResolver $valueResolver,
+        /**
+         * @readonly
+         */
+        private StrStartsWithFuncCallFactory $strStartsWithFuncCallFactory
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->valueResolver = $valueResolver;
-        $this->strStartsWithFuncCallFactory = $strStartsWithFuncCallFactory;
     }
     /**
      * @param \PhpParser\Node\Expr\BinaryOp\Identical|\PhpParser\Node\Expr\BinaryOp\NotIdentical|\PhpParser\Node\Expr\BinaryOp\Equal|\PhpParser\Node\Expr\BinaryOp\NotEqual $binaryOp

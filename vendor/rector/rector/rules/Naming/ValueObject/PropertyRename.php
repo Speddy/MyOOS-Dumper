@@ -8,46 +8,28 @@ use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
 use Rector\Core\Validation\RectorAssert;
 use Rector\Naming\Contract\RenamePropertyValueObjectInterface;
-final class PropertyRename implements RenamePropertyValueObjectInterface
+final readonly class PropertyRename implements RenamePropertyValueObjectInterface
 {
-    /**
+    public function __construct(/**
      * @readonly
-     * @var \PhpParser\Node\Stmt\Property
      */
-    private $property;
-    /**
+    private Property $property, /**
      * @readonly
-     * @var string
      */
-    private $expectedName;
-    /**
+    private string $expectedName, /**
      * @readonly
-     * @var string
      */
-    private $currentName;
-    /**
+    private string $currentName, /**
      * @readonly
-     * @var \PhpParser\Node\Stmt\ClassLike
      */
-    private $classLike;
-    /**
+    private ClassLike $classLike, /**
      * @readonly
-     * @var string
      */
-    private $classLikeName;
-    /**
+    private string $classLikeName, /**
      * @readonly
-     * @var \PhpParser\Node\Stmt\PropertyProperty
      */
-    private $propertyProperty;
-    public function __construct(Property $property, string $expectedName, string $currentName, ClassLike $classLike, string $classLikeName, PropertyProperty $propertyProperty)
+    private PropertyProperty $propertyProperty)
     {
-        $this->property = $property;
-        $this->expectedName = $expectedName;
-        $this->currentName = $currentName;
-        $this->classLike = $classLike;
-        $this->classLikeName = $classLikeName;
-        $this->propertyProperty = $propertyProperty;
         // name must be valid
         RectorAssert::propertyName($currentName);
         RectorAssert::propertyName($expectedName);

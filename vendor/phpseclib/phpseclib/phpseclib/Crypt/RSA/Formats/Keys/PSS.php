@@ -41,21 +41,20 @@ abstract class PSS extends Progenitor
      *
      * @var string
      */
-    const OID_NAME = 'id-RSASSA-PSS';
+    final public const OID_NAME = 'id-RSASSA-PSS';
 
     /**
      * OID Value
      *
      * @var string
      */
-    const OID_VALUE = '1.2.840.113549.1.1.10';
+    final public const OID_VALUE = '1.2.840.113549.1.1.10';
 
     /**
      * OIDs loaded
      *
-     * @var bool
      */
-    private static $oidsLoaded = false;
+    private static bool $oidsLoaded = false;
 
     /**
      * Child OIDs loaded
@@ -103,7 +102,7 @@ abstract class PSS extends Progenitor
             throw new \UnexpectedValueException('Key should be a string - not a ' . gettype($key));
         }
 
-        $components = ['isPublicKey' => strpos($key, 'PUBLIC') !== false];
+        $components = ['isPublicKey' => str_contains($key, 'PUBLIC')];
 
         $key = parent::load($key, $password);
 
@@ -138,8 +137,8 @@ abstract class PSS extends Progenitor
             $params['hashAlgorithm']['algorithm'] = 'id-sha1';
         }
 
-        $result['hash'] = str_replace('id-', '', $params['hashAlgorithm']['algorithm']);
-        $result['MGFHash'] = str_replace('id-', '', $params['maskGenAlgorithm']['parameters']['algorithm']);
+        $result['hash'] = str_replace('id-', '', (string) $params['hashAlgorithm']['algorithm']);
+        $result['MGFHash'] = str_replace('id-', '', (string) $params['maskGenAlgorithm']['parameters']['algorithm']);
         if (isset($params['saltLength'])) {
             $result['saltLength'] = (int) $params['saltLength']->toString();
         }
@@ -154,12 +153,6 @@ abstract class PSS extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
-     * @param \phpseclib3\Math\BigInteger $d
-     * @param array $primes
-     * @param array $exponents
-     * @param array $coefficients
      * @param string $password optional
      * @param array $options optional
      * @return string
@@ -177,8 +170,6 @@ abstract class PSS extends Progenitor
     /**
      * Convert a public key to the appropriate format
      *
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
      * @param array $options optional
      * @return string
      */
@@ -195,7 +186,6 @@ abstract class PSS extends Progenitor
     /**
      * Encodes PSS parameters
      *
-     * @param array $options
      * @return string
      */
     public static function savePSSParams(array $options)

@@ -5,16 +5,15 @@ namespace Rector\NodeTypeResolver\TypeAnalyzer;
 
 use PhpParser\Node\Expr;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final class StringTypeAnalyzer
+final readonly class StringTypeAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    public function __construct(NodeTypeResolver $nodeTypeResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver
+    )
     {
-        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     public function isStringOrUnionStringOnlyType(Expr $expr) : bool
     {

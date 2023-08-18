@@ -14,10 +14,6 @@ use RectorPrefix202308\Composer\Util\Filesystem as ComposerFilesystem;
 final class PluginInstaller
 {
     /**
-     * @var \Rector\RectorInstaller\Filesystem
-     */
-    private $filesystem;
-    /**
      * @var \Composer\Repository\InstalledRepositoryInterface
      */
     private $localRepository;
@@ -30,14 +26,6 @@ final class PluginInstaller
      */
     private $installationManager;
     /**
-     * @var ComposerFilesystem
-     */
-    private $composerFilesystem;
-    /**
-     * @var string
-     */
-    private $configurationFile;
-    /**
      * @var string
      */
     public const RECTOR_EXTENSION_TYPE = 'rector-extension';
@@ -45,10 +33,7 @@ final class PluginInstaller
      * @var string
      */
     public const RECTOR_EXTRA_KEY = 'rector';
-    /**
-     * @var string
-     */
-    private static $generatedFileTemplate = <<<'CODE_SAMPLE'
+    private static string $generatedFileTemplate = <<<'CODE_SAMPLE'
 <?php
 
 declare(strict_types = 1);
@@ -69,14 +54,11 @@ final class GeneratedConfig
 }
 
 CODE_SAMPLE;
-    public function __construct(\Rector\RectorInstaller\Filesystem $filesystem, InstalledRepositoryInterface $localRepository, IOInterface $io, InstallationManager $installationManager, ComposerFilesystem $composerFilesystem, string $configurationFile)
+    public function __construct(private readonly \Rector\RectorInstaller\Filesystem $filesystem, InstalledRepositoryInterface $localRepository, IOInterface $io, InstallationManager $installationManager, private readonly ComposerFilesystem $composerFilesystem, private readonly string $configurationFile)
     {
-        $this->filesystem = $filesystem;
         $this->localRepository = $localRepository;
         $this->io = $io;
         $this->installationManager = $installationManager;
-        $this->composerFilesystem = $composerFilesystem;
-        $this->configurationFile = $configurationFile;
     }
     public function install() : void
     {

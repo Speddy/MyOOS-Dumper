@@ -26,32 +26,25 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class TypedPropertyFromStrictGetterMethodReturnTypeRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeInferer\PropertyTypeInferer\GetterTypeDeclarationPropertyTypeInferer
-     */
-    private $getterTypeDeclarationPropertyTypeInferer;
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\PhpDoc\TagRemover\VarTagRemover
-     */
-    private $varTagRemover;
-    /**
-     * @readonly
-     * @var \Rector\Privatization\Guard\ParentPropertyLookupGuard
-     */
-    private $parentPropertyLookupGuard;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(GetterTypeDeclarationPropertyTypeInferer $getterTypeDeclarationPropertyTypeInferer, VarTagRemover $varTagRemover, ParentPropertyLookupGuard $parentPropertyLookupGuard, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly GetterTypeDeclarationPropertyTypeInferer $getterTypeDeclarationPropertyTypeInferer,
+        /**
+         * @readonly
+         */
+        private readonly VarTagRemover $varTagRemover,
+        /**
+         * @readonly
+         */
+        private readonly ParentPropertyLookupGuard $parentPropertyLookupGuard,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver
+    )
     {
-        $this->getterTypeDeclarationPropertyTypeInferer = $getterTypeDeclarationPropertyTypeInferer;
-        $this->varTagRemover = $varTagRemover;
-        $this->parentPropertyLookupGuard = $parentPropertyLookupGuard;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

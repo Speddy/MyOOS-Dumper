@@ -18,11 +18,11 @@ final class CpuCoreCounter
     /**
      * @var list<CpuCoreFinder>
      */
-    private $finders;
+    private readonly array $finders;
     /**
      * @var positive-int|null
      */
-    private $count;
+    private ?int $count = null;
     /**
      * @param list<CpuCoreFinder>|null $finders
      */

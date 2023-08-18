@@ -11,16 +11,15 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 /**
  * Should it pass autoload files/directories to PHPStan analyzer?
  */
-final class AdditionalAutoloader
+final readonly class AdditionalAutoloader
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\StaticReflection\DynamicSourceLocatorDecorator
-     */
-    private $dynamicSourceLocatorDecorator;
-    public function __construct(DynamicSourceLocatorDecorator $dynamicSourceLocatorDecorator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private DynamicSourceLocatorDecorator $dynamicSourceLocatorDecorator
+    )
     {
-        $this->dynamicSourceLocatorDecorator = $dynamicSourceLocatorDecorator;
     }
     public function autoloadInput(InputInterface $input) : void
     {

@@ -3,28 +3,23 @@
 declare (strict_types=1);
 namespace Rector\Caching\ValueObject;
 
-final class CacheFilePaths
+final readonly class CacheFilePaths
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $firstDirectory;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $secondDirectory;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $filePath;
-    public function __construct(string $firstDirectory, string $secondDirectory, string $filePath)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $firstDirectory,
+        /**
+         * @readonly
+         */
+        private string $secondDirectory,
+        /**
+         * @readonly
+         */
+        private string $filePath
+    )
     {
-        $this->firstDirectory = $firstDirectory;
-        $this->secondDirectory = $secondDirectory;
-        $this->filePath = $filePath;
     }
     public function getFirstDirectory() : string
     {

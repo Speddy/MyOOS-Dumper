@@ -15,10 +15,7 @@ final class CallableNodeVisitor extends NodeVisitorAbstract
      * @var callable(Node): (int|Node|null)
      */
     private $callable;
-    /**
-     * @var string|null
-     */
-    private $nodeHashToRemove;
+    private ?string $nodeHashToRemove = null;
     /**
      * @param callable(Node $node): (int|Node|null) $callable
      */

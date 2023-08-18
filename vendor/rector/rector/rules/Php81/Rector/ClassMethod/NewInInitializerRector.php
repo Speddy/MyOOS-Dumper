@@ -27,26 +27,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class NewInInitializerRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\FamilyTree\NodeAnalyzer\ClassChildAnalyzer
-     */
-    private $classChildAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Php81\NodeAnalyzer\CoalesePropertyAssignMatcher
-     */
-    private $coalesePropertyAssignMatcher;
-    public function __construct(ReflectionResolver $reflectionResolver, ClassChildAnalyzer $classChildAnalyzer, CoalesePropertyAssignMatcher $coalesePropertyAssignMatcher)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private readonly ClassChildAnalyzer $classChildAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly CoalesePropertyAssignMatcher $coalesePropertyAssignMatcher
+    )
     {
-        $this->reflectionResolver = $reflectionResolver;
-        $this->classChildAnalyzer = $classChildAnalyzer;
-        $this->coalesePropertyAssignMatcher = $coalesePropertyAssignMatcher;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -169,8 +164,6 @@ CODE_SAMPLE
         if ($classMethod->stmts === null || $classMethod->stmts === []) {
             return [];
         }
-        return \array_filter($classMethod->params, static function (Param $param) : bool {
-            return $param->type instanceof NullableType;
-        });
+        return \array_filter($classMethod->params, static fn(Param $param): bool => $param->type instanceof NullableType);
     }
 }

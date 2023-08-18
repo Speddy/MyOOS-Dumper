@@ -29,8 +29,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
 {
     public function tearDown(): void
     {
-        parent::tearDown();
-
         if (isset($this->handler)) {
             unset($this->handler);
         }
@@ -76,9 +74,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $formatter = $this->createMock(FormatterInterface::class);
         $formatter->expects($this->any())
             ->method('format')
-            ->will($this->returnCallback(function ($record) {
-                return $record['message'];
-            }));
+            ->will($this->returnCallback(fn($record) => $record['message']));
 
         return $formatter;
     }

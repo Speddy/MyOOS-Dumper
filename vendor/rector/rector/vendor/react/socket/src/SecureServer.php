@@ -53,8 +53,7 @@ use UnexpectedValueException;
  */
 final class SecureServer extends EventEmitter implements ServerInterface
 {
-    private $tcp;
-    private $encryption;
+    private readonly \RectorPrefix202308\React\Socket\StreamEncryption $encryption;
     private $context;
     /**
      * Creates a secure TLS server and starts waiting for incoming connections
@@ -115,20 +114,18 @@ final class SecureServer extends EventEmitter implements ServerInterface
      *
      * @param ServerInterface|TcpServer $tcp
      * @param ?LoopInterface $loop
-     * @param array $context
      * @throws BadMethodCallException for legacy HHVM < 3.8 due to lack of support
      * @see TcpServer
      * @link https://www.php.net/manual/en/context.ssl.php for TLS context options
      */
-    public function __construct(ServerInterface $tcp, LoopInterface $loop = null, array $context = array())
+    public function __construct(private readonly ServerInterface $tcp, LoopInterface $loop = null, array $context = [])
     {
         if (!\function_exists('stream_socket_enable_crypto')) {
             throw new \BadMethodCallException('Encryption not supported on your platform (HHVM < 3.8?)');
             // @codeCoverageIgnore
         }
         // default to empty passphrase to suppress blocking passphrase prompt
-        $context += array('passphrase' => '');
-        $this->tcp = $tcp;
+        $context += ['passphrase' => ''];
         $this->encryption = new StreamEncryption($loop ?: Loop::get());
         $this->context = $context;
         $that = $this;
@@ -136,7 +133,7 @@ final class SecureServer extends EventEmitter implements ServerInterface
             $that->handleConnection($connection);
         });
         $this->tcp->on('error', function ($error) use($that) {
-            $that->emit('error', array($error));
+            $that->emit('error', [$error]);
         });
     }
     public function getAddress()
@@ -163,7 +160,7 @@ final class SecureServer extends EventEmitter implements ServerInterface
     public function handleConnection(ConnectionInterface $connection)
     {
         if (!$connection instanceof Connection) {
-            $this->emit('error', array(new \UnexpectedValueException('Base server does not use internal Connection class exposing stream resource')));
+            $this->emit('error', [new \UnexpectedValueException('Base server does not use internal Connection class exposing stream resource')]);
             $connection->close();
             return;
         }
@@ -174,10 +171,10 @@ final class SecureServer extends EventEmitter implements ServerInterface
         $remote = $connection->getRemoteAddress();
         $that = $this;
         $this->encryption->enable($connection)->then(function ($conn) use($that) {
-            $that->emit('connection', array($conn));
+            $that->emit('connection', [$conn]);
         }, function ($error) use($that, $connection, $remote) {
             $error = new \RuntimeException('Connection from ' . $remote . ' failed during TLS handshake: ' . $error->getMessage(), $error->getCode());
-            $that->emit('error', array($error));
+            $that->emit('error', [$error]);
             $connection->close();
         });
     }

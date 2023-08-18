@@ -36,19 +36,19 @@ class Logger implements LoggerInterface, ResettableInterface
     /**
      * Detailed debug information
      */
-    public const DEBUG = 100;
+    final public const DEBUG = 100;
 
     /**
      * Interesting events
      *
      * Examples: User logs in, SQL logs.
      */
-    public const INFO = 200;
+    final public const INFO = 200;
 
     /**
      * Uncommon events
      */
-    public const NOTICE = 250;
+    final public const NOTICE = 250;
 
     /**
      * Exceptional occurrences that are not errors
@@ -56,19 +56,19 @@ class Logger implements LoggerInterface, ResettableInterface
      * Examples: Use of deprecated APIs, poor use of an API,
      * undesirable things that are not necessarily wrong.
      */
-    public const WARNING = 300;
+    final public const WARNING = 300;
 
     /**
      * Runtime errors
      */
-    public const ERROR = 400;
+    final public const ERROR = 400;
 
     /**
      * Critical conditions
      *
      * Example: Application component unavailable, unexpected exception.
      */
-    public const CRITICAL = 500;
+    final public const CRITICAL = 500;
 
     /**
      * Action must be taken immediately
@@ -76,12 +76,12 @@ class Logger implements LoggerInterface, ResettableInterface
      * Example: Entire website down, database unavailable, etc.
      * This should trigger the SMS alerts and wake you up.
      */
-    public const ALERT = 550;
+    final public const ALERT = 550;
 
     /**
      * Urgent alert.
      */
-    public const EMERGENCY = 600;
+    final public const EMERGENCY = 600;
 
     /**
      * Monolog API version
@@ -91,7 +91,7 @@ class Logger implements LoggerInterface, ResettableInterface
      *
      * @var int
      */
-    public const API = 2;
+    final public const API = 2;
 
     /**
      * This is a static variable and not a constant to serve as an extension point for custom levels
@@ -345,7 +345,7 @@ class Logger implements LoggerInterface, ResettableInterface
 
         if ($this->detectCycles) {
             if (\PHP_VERSION_ID >= 80100 && $fiber = \Fiber::getCurrent()) {
-                $this->fiberLogDepth[$fiber] = $this->fiberLogDepth[$fiber] ?? 0;
+                $this->fiberLogDepth[$fiber] ??= 0;
                 $logDepth = ++$this->fiberLogDepth[$fiber];
             } else {
                 $logDepth = ++$this->logDepth;
@@ -508,8 +508,8 @@ class Logger implements LoggerInterface, ResettableInterface
             // Contains chars of all log levels and avoids using strtoupper() which may have
             // strange results depending on locale (for example, "i" will become "İ" in Turkish locale)
             $upper = strtr($level, 'abcdefgilmnortuwy', 'ABCDEFGILMNORTUWY');
-            if (defined(__CLASS__.'::'.$upper)) {
-                return constant(__CLASS__ . '::' . $upper);
+            if (defined(self::class.'::'.$upper)) {
+                return constant(self::class . '::' . $upper);
             }
 
             throw new InvalidArgumentException('Level "'.$level.'" is not defined, use one of: '.implode(', ', array_keys(static::$levels) + static::$levels));
@@ -711,7 +711,6 @@ class Logger implements LoggerInterface, ResettableInterface
      * Delegates exception management to the custom exception handler,
      * or throws the exception if no custom handler is set.
      *
-     * @param array $record
      * @phpstan-param Record $record
      */
     protected function handleException(Throwable $e, array $record): void

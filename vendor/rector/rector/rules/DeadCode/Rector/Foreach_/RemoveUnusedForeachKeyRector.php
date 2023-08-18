@@ -46,9 +46,7 @@ CODE_SAMPLE
             return null;
         }
         $keyVar = $node->keyVar;
-        $isNodeUsed = (bool) $this->betterNodeFinder->findFirst($node->stmts, function (Node $node) use($keyVar) : bool {
-            return $this->nodeComparator->areNodesEqual($node, $keyVar);
-        });
+        $isNodeUsed = (bool) $this->betterNodeFinder->findFirst($node->stmts, fn(Node $node): bool => $this->nodeComparator->areNodesEqual($node, $keyVar));
         if ($isNodeUsed) {
             return null;
         }

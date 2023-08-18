@@ -6,16 +6,15 @@ namespace Rector\Symfony\NodeAnalyzer;
 use PhpParser\Node;
 use PHPStan\Reflection\ClassReflection;
 use Rector\Core\Reflection\ReflectionResolver;
-final class SymfonyTestCaseAnalyzer
+final readonly class SymfonyTestCaseAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ReflectionResolver $reflectionResolver
+    )
     {
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function isInWebTestCase(Node $node) : bool
     {

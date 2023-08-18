@@ -95,7 +95,7 @@ class MongoDB extends AbstractCache
 
         try {
             $data = $this->collection->findOne($filter);
-        } catch (MongoDBRuntimeException $e) {
+        } catch (MongoDBRuntimeException) {
             return $default;
         }
 
@@ -118,7 +118,7 @@ class MongoDB extends AbstractCache
 
         try {
             $rows = $this->collection->find($filter);
-        } catch (MongoDBRuntimeException $e) {
+        } catch (MongoDBRuntimeException) {
             return $items;
         }
 
@@ -141,7 +141,7 @@ class MongoDB extends AbstractCache
 
         try {
             $count = $this->collection->count($filter);
-        } catch (MongoDBRuntimeException $e) {
+        } catch (MongoDBRuntimeException) {
             return false;
         }
 
@@ -163,7 +163,7 @@ class MongoDB extends AbstractCache
 
         try {
             $this->collection->replaceOne(['_id' => $id], $item, ['upsert' => true]);
-        } catch (MongoDBRuntimeException $e) {
+        } catch (MongoDBRuntimeException) {
             return false;
         }
 
@@ -202,7 +202,7 @@ class MongoDB extends AbstractCache
 
         try {
             $this->collection->bulkWrite($items);
-        } catch (MongoDBRuntimeException $e) {
+        } catch (MongoDBRuntimeException) {
             return false;
         }
 
@@ -218,7 +218,7 @@ class MongoDB extends AbstractCache
 
         try {
             $this->collection->deleteOne(['_id' => $id]);
-        } catch (MongoDBRuntimeException $e) {
+        } catch (MongoDBRuntimeException) {
             return false;
         }
 
@@ -236,7 +236,7 @@ class MongoDB extends AbstractCache
             if (!empty($idKeyPairs)) {
                 $this->collection->deleteMany(['_id' => ['$in' => array_keys($idKeyPairs)]]);
             }
-        } catch (MongoDBRuntimeException $e) {
+        } catch (MongoDBRuntimeException) {
             return false;
         }
 
@@ -250,7 +250,7 @@ class MongoDB extends AbstractCache
     {
         try {
             $this->collection->drop();
-        } catch (MongoDBRuntimeException $e) {
+        } catch (MongoDBRuntimeException) {
             return false;
         }
 

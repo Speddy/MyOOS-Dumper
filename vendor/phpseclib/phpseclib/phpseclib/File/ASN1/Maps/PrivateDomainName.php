@@ -22,7 +22,7 @@ use phpseclib3\File\ASN1;
  */
 abstract class PrivateDomainName
 {
-    const MAP = [
+    final public const MAP = [
         'type' => ASN1::TYPE_CHOICE,
         'children' => [
             'numeric' => ['type' => ASN1::TYPE_NUMERIC_STRING],

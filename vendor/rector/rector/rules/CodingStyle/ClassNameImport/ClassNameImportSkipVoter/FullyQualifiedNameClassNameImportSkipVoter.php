@@ -17,16 +17,15 @@ use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
  *
  * SomeClass::callThis();
  */
-final class FullyQualifiedNameClassNameImportSkipVoter implements ClassNameImportSkipVoterInterface
+final readonly class FullyQualifiedNameClassNameImportSkipVoter implements ClassNameImportSkipVoterInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\CodingStyle\ClassNameImport\ShortNameResolver
-     */
-    private $shortNameResolver;
-    public function __construct(ShortNameResolver $shortNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ShortNameResolver $shortNameResolver
+    )
     {
-        $this->shortNameResolver = $shortNameResolver;
     }
     public function shouldSkip(File $file, FullyQualifiedObjectType $fullyQualifiedObjectType, Node $node) : bool
     {

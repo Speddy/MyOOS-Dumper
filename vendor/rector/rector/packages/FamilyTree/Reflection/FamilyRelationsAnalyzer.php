@@ -11,34 +11,27 @@ use PHPStan\Reflection\ReflectionProvider;
 use Rector\Core\PhpParser\AstResolver;
 use Rector\Core\Util\Reflection\PrivatesAccessor;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class FamilyRelationsAnalyzer
+final readonly class FamilyRelationsAnalyzer
 {
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\Util\Reflection\PrivatesAccessor
-     */
-    private $privatesAccessor;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    public function __construct(ReflectionProvider $reflectionProvider, PrivatesAccessor $privatesAccessor, NodeNameResolver $nodeNameResolver, AstResolver $astResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private PrivatesAccessor $privatesAccessor,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private AstResolver $astResolver
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
-        $this->privatesAccessor = $privatesAccessor;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->astResolver = $astResolver;
     }
     /**
      * @return ClassReflection[]

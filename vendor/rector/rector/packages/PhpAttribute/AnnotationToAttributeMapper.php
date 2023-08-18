@@ -16,26 +16,22 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 /**
  * @see \Rector\Tests\PhpAttribute\AnnotationToAttributeMapper\AnnotationToAttributeMapperTest
  */
-final class AnnotationToAttributeMapper
+final readonly class AnnotationToAttributeMapper
 {
-    /**
-     * @var AnnotationToAttributeMapperInterface[]
-     * @readonly
-     */
-    private $annotationToAttributeMappers;
     /**
      * @param AnnotationToAttributeMapperInterface[] $annotationToAttributeMappers
      */
-    public function __construct(array $annotationToAttributeMappers)
+    public function __construct(/**
+     * @readonly
+     */
+    private array $annotationToAttributeMappers)
     {
-        $this->annotationToAttributeMappers = $annotationToAttributeMappers;
         Assert::notEmpty($annotationToAttributeMappers);
     }
     /**
      * @return Expr|DocTagNodeState::REMOVE_ARRAY
-     * @param mixed $value
      */
-    public function map($value)
+    public function map(mixed $value)
     {
         foreach ($this->annotationToAttributeMappers as $annotationToAttributeMapper) {
             if ($annotationToAttributeMapper->isCandidate($value)) {

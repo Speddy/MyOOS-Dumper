@@ -37,14 +37,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeArrayFilterNullableCallbackRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ArgsAnalyzer
-     */
-    private $argsAnalyzer;
-    public function __construct(ArgsAnalyzer $argsAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ArgsAnalyzer $argsAnalyzer
+    )
     {
-        $this->argsAnalyzer = $argsAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -112,11 +111,11 @@ CODE_SAMPLE
         if ($this->isAlreadyConditionedToNull($expr)) {
             return \true;
         }
-        if (\in_array(\get_class($expr), [String_::class, Closure::class, ArrowFunction::class, Array_::class], \true)) {
+        if (\in_array($expr::class, [String_::class, Closure::class, ArrowFunction::class, Array_::class], \true)) {
             return \true;
         }
         $type = $this->nodeTypeResolver->getType($expr);
-        return \in_array(\get_class($type), [StringType::class, ConstantStringType::class, ArrayType::class, ClosureType::class], \true);
+        return \in_array($type::class, [StringType::class, ConstantStringType::class, ArrayType::class, ClosureType::class], \true);
     }
     /**
      * @param Arg[] $args

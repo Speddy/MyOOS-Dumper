@@ -23,14 +23,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReturnEarlyIfVariableRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\VariableAnalyzer
-     */
-    private $variableAnalyzer;
-    public function __construct(VariableAnalyzer $variableAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly VariableAnalyzer $variableAnalyzer
+    )
     {
-        $this->variableAnalyzer = $variableAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

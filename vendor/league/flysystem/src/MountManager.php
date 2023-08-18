@@ -15,7 +15,7 @@ class MountManager implements FilesystemOperator
     /**
      * @var array<string, FilesystemOperator>
      */
-    private $filesystems = [];
+    private array $filesystems = [];
 
     /**
      * MountManager constructor.
@@ -96,9 +96,7 @@ class MountManager implements FilesystemOperator
             $filesystem
                 ->listContents($path, $deep)
                 ->map(
-                    function (StorageAttributes $attributes) use ($mountIdentifier) {
-                        return $attributes->withPath(sprintf('%s://%s', $mountIdentifier, $attributes->path()));
-                    }
+                    fn(StorageAttributes $attributes) => $attributes->withPath(sprintf('%s://%s', $mountIdentifier, $attributes->path()))
                 );
     }
 
@@ -298,11 +296,7 @@ class MountManager implements FilesystemOperator
         }
     }
 
-    /**
-     * @param mixed $key
-     * @param mixed $filesystem
-     */
-    private function guardAgainstInvalidMount($key, $filesystem): void
+    private function guardAgainstInvalidMount(mixed $key, mixed $filesystem): void
     {
         if ( ! is_string($key)) {
             throw UnableToMountFilesystem::becauseTheKeyIsNotValid($key);
@@ -319,7 +313,6 @@ class MountManager implements FilesystemOperator
     }
 
     /**
-     * @param string $path
      *
      * @return array{0:FilesystemOperator, 1:string}
      */
@@ -364,7 +357,7 @@ class MountManager implements FilesystemOperator
         string $destination
     ): void {
         try {
-            $visibility = $visibility ?? $sourceFilesystem->visibility($sourcePath);
+            $visibility ??= $sourceFilesystem->visibility($sourcePath);
             $stream = $sourceFilesystem->readStream($sourcePath);
             $destinationFilesystem->writeStream($destinationPath, $stream, compact('visibility'));
         } catch (UnableToRetrieveMetadata | UnableToReadFile | UnableToWriteFile $exception) {

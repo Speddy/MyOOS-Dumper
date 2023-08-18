@@ -48,7 +48,7 @@ abstract class DSA extends AsymmetricKey
      *
      * @var string
      */
-    const ALGORITHM = 'DSA';
+    public const ALGORITHM = 'DSA';
 
     /**
      * DSA Prime P
@@ -142,12 +142,12 @@ abstract class DSA extends AsymmetricKey
 
         do {
             $x = BigInteger::random($L);
-            list(, $c) = $x->divide($divisor);
+            [, $c] = $x->divide($divisor);
             $p = $x->subtract($c->subtract(self::$one));
         } while ($p->getLength() != $L || !$p->isPrime());
 
         $p_1 = $p->subtract(self::$one);
-        list($e) = $p_1->divide($q);
+        [$e] = $p_1->divide($q);
 
         // quoting http://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.186-4.pdf#page=50 ,
         // "h could be obtained from a random number generator or from a counter that

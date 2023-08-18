@@ -7,14 +7,10 @@ use RectorPrefix202308\React\EventLoop\LoopInterface;
 use RectorPrefix202308\React\Promise\Promise;
 final class TimeoutExecutor implements ExecutorInterface
 {
-    private $executor;
     private $loop;
-    private $timeout;
-    public function __construct(ExecutorInterface $executor, $timeout, LoopInterface $loop = null)
+    public function __construct(private readonly ExecutorInterface $executor, private $timeout, LoopInterface $loop = null)
     {
-        $this->executor = $executor;
         $this->loop = $loop ?: Loop::get();
-        $this->timeout = $timeout;
     }
     public function query(Query $query)
     {

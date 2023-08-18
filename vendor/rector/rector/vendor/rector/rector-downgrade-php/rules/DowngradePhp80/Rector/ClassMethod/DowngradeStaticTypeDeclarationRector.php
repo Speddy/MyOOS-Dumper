@@ -17,20 +17,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeStaticTypeDeclarationRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\PhpDocDecorator\PhpDocFromTypeDeclarationDecorator
-     */
-    private $phpDocFromTypeDeclarationDecorator;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(PhpDocFromTypeDeclarationDecorator $phpDocFromTypeDeclarationDecorator, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PhpDocFromTypeDeclarationDecorator $phpDocFromTypeDeclarationDecorator,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver
+    )
     {
-        $this->phpDocFromTypeDeclarationDecorator = $phpDocFromTypeDeclarationDecorator;
-        $this->reflectionResolver = $reflectionResolver;
     }
     /**
      * @return array<class-string<Node>>

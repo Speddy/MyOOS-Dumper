@@ -34,58 +34,43 @@ use Rector\TypeDeclaration\TypeNormalizer;
 /**
  * @internal
  */
-final class ReturnTypeInferer
+final readonly class ReturnTypeInferer
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeNormalizer
-     */
-    private $typeNormalizer;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeInferer\ReturnTypeInferer\ReturnedNodesReturnTypeInfererTypeInferer
-     */
-    private $returnedNodesReturnTypeInfererTypeInferer;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeAnalyzer\GenericClassStringTypeNormalizer
-     */
-    private $genericClassStringTypeNormalizer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    public function __construct(TypeNormalizer $typeNormalizer, ReturnedNodesReturnTypeInfererTypeInferer $returnedNodesReturnTypeInfererTypeInferer, GenericClassStringTypeNormalizer $genericClassStringTypeNormalizer, PhpVersionProvider $phpVersionProvider, BetterNodeFinder $betterNodeFinder, ReflectionResolver $reflectionResolver, ReflectionProvider $reflectionProvider, NodeTypeResolver $nodeTypeResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private TypeNormalizer $typeNormalizer,
+        /**
+         * @readonly
+         */
+        private ReturnedNodesReturnTypeInfererTypeInferer $returnedNodesReturnTypeInfererTypeInferer,
+        /**
+         * @readonly
+         */
+        private GenericClassStringTypeNormalizer $genericClassStringTypeNormalizer,
+        /**
+         * @readonly
+         */
+        private PhpVersionProvider $phpVersionProvider,
+        /**
+         * @readonly
+         */
+        private BetterNodeFinder $betterNodeFinder,
+        /**
+         * @readonly
+         */
+        private ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver
+    )
     {
-        $this->typeNormalizer = $typeNormalizer;
-        $this->returnedNodesReturnTypeInfererTypeInferer = $returnedNodesReturnTypeInfererTypeInferer;
-        $this->genericClassStringTypeNormalizer = $genericClassStringTypeNormalizer;
-        $this->phpVersionProvider = $phpVersionProvider;
-        $this->betterNodeFinder = $betterNodeFinder;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     /**
      * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Stmt\Function_|\PhpParser\Node\Expr\Closure|\PhpParser\Node\Expr\ArrowFunction $functionLike
@@ -181,9 +166,7 @@ final class ReturnTypeInferer
         }
         if (!$functionLike instanceof ArrowFunction) {
             $returns = $this->betterNodeFinder->findInstancesOfInFunctionLikeScoped($functionLike, Return_::class);
-            $returnsWithExpr = \array_filter($returns, static function (Return_ $return) : bool {
-                return $return->expr instanceof Expr;
-            });
+            $returnsWithExpr = \array_filter($returns, static fn(Return_ $return): bool => $return->expr instanceof Expr);
         } else {
             $returns = $functionLike->getStmts();
             $returnsWithExpr = $returns;

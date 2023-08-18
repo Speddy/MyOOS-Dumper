@@ -4,7 +4,7 @@ declare (strict_types=1);
 namespace PHPStan\PhpDocParser\Ast\ConstExpr;
 
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
-class ConstExprStringNode implements \PHPStan\PhpDocParser\Ast\ConstExpr\ConstExprNode
+class ConstExprStringNode implements \PHPStan\PhpDocParser\Ast\ConstExpr\ConstExprNode, \Stringable
 {
     use NodeAttributes;
     /** @var string */

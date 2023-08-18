@@ -10,22 +10,19 @@ use Rector\NodeTypeResolver\Reflection\BetterReflection\SourceLocator\Intermedia
 /**
  * @api used on phpstan config factory
  */
-final class RectorBetterReflectionSourceLocatorFactory
+final readonly class RectorBetterReflectionSourceLocatorFactory
 {
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\BetterReflection\BetterReflectionSourceLocatorFactory
-     */
-    private $betterReflectionSourceLocatorFactory;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\Reflection\BetterReflection\SourceLocator\IntermediateSourceLocator
-     */
-    private $intermediateSourceLocator;
-    public function __construct(BetterReflectionSourceLocatorFactory $betterReflectionSourceLocatorFactory, IntermediateSourceLocator $intermediateSourceLocator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private BetterReflectionSourceLocatorFactory $betterReflectionSourceLocatorFactory,
+        /**
+         * @readonly
+         */
+        private IntermediateSourceLocator $intermediateSourceLocator
+    )
     {
-        $this->betterReflectionSourceLocatorFactory = $betterReflectionSourceLocatorFactory;
-        $this->intermediateSourceLocator = $intermediateSourceLocator;
     }
     public function create() : MemoizingSourceLocator
     {

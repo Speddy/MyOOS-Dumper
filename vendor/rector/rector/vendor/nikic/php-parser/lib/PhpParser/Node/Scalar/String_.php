@@ -8,10 +8,10 @@ use PhpParser\Node\Scalar;
 class String_ extends Scalar
 {
     /* For use in "kind" attribute */
-    const KIND_SINGLE_QUOTED = 1;
-    const KIND_DOUBLE_QUOTED = 2;
-    const KIND_HEREDOC = 3;
-    const KIND_NOWDOC = 4;
+    final public const KIND_SINGLE_QUOTED = 1;
+    final public const KIND_DOUBLE_QUOTED = 2;
+    final public const KIND_HEREDOC = 3;
+    final public const KIND_NOWDOC = 4;
     /** @var string String value */
     public $value;
     protected static $replacements = ['\\' => '\\', '$' => '$', 'n' => "\n", 'r' => "\r", 't' => "\t", 'f' => "\f", 'v' => "\v", 'e' => "\x1b"];

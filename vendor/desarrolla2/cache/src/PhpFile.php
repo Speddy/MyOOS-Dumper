@@ -53,18 +53,15 @@ class PhpFile extends AbstractFile
     /**
      * Create a PHP script returning the cached value
      *
-     * @param mixed    $value
      * @param int|null $ttl
      * @return string
      */
-    public function createScript($value, ?int $ttl): string
+    public function createScript(mixed $value, ?int $ttl): string
     {
         $macro = var_export($value, true);
 
-        if (strpos($macro, 'stdClass::__set_state') !== false) {
-            $macro = preg_replace_callback("/('([^'\\\\]++|''\\.)')|stdClass::__set_state/", $macro, function($match) {
-                return empty($match[1]) ? '(object)' : $match[1];
-            });
+        if (str_contains($macro, 'stdClass::__set_state')) {
+            $macro = preg_replace_callback("/('([^'\\\\]++|''\\.)')|stdClass::__set_state/", $macro, fn($match) => empty($match[1]) ? '(object)' : $match[1]);
         }
 
         return $ttl !== null

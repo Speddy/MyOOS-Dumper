@@ -5,25 +5,22 @@ namespace Rector\Core\ValueObject;
 
 use PhpParser\Node\Expr;
 use PhpParser\Node\Scalar\String_;
-final class SprintfStringAndArgs
+final readonly class SprintfStringAndArgs
 {
-    /**
-     * @readonly
-     * @var \PhpParser\Node\Scalar\String_
-     */
-    private $string;
-    /**
-     * @var Expr[]
-     * @readonly
-     */
-    private $arrayItems;
     /**
      * @param Expr[] $arrayItems
      */
-    public function __construct(String_ $string, array $arrayItems)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private String_ $string,
+        /**
+         * @readonly
+         */
+        private array $arrayItems
+    )
     {
-        $this->string = $string;
-        $this->arrayItems = $arrayItems;
     }
     /**
      * @return Expr[]

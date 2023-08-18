@@ -42,7 +42,7 @@ class StreamOutput extends Output
             throw new InvalidArgumentException('The StreamOutput class needs a stream as its first argument.');
         }
         $this->stream = $stream;
-        $decorated = $decorated ?? $this->hasColorSupport();
+        $decorated ??= $this->hasColorSupport();
         parent::__construct($verbosity, $decorated, $formatter);
     }
     /**

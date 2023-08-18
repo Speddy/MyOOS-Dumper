@@ -28,12 +28,12 @@ abstract class Barrett extends Base
      * $cache[self::VARIABLE] tells us whether or not the cached data is still valid.
      *
      */
-    const VARIABLE = 0;
+    public const VARIABLE = 0;
     /**
      * $cache[self::DATA] contains the cached data.
      *
      */
-    const DATA = 1;
+    public const DATA = 1;
 
     /**
      * Barrett Modular Reduction
@@ -77,7 +77,7 @@ abstract class Barrett extends Base
         // n = 2 * m.length
 
         if (($key = array_search($m, $cache[self::VARIABLE])) === false) {
-            $key = count($cache[self::VARIABLE]);
+            $key = is_countable($cache[self::VARIABLE]) ? count($cache[self::VARIABLE]) : 0;
             $cache[self::VARIABLE][] = $m;
 
             $lhs = '1' . str_repeat('0', $m_length + ($m_length >> 1));
@@ -158,14 +158,14 @@ abstract class Barrett extends Base
         }
 
         if (($key = array_search($n, $cache[self::VARIABLE])) === false) {
-            $key = count($cache[self::VARIABLE]);
+            $key = is_countable($cache[self::VARIABLE]) ? count($cache[self::VARIABLE]) : 0;
             $cache[self::VARIABLE][] = $n;
             $lhs = '1' . str_repeat('0', 2 * $n_length);
             $cache[self::DATA][] = bcdiv($lhs, $n, 0);
         }
 
         $temp = substr($x, 0, -$n_length + 1);
-        $temp = bcmul($temp, $cache[self::DATA][$key]);
+        $temp = bcmul($temp, (string) $cache[self::DATA][$key]);
         $temp = substr($temp, 0, -$n_length - 1);
 
         $r1 = substr($x, -$n_length - 1);

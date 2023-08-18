@@ -25,34 +25,27 @@ use Rector\NodeCollector\ValueObject\ArrayCallable;
 use Rector\NodeCollector\ValueObject\ArrayCallableDynamicMethod;
 use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final class ArrayCallableMethodMatcher
+final readonly class ArrayCallableMethodMatcher
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
-     */
-    private $valueResolver;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(NodeTypeResolver $nodeTypeResolver, ValueResolver $valueResolver, ReflectionProvider $reflectionProvider, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver,
+        /**
+         * @readonly
+         */
+        private ValueResolver $valueResolver,
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private ReflectionResolver $reflectionResolver
+    )
     {
-        $this->nodeTypeResolver = $nodeTypeResolver;
-        $this->valueResolver = $valueResolver;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->reflectionResolver = $reflectionResolver;
     }
     /**
      * Matches array like: "[$this, 'methodName']" → ['ClassName', 'methodName']
@@ -112,10 +105,7 @@ final class ArrayCallableMethodMatcher
         }
         return !$array->items[1] instanceof ArrayItem;
     }
-    /**
-     * @param mixed $values
-     */
-    private function shouldSkipAssociativeArray($values) : bool
+    private function shouldSkipAssociativeArray(mixed $values) : bool
     {
         if (!\is_array($values)) {
             return \false;

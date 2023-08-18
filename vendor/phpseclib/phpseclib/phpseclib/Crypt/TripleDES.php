@@ -46,14 +46,14 @@ class TripleDES extends DES
      *
      * Inner chaining is used by SSH-1 and is generally considered to be less secure then outer chaining (self::MODE_CBC3).
      */
-    const MODE_3CBC = -2;
+    final public const MODE_3CBC = -2;
 
     /**
      * Encrypt / decrypt using outer chaining
      *
      * Outer chaining is used by SSH-2 and when the mode is set to \phpseclib3\Crypt\Common\BlockCipher::MODE_CBC.
      */
-    const MODE_CBC3 = self::MODE_CBC;
+    final public const MODE_CBC3 = self::MODE_CBC;
 
     /**
      * Key Length (in bytes)
@@ -92,18 +92,16 @@ class TripleDES extends DES
     /**
      * Internal flag whether using self::MODE_3CBC or not
      *
-     * @var bool
      */
-    private $mode_3cbc;
+    private ?bool $mode_3cbc = null;
 
     /**
      * The \phpseclib3\Crypt\DES objects
      *
      * Used only if $mode_3cbc === true
      *
-     * @var array
      */
-    private $des;
+    private ?array $des = null;
 
     /**
      * Default Constructor.

@@ -7,22 +7,19 @@ use PhpParser\Node\Stmt\Property;
 use PHPStan\Reflection\ClassReflection;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\Php74\Guard\MakePropertyTypedGuard;
-final class PropertyTypeOverrideGuard
+final readonly class PropertyTypeOverrideGuard
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Php74\Guard\MakePropertyTypedGuard
-     */
-    private $makePropertyTypedGuard;
-    public function __construct(NodeNameResolver $nodeNameResolver, MakePropertyTypedGuard $makePropertyTypedGuard)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private MakePropertyTypedGuard $makePropertyTypedGuard
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->makePropertyTypedGuard = $makePropertyTypedGuard;
     }
     public function isLegal(Property $property, ClassReflection $classReflection) : bool
     {

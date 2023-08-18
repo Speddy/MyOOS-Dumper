@@ -19,7 +19,7 @@ use phpseclib3\Math\BigInteger;
 
 class Ed25519 extends TwistedEdwards
 {
-    const HASH = 'sha512';
+    final public const HASH = 'sha512';
     /*
       Per https://tools.ietf.org/html/rfc8032#page-6 EdDSA has several parameters, one of which is b:
 
@@ -30,7 +30,7 @@ class Ed25519 extends TwistedEdwards
 
       SIZE corresponds to b
     */
-    const SIZE = 32;
+    final public const SIZE = 32;
 
     public function __construct()
     {
@@ -100,7 +100,6 @@ class Ed25519 extends TwistedEdwards
      *
      * Used by EC\Keys\Common.php
      *
-     * @param BigInteger $y
      * @param boolean $sign
      * @return object[]
      */
@@ -193,13 +192,13 @@ class Ed25519 extends TwistedEdwards
      */
     public function encodePoint($point)
     {
-        list($x, $y) = $point;
+        [$x, $y] = $point;
         $y = $y->toBytes();
         $y[0] = $y[0] & chr(0x7F);
         if ($x->isOdd()) {
             $y[0] = $y[0] | chr(0x80);
         }
-        $y = strrev($y);
+        $y = strrev((string) $y);
 
         return $y;
     }
@@ -261,7 +260,7 @@ class Ed25519 extends TwistedEdwards
 
         // from https://tools.ietf.org/html/rfc8032#page-12
 
-        list($x1, $y1, $z1, $t1) = $p;
+        [$x1, $y1, $z1, $t1] = $p;
 
         $a = $x1->multiply($x1);
         $b = $y1->multiply($y1);
@@ -311,8 +310,8 @@ class Ed25519 extends TwistedEdwards
 
         // from https://tools.ietf.org/html/rfc8032#page-12
 
-        list($x1, $y1, $z1, $t1) = $p;
-        list($x2, $y2, $z2, $t2) = $q;
+        [$x1, $y1, $z1, $t1] = $p;
+        [$x2, $y2, $z2, $t2] = $q;
 
         $a = $y1->subtract($x1)->multiply($y2->subtract($x2));
         $b = $y1->add($x1)->multiply($y2->add($x2));

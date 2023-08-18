@@ -35,28 +35,28 @@ class SMTP
      *
      * @var string
      */
-    const VERSION = '6.8.0';
+    final public const VERSION = '6.8.0';
 
     /**
      * SMTP line break constant.
      *
      * @var string
      */
-    const LE = "\r\n";
+    final public const LE = "\r\n";
 
     /**
      * The SMTP port to use if one is not specified.
      *
      * @var int
      */
-    const DEFAULT_PORT = 25;
+    final public const DEFAULT_PORT = 25;
 
     /**
      * The SMTPs port to use if one is not specified.
      *
      * @var int
      */
-    const DEFAULT_SECURE_PORT = 465;
+    final public const DEFAULT_SECURE_PORT = 465;
 
     /**
      * The maximum line length allowed by RFC 5321 section 4.5.3.1.6,
@@ -66,7 +66,7 @@ class SMTP
      *
      * @var int
      */
-    const MAX_LINE_LENGTH = 998;
+    final public const MAX_LINE_LENGTH = 998;
 
     /**
      * The maximum line length allowed for replies in RFC 5321 section 4.5.3.1.5,
@@ -76,42 +76,42 @@ class SMTP
      *
      * @var int
      */
-    const MAX_REPLY_LENGTH = 512;
+    final public const MAX_REPLY_LENGTH = 512;
 
     /**
      * Debug level for no output.
      *
      * @var int
      */
-    const DEBUG_OFF = 0;
+    final public const DEBUG_OFF = 0;
 
     /**
      * Debug level to show client -> server messages.
      *
      * @var int
      */
-    const DEBUG_CLIENT = 1;
+    final public const DEBUG_CLIENT = 1;
 
     /**
      * Debug level to show client -> server and server -> client messages.
      *
      * @var int
      */
-    const DEBUG_SERVER = 2;
+    final public const DEBUG_SERVER = 2;
 
     /**
      * Debug level to show connection status, client -> server and server -> client messages.
      *
      * @var int
      */
-    const DEBUG_CONNECTION = 3;
+    final public const DEBUG_CONNECTION = 3;
 
     /**
      * Debug level to show all messages.
      *
      * @var int
      */
-    const DEBUG_LOWLEVEL = 4;
+    final public const DEBUG_LOWLEVEL = 4;
 
     /**
      * Debug output level.
@@ -392,7 +392,7 @@ class SMTP
         $errstr = '';
         if ($streamok) {
             $socket_context = stream_context_create($options);
-            set_error_handler([$this, 'errorHandler']);
+            set_error_handler($this->errorHandler(...));
             $connection = stream_socket_client(
                 $host . ':' . $port,
                 $errno,
@@ -407,7 +407,7 @@ class SMTP
                 'Connection: stream_socket_client not available, falling back to fsockopen',
                 self::DEBUG_CONNECTION
             );
-            set_error_handler([$this, 'errorHandler']);
+            set_error_handler($this->errorHandler(...));
             $connection = fsockopen(
                 $host,
                 $port,
@@ -437,10 +437,10 @@ class SMTP
 
         //SMTP server can take longer to respond, give longer timeout for first read
         //Windows does not have support for this timeout function
-        if (strpos(PHP_OS, 'WIN') !== 0) {
+        if (!str_starts_with(PHP_OS, 'WIN')) {
             $max = (int)ini_get('max_execution_time');
             //Don't bother if unlimited, or if set_time_limit is disabled
-            if (0 !== $max && $timeout > $max && strpos(ini_get('disable_functions'), 'set_time_limit') === false) {
+            if (0 !== $max && $timeout > $max && !str_contains(ini_get('disable_functions'), 'set_time_limit')) {
                 @set_time_limit($timeout);
             }
             stream_set_timeout($connection, $timeout, 0);
@@ -471,7 +471,7 @@ class SMTP
         }
 
         //Begin encrypted connection
-        set_error_handler([$this, 'errorHandler']);
+        set_error_handler($this->errorHandler(...));
         $crypto_ok = stream_socket_enable_crypto(
             $this->smtp_conn,
             true,
@@ -738,7 +738,7 @@ class SMTP
 
         $field = substr($lines[0], 0, strpos($lines[0], ':'));
         $in_headers = false;
-        if (!empty($field) && strpos($field, ' ') === false) {
+        if (!empty($field) && !str_contains($field, ' ')) {
             $in_headers = true;
         }
 
@@ -814,7 +814,7 @@ class SMTP
         }
 
         //Some servers shut down the SMTP service here (RFC 5321)
-        if (substr($this->helo_rply, 0, 3) == '421') {
+        if (str_starts_with($this->helo_rply, '421')) {
             return false;
         }
 
@@ -951,11 +951,11 @@ class SMTP
             $dsn = strtoupper($dsn);
             $notify = [];
 
-            if (strpos($dsn, 'NEVER') !== false) {
+            if (str_contains($dsn, 'NEVER')) {
                 $notify[] = 'NEVER';
             } else {
                 foreach (['SUCCESS', 'FAILURE', 'DELAY'] as $value) {
-                    if (strpos($dsn, $value) !== false) {
+                    if (str_contains($dsn, $value)) {
                         $notify[] = $value;
                     }
                 }
@@ -1000,7 +1000,7 @@ class SMTP
             return false;
         }
         //Reject line breaks in all commands
-        if ((strpos($commandstring, "\n") !== false) || (strpos($commandstring, "\r") !== false)) {
+        if ((str_contains($commandstring, "\n")) || (str_contains($commandstring, "\r"))) {
             $this->setError("Command '$command' contained line breaks");
 
             return false;
@@ -1131,7 +1131,7 @@ class SMTP
         } else {
             $this->edebug('CLIENT -> SERVER: ' . $data, self::DEBUG_CLIENT);
         }
-        set_error_handler([$this, 'errorHandler']);
+        set_error_handler($this->errorHandler(...));
         $result = fwrite($this->smtp_conn, $data);
         restore_error_handler();
 
@@ -1234,7 +1234,7 @@ class SMTP
         while (is_resource($this->smtp_conn) && !feof($this->smtp_conn)) {
             //Must pass vars in here as params are by reference
             //solution for signals inspired by https://github.com/symfony/symfony/pull/6540
-            set_error_handler([$this, 'errorHandler']);
+            set_error_handler($this->errorHandler(...));
             $n = stream_select($selR, $selW, $selW, $this->Timelimit);
             restore_error_handler();
 
@@ -1248,7 +1248,7 @@ class SMTP
 
                 //stream_select returns false when the `select` system call is interrupted
                 //by an incoming signal, try the select again
-                if (stripos($message, 'interrupted system call') !== false) {
+                if (stripos((string) $message, 'interrupted system call') !== false) {
                     $this->edebug(
                         'SMTP -> get_lines(): retrying stream_select',
                         self::DEBUG_LOWLEVEL

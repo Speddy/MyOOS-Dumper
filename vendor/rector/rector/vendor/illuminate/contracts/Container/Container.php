@@ -100,7 +100,6 @@ interface Container extends ContainerInterface
      * "Extend" an abstract type in the container.
      *
      * @param  string  $abstract
-     * @param  \Closure  $closure
      * @return void
      *
      * @throws \InvalidArgumentException
@@ -110,10 +109,9 @@ interface Container extends ContainerInterface
      * Register an existing instance as shared in the container.
      *
      * @param  string  $abstract
-     * @param  mixed  $instance
      * @return mixed
      */
-    public function instance($abstract, $instance);
+    public function instance($abstract, mixed $instance);
     /**
      * Add a contextual binding to the container.
      *
@@ -147,7 +145,6 @@ interface Container extends ContainerInterface
      * Resolve the given type from the container.
      *
      * @param  string  $abstract
-     * @param  array  $parameters
      * @return mixed
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
@@ -157,7 +154,6 @@ interface Container extends ContainerInterface
      * Call the given Closure / class@method and inject its dependencies.
      *
      * @param  callable|string  $callback
-     * @param  array  $parameters
      * @param  string|null  $defaultMethod
      * @return mixed
      */

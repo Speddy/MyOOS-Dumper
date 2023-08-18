@@ -16,14 +16,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RedirectToRouteRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\TypeAnalyzer\ControllerAnalyzer
-     */
-    private $controllerAnalyzer;
-    public function __construct(ControllerAnalyzer $controllerAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ControllerAnalyzer $controllerAnalyzer
+    )
     {
-        $this->controllerAnalyzer = $controllerAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

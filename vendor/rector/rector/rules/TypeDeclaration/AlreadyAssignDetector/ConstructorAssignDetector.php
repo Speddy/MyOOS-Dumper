@@ -17,44 +17,35 @@ use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
 use Rector\TypeDeclaration\Matcher\PropertyAssignMatcher;
 use Rector\TypeDeclaration\NodeAnalyzer\AutowiredClassMethodOrPropertyAnalyzer;
-final class ConstructorAssignDetector
+final readonly class ConstructorAssignDetector
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\Matcher\PropertyAssignMatcher
-     */
-    private $propertyAssignMatcher;
-    /**
-     * @readonly
-     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
-     */
-    private $simpleCallableNodeTraverser;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\NodeAnalyzer\AutowiredClassMethodOrPropertyAnalyzer
-     */
-    private $autowiredClassMethodOrPropertyAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
-     */
-    private $propertyFetchAnalyzer;
     /**
      * @var string
      */
     private const IS_FIRST_LEVEL_STATEMENT = 'first_level_stmt';
-    public function __construct(NodeTypeResolver $nodeTypeResolver, PropertyAssignMatcher $propertyAssignMatcher, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, AutowiredClassMethodOrPropertyAnalyzer $autowiredClassMethodOrPropertyAnalyzer, PropertyFetchAnalyzer $propertyFetchAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver,
+        /**
+         * @readonly
+         */
+        private PropertyAssignMatcher $propertyAssignMatcher,
+        /**
+         * @readonly
+         */
+        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
+        /**
+         * @readonly
+         */
+        private AutowiredClassMethodOrPropertyAnalyzer $autowiredClassMethodOrPropertyAnalyzer,
+        /**
+         * @readonly
+         */
+        private PropertyFetchAnalyzer $propertyFetchAnalyzer
+    )
     {
-        $this->nodeTypeResolver = $nodeTypeResolver;
-        $this->propertyAssignMatcher = $propertyAssignMatcher;
-        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
-        $this->autowiredClassMethodOrPropertyAnalyzer = $autowiredClassMethodOrPropertyAnalyzer;
-        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
     }
     public function isPropertyAssigned(ClassLike $classLike, string $propertyName) : bool
     {
@@ -117,7 +108,7 @@ final class ConstructorAssignDetector
         if ($constructClassMethod instanceof ClassMethod) {
             $initializingClassMethods[] = $constructClassMethod;
         }
-        $testCaseObjectType = new ObjectType('PHPUnit\\Framework\\TestCase');
+        $testCaseObjectType = new ObjectType(\PHPUnit\Framework\TestCase::class);
         if ($this->nodeTypeResolver->isObjectType($classLike, $testCaseObjectType)) {
             $setUpClassMethod = $classLike->getMethod(MethodName::SET_UP);
             if ($setUpClassMethod instanceof ClassMethod) {

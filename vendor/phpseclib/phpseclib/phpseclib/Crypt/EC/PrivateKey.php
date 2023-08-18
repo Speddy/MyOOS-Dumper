@@ -66,7 +66,7 @@ final class PrivateKey extends EC implements Common\PrivateKey
 
             $point = [$this->curve->convertInteger(new BigInteger(strrev($coordinates), 256))];
             $point = $this->curve->multiplyPoint($point, $this->dA);
-            return strrev($point[0]->toBytes(true));
+            return strrev((string) $point[0]->toBytes(true));
         }
         if (!$this->curve instanceof TwistedEdwardsCurve) {
             $coordinates = "\0$coordinates";
@@ -123,22 +123,22 @@ final class PrivateKey extends EC implements Common\PrivateKey
                 $dom = !isset($this->context) ? '' :
                     'SigEd25519 no Ed25519 collisions' . "\0" . chr(strlen($this->context)) . $this->context;
             } else {
-                $context = isset($this->context) ? $this->context : '';
+                $context = $this->context ?? '';
                 $dom = 'SigEd448' . "\0" . chr(strlen($context)) . $context;
             }
             // SHA-512(dom2(F, C) || prefix || PH(M))
             $r = $hash->hash($dom . $secret . $message);
             $r = strrev($r);
             $r = new BigInteger($r, 256);
-            list(, $r) = $r->divide($order);
+            [, $r] = $r->divide($order);
             $R = $curve->multiplyPoint($curve->getBasePoint(), $r);
             $R = $curve->encodePoint($R);
             $k = $hash->hash($dom . $R . $A . $message);
             $k = strrev($k);
             $k = new BigInteger($k, 256);
-            list(, $k) = $k->divide($order);
+            [, $k] = $k->divide($order);
             $S = $k->multiply($dA)->add($r);
-            list(, $S) = $S->divide($order);
+            [, $S] = $S->divide($order);
             $S = str_pad(strrev($S->toBytes()), $curve::SIZE, "\0");
             return $shortFormat == 'SSH2' ? Strings::packSSH2('ss', 'ssh-' . strtolower($this->getCurve()), $R . $S) : $R . $S;
         }
@@ -171,16 +171,16 @@ final class PrivateKey extends EC implements Common\PrivateKey
 
         while (true) {
             $k = BigInteger::randomRange(self::$one, $order->subtract(self::$one));
-            list($x, $y) = $this->curve->multiplyPoint($this->curve->getBasePoint(), $k);
+            [$x, $y] = $this->curve->multiplyPoint($this->curve->getBasePoint(), $k);
             $x = $x->toBigInteger();
-            list(, $r) = $x->divide($order);
+            [, $r] = $x->divide($order);
             if ($r->equals(self::$zero)) {
                 continue;
             }
             $kinv = $k->modInverse($order);
             $temp = $z->add($dA->multiply($r));
             $temp = $kinv->multiply($temp);
-            list(, $s) = $temp->divide($order);
+            [, $s] = $temp->divide($order);
             if (!$s->equals(self::$zero)) {
                 break;
             }

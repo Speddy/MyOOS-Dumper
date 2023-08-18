@@ -30,38 +30,29 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class CommandPropertyToAttributeRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\NodeFactory\PhpAttributeGroupFactory
-     */
-    private $phpAttributeGroupFactory;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
-     */
-    private $phpAttributeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\Command\AttributeValueResolver
-     */
-    private $attributeValueResolver;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\Command\SetAliasesMethodCallExtractor
-     */
-    private $setAliasesMethodCallExtractor;
-    public function __construct(PhpAttributeGroupFactory $phpAttributeGroupFactory, PhpAttributeAnalyzer $phpAttributeAnalyzer, AttributeValueResolver $attributeValueResolver, ReflectionProvider $reflectionProvider, SetAliasesMethodCallExtractor $setAliasesMethodCallExtractor)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PhpAttributeGroupFactory $phpAttributeGroupFactory,
+        /**
+         * @readonly
+         */
+        private readonly PhpAttributeAnalyzer $phpAttributeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly AttributeValueResolver $attributeValueResolver,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private readonly SetAliasesMethodCallExtractor $setAliasesMethodCallExtractor
+    )
     {
-        $this->phpAttributeGroupFactory = $phpAttributeGroupFactory;
-        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
-        $this->attributeValueResolver = $attributeValueResolver;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->setAliasesMethodCallExtractor = $setAliasesMethodCallExtractor;
     }
     public function provideMinPhpVersion() : int
     {

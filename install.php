@@ -54,7 +54,7 @@ if (isset($_POST['dbhost'])) {
 } else {
     // If connection string exists -> read connection data from connstr
     if (isset($connstr) && !empty($connstr)) {
-        $p = explode('|', $connstr);
+        $p = explode('|', (string) $connstr);
         $dbhost = $config['dbhost'] = $p[0];
         $dbuser = $config['dbuser'] = $p[1];
         $dbpass = $config['dbpass'] = $p[2];
@@ -67,7 +67,7 @@ if (isset($_POST['dbhost'])) {
 }
 
 //Variabeln
-$phase = (isset($phase)) ? $phase : 0;
+$phase ??= 0;
 if (isset($_POST['manual_db'])) {
     $manual_db = trim((string) $_POST['manual_db']);
 }
@@ -181,33 +181,33 @@ switch ($phase) {
 
             if (!isset($_POST['dbconnect'])) {
                 // Erstaufruf - Daten aus config.php auslesen
-                for ($i = 0; $i < count($tmp); ++$i) {
-                    if ('$config[\'dbhost\']' == substr($tmp[$i], 0, 17)) {
+                for ($i = 0; $i < (is_countable($tmp) ? count($tmp) : 0); ++$i) {
+                    if (str_starts_with($tmp[$i], '$config[\'dbhost\']')) {
                         $config['dbhost'] = extractValue($tmp[$i]);
                         $dbhost = $config['dbhost'];
                         ++$stored;
                     }
-                    if ('$config[\'dbport\']' == substr($tmp[$i], 0, 17)) {
+                    if (str_starts_with($tmp[$i], '$config[\'dbport\']')) {
                         $config['dbport'] = extractValue($tmp[$i]);
                         $dbport = $config['dbport'];
                         ++$stored;
                     }
-                    if ('$config[\'dbsocket\']' == substr($tmp[$i], 0, 19)) {
+                    if (str_starts_with($tmp[$i], '$config[\'dbsocket\']')) {
                         $config['dbsocket'] = extractValue($tmp[$i]);
                         $dbsocket = $config['dbsocket'];
                         ++$stored;
                     }
-                    if ('$config[\'dbuser\']' == substr($tmp[$i], 0, 17)) {
+                    if (str_starts_with($tmp[$i], '$config[\'dbuser\']')) {
                         $config['dbuser'] = extractValue($tmp[$i]);
                         $dbuser = $config['dbuser'];
                         ++$stored;
                     }
-                    if ('$config[\'dbpass\']' == substr($tmp[$i], 0, 17)) {
+                    if (str_starts_with($tmp[$i], '$config[\'dbpass\']')) {
                         $config['dbpass'] = extractValue($tmp[$i]);
                         $dbpass = $config['dbpass'];
                         ++$stored;
                     }
-                    if ('$config[\'language\']' == substr($tmp[$i], 0, 19)) {
+                    if (str_starts_with($tmp[$i], '$config[\'language\']')) {
                         $config['language'] = extractValue($tmp[$i]);
                         ++$stored;
                     }
@@ -285,24 +285,24 @@ switch ($phase) {
         echo '<h6>MyOOS [Dumper] - '.$lang['L_CONFBASIC'].'</h6>';
         $tmp = @file('config.php');
         $stored = 0;
-        for ($i = 0; $i < count($tmp); ++$i) {
-            if ('$config[\'dbhost\']' == substr($tmp[$i], 0, 17)) {
+        for ($i = 0; $i < (is_countable($tmp) ? count($tmp) : 0); ++$i) {
+            if (str_starts_with($tmp[$i], '$config[\'dbhost\']')) {
                 $tmp[$i] = '$config[\'dbhost\'] = \''.$dbhost.'\';'."\n";
                 ++$stored;
             }
-            if ('$config[\'dbport\']' == substr($tmp[$i], 0, 17)) {
+            if (str_starts_with($tmp[$i], '$config[\'dbport\']')) {
                 $tmp[$i] = '$config[\'dbport\'] = \''.$dbport.'\';'."\n";
                 ++$stored;
             }
-            if ('$config[\'dbsocket\']' == substr($tmp[$i], 0, 19)) {
+            if (str_starts_with($tmp[$i], '$config[\'dbsocket\']')) {
                 $tmp[$i] = '$config[\'dbsocket\'] = \''.$dbsocket.'\';'."\n";
                 ++$stored;
             }
-            if ('$config[\'dbuser\']' == substr($tmp[$i], 0, 17)) {
+            if (str_starts_with($tmp[$i], '$config[\'dbuser\']')) {
                 $tmp[$i] = '$config[\'dbuser\'] = \''.$dbuser.'\';'."\n";
                 ++$stored;
             }
-            if ('$config[\'dbpass\']' == substr($tmp[$i], 0, 17)) {
+            if (str_starts_with($tmp[$i], '$config[\'dbpass\']')) {
                 $tmp[$i] = '$config[\'dbpass\'] = \''.$dbpass.'\';'."\n";
                 ++$stored;
             }
@@ -335,7 +335,7 @@ switch ($phase) {
         if (isset($_POST['submit'])) {
             $ret = true;
             if ($fp = fopen('config.php', 'wb')) {
-                if (!fwrite($fp, stripslashes(stripslashes($_POST['configfile'])))) {
+                if (!fwrite($fp, stripslashes(stripslashes((string) $_POST['configfile'])))) {
                     $ret = false;
                 }
                 if (!fclose($fp)) {
@@ -420,7 +420,7 @@ switch ($phase) {
     case 101:
         echo '<h6>'.$lang['L_UI5'].'</h6>';
         $paths = [];
-        $w = substr($config['paths']['work'], 0, strlen($config['paths']['work'] ?? '') - 1);
+        $w = substr((string) $config['paths']['work'], 0, strlen($config['paths']['work'] ?? '') - 1);
         if (is_dir($w)) {
             $res = rec_rmdir($w);
         } else {
@@ -534,12 +534,12 @@ function Rechte($file)
 
 function extractValue($s)
 {
-    $r = trim((string) substr($s, strpos($s, '=') + 1));
+    $r = trim((string) substr((string) $s, strpos((string) $s, '=') + 1));
     $r = substr($r, 0, strlen($r ?? '') - 1);
-    if ("'" == substr($r, -1) || '"' == substr($r, -1)) {
+    if (str_ends_with($r, "'") || str_ends_with($r, '"')) {
         $r = substr($r, 0, strlen($r ?? '') - 1);
     }
-    if ("'" == substr($r, 0, 1) || '"' == substr($r, 0, 1)) {
+    if (str_starts_with($r, "'") || str_starts_with($r, '"')) {
         $r = substr($r, 1);
     }
 

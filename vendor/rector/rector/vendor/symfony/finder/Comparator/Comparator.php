@@ -15,20 +15,12 @@ namespace RectorPrefix202308\Symfony\Component\Finder\Comparator;
  */
 class Comparator
 {
-    /**
-     * @var string
-     */
-    private $target;
-    /**
-     * @var string
-     */
-    private $operator;
-    public function __construct(string $target, string $operator = '==')
+    private readonly string $operator;
+    public function __construct(private readonly string $target, string $operator = '==')
     {
         if (!\in_array($operator, ['>', '<', '>=', '<=', '==', '!='])) {
             throw new \InvalidArgumentException(\sprintf('Invalid operator "%s".', $operator));
         }
-        $this->target = $target;
         $this->operator = $operator;
     }
     /**
@@ -47,23 +39,16 @@ class Comparator
     }
     /**
      * Tests against the target.
-     * @param mixed $test
      */
-    public function test($test) : bool
+    public function test(mixed $test) : bool
     {
-        switch ($this->operator) {
-            case '>':
-                return $test > $this->target;
-            case '>=':
-                return $test >= $this->target;
-            case '<':
-                return $test < $this->target;
-            case '<=':
-                return $test <= $this->target;
-            case '!=':
-                return $test != $this->target;
-            default:
-                return $test == $this->target;
-        }
+        return match ($this->operator) {
+            '>' => $test > $this->target,
+            '>=' => $test >= $this->target,
+            '<' => $test < $this->target,
+            '<=' => $test <= $this->target,
+            '!=' => $test != $this->target,
+            default => $test == $this->target,
+        };
     }
 }

@@ -29,7 +29,7 @@ use PhpParser\Node\Stmt\UseUse;
 use PhpParser\Node\VarLikeIdentifier;
 abstract class ParserAbstract implements \PhpParser\Parser
 {
-    const SYMBOL_NONE = -1;
+    final public const SYMBOL_NONE = -1;
     /*
      * The following members will be filled with generated parsing data:
      */
@@ -462,7 +462,7 @@ abstract class ParserAbstract implements \PhpParser\Parser
         // We only move the builtin end attributes here. This is the best we can do with the
         // knowledge we have.
         $endAttributes = ['endLine', 'endFilePos', 'endTokenPos'];
-        $lastStmt = $stmt->stmts[\count($stmt->stmts) - 1];
+        $lastStmt = $stmt->stmts[\count((array) $stmt->stmts) - 1];
         foreach ($endAttributes as $endAttribute) {
             if ($lastStmt->hasAttribute($endAttribute)) {
                 $stmt->setAttribute($endAttribute, $lastStmt->getAttribute($endAttribute));
@@ -518,7 +518,6 @@ abstract class ParserAbstract implements \PhpParser\Parser
      *
      * @param  Node\Expr\StaticPropertyFetch|Node\Expr\ArrayDimFetch $prop
      * @param  Node\Arg[] $args
-     * @param  array      $attributes
      *
      * @return Expr\StaticCall
      */
@@ -584,10 +583,10 @@ abstract class ParserAbstract implements \PhpParser\Parser
     protected function getFloatCastKind(string $cast) : int
     {
         $cast = \strtolower($cast);
-        if (\strpos($cast, 'float') !== \false) {
+        if (str_contains($cast, 'float')) {
             return Double::KIND_FLOAT;
         }
-        if (\strpos($cast, 'real') !== \false) {
+        if (str_contains($cast, 'real')) {
             return Double::KIND_REAL;
         }
         return Double::KIND_DOUBLE;
@@ -631,7 +630,7 @@ abstract class ParserAbstract implements \PhpParser\Parser
         $regex = '/' . $start . '([ \\t]*)(' . $end . ')?/';
         return \preg_replace_callback($regex, function ($matches) use($indentLen, $indentChar, $attributes) {
             $prefix = \substr($matches[1], 0, $indentLen);
-            if (\false !== \strpos($prefix, $indentChar === " " ? "\t" : " ")) {
+            if (str_contains($prefix, $indentChar === " " ? "\t" : " ")) {
                 $this->emitError(new \PhpParser\Error('Invalid indentation - tabs and spaces cannot be mixed', $attributes));
             } elseif (\strlen($prefix) < $indentLen && !isset($matches[2])) {
                 $this->emitError(new \PhpParser\Error('Invalid body indentation level ' . '(expecting an indentation level of at least ' . $indentLen . ')', $attributes));
@@ -641,7 +640,7 @@ abstract class ParserAbstract implements \PhpParser\Parser
     }
     protected function parseDocString(string $startToken, $contents, string $endToken, array $attributes, array $endTokenAttributes, bool $parseUnicodeEscape)
     {
-        $kind = \strpos($startToken, "'") === \false ? String_::KIND_HEREDOC : String_::KIND_NOWDOC;
+        $kind = !str_contains($startToken, "'") ? String_::KIND_HEREDOC : String_::KIND_NOWDOC;
         $regex = '/\\A[bB]?<<<[ \\t]*[\'"]?([a-zA-Z_\\x7f-\\xff][a-zA-Z0-9_\\x7f-\\xff]*)[\'"]?(?:\\r\\n|\\n|\\r)\\z/';
         $result = \preg_match($regex, $startToken, $matches);
         \assert($result === 1);
@@ -652,8 +651,8 @@ abstract class ParserAbstract implements \PhpParser\Parser
         $attributes['kind'] = $kind;
         $attributes['docLabel'] = $label;
         $attributes['docIndentation'] = $indentation;
-        $indentHasSpaces = \false !== \strpos($indentation, " ");
-        $indentHasTabs = \false !== \strpos($indentation, "\t");
+        $indentHasSpaces = str_contains($indentation, " ");
+        $indentHasTabs = str_contains($indentation, "\t");
         if ($indentHasSpaces && $indentHasTabs) {
             $this->emitError(new \PhpParser\Error('Invalid indentation - tabs and spaces cannot be mixed', $endTokenAttributes));
             // Proceed processing as if this doc string is not indented
@@ -666,13 +665,13 @@ abstract class ParserAbstract implements \PhpParser\Parser
                 return new String_('', $attributes);
             }
             $contents = $this->stripIndentation($contents, $indentLen, $indentChar, \true, \true, $attributes);
-            $contents = \preg_replace('~(\\r\\n|\\n|\\r)\\z~', '', $contents);
+            $contents = \preg_replace('~(\\r\\n|\\n|\\r)\\z~', '', (string) $contents);
             if ($kind === String_::KIND_HEREDOC) {
                 $contents = String_::parseEscapeSequences($contents, null, $parseUnicodeEscape);
             }
             return new String_($contents, $attributes);
         } else {
-            \assert(\count($contents) > 0);
+            \assert((is_countable($contents) ? \count($contents) : 0) > 0);
             if (!$contents[0] instanceof \PhpParser\Node\Scalar\EncapsedStringPart) {
                 // If there is no leading encapsed string part, pretend there is an empty one
                 $this->stripIndentation('', $indentLen, $indentChar, \true, \false, $contents[0]->getAttributes());
@@ -680,7 +679,7 @@ abstract class ParserAbstract implements \PhpParser\Parser
             $newContents = [];
             foreach ($contents as $i => $part) {
                 if ($part instanceof \PhpParser\Node\Scalar\EncapsedStringPart) {
-                    $isLast = $i === \count($contents) - 1;
+                    $isLast = $i === (is_countable($contents) ? \count($contents) : 0) - 1;
                     $part->value = $this->stripIndentation($part->value, $indentLen, $indentChar, $i === 0, $isLast, $part->getAttributes());
                     $part->value = String_::parseEscapeSequences($part->value, null, $parseUnicodeEscape);
                     if ($isLast) {

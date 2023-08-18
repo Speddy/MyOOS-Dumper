@@ -12,32 +12,27 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Expression;
 use Rector\Core\NodeAnalyzer\ParamAnalyzer;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class OnLogoutClassMethodFactory
+final readonly class OnLogoutClassMethodFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeFactory\BareLogoutClassMethodFactory
-     */
-    private $bareLogoutClassMethodFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ParamAnalyzer
-     */
-    private $paramAnalyzer;
     /**
      * @var array<string, string>
      */
     private const PARAMETER_TO_GETTER_NAMES = ['request' => 'getRequest', 'response' => 'getResponse', 'token' => 'getToken'];
-    public function __construct(NodeNameResolver $nodeNameResolver, \Rector\Symfony\NodeFactory\BareLogoutClassMethodFactory $bareLogoutClassMethodFactory, ParamAnalyzer $paramAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private \Rector\Symfony\NodeFactory\BareLogoutClassMethodFactory $bareLogoutClassMethodFactory,
+        /**
+         * @readonly
+         */
+        private ParamAnalyzer $paramAnalyzer
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->bareLogoutClassMethodFactory = $bareLogoutClassMethodFactory;
-        $this->paramAnalyzer = $paramAnalyzer;
     }
     public function createFromLogoutClassMethod(ClassMethod $logoutClassMethod) : ClassMethod
     {

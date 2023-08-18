@@ -11,16 +11,15 @@ use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
 use Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode;
 use Rector\Core\PhpParser\Printer\BetterStandardPrinter;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final class DoctrineAnnotationFactory
+final readonly class DoctrineAnnotationFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Printer\BetterStandardPrinter
-     */
-    private $betterStandardPrinter;
-    public function __construct(BetterStandardPrinter $betterStandardPrinter)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private BetterStandardPrinter $betterStandardPrinter
+    )
     {
-        $this->betterStandardPrinter = $betterStandardPrinter;
     }
     /**
      * @api downgrade

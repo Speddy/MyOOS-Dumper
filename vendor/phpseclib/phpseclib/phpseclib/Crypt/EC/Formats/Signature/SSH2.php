@@ -41,7 +41,7 @@ abstract class SSH2
         if ($result === false) {
             return false;
         }
-        list($type, $blob) = $result;
+        [$type, $blob] = $result;
         switch ($type) {
             // see https://tools.ietf.org/html/rfc5656#section-3.1.2
             case 'ecdsa-sha2-nistp256':
@@ -66,8 +66,6 @@ abstract class SSH2
     /**
      * Returns a signature in the appropriate format
      *
-     * @param \phpseclib3\Math\BigInteger $r
-     * @param \phpseclib3\Math\BigInteger $s
      * @param string $curve
      * @return string
      */

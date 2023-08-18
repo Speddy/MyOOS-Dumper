@@ -38,7 +38,7 @@ class Gitignore
         $res = self::lineToRegex('');
         foreach ($gitignoreLines as $line) {
             $line = \preg_replace('~(?<!\\\\)[ \\t]+$~', '', $line);
-            if (\strncmp($line, '!', \strlen('!')) === 0) {
+            if (str_starts_with($line, '!')) {
                 $line = \substr($line, 1);
                 $isNegative = \true;
             } else {
@@ -70,12 +70,10 @@ class Gitignore
             $isAbsolute = \false;
         }
         $regex = \preg_quote(\str_replace('\\', '', $gitignoreLine), '~');
-        $regex = \preg_replace_callback('~\\\\\\[((?:\\\\!)?)([^\\[\\]]*)\\\\\\]~', function (array $matches) : string {
-            return '[' . ('' !== $matches[1] ? '^' : '') . \str_replace('\\-', '-', $matches[2]) . ']';
-        }, $regex);
+        $regex = \preg_replace_callback('~\\\\\\[((?:\\\\!)?)([^\\[\\]]*)\\\\\\]~', fn(array $matches): string => '[' . ('' !== $matches[1] ? '^' : '') . \str_replace('\\-', '-', (string) $matches[2]) . ']', $regex);
         $regex = \preg_replace('~(?:(?:\\\\\\*){2,}(/?))+~', '(?:(?:(?!//).(?<!//))+$1)?', $regex);
         $regex = \preg_replace('~\\\\\\*~', '[^/]*', $regex);
         $regex = \preg_replace('~\\\\\\?~', '[^/]', $regex);
-        return ($isAbsolute ? '' : '(?:[^/]+/)*') . $regex . (\substr_compare($gitignoreLine, '/', -\strlen('/')) !== 0 ? '(?:$|/)' : '');
+        return ($isAbsolute ? '' : '(?:[^/]+/)*') . $regex . (!str_ends_with($gitignoreLine, '/') ? '(?:$|/)' : '');
     }
 }

@@ -49,38 +49,31 @@ use Rector\StaticTypeMapper\StaticTypeMapper;
 /**
  * @see \Rector\Core\Tests\PhpParser\Node\NodeFactoryTest
  */
-final class NodeFactory
+final readonly class NodeFactory
 {
-    /**
-     * @readonly
-     * @var \PhpParser\BuilderFactory
-     */
-    private $builderFactory;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\StaticTypeMapper
-     */
-    private $staticTypeMapper;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeDecorator\PropertyTypeDecorator
-     */
-    private $propertyTypeDecorator;
     /**
      * @var string
      */
     private const THIS = 'this';
-    public function __construct(BuilderFactory $builderFactory, PhpDocInfoFactory $phpDocInfoFactory, StaticTypeMapper $staticTypeMapper, PropertyTypeDecorator $propertyTypeDecorator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private BuilderFactory $builderFactory,
+        /**
+         * @readonly
+         */
+        private PhpDocInfoFactory $phpDocInfoFactory,
+        /**
+         * @readonly
+         */
+        private StaticTypeMapper $staticTypeMapper,
+        /**
+         * @readonly
+         */
+        private PropertyTypeDecorator $propertyTypeDecorator
+    )
     {
-        $this->builderFactory = $builderFactory;
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
-        $this->staticTypeMapper = $staticTypeMapper;
-        $this->propertyTypeDecorator = $propertyTypeDecorator;
     }
     /**
      * @param string|ObjectReference::* $className
@@ -141,10 +134,7 @@ final class NodeFactory
         $propertyFetch = $this->createPropertyFetch(self::THIS, $propertyName);
         return new Assign($propertyFetch, $expr);
     }
-    /**
-     * @param mixed $argument
-     */
-    public function createArg($argument) : Arg
+    public function createArg(mixed $argument) : Arg
     {
         return new Arg(BuilderHelpers::normalizeValue($argument));
     }
@@ -319,9 +309,8 @@ final class NodeFactory
     }
     /**
      * @param string|int|null $key
-     * @param mixed $item
      */
-    private function createArrayItem($item, $key = null) : ArrayItem
+    private function createArrayItem(mixed $item, $key = null) : ArrayItem
     {
         $arrayItem = null;
         if ($item instanceof Variable || $item instanceof MethodCall || $item instanceof StaticCall || $item instanceof FuncCall || $item instanceof Concat || $item instanceof Scalar || $item instanceof Cast || $item instanceof ConstFetch) {
@@ -344,7 +333,7 @@ final class NodeFactory
             $this->decorateArrayItemWithKey($key, $arrayItem);
             return $arrayItem;
         }
-        $nodeClass = \is_object($item) ? \get_class($item) : $item;
+        $nodeClass = \is_object($item) ? $item::class : $item;
         throw new NotImplementedYetException(\sprintf('Not implemented yet. Go to "%s()" and add check for "%s" node.', __METHOD__, (string) $nodeClass));
     }
     /**

@@ -29,14 +29,11 @@ final class EncapsedStringsToSprintfRector extends AbstractRector
      * @var array<string, array<class-string<Type>>>
      */
     private const FORMAT_SPECIFIERS = ['%s' => ['PHPStan\\Type\\StringType'], '%d' => ['PHPStan\\Type\\Constant\\ConstantIntegerType', 'PHPStan\\Type\\IntegerRangeType', 'PHPStan\\Type\\IntegerType']];
-    /**
-     * @var string
-     */
-    private $sprintfFormat = '';
+    private string $sprintfFormat = '';
     /**
      * @var Expr[]
      */
-    private $argumentVariables = [];
+    private array $argumentVariables = [];
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Convert enscaped {$string} to more readable sprintf or concat, if no mask is used', [new CodeSample(<<<'CODE_SAMPLE'
@@ -92,7 +89,7 @@ CODE_SAMPLE
         $type = $this->nodeTypeResolver->getType($expr);
         $found = \false;
         foreach (self::FORMAT_SPECIFIERS as $key => $types) {
-            if (\in_array(\get_class($type), $types, \true)) {
+            if (\in_array($type::class, $types, \true)) {
                 $this->sprintfFormat .= $key;
                 $found = \true;
                 break;
@@ -121,7 +118,7 @@ CODE_SAMPLE
             return $this->nodeFactory->createConcat($argumentVariables);
         }
         // checks for windows or linux line ending. \n is contained in both.
-        if (\strpos($mask, "\n") !== \false) {
+        if (str_contains($mask, "\n")) {
             return null;
         }
         $arguments = [new Arg(new String_($mask))];

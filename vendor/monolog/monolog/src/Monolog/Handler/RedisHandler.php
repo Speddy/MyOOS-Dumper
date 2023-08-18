@@ -31,25 +31,22 @@ use Monolog\Logger;
 class RedisHandler extends AbstractProcessingHandler
 {
     /** @var \Predis\Client<\Predis\Client>|\Redis */
-    private $redisClient;
-    /** @var string */
-    private $redisKey;
+    private readonly \Predis\Client|\Redis $redisClient;
     /** @var int */
     protected $capSize;
 
     /**
      * @param \Predis\Client<\Predis\Client>|\Redis $redis   The redis instance
-     * @param string                $key     The key name to push records to
+     * @param string $redisKey The key name to push records to
      * @param int                   $capSize Number of entries to limit list size to, 0 = unlimited
      */
-    public function __construct($redis, string $key, $level = Logger::DEBUG, bool $bubble = true, int $capSize = 0)
+    public function __construct($redis, private string $redisKey, $level = Logger::DEBUG, bool $bubble = true, int $capSize = 0)
     {
         if (!(($redis instanceof \Predis\Client) || ($redis instanceof \Redis))) {
             throw new \InvalidArgumentException('Predis\Client or Redis instance required');
         }
 
         $this->redisClient = $redis;
-        $this->redisKey = $key;
         $this->capSize = $capSize;
 
         parent::__construct($level, $bubble);

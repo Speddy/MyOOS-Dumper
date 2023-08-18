@@ -29,17 +29,16 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class ThrowWithPreviousExceptionRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
      * @var int
      */
     private const DEFAULT_EXCEPTION_ARGUMENT_POSITION = 2;
-    public function __construct(ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -146,7 +145,7 @@ CODE_SAMPLE
     {
         $className = $this->getName($exceptionName);
         // is native exception?
-        if (\strpos($className, '\\') === \false) {
+        if (!str_contains($className, '\\')) {
             return self::DEFAULT_EXCEPTION_ARGUMENT_POSITION;
         }
         if (!$this->reflectionProvider->hasClass($className)) {

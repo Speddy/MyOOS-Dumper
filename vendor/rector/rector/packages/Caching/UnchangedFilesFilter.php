@@ -4,16 +4,15 @@ declare (strict_types=1);
 namespace Rector\Caching;
 
 use Rector\Caching\Detector\ChangedFilesDetector;
-final class UnchangedFilesFilter
+final readonly class UnchangedFilesFilter
 {
-    /**
-     * @readonly
-     * @var \Rector\Caching\Detector\ChangedFilesDetector
-     */
-    private $changedFilesDetector;
-    public function __construct(ChangedFilesDetector $changedFilesDetector)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ChangedFilesDetector $changedFilesDetector
+    )
     {
-        $this->changedFilesDetector = $changedFilesDetector;
     }
     /**
      * @param string[] $filePaths

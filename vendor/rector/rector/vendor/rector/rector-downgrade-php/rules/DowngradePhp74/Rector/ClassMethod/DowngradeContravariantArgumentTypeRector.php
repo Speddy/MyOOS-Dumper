@@ -27,26 +27,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeContravariantArgumentTypeRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
-     */
-    private $phpDocTypeChanger;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ParamAnalyzer
-     */
-    private $paramAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(PhpDocTypeChanger $phpDocTypeChanger, ParamAnalyzer $paramAnalyzer, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTypeChanger $phpDocTypeChanger,
+        /**
+         * @readonly
+         */
+        private readonly ParamAnalyzer $paramAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver
+    )
     {
-        $this->phpDocTypeChanger = $phpDocTypeChanger;
-        $this->paramAnalyzer = $paramAnalyzer;
-        $this->reflectionResolver = $reflectionResolver;
     }
     /**
      * @return array<class-string<Node>>

@@ -5,7 +5,7 @@ namespace Rector\BetterPhpDocParser\ValueObject\Type;
 
 use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
 use Stringable;
-final class FullyQualifiedIdentifierTypeNode extends IdentifierTypeNode
+final class FullyQualifiedIdentifierTypeNode extends IdentifierTypeNode implements \Stringable
 {
     public function __toString() : string
     {

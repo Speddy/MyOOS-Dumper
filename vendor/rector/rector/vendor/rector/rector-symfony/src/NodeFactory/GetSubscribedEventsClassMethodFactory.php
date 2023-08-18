@@ -28,50 +28,39 @@ use Rector\Symfony\ValueObject\EventReferenceToMethodNameWithPriority;
 use Rector\Symfony\ValueObject\ServiceDefinition;
 use Rector\Symfony\ValueObject\Tag;
 use Rector\Symfony\ValueObject\Tag\EventListenerTag;
-final class GetSubscribedEventsClassMethodFactory
+final readonly class GetSubscribedEventsClassMethodFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    /**
-     * @readonly
-     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
-     */
-    private $visibilityManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
-     */
-    private $phpDocTypeChanger;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeFactory\EventReferenceFactory
-     */
-    private $eventReferenceFactory;
     /**
      * @var string
      */
     private const GET_SUBSCRIBED_EVENTS_METHOD_NAME = 'getSubscribedEvents';
-    public function __construct(NodeFactory $nodeFactory, VisibilityManipulator $visibilityManipulator, PhpVersionProvider $phpVersionProvider, PhpDocInfoFactory $phpDocInfoFactory, PhpDocTypeChanger $phpDocTypeChanger, \Rector\Symfony\NodeFactory\EventReferenceFactory $eventReferenceFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory,
+        /**
+         * @readonly
+         */
+        private VisibilityManipulator $visibilityManipulator,
+        /**
+         * @readonly
+         */
+        private PhpVersionProvider $phpVersionProvider,
+        /**
+         * @readonly
+         */
+        private PhpDocInfoFactory $phpDocInfoFactory,
+        /**
+         * @readonly
+         */
+        private PhpDocTypeChanger $phpDocTypeChanger,
+        /**
+         * @readonly
+         */
+        private \Rector\Symfony\NodeFactory\EventReferenceFactory $eventReferenceFactory
+    )
     {
-        $this->nodeFactory = $nodeFactory;
-        $this->visibilityManipulator = $visibilityManipulator;
-        $this->phpVersionProvider = $phpVersionProvider;
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
-        $this->phpDocTypeChanger = $phpDocTypeChanger;
-        $this->eventReferenceFactory = $eventReferenceFactory;
     }
     /**
      * @param EventReferenceToMethodNameInterface[] $eventReferencesToMethodNames

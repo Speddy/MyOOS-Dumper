@@ -21,14 +21,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class SpatieEnumClassToEnumRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Php81\NodeFactory\EnumFactory
-     */
-    private $enumFactory;
-    public function __construct(EnumFactory $enumFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly EnumFactory $enumFactory
+    )
     {
-        $this->enumFactory = $enumFactory;
     }
     public function provideMinPhpVersion() : int
     {

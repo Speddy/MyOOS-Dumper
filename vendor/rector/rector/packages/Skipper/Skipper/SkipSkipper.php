@@ -4,16 +4,15 @@ declare (strict_types=1);
 namespace Rector\Skipper\Skipper;
 
 use Rector\Skipper\Matcher\FileInfoMatcher;
-final class SkipSkipper
+final readonly class SkipSkipper
 {
-    /**
-     * @readonly
-     * @var \Rector\Skipper\Matcher\FileInfoMatcher
-     */
-    private $fileInfoMatcher;
-    public function __construct(FileInfoMatcher $fileInfoMatcher)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private FileInfoMatcher $fileInfoMatcher
+    )
     {
-        $this->fileInfoMatcher = $fileInfoMatcher;
     }
     /**
      * @param array<string, string[]|null> $skippedClasses

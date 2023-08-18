@@ -20,10 +20,7 @@ use Rector\PHPStanStaticTypeMapper\PHPStanStaticTypeMapper;
  */
 final class ConditionalTypeMapper implements TypeMapperInterface
 {
-    /**
-     * @var \Rector\PHPStanStaticTypeMapper\PHPStanStaticTypeMapper
-     */
-    private $phpStanStaticTypeMapper;
+    private ?\Rector\PHPStanStaticTypeMapper\PHPStanStaticTypeMapper $phpStanStaticTypeMapper = null;
     /**
      * @api used in autowire, @todo add to lazy container or remove
      */

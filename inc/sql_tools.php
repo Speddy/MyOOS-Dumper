@@ -80,14 +80,14 @@ if (isset($_POST['dbwantaction'])) {
         if (!empty($newname)) {
             $sqlc = "CREATE DATABASE `$newname`";
             $col = (MOD_NEW_VERSION) ? $_POST['db_collate'] : '';
-            if (isset($_POST['db_default_charset']) && intval(substr(MOD_NEW_VERSION, 0, 1)) > 3) {
+            if (isset($_POST['db_default_charset']) && intval(substr((string) MOD_NEW_VERSION, 0, 1)) > 3) {
                 $db_default_charset_string = $config['mysql_possible_character_sets'][$_POST['db_default_charset']];
-                $db_default_charset = explode(' ', $db_default_charset_string);
+                $db_default_charset = explode(' ', (string) $db_default_charset_string);
                 if (isset($db_default_charset[0])) {
                     $sqlc .= ' DEFAULT CHARACTER SET `'.$db_default_charset[0].'`';
                 }
             }
-            $db_default_collation = @explode('|', $col);
+            $db_default_collation = @explode('|', (string) $col);
             if (isset($db_default_collation[1])) {
                 $sqlc .= ' COLLATE `'.$db_default_collation[1].'`';
             }
@@ -102,7 +102,7 @@ if (isset($_POST['dbwantaction'])) {
     }
     $db_action = $newname = '';
     $db_index = -1;
-    for ($i = 0; $i < count($databases['Name']); ++$i) {
+    for ($i = 0; $i < (is_countable($databases['Name']) ? count($databases['Name']) : 0); ++$i) {
         if (isset($_POST['db_do_'.$i])) {
             $newname = $_POST['db_rename'.$i];
             $db_index = $i;
@@ -171,7 +171,7 @@ echo '</table>';
 
 echo '<br><table class="bdr">';
 echo '<tr class="thead"><th>'.$lang['L_DBS'].'</th><th>'.$lang['L_SQL_ACTIONS'].'</th></tr>';
-for ($i = 0; $i < count($databases['Name']); ++$i) {
+for ($i = 0; $i < (is_countable($databases['Name']) ? count($databases['Name']) : 0); ++$i) {
     $cl = ($i % 2) ? 'dbrow' : 'dbrow1';
     echo ($i == $databases['db_selected_index']) ? '<tr class="dbrowsel">' : '<tr class="'.$cl.'">';
     echo '<td><a href="sql.php?db='.$databases['Name'][$i].'&amp;dbid='.$i.'">'.$databases['Name'][$i].'</a></td>';

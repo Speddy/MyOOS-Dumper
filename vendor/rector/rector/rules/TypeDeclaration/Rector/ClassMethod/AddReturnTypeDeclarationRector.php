@@ -26,27 +26,21 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class AddReturnTypeDeclarationRector extends AbstractRector implements ConfigurableRectorInterface
 {
     /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    /**
-     * @readonly
-     * @var \Rector\VendorLocker\ParentClassMethodTypeOverrideGuard
-     */
-    private $parentClassMethodTypeOverrideGuard;
-    /**
      * @var AddReturnTypeDeclaration[]
      */
-    private $methodReturnTypes = [];
-    /**
-     * @var bool
-     */
-    private $hasChanged = \false;
-    public function __construct(PhpVersionProvider $phpVersionProvider, ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard)
+    private array $methodReturnTypes = [];
+    private bool $hasChanged = \false;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PhpVersionProvider $phpVersionProvider,
+        /**
+         * @readonly
+         */
+        private readonly ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard
+    )
     {
-        $this->phpVersionProvider = $phpVersionProvider;
-        $this->parentClassMethodTypeOverrideGuard = $parentClassMethodTypeOverrideGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {

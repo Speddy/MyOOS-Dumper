@@ -15,29 +15,24 @@ use Rector\Core\Util\FileHasher;
 final class ChangedFilesDetector
 {
     /**
-     * @readonly
-     * @var \Rector\Caching\Config\FileHashComputer
-     */
-    private $fileHashComputer;
-    /**
-     * @readonly
-     * @var \Rector\Caching\Cache
-     */
-    private $cache;
-    /**
-     * @readonly
-     * @var \Rector\Core\Util\FileHasher
-     */
-    private $fileHasher;
-    /**
      * @var array<string, true>
      */
-    private $cachableFiles = [];
-    public function __construct(FileHashComputer $fileHashComputer, Cache $cache, FileHasher $fileHasher)
+    private array $cachableFiles = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly FileHashComputer $fileHashComputer,
+        /**
+         * @readonly
+         */
+        private readonly Cache $cache,
+        /**
+         * @readonly
+         */
+        private readonly FileHasher $fileHasher
+    )
     {
-        $this->fileHashComputer = $fileHashComputer;
-        $this->cache = $cache;
-        $this->fileHasher = $fileHasher;
     }
     public function cacheFile(string $filePath) : void
     {

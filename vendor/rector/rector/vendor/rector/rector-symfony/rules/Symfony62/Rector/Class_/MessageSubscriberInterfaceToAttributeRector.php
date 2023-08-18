@@ -29,34 +29,23 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class MessageSubscriberInterfaceToAttributeRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\Helper\MessengerHelper
-     */
-    private $messengerHelper;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeManipulator\ClassManipulator
-     */
-    private $classManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\ClassAnalyzer
-     */
-    private $classAnalyzer;
-    /**
-     * @var \PhpParser\Node\Stmt\Class_
-     */
-    private $subscriberClass;
-    /**
-     * @var string
-     */
-    private $newInvokeMethodName;
-    public function __construct(MessengerHelper $messengerHelper, ClassManipulator $classManipulator, ClassAnalyzer $classAnalyzer)
+    private ?\PhpParser\Node $subscriberClass = null;
+    private ?string $newInvokeMethodName = null;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly MessengerHelper $messengerHelper,
+        /**
+         * @readonly
+         */
+        private readonly ClassManipulator $classManipulator,
+        /**
+         * @readonly
+         */
+        private readonly ClassAnalyzer $classAnalyzer
+    )
     {
-        $this->messengerHelper = $messengerHelper;
-        $this->classManipulator = $classManipulator;
-        $this->classAnalyzer = $classAnalyzer;
     }
     public function provideMinPhpVersion() : int
     {

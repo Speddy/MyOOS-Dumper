@@ -30,20 +30,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class IssetOnPropertyObjectToPropertyExistsRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(ReflectionProvider $reflectionProvider, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

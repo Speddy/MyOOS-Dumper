@@ -46,21 +46,21 @@ class POP3
      *
      * @var string
      */
-    const VERSION = '6.8.0';
+    final public const VERSION = '6.8.0';
 
     /**
      * Default POP3 port number.
      *
      * @var int
      */
-    const DEFAULT_PORT = 110;
+    final public const DEFAULT_PORT = 110;
 
     /**
      * Default timeout in seconds.
      *
      * @var int
      */
-    const DEFAULT_TIMEOUT = 30;
+    final public const DEFAULT_TIMEOUT = 30;
 
     /**
      * POP3 class debug output mode.
@@ -133,14 +133,14 @@ class POP3
     /**
      * Line break constant.
      */
-    const LE = "\r\n";
+    final public const LE = "\r\n";
 
     /**
      * Debug level for no output.
      *
      * @var int
      */
-    const DEBUG_OFF = 0;
+    final public const DEBUG_OFF = 0;
 
     /**
      * Debug level to show server -> client messages
@@ -148,14 +148,14 @@ class POP3
      *
      * @var int
      */
-    const DEBUG_SERVER = 1;
+    final public const DEBUG_SERVER = 1;
 
     /**
      * Debug level to show client -> server and server -> client messages.
      *
      * @var int
      */
-    const DEBUG_CLIENT = 2;
+    final public const DEBUG_CLIENT = 2;
 
     /**
      * Simple static wrapper for all-in-one POP before SMTP.
@@ -250,7 +250,7 @@ class POP3
 
         //On Windows this will raise a PHP Warning error if the hostname doesn't exist.
         //Rather than suppress it with @fsockopen, capture it cleanly instead
-        set_error_handler([$this, 'catchWarning']);
+        set_error_handler($this->catchWarning(...));
 
         if (false === $port) {
             $port = static::DEFAULT_PORT;
@@ -356,7 +356,7 @@ class POP3
         //So ignore errors here
         try {
             @fclose($this->pop_conn);
-        } catch (Exception $e) {
+        } catch (Exception) {
             //Do nothing
         }
 
@@ -412,7 +412,7 @@ class POP3
      */
     protected function checkResponse($string)
     {
-        if (strpos($string, '+OK') !== 0) {
+        if (!str_starts_with($string, '+OK')) {
             $this->setError("Server reported an error: $string");
 
             return false;

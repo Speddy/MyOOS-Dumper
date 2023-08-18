@@ -16,7 +16,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------- */
 
-$mod_path = realpath(dirname(__FILE__).'/../').'/';
+$mod_path = realpath(__DIR__.'/../').'/';
 if (!defined('MOD_PATH')) {
     define('MOD_PATH', $mod_path);
 }
@@ -43,7 +43,7 @@ if (!isset($databases['db_selected_index'])) {
     $databases['db_selected_index'] = 0;
 }
 SelectDB($databases['db_selected_index']);
-$config['theme'] = isset($config['theme']) ? $config['theme'] : 'mod';
+$config['theme'] ??= 'mod';
 $config['files']['iconpath'] = './css/'.$config['theme'].'/icons/';
 if (isset($error)) {
     echo $error;

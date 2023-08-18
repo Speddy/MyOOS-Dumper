@@ -11,27 +11,24 @@ use PHPStan\Type\ObjectType;
 use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\StaticTypeMapper\ValueObject\Type\ShortenedObjectType;
 use Rector\TypeDeclaration\PHPStan\ObjectTypeSpecifier;
-final class ShortClassExpander
+final readonly class ShortClassExpander
 {
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\PHPStan\ObjectTypeSpecifier
-     */
-    private $objectTypeSpecifier;
     /**
      * @var string
      * @see https://regex101.com/r/548EJJ/1
      */
     private const CLASS_CONST_REGEX = '#::class#';
-    public function __construct(ReflectionProvider $reflectionProvider, ObjectTypeSpecifier $objectTypeSpecifier)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private ObjectTypeSpecifier $objectTypeSpecifier
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
-        $this->objectTypeSpecifier = $objectTypeSpecifier;
     }
     /**
      * @api

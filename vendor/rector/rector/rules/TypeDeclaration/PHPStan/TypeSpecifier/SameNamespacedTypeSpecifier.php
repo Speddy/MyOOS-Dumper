@@ -9,16 +9,15 @@ use PHPStan\Type\ObjectType;
 use PHPStan\Type\TypeWithClassName;
 use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
 use Rector\TypeDeclaration\Contract\PHPStan\TypeWithClassTypeSpecifierInterface;
-final class SameNamespacedTypeSpecifier implements TypeWithClassTypeSpecifierInterface
+final readonly class SameNamespacedTypeSpecifier implements TypeWithClassTypeSpecifierInterface
 {
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    public function __construct(ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function match(ObjectType $objectType, Scope $scope) : bool
     {

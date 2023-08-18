@@ -25,7 +25,7 @@ function nl2null($string)
     $search = ["\r", "\n"];
     $replace = ['', ''];
 
-    return trim((string) str_replace($search, $replace, $string));
+    return trim((string) str_replace($search, $replace, (string) $string));
 }
 
 //SQL-Strings
@@ -41,7 +41,7 @@ if (isset($_POST['sqlnewupdate'])) {
     if (count($SQL_ARRAY) > 0) {
         array_push($SQL_ARRAY, $_POST['sqlname'.$ind].'|'.$_POST['sqlstring'.$ind]);
     } else {
-        $SQL_ARRAY[0] = htmlspecialchars($_POST['sqlname0'], ENT_COMPAT, 'UTF-8').'|'.$_POST['sqlstring0'];
+        $SQL_ARRAY[0] = htmlspecialchars((string) $_POST['sqlname0'], ENT_COMPAT, 'UTF-8').'|'.$_POST['sqlstring0'];
     }
     WriteSQL();
     echo '<p>'.$lang['L_SQL_BEFEHLSAVED1'].' \''.$_POST['sqlname'.$ind].'\' '.$lang['L_SQL_BEFEHLSAVED2'].'</p>';
@@ -58,7 +58,7 @@ if (count($SQL_ARRAY) > 0) {
     for ($i = 0; $i < count($SQL_ARRAY); ++$i) {
         if (isset($_POST['sqlupdate'.$i])) {
             echo '<tr><td colspan="4"><p class="success">'.$lang['L_SQL_BEFEHLSAVED1']
-            .' \''.htmlspecialchars($_POST['sqlname'.$i], ENT_COMPAT, 'UTF-8').'\' '.$lang['L_SQL_BEFEHLSAVED3'].'</p></td></tr>';
+            .' \''.htmlspecialchars((string) $_POST['sqlname'.$i], ENT_COMPAT, 'UTF-8').'\' '.$lang['L_SQL_BEFEHLSAVED3'].'</p></td></tr>';
             $SQL_ARRAY[$i] = $_POST['sqlname'.$i].'|'.nl2null($_POST['sqlstring'.$i]);
             WriteSQL();
         }
@@ -78,8 +78,8 @@ if (count($SQL_ARRAY) > 0) {
     for ($i = 0; $i < count($SQL_ARRAY); ++$i) {
         $cl = ($i % 2) ? 'dbrow' : 'dbrow1';
         echo '<tr class="'.$cl.'"><td>'.($i + 1).'.</td><td>';
-        echo '<input type="text" class="text" name="sqlname'.$i.'" value="'.htmlspecialchars(SQL_Name($i), ENT_COMPAT, 'UTF-8').'"></td>';
-        echo '<td><textarea rows="4" cols="80" style="width:100%;" name="sqlstring'.$i.'">'.stripslashes(SQL_String($i)).'</textarea></td>';
+        echo '<input type="text" class="text" name="sqlname'.$i.'" value="'.htmlspecialchars((string) SQL_Name($i), ENT_COMPAT, 'UTF-8').'"></td>';
+        echo '<td><textarea rows="4" cols="80" style="width:100%;" name="sqlstring'.$i.'">'.stripslashes((string) SQL_String($i)).'</textarea></td>';
         echo '<td><input class="Formbutton" style="width:80px;" type="submit" name="sqlupdate'.$i.'" value="save"><br>
 			<input class="Formbutton" style="width:80px;" type="submit" name="sqlmove'.$i.'" value="move up"><br>
 			<input class="Formbutton" style="width:80px;"  type="submit" name="sqldelete'.$i.'" value="delete"></td></tr>';
@@ -93,7 +93,7 @@ if (isset($_GET['new'])) {
     echo '<select id="sqllib" name="sqllib" onChange="InsertLib('.$i.');" class="small">';
     echo '<option value=""></option>';
     $og = false;
-    for ($j = 0; $j < count($sqllib); ++$j) {
+    for ($j = 0; $j < (is_countable($sqllib) ? count($sqllib) : 0); ++$j) {
         if ('trenn' == $sqllib[$j]['sql']) {
             if ($og) {
                 echo '</optgroup>';

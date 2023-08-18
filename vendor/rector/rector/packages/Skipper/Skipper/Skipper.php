@@ -16,21 +16,18 @@ use Rector\Skipper\SkipVoter\PathSkipVoter;
 final class Skipper
 {
     /**
-     * @readonly
-     * @var \Rector\Core\ProcessAnalyzer\RectifiedAnalyzer
-     */
-    private $rectifiedAnalyzer;
-    /**
      * @var string
      */
     private const FILE_ELEMENT = 'file_elements';
     /**
      * @var SkipVoterInterface[]
      */
-    private $skipVoters = [];
-    public function __construct(ClassSkipVoter $classSkipVoter, PathSkipVoter $pathSkipVoter, RectifiedAnalyzer $rectifiedAnalyzer)
+    private array $skipVoters = [];
+    public function __construct(ClassSkipVoter $classSkipVoter, PathSkipVoter $pathSkipVoter, /**
+     * @readonly
+     */
+    private readonly RectifiedAnalyzer $rectifiedAnalyzer)
     {
-        $this->rectifiedAnalyzer = $rectifiedAnalyzer;
         $this->skipVoters = [$classSkipVoter, $pathSkipVoter];
     }
     /**

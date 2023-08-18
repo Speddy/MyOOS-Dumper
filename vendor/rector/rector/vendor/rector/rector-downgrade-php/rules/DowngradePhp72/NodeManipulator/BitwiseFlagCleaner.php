@@ -9,16 +9,15 @@ use PhpParser\Node\Expr\BinaryOp\BitwiseOr;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\FuncCall;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class BitwiseFlagCleaner
+final readonly class BitwiseFlagCleaner
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    public function __construct(NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function cleanFuncCall(FuncCall $funcCall, BitwiseOr $bitwiseOr, string $flag, Expr $expr = null) : void
     {

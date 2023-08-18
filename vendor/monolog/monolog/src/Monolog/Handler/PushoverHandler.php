@@ -27,32 +27,22 @@ use Psr\Log\LogLevel;
  */
 class PushoverHandler extends SocketHandler
 {
-    /** @var string */
-    private $token;
     /** @var array<int|string> */
-    private $users;
-    /** @var string */
-    private $title;
+    private readonly array $users;
+    private readonly string $title;
     /** @var string|int|null */
     private $user = null;
-    /** @var int */
-    private $retry;
-    /** @var int */
-    private $expire;
 
-    /** @var int */
-    private $highPriorityLevel;
-    /** @var int */
-    private $emergencyLevel;
-    /** @var bool */
-    private $useFormattedMessage = false;
+    private int $highPriorityLevel;
+    private int $emergencyLevel;
+    private bool $useFormattedMessage = false;
 
     /**
      * All parameters that can be sent to Pushover
      * @see https://pushover.net/api
      * @var array<string, bool>
      */
-    private $parameterNames = [
+    private array $parameterNames = [
         'token' => true,
         'user' => true,
         'message' => true,
@@ -73,7 +63,7 @@ class PushoverHandler extends SocketHandler
      * @see https://pushover.net/api#sounds
      * @var string[]
      */
-    private $sounds = [
+    private array $sounds = [
         'pushover', 'bike', 'bugle', 'cashregister', 'classical', 'cosmic', 'falling', 'gamelan', 'incoming',
         'intermission', 'magic', 'mechanical', 'pianobar', 'siren', 'spacealarm', 'tugboat', 'alien', 'climb',
         'persistent', 'echo', 'updown', 'none',
@@ -99,7 +89,7 @@ class PushoverHandler extends SocketHandler
      * @phpstan-param Level|LevelName|LogLevel::* $emergencyLevel
      */
     public function __construct(
-        string $token,
+        private readonly string $token,
         $users,
         ?string $title = null,
         $level = Logger::CRITICAL,
@@ -107,8 +97,8 @@ class PushoverHandler extends SocketHandler
         bool $useSSL = true,
         $highPriorityLevel = Logger::CRITICAL,
         $emergencyLevel = Logger::EMERGENCY,
-        int $retry = 30,
-        int $expire = 25200,
+        private int $retry = 30,
+        private int $expire = 25200,
         bool $persistent = false,
         float $timeout = 0.0,
         float $writingTimeout = 10.0,
@@ -126,14 +116,10 @@ class PushoverHandler extends SocketHandler
             $connectionTimeout,
             $chunkSize
         );
-
-        $this->token = $token;
         $this->users = (array) $users;
         $this->title = $title ?: (string) gethostname();
         $this->highPriorityLevel = Logger::toMonologLevel($highPriorityLevel);
         $this->emergencyLevel = Logger::toMonologLevel($emergencyLevel);
-        $this->retry = $retry;
-        $this->expire = $expire;
     }
 
     protected function generateDataStream(array $record): string

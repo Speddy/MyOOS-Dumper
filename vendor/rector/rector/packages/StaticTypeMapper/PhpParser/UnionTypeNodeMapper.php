@@ -14,40 +14,31 @@ use Rector\StaticTypeMapper\Contract\PhpParser\PhpParserNodeMapperInterface;
 /**
  * @implements PhpParserNodeMapperInterface<UnionType>
  */
-final class UnionTypeNodeMapper implements PhpParserNodeMapperInterface
+final readonly class UnionTypeNodeMapper implements PhpParserNodeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
-     */
-    private $typeFactory;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\PhpParser\FullyQualifiedNodeMapper
-     */
-    private $fullyQualifiedNodeMapper;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\PhpParser\NameNodeMapper
-     */
-    private $nameNodeMapper;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\PhpParser\IdentifierNodeMapper
-     */
-    private $identifierNodeMapper;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\PhpParser\IntersectionTypeNodeMapper
-     */
-    private $intersectionTypeNodeMapper;
-    public function __construct(TypeFactory $typeFactory, \Rector\StaticTypeMapper\PhpParser\FullyQualifiedNodeMapper $fullyQualifiedNodeMapper, \Rector\StaticTypeMapper\PhpParser\NameNodeMapper $nameNodeMapper, \Rector\StaticTypeMapper\PhpParser\IdentifierNodeMapper $identifierNodeMapper, \Rector\StaticTypeMapper\PhpParser\IntersectionTypeNodeMapper $intersectionTypeNodeMapper)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private TypeFactory $typeFactory,
+        /**
+         * @readonly
+         */
+        private \Rector\StaticTypeMapper\PhpParser\FullyQualifiedNodeMapper $fullyQualifiedNodeMapper,
+        /**
+         * @readonly
+         */
+        private \Rector\StaticTypeMapper\PhpParser\NameNodeMapper $nameNodeMapper,
+        /**
+         * @readonly
+         */
+        private \Rector\StaticTypeMapper\PhpParser\IdentifierNodeMapper $identifierNodeMapper,
+        /**
+         * @readonly
+         */
+        private \Rector\StaticTypeMapper\PhpParser\IntersectionTypeNodeMapper $intersectionTypeNodeMapper
+    )
     {
-        $this->typeFactory = $typeFactory;
-        $this->fullyQualifiedNodeMapper = $fullyQualifiedNodeMapper;
-        $this->nameNodeMapper = $nameNodeMapper;
-        $this->identifierNodeMapper = $identifierNodeMapper;
-        $this->intersectionTypeNodeMapper = $intersectionTypeNodeMapper;
     }
     public function getNodeType() : string
     {

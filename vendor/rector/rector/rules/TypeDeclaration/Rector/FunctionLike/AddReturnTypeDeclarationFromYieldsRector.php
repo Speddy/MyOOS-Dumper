@@ -34,20 +34,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class AddReturnTypeDeclarationFromYieldsRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
-     */
-    private $typeFactory;
-    /**
-     * @readonly
-     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
-     */
-    private $simpleCallableNodeTraverser;
-    public function __construct(TypeFactory $typeFactory, SimpleCallableNodeTraverser $simpleCallableNodeTraverser)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly TypeFactory $typeFactory,
+        /**
+         * @readonly
+         */
+        private readonly SimpleCallableNodeTraverser $simpleCallableNodeTraverser
+    )
     {
-        $this->typeFactory = $typeFactory;
-        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
     }
     public function getRuleDefinition() : RuleDefinition
     {

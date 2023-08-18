@@ -9,16 +9,15 @@ use PHPStan\Type\Generic\GenericClassStringType;
 use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 use PHPStan\Type\TypeTraverser;
-final class GenericClassStringTypeCorrector
+final readonly class GenericClassStringTypeCorrector
 {
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    public function __construct(ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function correct(Type $mainType) : Type
     {

@@ -13,11 +13,6 @@ use Rector\Php70\Exception\InvalidEregException;
 final class EregToPcreTransformer
 {
     /**
-     * @readonly
-     * @var string
-     */
-    private $pcreDelimiter = '#';
-    /**
      * @var array<string, string>
      */
     private const CHARACTER_CLASS_MAP = [
@@ -54,22 +49,26 @@ final class EregToPcreTransformer
     /**
      * @var array<string, string>
      */
-    private $icache = [];
+    private array $icache = [];
     /**
      * @var array<string, string>
      */
-    private $cache = [];
+    private array $cache = [];
     /**
      * Change this via services configuratoin in rector.php if you need it
      * Single type is chosen to prevent every regular with different delimiter.
      */
-    public function __construct(string $pcreDelimiter = '#')
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly string $pcreDelimiter = '#'
+    )
     {
-        $this->pcreDelimiter = $pcreDelimiter;
     }
     public function transform(string $ereg, bool $isCaseInsensitive) : string
     {
-        if (\strpos($ereg, $this->pcreDelimiter) === \false) {
+        if (!str_contains($ereg, $this->pcreDelimiter)) {
             return $this->ere2pcre($ereg, $isCaseInsensitive);
         }
         // fallback
@@ -133,7 +132,7 @@ final class EregToPcreTransformer
             } elseif ($char === '*' || $char === '+' || $char === '?') {
                 throw new InvalidEregException('unescaped metacharacter "' . $char . '"');
             } elseif ($char === '{') {
-                if ($i + 1 < $l && \strpos('0123456789', $content[$i + 1]) !== \false) {
+                if ($i + 1 < $l && str_contains('0123456789', $content[$i + 1])) {
                     $r[$rr] .= '\\{';
                 } else {
                     throw new InvalidEregException('unescaped metacharacter "' . $char . '"');
@@ -208,7 +207,7 @@ final class EregToPcreTransformer
     private function processSquareBracket(string $s, int $i, int $l, string $cls, bool $start) : array
     {
         do {
-            if ($s[$i] === '[' && $i + 1 < $l && \strpos('.=:', $s[$i + 1]) !== \false) {
+            if ($s[$i] === '[' && $i + 1 < $l && str_contains('.=:', $s[$i + 1])) {
                 /** @var string $cls */
                 [$cls, $i] = $this->processCharacterClass($s, $i, $cls);
             } else {
@@ -241,7 +240,7 @@ final class EregToPcreTransformer
         if ($content === "\x00") {
             throw new InvalidEregException('a literal null byte in the regex');
         }
-        if (\strpos('\\^$.[]|()?*+{}-/', $content) !== \false) {
+        if (str_contains('\\^$.[]|()?*+{}-/', $content)) {
             return '\\' . $content;
         }
         return $content;

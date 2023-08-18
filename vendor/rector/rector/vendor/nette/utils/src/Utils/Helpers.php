@@ -38,10 +38,9 @@ class Helpers
     }
     /**
      * Converts false to null, does not change other values.
-     * @param  mixed  $value
      * @return mixed
      */
-    public static function falseToNull($value)
+    public static function falseToNull(mixed $value)
     {
         return $value === \false ? null : $value;
     }

@@ -18,29 +18,24 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
 final class ClassAnnotationMatcher
 {
     /**
-     * @readonly
-     * @var \Rector\CodingStyle\NodeAnalyzer\UseImportNameMatcher
-     */
-    private $useImportNameMatcher;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\UseImportsResolver
-     */
-    private $useImportsResolver;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
      * @var array<string, string>
      */
-    private $fullyQualifiedNameByHash = [];
-    public function __construct(UseImportNameMatcher $useImportNameMatcher, UseImportsResolver $useImportsResolver, ReflectionProvider $reflectionProvider)
+    private array $fullyQualifiedNameByHash = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly UseImportNameMatcher $useImportNameMatcher,
+        /**
+         * @readonly
+         */
+        private readonly UseImportsResolver $useImportsResolver,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider
+    )
     {
-        $this->useImportNameMatcher = $useImportNameMatcher;
-        $this->useImportsResolver = $useImportsResolver;
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function resolveTagFullyQualifiedName(string $tag, Node $node) : string
     {
@@ -70,7 +65,7 @@ final class ClassAnnotationMatcher
                 if ($this->reflectionProvider->hasClass($namespacedTag)) {
                     return $namespacedTag;
                 }
-                if (\strpos($tag, '\\') === \false) {
+                if (!str_contains($tag, '\\')) {
                     return $this->resolveAsAliased($uses, $tag, $returnNullOnUnknownClass);
                 }
                 if ($this->isPreslashedExistingClass($tag)) {
@@ -112,7 +107,7 @@ final class ClassAnnotationMatcher
     }
     private function isPreslashedExistingClass(string $tag) : bool
     {
-        if (\strncmp($tag, '\\', \strlen('\\')) !== 0) {
+        if (!str_starts_with($tag, '\\')) {
             return \false;
         }
         return $this->reflectionProvider->hasClass($tag);

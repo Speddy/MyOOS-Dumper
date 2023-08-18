@@ -27,10 +27,7 @@ use Psr\Log\LogLevel;
  */
 class NullHandler extends Handler
 {
-    /**
-     * @var int
-     */
-    private $level;
+    private readonly int $level;
 
     /**
      * @param string|int $level The minimum logging level at which this handler will be triggered

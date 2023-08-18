@@ -3,7 +3,7 @@
 declare (strict_types=1);
 namespace PhpParser;
 
-class Comment implements \JsonSerializable
+class Comment implements \JsonSerializable, \Stringable
 {
     protected $text;
     protected $startLine;
@@ -133,7 +133,7 @@ class Comment implements \JsonSerializable
      */
     public function __toString() : string
     {
-        return $this->text;
+        return (string) $this->text;
     }
     /**
      * Gets the reformatted comment text.
@@ -147,7 +147,7 @@ class Comment implements \JsonSerializable
      */
     public function getReformattedText()
     {
-        $text = \trim($this->text);
+        $text = \trim((string) $this->text);
         $newlinePos = \strpos($text, "\n");
         if (\false === $newlinePos) {
             // Single line comments don't need further processing
@@ -161,7 +161,7 @@ class Comment implements \JsonSerializable
             //      */
             //
             // is handled by replacing the whitespace sequences before the * by a single space
-            return \preg_replace('(^\\s+\\*)m', ' *', $this->text);
+            return \preg_replace('(^\\s+\\*)m', ' *', (string) $this->text);
         } elseif (\preg_match('(^/\\*\\*?\\s*[\\r\\n])', $text) && \preg_match('(\\n(\\s*)\\*/$)', $text, $matches)) {
             // Multi line comment of the type
             //

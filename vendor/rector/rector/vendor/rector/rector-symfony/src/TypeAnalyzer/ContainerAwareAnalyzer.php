@@ -9,17 +9,14 @@ use Rector\NodeTypeResolver\NodeTypeResolver;
 final class ContainerAwareAnalyzer
 {
     /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
      * @var ObjectType[]
      */
-    private $getMethodAwareObjectTypes = [];
-    public function __construct(NodeTypeResolver $nodeTypeResolver)
+    private array $getMethodAwareObjectTypes = [];
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly NodeTypeResolver $nodeTypeResolver)
     {
-        $this->nodeTypeResolver = $nodeTypeResolver;
         $this->getMethodAwareObjectTypes = [new ObjectType('Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController'), new ObjectType('Symfony\\Bundle\\FrameworkBundle\\Controller\\Controller'), new ObjectType('Symfony\\Bundle\\FrameworkBundle\\Controller\\ControllerTrait')];
     }
     public function isGetMethodAwareType(Node $node) : bool

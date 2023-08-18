@@ -16,20 +16,17 @@ use Rector\BetterPhpDocParser\ValueObject\Type\BracketsAwareUnionTypeNode;
 use Rector\PhpDocParser\PhpDocParser\PhpDocNodeVisitor\AbstractPhpDocNodeVisitor;
 final class UnionTypeNodePhpDocNodeVisitor extends AbstractPhpDocNodeVisitor implements BasePhpDocNodeVisitorInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\DataProvider\CurrentTokenIteratorProvider
-     */
-    private $currentTokenIteratorProvider;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\Attributes\AttributeMirrorer
-     */
-    private $attributeMirrorer;
-    public function __construct(CurrentTokenIteratorProvider $currentTokenIteratorProvider, AttributeMirrorer $attributeMirrorer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly CurrentTokenIteratorProvider $currentTokenIteratorProvider,
+        /**
+         * @readonly
+         */
+        private readonly AttributeMirrorer $attributeMirrorer
+    )
     {
-        $this->currentTokenIteratorProvider = $currentTokenIteratorProvider;
-        $this->attributeMirrorer = $attributeMirrorer;
     }
     public function enterNode(Node $node) : ?Node
     {

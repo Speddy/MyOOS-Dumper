@@ -74,11 +74,11 @@ use InvalidArgumentException;
  */
 final class ThroughStream extends EventEmitter implements DuplexStreamInterface
 {
-    private $readable = \true;
-    private $writable = \true;
-    private $closed = \false;
-    private $paused = \false;
-    private $drain = \false;
+    private bool $readable = \true;
+    private bool $writable = \true;
+    private bool $closed = \false;
+    private bool $paused = \false;
+    private bool $drain = \false;
     private $callback;
     public function __construct($callback = null)
     {
@@ -99,7 +99,7 @@ final class ThroughStream extends EventEmitter implements DuplexStreamInterface
         }
         $this->paused = \false;
     }
-    public function pipe(WritableStreamInterface $dest, array $options = array())
+    public function pipe(WritableStreamInterface $dest, array $options = [])
     {
         return Util::pipe($this, $dest, $options);
     }
@@ -120,12 +120,12 @@ final class ThroughStream extends EventEmitter implements DuplexStreamInterface
             try {
                 $data = \call_user_func($this->callback, $data);
             } catch (\Exception $e) {
-                $this->emit('error', array($e));
+                $this->emit('error', [$e]);
                 $this->close();
                 return \false;
             }
         }
-        $this->emit('data', array($data));
+        $this->emit('data', [$data]);
         if ($this->paused) {
             $this->drain = \true;
             return \false;

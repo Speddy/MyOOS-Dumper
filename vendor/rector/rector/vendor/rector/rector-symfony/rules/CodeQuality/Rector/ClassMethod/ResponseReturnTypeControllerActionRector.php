@@ -23,20 +23,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ResponseReturnTypeControllerActionRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\TypeAnalyzer\ControllerAnalyzer
-     */
-    private $controllerAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\NodeAnalyzer\AttrinationFinder
-     */
-    private $attrinationFinder;
-    public function __construct(ControllerAnalyzer $controllerAnalyzer, AttrinationFinder $attrinationFinder)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ControllerAnalyzer $controllerAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly AttrinationFinder $attrinationFinder
+    )
     {
-        $this->controllerAnalyzer = $controllerAnalyzer;
-        $this->attrinationFinder = $attrinationFinder;
     }
     public function getRuleDefinition() : RuleDefinition
     {

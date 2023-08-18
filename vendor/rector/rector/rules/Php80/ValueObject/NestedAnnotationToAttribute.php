@@ -8,26 +8,20 @@ use Rector\Php80\Contract\ValueObject\AnnotationToAttributeInterface;
 final class NestedAnnotationToAttribute implements AnnotationToAttributeInterface
 {
     /**
-     * @readonly
-     * @var string
-     */
-    private $tag;
-    /**
-     * @readonly
-     * @var bool
-     */
-    private $removeOriginal = \false;
-    /**
      * @var AnnotationPropertyToAttributeClass[]
      */
-    private $annotationPropertiesToAttributeClasses = [];
+    private array $annotationPropertiesToAttributeClasses = [];
     /**
      * @param array<string, string>|string[]|AnnotationPropertyToAttributeClass[] $annotationPropertiesToAttributeClasses
      */
-    public function __construct(string $tag, array $annotationPropertiesToAttributeClasses, bool $removeOriginal = \false)
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly string $tag, array $annotationPropertiesToAttributeClasses, /**
+     * @readonly
+     */
+    private readonly bool $removeOriginal = \false)
     {
-        $this->tag = $tag;
-        $this->removeOriginal = $removeOriginal;
         RectorAssert::className($tag);
         // back compatibility for raw scalar values
         foreach ($annotationPropertiesToAttributeClasses as $annotationProperty => $attributeClass) {

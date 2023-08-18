@@ -39,89 +39,74 @@ use RectorPrefix202308\Symfony\Component\Finder\Iterator\SortableIterator;
  */
 class Finder implements \IteratorAggregate, \Countable
 {
-    public const IGNORE_VCS_FILES = 1;
-    public const IGNORE_DOT_FILES = 2;
-    public const IGNORE_VCS_IGNORED_FILES = 4;
-    /**
-     * @var int
-     */
-    private $mode = 0;
+    final public const IGNORE_VCS_FILES = 1;
+    final public const IGNORE_DOT_FILES = 2;
+    final public const IGNORE_VCS_IGNORED_FILES = 4;
+    private int $mode = 0;
     /**
      * @var mixed[]
      */
-    private $names = [];
+    private array $names = [];
     /**
      * @var mixed[]
      */
-    private $notNames = [];
+    private array $notNames = [];
     /**
      * @var mixed[]
      */
-    private $exclude = [];
+    private array $exclude = [];
     /**
      * @var mixed[]
      */
-    private $filters = [];
+    private array $filters = [];
     /**
      * @var mixed[]
      */
-    private $depths = [];
+    private array $depths = [];
     /**
      * @var mixed[]
      */
-    private $sizes = [];
-    /**
-     * @var bool
-     */
-    private $followLinks = \false;
-    /**
-     * @var bool
-     */
-    private $reverseSorting = \false;
+    private array $sizes = [];
+    private bool $followLinks = \false;
+    private bool $reverseSorting = \false;
     /**
      * @var \Closure|int|false
      */
     private $sort = \false;
-    /**
-     * @var int
-     */
-    private $ignore = 0;
+    private int $ignore = 0;
     /**
      * @var mixed[]
      */
-    private $dirs = [];
+    private array $dirs = [];
     /**
      * @var mixed[]
      */
-    private $dates = [];
+    private array $dates = [];
     /**
      * @var mixed[]
      */
-    private $iterators = [];
+    private array $iterators = [];
     /**
      * @var mixed[]
      */
-    private $contains = [];
+    private array $contains = [];
     /**
      * @var mixed[]
      */
-    private $notContains = [];
+    private array $notContains = [];
     /**
      * @var mixed[]
      */
-    private $paths = [];
+    private array $paths = [];
     /**
      * @var mixed[]
      */
-    private $notPaths = [];
-    /**
-     * @var bool
-     */
-    private $ignoreUnreadableDirs = \false;
+    private array $notPaths = [];
+    private bool $ignoreUnreadableDirs = \false;
     /**
      * @var mixed[]
      */
-    private static $vcsPatterns = ['.svn', '_svn', 'CVS', '_darcs', '.arch-params', '.monotone', '.bzr', '.git', '.hg'];
+    private static array $vcsPatterns = ['.svn', '_svn', 'CVS', '_darcs', '.arch-params', '.monotone', '.bzr', '.git', '.hg'];
     public function __construct()
     {
         $this->ignore = static::IGNORE_VCS_FILES | static::IGNORE_DOT_FILES;
@@ -630,7 +615,7 @@ class Finder implements \IteratorAggregate, \Countable
                 $resolvedDirs[] = [$this->normalizeDir($dir)];
             } elseif ($glob = \glob($dir, (\defined('GLOB_BRACE') ? \GLOB_BRACE : 0) | \GLOB_ONLYDIR | \GLOB_NOSORT)) {
                 \sort($glob);
-                $resolvedDirs[] = \array_map(\Closure::fromCallable([$this, 'normalizeDir']), $glob);
+                $resolvedDirs[] = \array_map(\Closure::fromCallable($this->normalizeDir(...)), $glob);
             } else {
                 throw new DirectoryNotFoundException(\sprintf('The "%s" directory does not exist.', $dir));
             }
@@ -661,9 +646,7 @@ class Finder implements \IteratorAggregate, \Countable
         }
         $iterator = new \AppendIterator();
         foreach ($this->dirs as $dir) {
-            $iterator->append(new \IteratorIterator(new LazyIterator(function () use($dir) {
-                return $this->searchInDirectory($dir);
-            })));
+            $iterator->append(new \IteratorIterator(new LazyIterator(fn() => $this->searchInDirectory($dir))));
         }
         foreach ($this->iterators as $it) {
             $iterator->append($it);

@@ -4,28 +4,23 @@ declare (strict_types=1);
 namespace Rector\Symfony\ValueObject\Tag;
 
 use Rector\Symfony\Contract\Tag\TagInterface;
-final class EventListenerTag implements TagInterface
+final readonly class EventListenerTag implements TagInterface
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $event;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $method;
-    /**
-     * @readonly
-     * @var int
-     */
-    private $priority;
-    public function __construct(string $event, string $method, int $priority)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $event,
+        /**
+         * @readonly
+         */
+        private string $method,
+        /**
+         * @readonly
+         */
+        private int $priority
+    )
     {
-        $this->event = $event;
-        $this->method = $method;
-        $this->priority = $priority;
     }
     public function getName() : string
     {

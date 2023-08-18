@@ -10,18 +10,12 @@ final class WritableResourceStream extends EventEmitter implements WritableStrea
     private $stream;
     /** @var LoopInterface */
     private $loop;
-    /**
-     * @var int
-     */
-    private $softLimit;
-    /**
-     * @var int
-     */
-    private $writeChunkSize;
-    private $listening = \false;
-    private $writable = \true;
-    private $closed = \false;
-    private $data = '';
+    private readonly int $softLimit;
+    private readonly int $writeChunkSize;
+    private bool $listening = \false;
+    private bool $writable = \true;
+    private bool $closed = \false;
+    private string $data = '';
     public function __construct($stream, LoopInterface $loop = null, $writeBufferSoftLimit = null, $writeChunkSize = null)
     {
         if (!\is_resource($stream) || \get_resource_type($stream) !== "stream") {
@@ -54,7 +48,7 @@ final class WritableResourceStream extends EventEmitter implements WritableStrea
         $this->data .= $data;
         if (!$this->listening && $this->data !== '') {
             $this->listening = \true;
-            $this->loop->addWriteStream($this->stream, array($this, 'handleWrite'));
+            $this->loop->addWriteStream($this->stream, $this->handleWrite(...));
         }
         return !isset($this->data[$this->softLimit - 1]);
     }
@@ -96,9 +90,9 @@ final class WritableResourceStream extends EventEmitter implements WritableStrea
             $error = $errstr;
         });
         if ($this->writeChunkSize === -1) {
-            $sent = \fwrite($this->stream, $this->data);
+            $sent = \fwrite($this->stream, (string) $this->data);
         } else {
-            $sent = \fwrite($this->stream, $this->data, $this->writeChunkSize);
+            $sent = \fwrite($this->stream, (string) $this->data, $this->writeChunkSize);
         }
         \restore_error_handler();
         // Only report errors if *nothing* could be sent and an error has been raised.
@@ -110,12 +104,12 @@ final class WritableResourceStream extends EventEmitter implements WritableStrea
         // Should this turn out to be a permanent error later, it will eventually
         // send *nothing* and we can detect this.
         if (($sent === 0 || $sent === \false) && $error !== null) {
-            $this->emit('error', array(new \RuntimeException('Unable to write to stream: ' . $error)));
+            $this->emit('error', [new \RuntimeException('Unable to write to stream: ' . $error)]);
             $this->close();
             return;
         }
         $exceeded = isset($this->data[$this->softLimit - 1]);
-        $this->data = (string) \substr($this->data, $sent);
+        $this->data = (string) \substr((string) $this->data, $sent);
         // buffer has been above limit and is now below limit
         if ($exceeded && !isset($this->data[$this->softLimit - 1])) {
             $this->emit('drain');

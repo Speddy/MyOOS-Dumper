@@ -41,11 +41,6 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
 final class BetterStandardPrinter extends Standard
 {
     /**
-     * @readonly
-     * @var \Rector\Comments\NodeDocBlock\DocBlockUpdater
-     */
-    private $docBlockUpdater;
-    /**
      * @var string
      * @see https://regex101.com/r/jUFizd/1
      */
@@ -71,9 +66,11 @@ final class BetterStandardPrinter extends Standard
      * @var string
      */
     private const REPLACE_COLON_WITH_SPACE_REGEX = '#(^.*function .*\\(.*\\)) : #';
-    public function __construct(DocBlockUpdater $docBlockUpdater)
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly DocBlockUpdater $docBlockUpdater)
     {
-        $this->docBlockUpdater = $docBlockUpdater;
         parent::__construct(['shortArraySyntax' => \true]);
         // print return type double colon right after the bracket "function(): string"
         $this->initializeInsertionMap();

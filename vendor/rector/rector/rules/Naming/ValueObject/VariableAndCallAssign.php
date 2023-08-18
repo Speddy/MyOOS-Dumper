@@ -14,41 +14,26 @@ use PhpParser\Node\Stmt\Function_;
 final class VariableAndCallAssign
 {
     /**
-     * @readonly
-     * @var \PhpParser\Node\Expr\Variable
-     */
-    private $variable;
-    /**
-     * @readonly
-     * @var \PhpParser\Node\Expr\FuncCall|\PhpParser\Node\Expr\StaticCall|\PhpParser\Node\Expr\MethodCall
-     */
-    private $expr;
-    /**
-     * @readonly
-     * @var \PhpParser\Node\Expr\Assign
-     */
-    private $assign;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $variableName;
-    /**
-     * @readonly
-     * @var \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Stmt\Function_|\PhpParser\Node\Expr\Closure
-     */
-    private $functionLike;
-    /**
      * @param \PhpParser\Node\Expr\FuncCall|\PhpParser\Node\Expr\StaticCall|\PhpParser\Node\Expr\MethodCall $expr
      * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Stmt\Function_|\PhpParser\Node\Expr\Closure $functionLike
      */
-    public function __construct(Variable $variable, $expr, Assign $assign, string $variableName, $functionLike)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly Variable $variable,
+        private $expr,
+        /**
+         * @readonly
+         */
+        private readonly Assign $assign,
+        /**
+         * @readonly
+         */
+        private readonly string $variableName,
+        private $functionLike
+    )
     {
-        $this->variable = $variable;
-        $this->expr = $expr;
-        $this->assign = $assign;
-        $this->variableName = $variableName;
-        $this->functionLike = $functionLike;
     }
     public function getVariable() : Variable
     {

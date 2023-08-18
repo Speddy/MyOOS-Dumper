@@ -5,34 +5,27 @@ namespace Rector\Core\ValueObject\Error;
 
 use Rector\Parallel\ValueObject\Name;
 use RectorPrefix202308\Symplify\EasyParallel\Contract\SerializableInterface;
-final class SystemError implements SerializableInterface
+final readonly class SystemError implements SerializableInterface
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $message;
-    /**
-     * @readonly
-     * @var string|null
-     */
-    private $relativeFilePath = null;
-    /**
-     * @readonly
-     * @var int|null
-     */
-    private $line = null;
-    /**
-     * @readonly
-     * @var string|null
-     */
-    private $rectorClass = null;
-    public function __construct(string $message, ?string $relativeFilePath = null, ?int $line = null, ?string $rectorClass = null)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $message,
+        /**
+         * @readonly
+         */
+        private ?string $relativeFilePath = null,
+        /**
+         * @readonly
+         */
+        private ?int $line = null,
+        /**
+         * @readonly
+         */
+        private ?string $rectorClass = null
+    )
     {
-        $this->message = $message;
-        $this->relativeFilePath = $relativeFilePath;
-        $this->line = $line;
-        $this->rectorClass = $rectorClass;
     }
     public function getMessage() : string
     {

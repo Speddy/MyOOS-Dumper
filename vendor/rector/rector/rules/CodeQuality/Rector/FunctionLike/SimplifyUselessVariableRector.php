@@ -25,26 +25,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class SimplifyUselessVariableRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\AssignAndBinaryMap
-     */
-    private $assignAndBinaryMap;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\VariableAnalyzer
-     */
-    private $variableAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\CallAnalyzer
-     */
-    private $callAnalyzer;
-    public function __construct(AssignAndBinaryMap $assignAndBinaryMap, VariableAnalyzer $variableAnalyzer, CallAnalyzer $callAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly AssignAndBinaryMap $assignAndBinaryMap,
+        /**
+         * @readonly
+         */
+        private readonly VariableAnalyzer $variableAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly CallAnalyzer $callAnalyzer
+    )
     {
-        $this->assignAndBinaryMap = $assignAndBinaryMap;
-        $this->variableAnalyzer = $variableAnalyzer;
-        $this->callAnalyzer = $callAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

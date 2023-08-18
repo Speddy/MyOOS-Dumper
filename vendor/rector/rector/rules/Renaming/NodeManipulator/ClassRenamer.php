@@ -31,69 +31,52 @@ use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
 final class ClassRenamer
 {
     /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
-     */
-    private $simpleCallableNodeTraverser;
-    /**
-     * @readonly
-     * @var \Rector\CodingStyle\Naming\ClassNaming
-     */
-    private $classNaming;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocClassRenamer
-     */
-    private $phpDocClassRenamer;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PhpDoc\NodeAnalyzer\DocBlockClassRenamer
-     */
-    private $docBlockClassRenamer;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\Util\FileHasher
-     */
-    private $fileHasher;
-    /**
      * @var string[]
      */
-    private $alreadyProcessedClasses = [];
+    private array $alreadyProcessedClasses = [];
     /**
      * @var array<string, OldToNewType[]>
      */
-    private $oldToNewTypesByCacheKey = [];
-    public function __construct(BetterNodeFinder $betterNodeFinder, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, ClassNaming $classNaming, NodeNameResolver $nodeNameResolver, PhpDocClassRenamer $phpDocClassRenamer, PhpDocInfoFactory $phpDocInfoFactory, DocBlockClassRenamer $docBlockClassRenamer, ReflectionProvider $reflectionProvider, FileHasher $fileHasher)
+    private array $oldToNewTypesByCacheKey = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly BetterNodeFinder $betterNodeFinder,
+        /**
+         * @readonly
+         */
+        private readonly SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
+        /**
+         * @readonly
+         */
+        private readonly ClassNaming $classNaming,
+        /**
+         * @readonly
+         */
+        private readonly NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocClassRenamer $phpDocClassRenamer,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocInfoFactory $phpDocInfoFactory,
+        /**
+         * @readonly
+         */
+        private readonly DocBlockClassRenamer $docBlockClassRenamer,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private readonly FileHasher $fileHasher
+    )
     {
-        $this->betterNodeFinder = $betterNodeFinder;
-        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
-        $this->classNaming = $classNaming;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->phpDocClassRenamer = $phpDocClassRenamer;
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
-        $this->docBlockClassRenamer = $docBlockClassRenamer;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->fileHasher = $fileHasher;
     }
     /**
      * @param array<string, string> $oldToNewClasses

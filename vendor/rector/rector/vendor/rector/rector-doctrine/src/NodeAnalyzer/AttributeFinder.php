@@ -16,16 +16,15 @@ use Rector\NodeNameResolver\NodeNameResolver;
 /**
  * @api
  */
-final class AttributeFinder
+final readonly class AttributeFinder
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    public function __construct(NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @param class-string $attributeClass

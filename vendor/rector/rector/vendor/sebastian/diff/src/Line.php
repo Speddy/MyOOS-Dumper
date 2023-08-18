@@ -11,23 +11,13 @@ declare (strict_types=1);
  */
 namespace RectorPrefix202308\SebastianBergmann\Diff;
 
-final class Line
+final readonly class Line
 {
     public const ADDED = 1;
     public const REMOVED = 2;
     public const UNCHANGED = 3;
-    /**
-     * @var int
-     */
-    private $type;
-    /**
-     * @var string
-     */
-    private $content;
-    public function __construct(int $type = self::UNCHANGED, string $content = '')
+    public function __construct(private int $type = self::UNCHANGED, private string $content = '')
     {
-        $this->type = $type;
-        $this->content = $content;
     }
     public function getContent() : string
     {

@@ -42,40 +42,40 @@ if (isset($_GET['filename'])) {
         $restore['max_zeit'] = 20;
     }
     $restore['startzeit'] = time();
-    $restore['xtime'] = (isset($_POST['xtime'])) ? $_POST['xtime'] : time();
+    $restore['xtime'] = $_POST['xtime'] ?? time();
     $restore['fileEOF'] = false; // Ende des Files erreicht?
     $restore['actual_table'] = (!empty($_POST['actual_table'])) ? $_POST['actual_table'] : 'unbekannt';
     $restore['offset'] = (!empty($_POST['offset'])) ? $_POST['offset'] : 0;
     $restore['aufruf'] = (!empty($_POST['aufruf'])) ? $_POST['aufruf'] : 0;
     $restore['table_ready'] = (!empty($_POST['table_ready'])) ? $_POST['table_ready'] : 0;
-    $restore['part'] = (isset($_POST['part'])) ? $_POST['part'] : 0;
-    $restore['do_it'] = (isset($_POST['do_it'])) ? $_POST['do_it'] : false;
-    $restore['errors'] = (isset($_POST['err'])) ? $_POST['err'] : 0;
-    $restore['notices'] = (isset($_POST['notices'])) ? $_POST['notices'] : 0;
-    $restore['anzahl_eintraege'] = (isset($_POST['anzahl_eintraege'])) ? $_POST['anzahl_eintraege'] : 0;
-    $restore['anzahl_tabellen'] = (isset($_POST['anzahl_tabellen'])) ? $_POST['anzahl_tabellen'] : 0;
-    $restore['filename'] = (isset($_POST['filename'])) ? urldecode($_POST['filename']) : '';
+    $restore['part'] = $_POST['part'] ?? 0;
+    $restore['do_it'] = $_POST['do_it'] ?? false;
+    $restore['errors'] = $_POST['err'] ?? 0;
+    $restore['notices'] = $_POST['notices'] ?? 0;
+    $restore['anzahl_eintraege'] = $_POST['anzahl_eintraege'] ?? 0;
+    $restore['anzahl_tabellen'] = $_POST['anzahl_tabellen'] ?? 0;
+    $restore['filename'] = (isset($_POST['filename'])) ? urldecode((string) $_POST['filename']) : '';
     if (isset($_GET['filename'])) {
-        $restore['filename'] = urldecode($_GET['filename']);
+        $restore['filename'] = urldecode((string) $_GET['filename']);
     }
-    $restore['actual_fieldcount'] = (isset($_POST['actual_fieldcount'])) ? $_POST['actual_fieldcount'] : 0;
-    $restore['eintraege_ready'] = (isset($_POST['eintraege_ready'])) ? $_POST['eintraege_ready'] : 0;
-    $restore['anzahl_zeilen'] = (isset($_POST['anzahl_zeilen'])) ? $_POST['anzahl_zeilen'] : $config['minspeed'];
-    $restore['summe_eintraege'] = (isset($_POST['summe_eintraege'])) ? $_POST['summe_eintraege'] : 0;
-    $restore['erweiterte_inserts'] = (isset($_POST['erweiterte_inserts'])) ? $_POST['erweiterte_inserts'] : 0;
-    $restore['flag'] = (isset($_POST['flag'])) ? $_POST['flag'] : -1;
+    $restore['actual_fieldcount'] = $_POST['actual_fieldcount'] ?? 0;
+    $restore['eintraege_ready'] = $_POST['eintraege_ready'] ?? 0;
+    $restore['anzahl_zeilen'] = $_POST['anzahl_zeilen'] ?? $config['minspeed'];
+    $restore['summe_eintraege'] = $_POST['summe_eintraege'] ?? 0;
+    $restore['erweiterte_inserts'] = $_POST['erweiterte_inserts'] ?? 0;
+    $restore['flag'] = $_POST['flag'] ?? -1;
     $restore['EOB'] = false;
-    $restore['dump_encoding'] = (isset($_POST['dump_encoding'])) ? $_POST['dump_encoding'] : 'utf8';
+    $restore['dump_encoding'] = $_POST['dump_encoding'] ?? 'utf8';
     if (isset($_GET['dump_encoding'])) {
         $restore['dump_encoding'] = $_GET['dump_encoding'];
     }
-    $restore['compressed'] = ('gz' == substr(strtolower($restore['filename']), -2)) ? 1 : 0;
+    $restore['compressed'] = (str_ends_with(strtolower((string) $restore['filename']), 'gz')) ? 1 : 0;
     // wurden nur bestimmte Tabellen ausgwaehlt?
     if (!isset($databases['db_actual_tableselected'])) {
         $databases['db_actual_tableselected'] = '';
     }
     if ('' != $databases['db_actual_tableselected']) {
-        $restore['tables_to_restore'] = explode('|', $databases['db_actual_tableselected']);
+        $restore['tables_to_restore'] = explode('|', (string) $databases['db_actual_tableselected']);
     } else {
         $restore['tables_to_restore'] = false;
     }
@@ -111,7 +111,7 @@ if ($restore['filehandle']) {
         // Statuszeile auslesen
         $restore['part'] = 0;
         $statusline = (1 == $restore['compressed']) ? gzgets($restore['filehandle']) : fgets($restore['filehandle']);
-        $sline = ReadStatusline($statusline, true);
+        $sline = ReadStatusline($statusline);
 
         $restore['anzahl_tabellen'] = $sline['tables'];
         $restore['anzahl_eintraege'] = $sline['records'];
@@ -160,7 +160,7 @@ if ($restore['filehandle']) {
                 if (false === !$res) {
                     $anzsql = mysqli_affected_rows($config['dbconnection']);
                     // Anzahl der eingetragenen Datensaetze ermitteln (Indexaktionen nicht zaehlen)
-                    $command = strtoupper(substr($sql_command, 0, 7));
+                    $command = strtoupper(substr((string) $sql_command, 0, 7));
                     if ('INSERT ' == $command) {
                         $anzsql = mysqli_affected_rows($config['dbconnection']);
                         if ($anzsql > 0) {

@@ -25,17 +25,16 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class GetClassToInstanceOfRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\BinaryOpManipulator
-     */
-    private $binaryOpManipulator;
-    /**
      * @var string[]
      */
     private const NO_NAMESPACED_CLASSNAMES = ['self', 'static'];
-    public function __construct(BinaryOpManipulator $binaryOpManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly BinaryOpManipulator $binaryOpManipulator
+    )
     {
-        $this->binaryOpManipulator = $binaryOpManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -53,11 +52,7 @@ final class GetClassToInstanceOfRector extends AbstractRector
      */
     public function refactor(Node $node) : ?Node
     {
-        $twoNodeMatch = $this->binaryOpManipulator->matchFirstAndSecondConditionNode($node, function (Node $node) : bool {
-            return $this->isClassReference($node);
-        }, function (Node $node) : bool {
-            return $this->isGetClassFuncCallNode($node);
-        });
+        $twoNodeMatch = $this->binaryOpManipulator->matchFirstAndSecondConditionNode($node, fn(Node $node): bool => $this->isClassReference($node), fn(Node $node): bool => $this->isGetClassFuncCallNode($node));
         if (!$twoNodeMatch instanceof TwoNodeMatch) {
             return null;
         }

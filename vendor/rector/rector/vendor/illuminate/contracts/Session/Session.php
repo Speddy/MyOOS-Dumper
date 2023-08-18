@@ -66,26 +66,23 @@ interface Session
      * Get an item from the session.
      *
      * @param  string  $key
-     * @param  mixed  $default
      * @return mixed
      */
-    public function get($key, $default = null);
+    public function get($key, mixed $default = null);
     /**
      * Get the value of a given key and then forget it.
      *
      * @param  string  $key
-     * @param  mixed  $default
      * @return mixed
      */
-    public function pull($key, $default = null);
+    public function pull($key, mixed $default = null);
     /**
      * Put a key / value pair or array of key / value pairs in the session.
      *
      * @param  string|array  $key
-     * @param  mixed  $value
      * @return void
      */
-    public function put($key, $value = null);
+    public function put($key, mixed $value = null);
     /**
      * Get the CSRF token value.
      *

@@ -22,7 +22,6 @@ class RewindableGenerator implements Countable, IteratorAggregate
     /**
      * Create a new generator instance.
      *
-     * @param  callable  $generator
      * @param  callable|int  $count
      * @return void
      */

@@ -30,14 +30,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class StrEndsWithRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\BinaryOpAnalyzer
-     */
-    private $binaryOpAnalyzer;
-    public function __construct(BinaryOpAnalyzer $binaryOpAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly BinaryOpAnalyzer $binaryOpAnalyzer
+    )
     {
-        $this->binaryOpAnalyzer = $binaryOpAnalyzer;
     }
     public function provideMinPhpVersion() : int
     {

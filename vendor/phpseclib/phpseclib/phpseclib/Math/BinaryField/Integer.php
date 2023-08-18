@@ -30,7 +30,7 @@ use phpseclib3\Math\Common\FiniteField\Integer as Base;
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-class Integer extends Base
+class Integer extends Base implements \Stringable
 {
     /**
      * Holds the BinaryField's value
@@ -38,13 +38,6 @@ class Integer extends Base
      * @var string
      */
     protected $value;
-
-    /**
-     * Keeps track of current instance
-     *
-     * @var int
-     */
-    protected $instanceID;
 
     /**
      * Holds the PrimeField's modulo
@@ -62,11 +55,15 @@ class Integer extends Base
 
     /**
      * Default constructor
+     * @param int $instanceID
      */
-    public function __construct($instanceID, $num = '')
+    public function __construct(/**
+     * Keeps track of current instance
+     *
+     */
+    protected $instanceID, $num = '')
     {
-        $this->instanceID = $instanceID;
-        if (!strlen($num)) {
+        if (!strlen((string) $num)) {
             $this->value = '';
         } else {
             $reduce = static::$reduce[$instanceID];
@@ -176,12 +173,12 @@ class Integer extends Base
                 str_pad($q, $length, "\0", STR_PAD_LEFT) ^
                 str_pad($s, $length, "\0", STR_PAD_LEFT);
             $s = static::polynomialMultiply($s, $y);
-            $length = max(strlen($r), strlen($s));
-            $r = str_pad($r, $length, "\0", STR_PAD_LEFT) ^
+            $length = max(strlen((string) $r), strlen($s));
+            $r = str_pad((string) $r, $length, "\0", STR_PAD_LEFT) ^
                  str_pad($s, $length, "\0", STR_PAD_LEFT);
         }
 
-        return [ltrim($q, "\0"), ltrim($r, "\0")];
+        return [ltrim($q, "\0"), ltrim((string) $r, "\0")];
     }
 
     /**
@@ -192,7 +189,7 @@ class Integer extends Base
      */
     private static function regularPolynomialMultiply($x, $y)
     {
-        $precomputed = [ltrim($x, "\0")];
+        $precomputed = [ltrim((string) $x, "\0")];
         $x = strrev(BinaryField::base256ToBase2($x));
         $y = strrev(BinaryField::base256ToBase2($y));
         if (strlen($x) == strlen($y)) {
@@ -231,18 +228,18 @@ class Integer extends Base
      */
     private static function polynomialMultiply($x, $y)
     {
-        if (strlen($x) == strlen($y)) {
-            $length = strlen($x);
+        if (strlen((string) $x) == strlen((string) $y)) {
+            $length = strlen((string) $x);
         } else {
-            $length = max(strlen($x), strlen($y));
-            $x = str_pad($x, $length, "\0", STR_PAD_LEFT);
-            $y = str_pad($y, $length, "\0", STR_PAD_LEFT);
+            $length = max(strlen((string) $x), strlen((string) $y));
+            $x = str_pad((string) $x, $length, "\0", STR_PAD_LEFT);
+            $y = str_pad((string) $y, $length, "\0", STR_PAD_LEFT);
         }
 
         switch (true) {
             case PHP_INT_SIZE == 8 && $length <= 4:
                 return $length != 4 ?
-                    self::subMultiply(str_pad($x, 4, "\0", STR_PAD_LEFT), str_pad($y, 4, "\0", STR_PAD_LEFT)) :
+                    self::subMultiply(str_pad((string) $x, 4, "\0", STR_PAD_LEFT), str_pad((string) $y, 4, "\0", STR_PAD_LEFT)) :
                     self::subMultiply($x, $y);
             case PHP_INT_SIZE == 4 || $length > 32:
                 return self::regularPolynomialMultiply($x, $y);
@@ -250,10 +247,10 @@ class Integer extends Base
 
         $m = $length >> 1;
 
-        $x1 = substr($x, 0, -$m);
-        $x0 = substr($x, -$m);
-        $y1 = substr($y, 0, -$m);
-        $y0 = substr($y, -$m);
+        $x1 = substr((string) $x, 0, -$m);
+        $x0 = substr((string) $x, -$m);
+        $y1 = substr((string) $y, 0, -$m);
+        $y0 = substr((string) $y, -$m);
 
         $z2 = self::polynomialMultiply($x1, $y1);
         $z0 = self::polynomialMultiply($x0, $y0);
@@ -305,7 +302,7 @@ class Integer extends Base
         $z0 &= 0x1111111111111111;
         $z1 &= 0x2222222222222222;
         $z2 &= 0x4444444444444444;
-        $z3 &= -8608480567731124088; // 0x8888888888888888 gets interpreted as a float
+        $z3 &= -8_608_480_567_731_124_088; // 0x8888888888888888 gets interpreted as a float
 
         $z = $z0 | $z1 | $z2 | $z3;
 
@@ -336,10 +333,10 @@ class Integer extends Base
      */
     private static function subAdd3($x, $y, $z)
     {
-        $length = max(strlen($x), strlen($y), strlen($z));
+        $length = max(strlen($x), strlen($y), strlen((string) $z));
         $x = str_pad($x, $length, "\0", STR_PAD_LEFT);
         $y = str_pad($y, $length, "\0", STR_PAD_LEFT);
-        $z = str_pad($z, $length, "\0", STR_PAD_LEFT);
+        $z = str_pad((string) $z, $length, "\0", STR_PAD_LEFT);
         return $x ^ $y ^ $z;
     }
 
@@ -399,7 +396,7 @@ class Integer extends Base
         $aux0 = "\0";
         $aux1 = "\1";
         while ($remainder1 != "\1") {
-            list($q, $r) = static::polynomialDivide($remainder0, $remainder1);
+            [$q, $r] = static::polynomialDivide($remainder0, $remainder1);
             $remainder0 = $remainder1;
             $remainder1 = $r;
             // the auxiliary in row n is given by the sum of the auxiliary in
@@ -500,7 +497,7 @@ class Integer extends Base
      *  __toString() magic method
      *
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string) $this->toBigInteger();
     }

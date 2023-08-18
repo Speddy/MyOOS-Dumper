@@ -10,26 +10,22 @@ use Rector\Symfony\ValueObject\Tag\EventListenerTag;
 final class ListenerServiceDefinitionProvider
 {
     /**
-     * @readonly
-     * @var \Rector\Symfony\DataProvider\ServiceMapProvider
-     */
-    private $serviceMapProvider;
-    /**
      * @var string
      * @see https://regex101.com/r/j6SAga/1
      */
     private const SYMFONY_FAMILY_REGEX = '#^(Symfony|Sensio|Doctrine)\\b#';
-    /**
-     * @var bool
-     */
-    private $areListenerClassesLoaded = \false;
+    private bool $areListenerClassesLoaded = \false;
     /**
      * @var ServiceDefinition[][][]
      */
-    private $listenerClassesToEvents = [];
-    public function __construct(ServiceMapProvider $serviceMapProvider)
+    private array $listenerClassesToEvents = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ServiceMapProvider $serviceMapProvider
+    )
     {
-        $this->serviceMapProvider = $serviceMapProvider;
     }
     /**
      * @return ServiceDefinition[][][]

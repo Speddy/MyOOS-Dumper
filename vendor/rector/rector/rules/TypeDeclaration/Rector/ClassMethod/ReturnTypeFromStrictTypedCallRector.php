@@ -36,38 +36,29 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReturnTypeFromStrictTypedCallRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\NodeAnalyzer\TypeNodeUnwrapper
-     */
-    private $typeNodeUnwrapper;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeAnalyzer\ReturnStrictTypeAnalyzer
-     */
-    private $returnStrictTypeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeInferer\ReturnTypeInferer
-     */
-    private $returnTypeInferer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    /**
-     * @readonly
-     * @var \Rector\VendorLocker\NodeVendorLocker\ClassMethodReturnTypeOverrideGuard
-     */
-    private $classMethodReturnTypeOverrideGuard;
-    public function __construct(TypeNodeUnwrapper $typeNodeUnwrapper, ReturnStrictTypeAnalyzer $returnStrictTypeAnalyzer, ReturnTypeInferer $returnTypeInferer, PhpVersionProvider $phpVersionProvider, ClassMethodReturnTypeOverrideGuard $classMethodReturnTypeOverrideGuard)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly TypeNodeUnwrapper $typeNodeUnwrapper,
+        /**
+         * @readonly
+         */
+        private readonly ReturnStrictTypeAnalyzer $returnStrictTypeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ReturnTypeInferer $returnTypeInferer,
+        /**
+         * @readonly
+         */
+        private readonly PhpVersionProvider $phpVersionProvider,
+        /**
+         * @readonly
+         */
+        private readonly ClassMethodReturnTypeOverrideGuard $classMethodReturnTypeOverrideGuard
+    )
     {
-        $this->typeNodeUnwrapper = $typeNodeUnwrapper;
-        $this->returnStrictTypeAnalyzer = $returnStrictTypeAnalyzer;
-        $this->returnTypeInferer = $returnTypeInferer;
-        $this->phpVersionProvider = $phpVersionProvider;
-        $this->classMethodReturnTypeOverrideGuard = $classMethodReturnTypeOverrideGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {

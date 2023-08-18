@@ -31,52 +31,39 @@ use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\StaticTypeMapper\ValueObject\Type\ShortenedObjectType;
-final class ReflectionResolver
+final readonly class ReflectionResolver
 {
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PHPStan\Reflection\TypeToCallReflectionResolver\TypeToCallReflectionResolverRegistry
-     */
-    private $typeToCallReflectionResolverRegistry;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ClassAnalyzer
-     */
-    private $classAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\MethodReflectionResolver
-     */
-    private $methodReflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    public function __construct(ReflectionProvider $reflectionProvider, NodeTypeResolver $nodeTypeResolver, NodeNameResolver $nodeNameResolver, TypeToCallReflectionResolverRegistry $typeToCallReflectionResolverRegistry, ClassAnalyzer $classAnalyzer, \Rector\Core\Reflection\MethodReflectionResolver $methodReflectionResolver, AstResolver $astResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private TypeToCallReflectionResolverRegistry $typeToCallReflectionResolverRegistry,
+        /**
+         * @readonly
+         */
+        private ClassAnalyzer $classAnalyzer,
+        /**
+         * @readonly
+         */
+        private \Rector\Core\Reflection\MethodReflectionResolver $methodReflectionResolver,
+        /**
+         * @readonly
+         */
+        private AstResolver $astResolver
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
-        $this->nodeTypeResolver = $nodeTypeResolver;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->typeToCallReflectionResolverRegistry = $typeToCallReflectionResolverRegistry;
-        $this->classAnalyzer = $classAnalyzer;
-        $this->methodReflectionResolver = $methodReflectionResolver;
-        $this->astResolver = $astResolver;
     }
     /**
      * @api

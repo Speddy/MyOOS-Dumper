@@ -19,19 +19,14 @@ namespace RectorPrefix202308\Symfony\Component\Finder\Iterator;
  */
 class FileTypeFilterIterator extends \FilterIterator
 {
-    public const ONLY_FILES = 1;
-    public const ONLY_DIRECTORIES = 2;
-    /**
-     * @var int
-     */
-    private $mode;
+    final public const ONLY_FILES = 1;
+    final public const ONLY_DIRECTORIES = 2;
     /**
      * @param \Iterator<string, \SplFileInfo> $iterator The Iterator to filter
      * @param int                             $mode     The mode (self::ONLY_FILES or self::ONLY_DIRECTORIES)
      */
-    public function __construct(\Iterator $iterator, int $mode)
+    public function __construct(\Iterator $iterator, private readonly int $mode)
     {
-        $this->mode = $mode;
         parent::__construct($iterator);
     }
     /**

@@ -19,14 +19,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class SimplifyArraySearchRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\BinaryOpManipulator
-     */
-    private $binaryOpManipulator;
-    public function __construct(BinaryOpManipulator $binaryOpManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly BinaryOpManipulator $binaryOpManipulator
+    )
     {
-        $this->binaryOpManipulator = $binaryOpManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -49,9 +48,7 @@ final class SimplifyArraySearchRector extends AbstractRector
                 return \false;
             }
             return $this->nodeNameResolver->isName($node, 'array_search');
-        }, function (Node $node) : bool {
-            return $node instanceof Expr && $this->valueResolver->isFalse($node);
-        });
+        }, fn(Node $node): bool => $node instanceof Expr && $this->valueResolver->isFalse($node));
         if (!$twoNodeMatch instanceof TwoNodeMatch) {
             return null;
         }

@@ -28,13 +28,13 @@ use SplObjectStorage;
 final class ExtLibevLoop implements LoopInterface
 {
     private $loop;
-    private $futureTickQueue;
-    private $timerEvents;
-    private $readEvents = array();
-    private $writeEvents = array();
-    private $running;
-    private $signals;
-    private $signalEvents = array();
+    private readonly \RectorPrefix202308\React\EventLoop\Tick\FutureTickQueue $futureTickQueue;
+    private \SplObjectStorage $timerEvents;
+    private array $readEvents = [];
+    private array $writeEvents = [];
+    private ?bool $running = null;
+    private \RectorPrefix202308\React\EventLoop\SignalsHandler $signals;
+    private array $signalEvents = [];
     public function __construct()
     {
         if (!\class_exists('RectorPrefix202308\\libev\\EventLoop', \false)) {

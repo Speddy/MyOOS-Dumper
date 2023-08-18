@@ -32,37 +32,37 @@ abstract class MSBLOB
      * Public/Private Key Pair
      *
      */
-    const PRIVATEKEYBLOB = 0x7;
+    final public const PRIVATEKEYBLOB = 0x7;
     /**
      * Public Key
      *
      */
-    const PUBLICKEYBLOB = 0x6;
+    final public const PUBLICKEYBLOB = 0x6;
     /**
      * Public Key
      *
      */
-    const PUBLICKEYBLOBEX = 0xA;
+    final public const PUBLICKEYBLOBEX = 0xA;
     /**
      * RSA public key exchange algorithm
      *
      */
-    const CALG_RSA_KEYX = 0x0000A400;
+    final public const CALG_RSA_KEYX = 0x0000A400;
     /**
      * RSA public key exchange algorithm
      *
      */
-    const CALG_RSA_SIGN = 0x00002400;
+    final public const CALG_RSA_SIGN = 0x00002400;
     /**
      * Public Key
      *
      */
-    const RSA1 = 0x31415352;
+    final public const RSA1 = 0x31415352;
     /**
      * Private Key
      *
      */
-    const RSA2 = 0x32415352;
+    final public const RSA2 = 0x32415352;
 
     /**
      * Break a public or private key down into its constituent components
@@ -89,23 +89,11 @@ abstract class MSBLOB
         // PUBLICKEYSTRUC  publickeystruc
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa387453(v=vs.85).aspx
         extract(unpack('atype/aversion/vreserved/Valgo', Strings::shift($key, 8)));
-        /**
-         * @var string $type
-         * @var string $version
-         * @var integer $reserved
-         * @var integer $algo
-         */
-        switch (ord($type)) {
-            case self::PUBLICKEYBLOB:
-            case self::PUBLICKEYBLOBEX:
-                $publickey = true;
-                break;
-            case self::PRIVATEKEYBLOB:
-                $publickey = false;
-                break;
-            default:
-                throw new \UnexpectedValueException('Key appears to be malformed');
-        }
+        $publickey = match (ord($type)) {
+            self::PUBLICKEYBLOB, self::PUBLICKEYBLOBEX => true,
+            self::PRIVATEKEYBLOB => false,
+            default => throw new \UnexpectedValueException('Key appears to be malformed'),
+        };
 
         $components = ['isPublicKey' => $publickey];
 
@@ -138,7 +126,7 @@ abstract class MSBLOB
         }
 
         $baseLength = $bitlen / 16;
-        if (strlen($key) != 2 * $baseLength && strlen($key) != 9 * $baseLength) {
+        if (strlen((string) $key) != 2 * $baseLength && strlen((string) $key) != 9 * $baseLength) {
             throw new \UnexpectedValueException('Key appears to be malformed');
         }
 
@@ -174,12 +162,6 @@ abstract class MSBLOB
     /**
      * Convert a private key to the appropriate format.
      *
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
-     * @param \phpseclib3\Math\BigInteger $d
-     * @param array $primes
-     * @param array $exponents
-     * @param array $coefficients
      * @param string $password optional
      * @return string
      */
@@ -198,11 +180,11 @@ abstract class MSBLOB
         $key = pack('aavV', chr(self::PRIVATEKEYBLOB), chr(2), 0, self::CALG_RSA_KEYX);
         $key .= pack('VVa*', self::RSA2, 8 * strlen($n), $e);
         $key .= $n;
-        $key .= strrev($primes[1]->toBytes());
-        $key .= strrev($primes[2]->toBytes());
-        $key .= strrev($exponents[1]->toBytes());
-        $key .= strrev($exponents[2]->toBytes());
-        $key .= strrev($coefficients[2]->toBytes());
+        $key .= strrev((string) $primes[1]->toBytes());
+        $key .= strrev((string) $primes[2]->toBytes());
+        $key .= strrev((string) $exponents[1]->toBytes());
+        $key .= strrev((string) $exponents[2]->toBytes());
+        $key .= strrev((string) $coefficients[2]->toBytes());
         $key .= strrev($d->toBytes());
 
         return Strings::base64_encode($key);
@@ -211,8 +193,6 @@ abstract class MSBLOB
     /**
      * Convert a public key to the appropriate format
      *
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
      * @return string
      */
     public static function savePublicKey(BigInteger $n, BigInteger $e)

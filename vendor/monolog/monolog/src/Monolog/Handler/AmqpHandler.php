@@ -28,7 +28,7 @@ class AmqpHandler extends AbstractProcessingHandler
      */
     protected $exchange;
     /** @var array<string, mixed> */
-    private $extraAttributes = [];
+    private array $extraAttributes = [];
 
     /**
      * @return array<string, mixed>

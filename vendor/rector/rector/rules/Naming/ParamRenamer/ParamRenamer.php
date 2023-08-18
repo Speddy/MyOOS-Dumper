@@ -6,22 +6,19 @@ namespace Rector\Naming\ParamRenamer;
 use Rector\BetterPhpDocParser\PhpDocManipulator\PropertyDocBlockManipulator;
 use Rector\Naming\ValueObject\ParamRename;
 use Rector\Naming\VariableRenamer;
-final class ParamRenamer
+final readonly class ParamRenamer
 {
-    /**
-     * @readonly
-     * @var \Rector\Naming\VariableRenamer
-     */
-    private $variableRenamer;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PropertyDocBlockManipulator
-     */
-    private $propertyDocBlockManipulator;
-    public function __construct(VariableRenamer $variableRenamer, PropertyDocBlockManipulator $propertyDocBlockManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private VariableRenamer $variableRenamer,
+        /**
+         * @readonly
+         */
+        private PropertyDocBlockManipulator $propertyDocBlockManipulator
+    )
     {
-        $this->variableRenamer = $variableRenamer;
-        $this->propertyDocBlockManipulator = $propertyDocBlockManipulator;
     }
     public function rename(ParamRename $paramRename) : void
     {

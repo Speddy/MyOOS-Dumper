@@ -4,11 +4,11 @@
 
 class ComposerAutoloaderInitae1b297561b2af333af4101d3842f5ee
 {
-    private static $loader;
+    private static ?\Composer\Autoload\ClassLoader $loader = null;
 
     public static function loadClassLoader($class)
     {
-        if ('Composer\Autoload\ClassLoader' === $class) {
+        if (\Composer\Autoload\ClassLoader::class === $class) {
             require __DIR__ . '/ClassLoader.php';
         }
     }
@@ -22,9 +22,9 @@ class ComposerAutoloaderInitae1b297561b2af333af4101d3842f5ee
             return self::$loader;
         }
 
-        spl_autoload_register(array('ComposerAutoloaderInitae1b297561b2af333af4101d3842f5ee', 'loadClassLoader'), true, true);
+        spl_autoload_register(['ComposerAutoloaderInitae1b297561b2af333af4101d3842f5ee', 'loadClassLoader'], true, true);
         self::$loader = $loader = new \Composer\Autoload\ClassLoader(\dirname(__DIR__));
-        spl_autoload_unregister(array('ComposerAutoloaderInitae1b297561b2af333af4101d3842f5ee', 'loadClassLoader'));
+        spl_autoload_unregister(['ComposerAutoloaderInitae1b297561b2af333af4101d3842f5ee', 'loadClassLoader']);
 
         require __DIR__ . '/autoload_static.php';
         call_user_func(\Composer\Autoload\ComposerStaticInitae1b297561b2af333af4101d3842f5ee::getInitializer($loader));

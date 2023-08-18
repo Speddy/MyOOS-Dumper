@@ -29,33 +29,23 @@ final class BetterPhpDocParser extends PhpDocParser
 {
     /**
      * @readonly
-     * @var \Rector\Core\Configuration\CurrentNodeProvider
      */
-    private $currentNodeProvider;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\TokenIteratorFactory
-     */
-    private $tokenIteratorFactory;
-    /**
-     * @var PhpDocNodeDecoratorInterface[]
-     * @readonly
-     */
-    private $phpDocNodeDecorators;
-    /**
-     * @readonly
-     * @var \Rector\Core\Util\Reflection\PrivatesAccessor
-     */
-    private $privatesAccessor;
+    private readonly \Rector\Core\Util\Reflection\PrivatesAccessor $privatesAccessor;
     /**
      * @param PhpDocNodeDecoratorInterface[] $phpDocNodeDecorators
      */
-    public function __construct(TypeParser $typeParser, ConstExprParser $constExprParser, CurrentNodeProvider $currentNodeProvider, TokenIteratorFactory $tokenIteratorFactory, iterable $phpDocNodeDecorators, PrivatesAccessor $privatesAccessor = null)
+    public function __construct(TypeParser $typeParser, ConstExprParser $constExprParser, /**
+     * @readonly
+     */
+    private readonly CurrentNodeProvider $currentNodeProvider, /**
+     * @readonly
+     */
+    private readonly TokenIteratorFactory $tokenIteratorFactory, /**
+     * @readonly
+     */
+    private readonly iterable $phpDocNodeDecorators, PrivatesAccessor $privatesAccessor = null)
     {
-        $privatesAccessor = $privatesAccessor ?? new PrivatesAccessor();
-        $this->currentNodeProvider = $currentNodeProvider;
-        $this->tokenIteratorFactory = $tokenIteratorFactory;
-        $this->phpDocNodeDecorators = $phpDocNodeDecorators;
+        $privatesAccessor ??= new PrivatesAccessor();
         $this->privatesAccessor = $privatesAccessor;
         parent::__construct(
             // TypeParser

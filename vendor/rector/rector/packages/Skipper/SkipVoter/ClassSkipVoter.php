@@ -7,28 +7,23 @@ use PHPStan\Reflection\ReflectionProvider;
 use Rector\Skipper\Contract\SkipVoterInterface;
 use Rector\Skipper\SkipCriteriaResolver\SkippedClassResolver;
 use Rector\Skipper\Skipper\SkipSkipper;
-final class ClassSkipVoter implements SkipVoterInterface
+final readonly class ClassSkipVoter implements SkipVoterInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Skipper\Skipper\SkipSkipper
-     */
-    private $skipSkipper;
-    /**
-     * @readonly
-     * @var \Rector\Skipper\SkipCriteriaResolver\SkippedClassResolver
-     */
-    private $skippedClassResolver;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    public function __construct(SkipSkipper $skipSkipper, SkippedClassResolver $skippedClassResolver, ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private SkipSkipper $skipSkipper,
+        /**
+         * @readonly
+         */
+        private SkippedClassResolver $skippedClassResolver,
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider
+    )
     {
-        $this->skipSkipper = $skipSkipper;
-        $this->skippedClassResolver = $skippedClassResolver;
-        $this->reflectionProvider = $reflectionProvider;
     }
     /**
      * @param string|object $element

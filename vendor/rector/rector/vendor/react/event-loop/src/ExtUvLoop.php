@@ -19,14 +19,14 @@ use SplObjectStorage;
 final class ExtUvLoop implements LoopInterface
 {
     private $uv;
-    private $futureTickQueue;
-    private $timers;
-    private $streamEvents = array();
-    private $readStreams = array();
-    private $writeStreams = array();
-    private $running;
-    private $signals;
-    private $signalEvents = array();
+    private readonly \RectorPrefix202308\React\EventLoop\Tick\FutureTickQueue $futureTickQueue;
+    private \SplObjectStorage $timers;
+    private array $streamEvents = [];
+    private array $readStreams = [];
+    private array $writeStreams = [];
+    private ?bool $running = null;
+    private \RectorPrefix202308\React\EventLoop\SignalsHandler $signals;
+    private array $signalEvents = [];
     private $streamListener;
     public function __construct()
     {

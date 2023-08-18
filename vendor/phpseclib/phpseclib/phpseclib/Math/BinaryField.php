@@ -28,9 +28,8 @@ class BinaryField extends FiniteField
     /**
      * Instance Counter
      *
-     * @var int
      */
-    private static $instanceCounter = 0;
+    private static int $instanceCounter = 0;
 
     /**
      * Keeps track of current instance
@@ -39,8 +38,7 @@ class BinaryField extends FiniteField
      */
     protected $instanceID;
 
-    /** @var BigInteger */
-    private $randomMax;
+    private readonly \phpseclib3\Math\BigInteger $randomMax;
 
     /**
      * Default constructor

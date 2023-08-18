@@ -40,7 +40,7 @@ abstract class Helper implements HelperInterface
      */
     public static function width(?string $string) : int
     {
-        $string = $string ?? '';
+        $string ??= '';
         if (\preg_match('//u', $string)) {
             return (new UnicodeString($string))->width(\false);
         }
@@ -55,7 +55,7 @@ abstract class Helper implements HelperInterface
      */
     public static function length(?string $string) : int
     {
-        $string = $string ?? '';
+        $string ??= '';
         if (\preg_match('//u', $string)) {
             return (new UnicodeString($string))->length();
         }
@@ -69,7 +69,7 @@ abstract class Helper implements HelperInterface
      */
     public static function substr(?string $string, int $from, int $length = null) : string
     {
-        $string = $string ?? '';
+        $string ??= '';
         if (\false === ($encoding = \mb_detect_encoding($string, null, \true))) {
             return \substr($string, $from, $length);
         }
@@ -85,7 +85,7 @@ abstract class Helper implements HelperInterface
         foreach ($timeFormats as $index => $format) {
             if ($secs >= $format[0]) {
                 if (isset($timeFormats[$index + 1]) && $secs < $timeFormats[$index + 1][0] || $index == \count($timeFormats) - 1) {
-                    if (2 == \count($format)) {
+                    if (2 == (is_countable($format) ? \count($format) : 0)) {
                         return $format[1];
                     }
                     return \floor($secs / $format[2]) . ' ' . $format[1];

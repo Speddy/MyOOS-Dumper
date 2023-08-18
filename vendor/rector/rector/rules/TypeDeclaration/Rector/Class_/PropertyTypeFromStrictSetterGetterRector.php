@@ -28,32 +28,25 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class PropertyTypeFromStrictSetterGetterRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeInferer\PropertyTypeInferer\GetterTypeDeclarationPropertyTypeInferer
-     */
-    private $getterTypeDeclarationPropertyTypeInferer;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeInferer\PropertyTypeInferer\SetterTypeDeclarationPropertyTypeInferer
-     */
-    private $setterTypeDeclarationPropertyTypeInferer;
-    /**
-     * @readonly
-     * @var \Rector\Php74\Guard\MakePropertyTypedGuard
-     */
-    private $makePropertyTypedGuard;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(GetterTypeDeclarationPropertyTypeInferer $getterTypeDeclarationPropertyTypeInferer, SetterTypeDeclarationPropertyTypeInferer $setterTypeDeclarationPropertyTypeInferer, MakePropertyTypedGuard $makePropertyTypedGuard, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly GetterTypeDeclarationPropertyTypeInferer $getterTypeDeclarationPropertyTypeInferer,
+        /**
+         * @readonly
+         */
+        private readonly SetterTypeDeclarationPropertyTypeInferer $setterTypeDeclarationPropertyTypeInferer,
+        /**
+         * @readonly
+         */
+        private readonly MakePropertyTypedGuard $makePropertyTypedGuard,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver
+    )
     {
-        $this->getterTypeDeclarationPropertyTypeInferer = $getterTypeDeclarationPropertyTypeInferer;
-        $this->setterTypeDeclarationPropertyTypeInferer = $setterTypeDeclarationPropertyTypeInferer;
-        $this->makePropertyTypedGuard = $makePropertyTypedGuard;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

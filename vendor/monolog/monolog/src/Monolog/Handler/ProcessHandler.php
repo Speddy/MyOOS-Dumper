@@ -33,10 +33,7 @@ class ProcessHandler extends AbstractProcessingHandler
      */
     private $process;
 
-    /**
-     * @var string
-     */
-    private $command;
+    private readonly string $command;
 
     /**
      * @var string|null
@@ -46,7 +43,7 @@ class ProcessHandler extends AbstractProcessingHandler
     /**
      * @var resource[]
      */
-    private $pipes = [];
+    private array $pipes = [];
 
     /**
      * @var array<int, string[]>

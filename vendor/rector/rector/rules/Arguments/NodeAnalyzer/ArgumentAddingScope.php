@@ -9,13 +9,8 @@ use PhpParser\Node\Name;
 use Rector\Arguments\ValueObject\ArgumentAdder;
 use Rector\Core\Enum\ObjectReference;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class ArgumentAddingScope
+final readonly class ArgumentAddingScope
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
     /**
      * @api
      * @var string
@@ -31,9 +26,13 @@ final class ArgumentAddingScope
      * @var string
      */
     public const SCOPE_CLASS_METHOD = 'class_method';
-    public function __construct(NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @param \PhpParser\Node\Expr\MethodCall|\PhpParser\Node\Expr\StaticCall $expr

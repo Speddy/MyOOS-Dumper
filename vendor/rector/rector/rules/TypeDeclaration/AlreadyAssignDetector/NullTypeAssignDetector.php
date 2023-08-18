@@ -15,34 +15,27 @@ use Rector\TypeDeclaration\Matcher\PropertyAssignMatcher;
 /**
  * Should add extra null type
  */
-final class NullTypeAssignDetector
+final readonly class NullTypeAssignDetector
 {
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\DoctrineTypeAnalyzer
-     */
-    private $doctrineTypeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\Matcher\PropertyAssignMatcher
-     */
-    private $propertyAssignMatcher;
-    /**
-     * @readonly
-     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
-     */
-    private $simpleCallableNodeTraverser;
-    public function __construct(DoctrineTypeAnalyzer $doctrineTypeAnalyzer, NodeTypeResolver $nodeTypeResolver, PropertyAssignMatcher $propertyAssignMatcher, SimpleCallableNodeTraverser $simpleCallableNodeTraverser)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private DoctrineTypeAnalyzer $doctrineTypeAnalyzer,
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver,
+        /**
+         * @readonly
+         */
+        private PropertyAssignMatcher $propertyAssignMatcher,
+        /**
+         * @readonly
+         */
+        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser
+    )
     {
-        $this->doctrineTypeAnalyzer = $doctrineTypeAnalyzer;
-        $this->nodeTypeResolver = $nodeTypeResolver;
-        $this->propertyAssignMatcher = $propertyAssignMatcher;
-        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
     }
     public function detect(ClassLike $classLike, string $propertyName) : bool
     {

@@ -32,80 +32,59 @@ use Rector\TypeDeclaration\AlreadyAssignDetector\ConstructorAssignDetector;
  * For inspiration to improve this service,
  * @see examples of variable modifications in https://wiki.php.net/rfc/readonly_properties_v2#proposal
  */
-final class PropertyManipulator
+final readonly class PropertyManipulator
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\AssignManipulator
-     */
-    private $assignManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\NodeFinder\PropertyFetchFinder
-     */
-    private $propertyFetchFinder;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
-     */
-    private $phpAttributeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\PromotedPropertyResolver
-     */
-    private $promotedPropertyResolver;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\AlreadyAssignDetector\ConstructorAssignDetector
-     */
-    private $constructorAssignDetector;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
-     */
-    private $propertyFetchAnalyzer;
     /**
      * @var string[]|class-string<Table>[]
      */
     private const DOCTRINE_PROPERTY_ANNOTATIONS = ['Doctrine\\ORM\\Mapping\\Entity', 'Doctrine\\ORM\\Mapping\\Table', 'Doctrine\\ORM\\Mapping\\MappedSuperclass'];
-    public function __construct(\Rector\Core\NodeManipulator\AssignManipulator $assignManipulator, BetterNodeFinder $betterNodeFinder, PhpDocInfoFactory $phpDocInfoFactory, PropertyFetchFinder $propertyFetchFinder, NodeNameResolver $nodeNameResolver, PhpAttributeAnalyzer $phpAttributeAnalyzer, NodeTypeResolver $nodeTypeResolver, PromotedPropertyResolver $promotedPropertyResolver, ConstructorAssignDetector $constructorAssignDetector, AstResolver $astResolver, PropertyFetchAnalyzer $propertyFetchAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private \Rector\Core\NodeManipulator\AssignManipulator $assignManipulator,
+        /**
+         * @readonly
+         */
+        private BetterNodeFinder $betterNodeFinder,
+        /**
+         * @readonly
+         */
+        private PhpDocInfoFactory $phpDocInfoFactory,
+        /**
+         * @readonly
+         */
+        private PropertyFetchFinder $propertyFetchFinder,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private PhpAttributeAnalyzer $phpAttributeAnalyzer,
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver,
+        /**
+         * @readonly
+         */
+        private PromotedPropertyResolver $promotedPropertyResolver,
+        /**
+         * @readonly
+         */
+        private ConstructorAssignDetector $constructorAssignDetector,
+        /**
+         * @readonly
+         */
+        private AstResolver $astResolver,
+        /**
+         * @readonly
+         */
+        private PropertyFetchAnalyzer $propertyFetchAnalyzer
+    )
     {
-        $this->assignManipulator = $assignManipulator;
-        $this->betterNodeFinder = $betterNodeFinder;
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
-        $this->propertyFetchFinder = $propertyFetchFinder;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
-        $this->nodeTypeResolver = $nodeTypeResolver;
-        $this->promotedPropertyResolver = $promotedPropertyResolver;
-        $this->constructorAssignDetector = $constructorAssignDetector;
-        $this->astResolver = $astResolver;
-        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
     }
     /**
      * @param \PhpParser\Node\Stmt\Property|\PhpParser\Node\Param $propertyOrParam
@@ -179,9 +158,7 @@ final class PropertyManipulator
         if (!$classMethod instanceof ClassMethod) {
             return \false;
         }
-        $node = $this->betterNodeFinder->findFirst((array) $classMethod->stmts, static function (Node $subNode) use($propertyFetch) : bool {
-            return ($subNode instanceof PropertyFetch || $subNode instanceof StaticPropertyFetch) && $subNode === $propertyFetch;
-        });
+        $node = $this->betterNodeFinder->findFirst((array) $classMethod->stmts, static fn(Node $subNode): bool => ($subNode instanceof PropertyFetch || $subNode instanceof StaticPropertyFetch) && $subNode === $propertyFetch);
         // there is property unset in Test class, so only check on __construct
         if (!$node instanceof Node) {
             return \false;

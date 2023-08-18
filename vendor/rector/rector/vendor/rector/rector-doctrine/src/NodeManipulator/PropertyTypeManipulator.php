@@ -9,22 +9,19 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\NodeTypeResolver\PhpDoc\NodeAnalyzer\DocBlockClassRenamer;
 use Rector\NodeTypeResolver\ValueObject\OldToNewType;
 use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
-final class PropertyTypeManipulator
+final readonly class PropertyTypeManipulator
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PhpDoc\NodeAnalyzer\DocBlockClassRenamer
-     */
-    private $docBlockClassRenamer;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    public function __construct(DocBlockClassRenamer $docBlockClassRenamer, PhpDocInfoFactory $phpDocInfoFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private DocBlockClassRenamer $docBlockClassRenamer,
+        /**
+         * @readonly
+         */
+        private PhpDocInfoFactory $phpDocInfoFactory
+    )
     {
-        $this->docBlockClassRenamer = $docBlockClassRenamer;
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
     public function changePropertyType(Property $property, string $oldClass, string $newClass) : void
     {

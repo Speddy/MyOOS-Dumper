@@ -31,14 +31,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class AssignArrayToStringRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\NodeFinder\PropertyFetchFinder
-     */
-    private $propertyFetchFinder;
-    public function __construct(PropertyFetchFinder $propertyFetchFinder)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PropertyFetchFinder $propertyFetchFinder
+    )
     {
-        $this->propertyFetchFinder = $propertyFetchFinder;
     }
     public function provideMinPhpVersion() : int
     {

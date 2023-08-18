@@ -23,20 +23,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveUnusedPrivatePropertyRector extends AbstractScopeAwareRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\NodeFinder\PropertyFetchFinder
-     */
-    private $propertyFetchFinder;
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\NodeAnalyzer\PropertyWriteonlyAnalyzer
-     */
-    private $propertyWriteonlyAnalyzer;
-    public function __construct(PropertyFetchFinder $propertyFetchFinder, PropertyWriteonlyAnalyzer $propertyWriteonlyAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PropertyFetchFinder $propertyFetchFinder,
+        /**
+         * @readonly
+         */
+        private readonly PropertyWriteonlyAnalyzer $propertyWriteonlyAnalyzer
+    )
     {
-        $this->propertyFetchFinder = $propertyFetchFinder;
-        $this->propertyWriteonlyAnalyzer = $propertyWriteonlyAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

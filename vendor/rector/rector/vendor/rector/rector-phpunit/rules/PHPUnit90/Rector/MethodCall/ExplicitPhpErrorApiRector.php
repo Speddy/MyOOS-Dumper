@@ -22,23 +22,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class ExplicitPhpErrorApiRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeFactory\AssertCallFactory
-     */
-    private $assertCallFactory;
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
-     */
-    private $testsNodeAnalyzer;
-    /**
      * @var array<string, string>
      */
     private const REPLACEMENTS = ['PHPUnit\\Framework\\TestCase\\Notice' => 'expectNotice', 'PHPUnit\\Framework\\TestCase\\Deprecated' => 'expectDeprecation', 'PHPUnit\\Framework\\TestCase\\Error' => 'expectError', 'PHPUnit\\Framework\\TestCase\\Warning' => 'expectWarning'];
-    public function __construct(AssertCallFactory $assertCallFactory, TestsNodeAnalyzer $testsNodeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly AssertCallFactory $assertCallFactory,
+        /**
+         * @readonly
+         */
+        private readonly TestsNodeAnalyzer $testsNodeAnalyzer
+    )
     {
-        $this->assertCallFactory = $assertCallFactory;
-        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

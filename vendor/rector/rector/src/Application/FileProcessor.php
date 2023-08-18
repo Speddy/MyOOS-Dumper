@@ -7,28 +7,23 @@ use Rector\Core\PhpParser\NodeTraverser\RectorNodeTraverser;
 use Rector\Core\PhpParser\Parser\RectorParser;
 use Rector\Core\ValueObject\Application\File;
 use Rector\NodeTypeResolver\NodeScopeAndMetadataDecorator;
-final class FileProcessor
+final readonly class FileProcessor
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeScopeAndMetadataDecorator
-     */
-    private $nodeScopeAndMetadataDecorator;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Parser\RectorParser
-     */
-    private $rectorParser;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\NodeTraverser\RectorNodeTraverser
-     */
-    private $rectorNodeTraverser;
-    public function __construct(NodeScopeAndMetadataDecorator $nodeScopeAndMetadataDecorator, RectorParser $rectorParser, RectorNodeTraverser $rectorNodeTraverser)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeScopeAndMetadataDecorator $nodeScopeAndMetadataDecorator,
+        /**
+         * @readonly
+         */
+        private RectorParser $rectorParser,
+        /**
+         * @readonly
+         */
+        private RectorNodeTraverser $rectorNodeTraverser
+    )
     {
-        $this->nodeScopeAndMetadataDecorator = $nodeScopeAndMetadataDecorator;
-        $this->rectorParser = $rectorParser;
-        $this->rectorNodeTraverser = $rectorNodeTraverser;
     }
     public function parseFileInfoToLocalCache(File $file) : void
     {

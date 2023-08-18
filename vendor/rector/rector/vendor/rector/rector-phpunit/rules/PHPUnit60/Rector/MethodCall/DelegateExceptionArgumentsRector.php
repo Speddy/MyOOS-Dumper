@@ -20,23 +20,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class DelegateExceptionArgumentsRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeFactory\AssertCallFactory
-     */
-    private $assertCallFactory;
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
-     */
-    private $testsNodeAnalyzer;
-    /**
      * @var array<string, string>
      */
     private const OLD_TO_NEW_METHOD = ['setExpectedException' => 'expectExceptionMessage', 'setExpectedExceptionRegExp' => 'expectExceptionMessageRegExp'];
-    public function __construct(AssertCallFactory $assertCallFactory, TestsNodeAnalyzer $testsNodeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly AssertCallFactory $assertCallFactory,
+        /**
+         * @readonly
+         */
+        private readonly TestsNodeAnalyzer $testsNodeAnalyzer
+    )
     {
-        $this->assertCallFactory = $assertCallFactory;
-        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

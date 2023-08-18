@@ -17,11 +17,10 @@ trait ProxyArrayAccessToProperties
     }
 
     /**
-     * @param mixed $offset
      *
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         $property = $this->formatPropertyName((string) $offset);
 
@@ -29,33 +28,25 @@ trait ProxyArrayAccessToProperties
     }
 
     /**
-     * @param mixed $offset
      *
      * @return mixed
      */
     #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet(mixed $offset)
     {
         $property = $this->formatPropertyName((string) $offset);
 
         return $this->{$property};
     }
 
-    /**
-     * @param mixed $offset
-     * @param mixed $value
-     */
     #[\ReturnTypeWillChange]
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): never
     {
         throw new RuntimeException('Properties can not be manipulated');
     }
 
-    /**
-     * @param mixed $offset
-     */
     #[\ReturnTypeWillChange]
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): never
     {
         throw new RuntimeException('Properties can not be manipulated');
     }

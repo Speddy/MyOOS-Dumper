@@ -10,19 +10,8 @@ use Symplify\RuleDocGenerator\Exception\ShouldNotHappenException;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\ConfiguredCodeSample;
 final class RuleDefinition
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $description;
-    /**
-     * @var string|null
-     */
-    private $ruleClass;
-    /**
-     * @var string|null
-     */
-    private $ruleFilePath;
+    private ?string $ruleClass = null;
+    private ?string $ruleFilePath = null;
     /**
      * @var CodeSampleInterface[]
      */
@@ -30,9 +19,11 @@ final class RuleDefinition
     /**
      * @param CodeSampleInterface[] $codeSamples
      */
-    public function __construct(string $description, array $codeSamples)
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly string $description, array $codeSamples)
     {
-        $this->description = $description;
         if ($codeSamples === []) {
             throw new PoorDocumentationException('Provide at least one code sample, so people can practically see what the rule does');
         }

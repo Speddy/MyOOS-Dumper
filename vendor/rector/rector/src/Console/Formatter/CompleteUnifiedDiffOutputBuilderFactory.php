@@ -9,16 +9,15 @@ use RectorPrefix202308\SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
  * @api
  * Creates @see UnifiedDiffOutputBuilder with "$contextLines = 1000;"
  */
-final class CompleteUnifiedDiffOutputBuilderFactory
+final readonly class CompleteUnifiedDiffOutputBuilderFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Util\Reflection\PrivatesAccessor
-     */
-    private $privatesAccessor;
-    public function __construct(PrivatesAccessor $privatesAccessor)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PrivatesAccessor $privatesAccessor
+    )
     {
-        $this->privatesAccessor = $privatesAccessor;
     }
     /**
      * @api

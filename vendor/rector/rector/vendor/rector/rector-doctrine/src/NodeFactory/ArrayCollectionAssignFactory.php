@@ -8,16 +8,15 @@ use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Stmt\Expression;
 use Rector\Core\PhpParser\Node\NodeFactory;
-final class ArrayCollectionAssignFactory
+final readonly class ArrayCollectionAssignFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    public function __construct(NodeFactory $nodeFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory
+    )
     {
-        $this->nodeFactory = $nodeFactory;
     }
     public function createFromPropertyName(string $toManyPropertyName) : Expression
     {

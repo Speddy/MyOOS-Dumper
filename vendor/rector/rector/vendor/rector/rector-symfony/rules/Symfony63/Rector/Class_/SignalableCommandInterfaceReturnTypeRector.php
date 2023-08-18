@@ -20,20 +20,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class SignalableCommandInterfaceReturnTypeRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\ClassAnalyzer
-     */
-    private $classAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\VendorLocker\ParentClassMethodTypeOverrideGuard
-     */
-    private $parentClassMethodTypeOverrideGuard;
-    public function __construct(ClassAnalyzer $classAnalyzer, ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ClassAnalyzer $classAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard
+    )
     {
-        $this->classAnalyzer = $classAnalyzer;
-        $this->parentClassMethodTypeOverrideGuard = $parentClassMethodTypeOverrideGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {

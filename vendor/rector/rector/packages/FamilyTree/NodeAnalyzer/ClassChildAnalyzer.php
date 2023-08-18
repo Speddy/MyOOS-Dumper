@@ -9,16 +9,15 @@ use PHPStan\Reflection\Php\PhpMethodReflection;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\Type;
 use Rector\FamilyTree\Reflection\FamilyRelationsAnalyzer;
-final class ClassChildAnalyzer
+final readonly class ClassChildAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\FamilyTree\Reflection\FamilyRelationsAnalyzer
-     */
-    private $familyRelationsAnalyzer;
-    public function __construct(FamilyRelationsAnalyzer $familyRelationsAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private FamilyRelationsAnalyzer $familyRelationsAnalyzer
+    )
     {
-        $this->familyRelationsAnalyzer = $familyRelationsAnalyzer;
     }
     public function hasChildClassMethod(ClassReflection $classReflection, string $methodName) : bool
     {

@@ -21,17 +21,16 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class AddParamTypeSplFixedArrayRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
-     */
-    private $phpDocTypeChanger;
-    /**
      * @var array<string, string>
      */
     private const SPL_FIXED_ARRAY_TO_SINGLE = ['PhpCsFixer\\Tokenizer\\Tokens' => 'PhpCsFixer\\Tokenizer\\Token', 'PhpCsFixer\\Doctrine\\Annotation\\Tokens' => 'PhpCsFixer\\Doctrine\\Annotation\\Token'];
-    public function __construct(PhpDocTypeChanger $phpDocTypeChanger)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTypeChanger $phpDocTypeChanger
+    )
     {
-        $this->phpDocTypeChanger = $phpDocTypeChanger;
     }
     /**
      * @return array<class-string<Node>>

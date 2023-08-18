@@ -46,7 +46,7 @@ foreach ($record as $field => $fieldvalue) {
             'NULL_CHECKED' => is_null($fieldvalue) ? ' checked="checked"' : '', ]);
     }
 
-    $type = strtoupper($fields[$field]['type']);
+    $type = strtoupper((string) $fields[$field]['type']);
     if (in_array($type, [
         'BLOB',
         'TEXT', ])) {

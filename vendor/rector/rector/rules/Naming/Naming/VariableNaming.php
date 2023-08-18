@@ -26,23 +26,17 @@ use Rector\NodeTypeResolver\NodeTypeResolver;
 final class VariableNaming
 {
     /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
      * @var AssignVariableNameResolverInterface[]
      */
-    private $assignVariableNameResolvers = [];
-    public function __construct(NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver, PropertyFetchAssignVariableNameResolver $propertyFetchAssignVariableNameResolver, NewAssignVariableNameResolver $newAssignVariableNameResolver)
+    private array $assignVariableNameResolvers = [];
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly NodeNameResolver $nodeNameResolver, /**
+     * @readonly
+     */
+    private readonly NodeTypeResolver $nodeTypeResolver, PropertyFetchAssignVariableNameResolver $propertyFetchAssignVariableNameResolver, NewAssignVariableNameResolver $newAssignVariableNameResolver)
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->nodeTypeResolver = $nodeTypeResolver;
         $this->assignVariableNameResolvers = [$propertyFetchAssignVariableNameResolver, $newAssignVariableNameResolver];
     }
     /**

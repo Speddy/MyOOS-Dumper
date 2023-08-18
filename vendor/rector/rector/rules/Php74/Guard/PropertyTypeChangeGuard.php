@@ -9,34 +9,27 @@ use Rector\Core\NodeAnalyzer\PropertyAnalyzer;
 use Rector\Core\NodeManipulator\PropertyManipulator;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\Privatization\Guard\ParentPropertyLookupGuard;
-final class PropertyTypeChangeGuard
+final readonly class PropertyTypeChangeGuard
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\PropertyAnalyzer
-     */
-    private $propertyAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\PropertyManipulator
-     */
-    private $propertyManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Privatization\Guard\ParentPropertyLookupGuard
-     */
-    private $parentPropertyLookupGuard;
-    public function __construct(NodeNameResolver $nodeNameResolver, PropertyAnalyzer $propertyAnalyzer, PropertyManipulator $propertyManipulator, ParentPropertyLookupGuard $parentPropertyLookupGuard)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private PropertyAnalyzer $propertyAnalyzer,
+        /**
+         * @readonly
+         */
+        private PropertyManipulator $propertyManipulator,
+        /**
+         * @readonly
+         */
+        private ParentPropertyLookupGuard $parentPropertyLookupGuard
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->propertyAnalyzer = $propertyAnalyzer;
-        $this->propertyManipulator = $propertyManipulator;
-        $this->parentPropertyLookupGuard = $parentPropertyLookupGuard;
     }
     public function isLegal(Property $property, ClassReflection $classReflection, bool $inlinePublic = \true, bool $isConstructorPromotion = \false) : bool
     {

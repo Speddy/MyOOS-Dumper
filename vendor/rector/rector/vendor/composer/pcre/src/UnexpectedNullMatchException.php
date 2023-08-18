@@ -12,7 +12,7 @@ namespace RectorPrefix202308\Composer\Pcre;
 
 class UnexpectedNullMatchException extends PcreException
 {
-    public static function fromFunction($function, $pattern)
+    public static function fromFunction($function, $pattern): never
     {
         throw new \LogicException('fromFunction should not be called on ' . self::class . ', use ' . PcreException::class);
     }

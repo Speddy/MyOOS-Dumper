@@ -15,7 +15,7 @@ namespace RectorPrefix202308\Symfony\Component\String;
  *
  * @author Nicolas Grekas <p@tchwork.com>
  */
-class LazyString implements \JsonSerializable
+class LazyString implements \JsonSerializable, \Stringable
 {
     /**
      * @var \Closure|string
@@ -23,10 +23,9 @@ class LazyString implements \JsonSerializable
     private $value;
     /**
      * @param callable|array $callback A callable or a [Closure, method] lazy-callable
-     * @param mixed ...$arguments
      * @return static
      */
-    public static function fromCallable($callback, ...$arguments)
+    public static function fromCallable($callback, mixed ...$arguments)
     {
         if (\is_array($callback) && !\is_callable($callback) && !(($callback[0] ?? null) instanceof \Closure || 2 < \count($callback))) {
             throw new \TypeError(\sprintf('Argument 1 passed to "%s()" must be a callable or a [Closure, method] lazy-callable, "%s" given.', __METHOD__, '[' . \implode(', ', \array_map('get_debug_type', $callback)) . ']'));
@@ -37,7 +36,7 @@ class LazyString implements \JsonSerializable
             if (null !== $arguments) {
                 if (!\is_callable($callback)) {
                     $callback[0] = $callback[0]();
-                    $callback[1] = $callback[1] ?? '__invoke';
+                    $callback[1] ??= '__invoke';
                 }
                 $value = $callback(...$arguments);
                 $callback = self::getPrettyName($callback);
@@ -54,7 +53,7 @@ class LazyString implements \JsonSerializable
     public static function fromStringable($value)
     {
         if (\is_object($value)) {
-            return static::fromCallable(\Closure::fromCallable([$value, '__toString']));
+            return static::fromCallable(\Closure::fromCallable($value->__toString(...)));
         }
         $lazyString = new static();
         $lazyString->value = (string) $value;
@@ -62,9 +61,8 @@ class LazyString implements \JsonSerializable
     }
     /**
      * Tells whether the provided value can be cast to string.
-     * @param mixed $value
      */
-    public static final function isStringable($value) : bool
+    public static final function isStringable(mixed $value) : bool
     {
         return \is_string($value) || $value instanceof \Stringable || \is_scalar($value);
     }
@@ -84,9 +82,9 @@ class LazyString implements \JsonSerializable
             return $this->value;
         }
         try {
-            return $this->value = ($this->value)();
+            return (string) ($this->value = ($this->value)());
         } catch (\Throwable $e) {
-            if (\TypeError::class === \get_class($e) && __FILE__ === $e->getFile()) {
+            if (\TypeError::class === $e::class && __FILE__ === $e->getFile()) {
                 $type = \explode(', ', $e->getMessage());
                 $type = \substr(\array_pop($type), 0, -\strlen(' returned'));
                 $r = new \ReflectionFunction($this->value);
@@ -118,7 +116,7 @@ class LazyString implements \JsonSerializable
             $method = $callback[1];
         } elseif ($callback instanceof \Closure) {
             $r = new \ReflectionFunction($callback);
-            if (\strpos($r->name, '{closure}') !== \false || !($class = \PHP_VERSION_ID >= 80111 ? $r->getClosureCalledClass() : $r->getClosureScopeClass())) {
+            if (str_contains($r->name, '{closure}') || !($class = \PHP_VERSION_ID >= 80111 ? $r->getClosureCalledClass() : $r->getClosureScopeClass())) {
                 return $r->name;
             }
             $class = $class->name;

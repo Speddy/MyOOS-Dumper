@@ -22,7 +22,7 @@ use phpseclib3\File\ASN1;
  */
 abstract class CertificateList
 {
-    const MAP = [
+    final public const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'tbsCertList' => TBSCertList::MAP,

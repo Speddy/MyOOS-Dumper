@@ -24,14 +24,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class CompactToVariablesRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\CodeQuality\CompactConverter
-     */
-    private $compactConverter;
-    public function __construct(CompactConverter $compactConverter)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly CompactConverter $compactConverter
+    )
     {
-        $this->compactConverter = $compactConverter;
     }
     public function getRuleDefinition() : RuleDefinition
     {

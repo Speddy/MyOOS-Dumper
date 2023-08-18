@@ -14,7 +14,7 @@ namespace Composer\Semver\Constraint;
 /**
  * Defines a conjunctive or disjunctive set of constraints.
  */
-class MultiConstraint implements ConstraintInterface
+class MultiConstraint implements ConstraintInterface, \Stringable
 {
     /**
      * @var ConstraintInterface[]
@@ -28,9 +28,6 @@ class MultiConstraint implements ConstraintInterface
     /** @var string|null */
     protected $string;
 
-    /** @var bool */
-    protected $conjunctive;
-
     /** @var Bound|null */
     protected $lowerBound;
 
@@ -43,7 +40,7 @@ class MultiConstraint implements ConstraintInterface
      *
      * @throws \InvalidArgumentException If less than 2 constraints are passed
      */
-    public function __construct(array $constraints, $conjunctive = true)
+    public function __construct(array $constraints, protected $conjunctive = true)
     {
         if (\count($constraints) < 2) {
             throw new \InvalidArgumentException(
@@ -54,7 +51,6 @@ class MultiConstraint implements ConstraintInterface
         }
 
         $this->constraints = $constraints;
-        $this->conjunctive = $conjunctive;
     }
 
     /**
@@ -86,7 +82,7 @@ class MultiConstraint implements ConstraintInterface
      */
     public function compile($otherOperator)
     {
-        $parts = array();
+        $parts = [];
         foreach ($this->constraints as $constraint) {
             $code = $constraint->compile($otherOperator);
             if ($code === 'true') {
@@ -165,13 +161,13 @@ class MultiConstraint implements ConstraintInterface
     /**
      * {@inheritDoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->string !== null) {
             return $this->string;
         }
 
-        $constraints = array();
+        $constraints = [];
         foreach ($this->constraints as $constraint) {
             $constraints[] = (string) $constraint;
         }
@@ -230,7 +226,7 @@ class MultiConstraint implements ConstraintInterface
 
         $optimized = self::optimizeConstraints($constraints, $conjunctive);
         if ($optimized !== null) {
-            list($constraints, $conjunctive) = $optimized;
+            [$constraints, $conjunctive] = $optimized;
             if (\count($constraints) === 1) {
                 return $constraints[0];
             }
@@ -253,7 +249,7 @@ class MultiConstraint implements ConstraintInterface
         // [>= 1 < 2] || [>= 2 < 3] || [>= 3 < 4] => [>= 1 < 4]
         if (!$conjunctive) {
             $left = $constraints[0];
-            $mergedConstraints = array();
+            $mergedConstraints = [];
             $optimized = false;
             for ($i = 1, $l = \count($constraints); $i < $l; $i++) {
                 $right = $constraints[$i];
@@ -276,10 +272,7 @@ class MultiConstraint implements ConstraintInterface
                 ) {
                     $optimized = true;
                     $left = new MultiConstraint(
-                        array(
-                            $left->constraints[0],
-                            $right->constraints[1],
-                        ),
+                        [$left->constraints[0], $right->constraints[1]],
                         true);
                 } else {
                     $mergedConstraints[] = $left;
@@ -288,7 +281,7 @@ class MultiConstraint implements ConstraintInterface
             }
             if ($optimized) {
                 $mergedConstraints[] = $left;
-                return array($mergedConstraints, false);
+                return [$mergedConstraints, false];
             }
         }
 

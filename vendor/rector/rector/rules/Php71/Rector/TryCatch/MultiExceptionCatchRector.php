@@ -18,14 +18,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class MultiExceptionCatchRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Printer\BetterStandardPrinter
-     */
-    private $betterStandardPrinter;
-    public function __construct(BetterStandardPrinter $betterStandardPrinter)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly BetterStandardPrinter $betterStandardPrinter
+    )
     {
-        $this->betterStandardPrinter = $betterStandardPrinter;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -7,11 +7,11 @@ namespace RectorPrefix202308\React\EventLoop;
  */
 final class SignalsHandler
 {
-    private $signals = array();
+    private array $signals = [];
     public function add($signal, $listener)
     {
         if (!isset($this->signals[$signal])) {
-            $this->signals[$signal] = array();
+            $this->signals[$signal] = [];
         }
         if (\in_array($listener, $this->signals[$signal])) {
             return;
@@ -25,7 +25,7 @@ final class SignalsHandler
         }
         $index = \array_search($listener, $this->signals[$signal], \true);
         unset($this->signals[$signal][$index]);
-        if (isset($this->signals[$signal]) && \count($this->signals[$signal]) === 0) {
+        if (isset($this->signals[$signal]) && (is_countable($this->signals[$signal]) ? \count($this->signals[$signal]) : 0) === 0) {
             unset($this->signals[$signal]);
         }
     }
@@ -43,7 +43,7 @@ final class SignalsHandler
         if (!isset($this->signals[$signal])) {
             return 0;
         }
-        return \count($this->signals[$signal]);
+        return is_countable($this->signals[$signal]) ? \count($this->signals[$signal]) : 0;
     }
     public function isEmpty()
     {

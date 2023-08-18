@@ -22,26 +22,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class AddVoidReturnTypeWhereNoReturnRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeInferer\SilentVoidResolver
-     */
-    private $silentVoidResolver;
-    /**
-     * @readonly
-     * @var \Rector\VendorLocker\NodeVendorLocker\ClassMethodReturnVendorLockResolver
-     */
-    private $classMethodReturnVendorLockResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(SilentVoidResolver $silentVoidResolver, ClassMethodReturnVendorLockResolver $classMethodReturnVendorLockResolver, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly SilentVoidResolver $silentVoidResolver,
+        /**
+         * @readonly
+         */
+        private readonly ClassMethodReturnVendorLockResolver $classMethodReturnVendorLockResolver,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver
+    )
     {
-        $this->silentVoidResolver = $silentVoidResolver;
-        $this->classMethodReturnVendorLockResolver = $classMethodReturnVendorLockResolver;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

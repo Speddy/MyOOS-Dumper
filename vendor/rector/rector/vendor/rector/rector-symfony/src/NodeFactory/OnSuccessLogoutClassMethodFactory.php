@@ -17,38 +17,31 @@ use PhpParser\NodeTraverser;
 use Rector\Core\PhpParser\Node\NodeFactory;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
-final class OnSuccessLogoutClassMethodFactory
+final readonly class OnSuccessLogoutClassMethodFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
-     */
-    private $simpleCallableNodeTraverser;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeFactory\BareLogoutClassMethodFactory
-     */
-    private $bareLogoutClassMethodFactory;
     /**
      * @var string
      */
     private const LOGOUT_EVENT = 'logoutEvent';
-    public function __construct(NodeFactory $nodeFactory, NodeNameResolver $nodeNameResolver, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, \Rector\Symfony\NodeFactory\BareLogoutClassMethodFactory $bareLogoutClassMethodFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
+        /**
+         * @readonly
+         */
+        private \Rector\Symfony\NodeFactory\BareLogoutClassMethodFactory $bareLogoutClassMethodFactory
+    )
     {
-        $this->nodeFactory = $nodeFactory;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
-        $this->bareLogoutClassMethodFactory = $bareLogoutClassMethodFactory;
     }
     public function createFromOnLogoutSuccessClassMethod(ClassMethod $onLogoutSuccessClassMethod) : ClassMethod
     {

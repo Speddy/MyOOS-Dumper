@@ -27,26 +27,6 @@ use Rector\PhpDocParser\PhpDocParser\PhpDocNodeTraverser;
 final class PhpDocInfoPrinter
 {
     /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\Printer\EmptyPhpDocDetector
-     */
-    private $emptyPhpDocDetector;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\Printer\DocBlockInliner
-     */
-    private $docBlockInliner;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\Printer\RemoveNodesStartAndEndResolver
-     */
-    private $removeNodesStartAndEndResolver;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocNodeVisitor\ChangedPhpDocNodeVisitor
-     */
-    private $changedPhpDocNodeVisitor;
-    /**
      * @var string
      * @see https://regex101.com/r/Ab0Vey/1
      */
@@ -70,33 +50,31 @@ final class PhpDocInfoPrinter
      * @var string Uses a hardcoded unix-newline since most codes use it (even on windows) - otherwise we would need to normalize newlines
      */
     private const NEWLINE_WITH_ASTERISK = "\n" . ' *';
-    /**
-     * @var int
-     */
-    private $tokenCount = 0;
-    /**
-     * @var int
-     */
-    private $currentTokenPosition = 0;
+    private int $tokenCount = 0;
+    private int $currentTokenPosition = 0;
     /**
      * @var mixed[]
      */
     private $tokens = [];
-    /**
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo|null
-     */
-    private $phpDocInfo;
+    private ?\Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo $phpDocInfo = null;
     /**
      * @readonly
-     * @var \Rector\PhpDocParser\PhpDocParser\PhpDocNodeTraverser
      */
-    private $changedPhpDocNodeTraverser;
-    public function __construct(\Rector\BetterPhpDocParser\Printer\EmptyPhpDocDetector $emptyPhpDocDetector, \Rector\BetterPhpDocParser\Printer\DocBlockInliner $docBlockInliner, \Rector\BetterPhpDocParser\Printer\RemoveNodesStartAndEndResolver $removeNodesStartAndEndResolver, ChangedPhpDocNodeVisitor $changedPhpDocNodeVisitor)
+    private readonly \Rector\PhpDocParser\PhpDocParser\PhpDocNodeTraverser $changedPhpDocNodeTraverser;
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly \Rector\BetterPhpDocParser\Printer\EmptyPhpDocDetector $emptyPhpDocDetector, /**
+     * @readonly
+     */
+    private readonly \Rector\BetterPhpDocParser\Printer\DocBlockInliner $docBlockInliner, /**
+     * @readonly
+     */
+    private readonly \Rector\BetterPhpDocParser\Printer\RemoveNodesStartAndEndResolver $removeNodesStartAndEndResolver, /**
+     * @readonly
+     */
+    private readonly ChangedPhpDocNodeVisitor $changedPhpDocNodeVisitor)
     {
-        $this->emptyPhpDocDetector = $emptyPhpDocDetector;
-        $this->docBlockInliner = $docBlockInliner;
-        $this->removeNodesStartAndEndResolver = $removeNodesStartAndEndResolver;
-        $this->changedPhpDocNodeVisitor = $changedPhpDocNodeVisitor;
         $changedPhpDocNodeTraverser = new PhpDocNodeTraverser();
         $changedPhpDocNodeTraverser->addPhpDocNodeVisitor($this->changedPhpDocNodeVisitor);
         $this->changedPhpDocNodeTraverser = $changedPhpDocNodeTraverser;
@@ -226,7 +204,7 @@ final class PhpDocInfoPrinter
             --$from;
         }
         // skip extra empty lines above if this is the last one
-        if ($shouldSkipEmptyLinesAbove && \strpos((string) $this->tokens[$from][0], \PHP_EOL) !== \false && \strpos((string) $this->tokens[$from + 1][0], \PHP_EOL) !== \false) {
+        if ($shouldSkipEmptyLinesAbove && str_contains((string) $this->tokens[$from][0], \PHP_EOL) && str_contains((string) $this->tokens[$from + 1][0], \PHP_EOL)) {
             ++$from;
         }
         return $this->appendToOutput($output, $from, $to, $positionJumpSet);

@@ -39,7 +39,7 @@ abstract class Handler implements HandlerInterface
     {
         try {
             $this->close();
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             // do nothing
         }
     }

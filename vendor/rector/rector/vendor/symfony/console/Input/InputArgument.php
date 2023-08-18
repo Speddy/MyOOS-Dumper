@@ -23,29 +23,14 @@ use RectorPrefix202308\Symfony\Component\Console\Exception\LogicException;
  */
 class InputArgument
 {
-    public const REQUIRED = 1;
-    public const OPTIONAL = 2;
-    public const IS_ARRAY = 4;
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var int
-     */
-    private $mode;
+    final public const REQUIRED = 1;
+    final public const OPTIONAL = 2;
+    final public const IS_ARRAY = 4;
+    private readonly int $mode;
     /**
      * @var string|int|bool|mixed[]|null|float
      */
     private $default;
-    /**
-     * @var mixed[]|\Closure
-     */
-    private $suggestedValues;
-    /**
-     * @var string
-     */
-    private $description;
     /**
      * @param string                                                                        $name            The argument name
      * @param int|null                                                                      $mode            The argument mode: a bit mask of self::REQUIRED, self::OPTIONAL and self::IS_ARRAY
@@ -55,17 +40,14 @@ class InputArgument
      *
      * @throws InvalidArgumentException When argument mode is not valid
      */
-    public function __construct(string $name, int $mode = null, string $description = '', $default = null, $suggestedValues = [])
+    public function __construct(private readonly string $name, int $mode = null, private readonly string $description = '', $default = null, private $suggestedValues = [])
     {
         if (null === $mode) {
             $mode = self::OPTIONAL;
         } elseif ($mode > 7 || $mode < 1) {
             throw new InvalidArgumentException(\sprintf('Argument mode "%s" is not valid.', $mode));
         }
-        $this->name = $name;
         $this->mode = $mode;
-        $this->description = $description;
-        $this->suggestedValues = $suggestedValues;
         $this->setDefault($default);
     }
     /**

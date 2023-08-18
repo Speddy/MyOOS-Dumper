@@ -24,29 +24,24 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
 {
     private const LOCALE_TO_TRANSLITERATOR_ID = ['am' => 'Amharic-Latin', 'ar' => 'Arabic-Latin', 'az' => 'Azerbaijani-Latin', 'be' => 'Belarusian-Latin', 'bg' => 'Bulgarian-Latin', 'bn' => 'Bengali-Latin', 'de' => 'de-ASCII', 'el' => 'Greek-Latin', 'fa' => 'Persian-Latin', 'he' => 'Hebrew-Latin', 'hy' => 'Armenian-Latin', 'ka' => 'Georgian-Latin', 'kk' => 'Kazakh-Latin', 'ky' => 'Kirghiz-Latin', 'ko' => 'Korean-Latin', 'mk' => 'Macedonian-Latin', 'mn' => 'Mongolian-Latin', 'or' => 'Oriya-Latin', 'ps' => 'Pashto-Latin', 'ru' => 'Russian-Latin', 'sr' => 'Serbian-Latin', 'sr_Cyrl' => 'Serbian-Latin', 'th' => 'Thai-Latin', 'tk' => 'Turkmen-Latin', 'uk' => 'Ukrainian-Latin', 'uz' => 'Uzbek-Latin', 'zh' => 'Han-Latin'];
     /**
-     * @var string|null
-     */
-    private $defaultLocale;
-    /**
      * @var \Closure|mixed[]
      */
     private $symbolsMap = ['en' => ['@' => 'at', '&' => 'and']];
     /**
      * @var bool|string
      */
-    private $emoji = \false;
+    private bool $emoji = \false;
     /**
      * Cache of transliterators per locale.
      *
      * @var \Transliterator[]
      */
-    private $transliterators = [];
+    private array $transliterators = [];
     /**
      * @param mixed[]|\Closure $symbolsMap
      */
-    public function __construct(string $defaultLocale = null, $symbolsMap = null)
+    public function __construct(private ?string $defaultLocale = null, $symbolsMap = null)
     {
-        $this->defaultLocale = $defaultLocale;
         $this->symbolsMap = $symbolsMap ?? $this->symbolsMap;
     }
     /**
@@ -77,9 +72,9 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
     }
     public function slug(string $string, string $separator = '-', string $locale = null) : AbstractUnicodeString
     {
-        $locale = $locale ?? $this->defaultLocale;
+        $locale ??= $this->defaultLocale;
         $transliterator = [];
-        if ($locale && ('de' === $locale || \strncmp($locale, 'de_', \strlen('de_')) === 0)) {
+        if ($locale && ('de' === $locale || str_starts_with($locale, 'de_'))) {
             // Use the shortcut for German in UnicodeString::ascii() if possible (faster and no requirement on intl)
             $transliterator = ['de-ASCII'];
         } elseif (\function_exists('transliterator_transliterate') && $locale) {
@@ -92,9 +87,7 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
             // If the symbols map is passed as a closure, there is no need to fallback to the parent locale
             // as the closure can just provide substitutions for all locales of interest.
             $symbolsMap = $this->symbolsMap;
-            \array_unshift($transliterator, static function ($s) use($symbolsMap, $locale) {
-                return $symbolsMap($s, $locale);
-            });
+            \array_unshift($transliterator, static fn($s) => $symbolsMap($s, $locale));
         }
         $unicodeString = (new UnicodeString($string))->ascii($transliterator);
         if (\is_array($this->symbolsMap)) {
@@ -144,7 +137,7 @@ class AsciiSlugger implements SluggerInterface, LocaleAwareInterface
         while (null !== $locale) {
             try {
                 return EmojiTransliterator::create("emoji-{$locale}");
-            } catch (\IntlException $exception) {
+            } catch (\IntlException) {
                 $locale = self::getParentLocale($locale);
             }
         }

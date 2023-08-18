@@ -30,13 +30,13 @@ $available = [];
 if ('' == $databases['multisetting']) {
     $available[0] = $databases['db_actual'];
 } else {
-    $available = explode(';', $databases['multisetting']);
+    $available = explode(';', (string) $databases['multisetting']);
 }
 $dh = opendir($config['paths']['backup']);
 while (false !== ($filename = readdir($dh))) {
     if ('.' != $filename && '..' != $filename && !is_dir($config['paths']['backup'].$filename)) {
         foreach ($available as $item) {
-            $pos = strpos($filename, $item);
+            $pos = strpos($filename, (string) $item);
             if ($pos === false) {
                 // Der Datenbankname wurde nicht in der Konfiguration gefunden;
             } else {
@@ -107,7 +107,7 @@ if ($directory_warnings > '') {
 
 if ($config['disabled'] > '') {
     $tpl->assign_block_vars('DISABLED_FUNCTIONS', [
-    'PHP_DISABLED_FUNCTIONS' => str_replace(',', ', ', $config['disabled']), ]);
+    'PHP_DISABLED_FUNCTIONS' => str_replace(',', ', ', (string) $config['disabled']), ]);
 }
 
 if (!extension_loaded('ftp')) {

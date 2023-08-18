@@ -21,18 +21,8 @@ use Rector\StaticTypeMapper\ValueObject\Type\SelfObjectType;
 /**
  * @see \Rector\Tests\Naming\Naming\PropertyNamingTest
  */
-final class PropertyNaming
+final readonly class PropertyNaming
 {
-    /**
-     * @readonly
-     * @var \Rector\Naming\RectorNamingInflector
-     */
-    private $rectorNamingInflector;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
     /**
      * @var string[]
      */
@@ -55,10 +45,17 @@ final class PropertyNaming
      * @var string
      */
     private const GET_PREFIX_REGEX = '#^get(?<root_name>[A-Z].+)#';
-    public function __construct(RectorNamingInflector $rectorNamingInflector, NodeTypeResolver $nodeTypeResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private RectorNamingInflector $rectorNamingInflector,
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver
+    )
     {
-        $this->rectorNamingInflector = $rectorNamingInflector;
-        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     public function getExpectedNameFromMethodName(string $methodName) : ?ExpectedName
     {
@@ -105,7 +102,7 @@ final class PropertyNaming
             $objectType = $objectType->getStaticObjectType();
         }
         $className = $this->resolveClassName($objectType);
-        $shortClassName = \strpos($className, '\\') !== \false ? (string) Strings::after($className, '\\', -1) : $className;
+        $shortClassName = str_contains($className, '\\') ? (string) Strings::after($className, '\\', -1) : $className;
         $variableName = $this->removeInterfaceSuffixPrefix($shortClassName, 'interface');
         $variableName = $this->removeInterfaceSuffixPrefix($variableName, 'abstract');
         $variableName = $this->fqnToShortName($variableName);
@@ -115,7 +112,7 @@ final class PropertyNaming
     }
     private function resolveShortClassName(string $className) : string
     {
-        if (\strpos($className, '\\') !== \false) {
+        if (str_contains($className, '\\')) {
             return (string) Strings::after($className, '\\', -1);
         }
         return $className;
@@ -123,7 +120,7 @@ final class PropertyNaming
     private function removePrefixesAndSuffixes(string $shortClassName) : string
     {
         // is SomeInterface
-        if (\substr_compare($shortClassName, self::INTERFACE, -\strlen(self::INTERFACE)) === 0) {
+        if (str_ends_with($shortClassName, self::INTERFACE)) {
             $shortClassName = Strings::substring($shortClassName, 0, -\strlen(self::INTERFACE));
         }
         // is ISomeClass
@@ -131,7 +128,7 @@ final class PropertyNaming
             $shortClassName = Strings::substring($shortClassName, 1);
         }
         // is AbstractClass
-        if (\strncmp($shortClassName, 'Abstract', \strlen('Abstract')) === 0) {
+        if (str_starts_with($shortClassName, 'Abstract')) {
             return Strings::substring($shortClassName, \strlen('Abstract'));
         }
         return $shortClassName;
@@ -169,14 +166,14 @@ final class PropertyNaming
     }
     private function fqnToShortName(string $fqn) : string
     {
-        if (\strpos($fqn, '\\') === \false) {
+        if (!str_contains($fqn, '\\')) {
             return $fqn;
         }
         $lastNamePart = Strings::after($fqn, '\\', -1);
         if (!\is_string($lastNamePart)) {
             throw new ShouldNotHappenException();
         }
-        if (\substr_compare($lastNamePart, self::INTERFACE, -\strlen(self::INTERFACE)) === 0) {
+        if (str_ends_with($lastNamePart, self::INTERFACE)) {
             return Strings::substring($lastNamePart, 0, -\strlen(self::INTERFACE));
         }
         return $lastNamePart;
@@ -204,7 +201,7 @@ final class PropertyNaming
         if (\strlen($shortClassName) <= 3) {
             return \false;
         }
-        if (\strncmp($shortClassName, 'I', \strlen('I')) !== 0) {
+        if (!str_starts_with($shortClassName, 'I')) {
             return \false;
         }
         if (!\ctype_upper($shortClassName[1])) {

@@ -7,22 +7,19 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PHPStan\Reflection\ClassReflection;
 use Rector\FamilyTree\NodeAnalyzer\ClassChildAnalyzer;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class BuiltInMethodAnalyzer
+final readonly class BuiltInMethodAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\FamilyTree\NodeAnalyzer\ClassChildAnalyzer
-     */
-    private $classChildAnalyzer;
-    public function __construct(NodeNameResolver $nodeNameResolver, ClassChildAnalyzer $classChildAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private ClassChildAnalyzer $classChildAnalyzer
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->classChildAnalyzer = $classChildAnalyzer;
     }
     public function isImplementsBuiltInInterface(ClassReflection $classReflection, ClassMethod $classMethod) : bool
     {

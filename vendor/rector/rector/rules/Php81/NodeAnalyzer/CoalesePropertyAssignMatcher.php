@@ -11,22 +11,19 @@ use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Expression;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class CoalesePropertyAssignMatcher
+final readonly class CoalesePropertyAssignMatcher
 {
-    /**
-     * @readonly
-     * @var \Rector\Php81\NodeAnalyzer\ComplexNewAnalyzer
-     */
-    private $complexNewAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    public function __construct(\Rector\Php81\NodeAnalyzer\ComplexNewAnalyzer $complexNewAnalyzer, NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private \Rector\Php81\NodeAnalyzer\ComplexNewAnalyzer $complexNewAnalyzer,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->complexNewAnalyzer = $complexNewAnalyzer;
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * Matches

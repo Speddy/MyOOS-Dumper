@@ -27,20 +27,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ArraySpreadInsteadOfArrayMergeRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\TypeAnalyzer\ArrayTypeAnalyzer
-     */
-    private $arrayTypeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    public function __construct(ArrayTypeAnalyzer $arrayTypeAnalyzer, PhpVersionProvider $phpVersionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ArrayTypeAnalyzer $arrayTypeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly PhpVersionProvider $phpVersionProvider
+    )
     {
-        $this->arrayTypeAnalyzer = $arrayTypeAnalyzer;
-        $this->phpVersionProvider = $phpVersionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

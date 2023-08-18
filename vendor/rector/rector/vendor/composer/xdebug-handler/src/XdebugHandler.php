@@ -20,39 +20,30 @@ use RectorPrefix202308\Psr\Log\LoggerInterface;
  */
 class XdebugHandler
 {
-    const SUFFIX_ALLOW = '_ALLOW_XDEBUG';
-    const SUFFIX_INIS = '_ORIGINAL_INIS';
-    const RESTART_ID = 'internal';
-    const RESTART_SETTINGS = 'XDEBUG_HANDLER_SETTINGS';
-    const DEBUG = 'XDEBUG_HANDLER_DEBUG';
+    final public const SUFFIX_ALLOW = '_ALLOW_XDEBUG';
+    final public const SUFFIX_INIS = '_ORIGINAL_INIS';
+    final public const RESTART_ID = 'internal';
+    final public const RESTART_SETTINGS = 'XDEBUG_HANDLER_SETTINGS';
+    final public const DEBUG = 'XDEBUG_HANDLER_DEBUG';
     /** @var string|null */
     protected $tmpIni;
-    /** @var bool */
-    private static $inRestart;
-    /** @var string */
-    private static $name;
+    private static bool $inRestart;
+    private static string $name;
     /** @var string|null */
     private static $skipped;
-    /** @var bool */
-    private static $xdebugActive;
+    private static bool $xdebugActive;
+    private static ?string $xdebugMode = null;
     /** @var string|null */
-    private static $xdebugMode;
-    /** @var string|null */
-    private static $xdebugVersion;
-    /** @var bool */
-    private $cli;
+    private static string $xdebugVersion;
+    private ?bool $cli = null;
     /** @var string|null */
     private $debug;
-    /** @var string */
-    private $envAllowXdebug;
-    /** @var string */
-    private $envOriginalInis;
-    /** @var bool */
-    private $persistent;
+    private readonly string $envAllowXdebug;
+    private readonly string $envOriginalInis;
+    private ?bool $persistent = null;
     /** @var string|null */
     private $script;
-    /** @var Status */
-    private $statusWriter;
+    private readonly \RectorPrefix202308\Composer\XdebugHandler\Status $statusWriter;
     /**
      * Constructor
      *
@@ -276,7 +267,7 @@ class XdebugHandler
         } elseif (!$this->checkMainScript()) {
             $error = 'Unable to access main script: ' . $this->script;
         } elseif (!$this->writeTmpIni($iniFiles, $tmpDir, $error)) {
-            $error = $error !== null ? $error : 'Unable to create temp ini file at: ' . $tmpDir;
+            $error ??= 'Unable to create temp ini file at: ' . $tmpDir;
         } elseif (!$this->setEnvironment($scannedInis, $iniFiles)) {
             $error = 'Unable to set environment variables';
         }
@@ -386,7 +377,7 @@ class XdebugHandler
         $content = '';
         foreach ($loadedConfig as $name => $value) {
             // Value will either be null, string or array (HHVM only)
-            if (!\is_string($value) || \strpos($name, 'xdebug') === 0 || $name === 'apc.mmap_file_mask') {
+            if (!\is_string($value) || str_starts_with($name, 'xdebug') || $name === 'apc.mmap_file_mask') {
                 continue;
             }
             if (!isset($iniConfig[$name]) || $iniConfig[$name] !== $value) {
@@ -465,7 +456,7 @@ class XdebugHandler
                 $info = 'unable to determine working directory';
                 return \false;
             }
-            if (0 === \strpos($workingDir, '\\\\')) {
+            if (str_starts_with($workingDir, '\\\\')) {
                 $info = 'cmd.exe does not support UNC paths: ' . $workingDir;
                 return \false;
             }
@@ -514,7 +505,7 @@ class XdebugHandler
         self::$xdebugVersion = $version !== \false ? $version : 'unknown';
         if (\version_compare(self::$xdebugVersion, '3.1', '>=')) {
             $modes = \xdebug_info('mode');
-            self::$xdebugMode = \count($modes) === 0 ? 'off' : \implode(',', $modes);
+            self::$xdebugMode = (is_countable($modes) ? \count($modes) : 0) === 0 ? 'off' : \implode(',', $modes);
             self::$xdebugActive = self::$xdebugMode !== 'off';
             return;
         }

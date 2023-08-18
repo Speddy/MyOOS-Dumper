@@ -100,14 +100,14 @@ final class PrivateKey extends DSA implements Common\PrivateKey
         while (true) {
             $k = BigInteger::randomRange(self::$one, $this->q->subtract(self::$one));
             $r = $this->g->powMod($k, $this->p);
-            list(, $r) = $r->divide($this->q);
+            [, $r] = $r->divide($this->q);
             if ($r->equals(self::$zero)) {
                 continue;
             }
             $kinv = $k->modInverse($this->q);
             $temp = $h->add($this->x->multiply($r));
             $temp = $kinv->multiply($temp);
-            list(, $s) = $temp->divide($this->q);
+            [, $s] = $temp->divide($this->q);
             if (!$s->equals(self::$zero)) {
                 break;
             }

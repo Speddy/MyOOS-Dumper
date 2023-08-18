@@ -9,22 +9,19 @@ use Rector\Core\Util\StringUtils;
 use Rector\Naming\ValueObject\PropertyRename;
 use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\PHPStanStaticTypeMapper\Utils\TypeUnwrapper;
-final class DateTimeAtNamingConventionGuard
+final readonly class DateTimeAtNamingConventionGuard
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\Utils\TypeUnwrapper
-     */
-    private $typeUnwrapper;
-    public function __construct(NodeTypeResolver $nodeTypeResolver, TypeUnwrapper $typeUnwrapper)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver,
+        /**
+         * @readonly
+         */
+        private TypeUnwrapper $typeUnwrapper
+    )
     {
-        $this->nodeTypeResolver = $nodeTypeResolver;
-        $this->typeUnwrapper = $typeUnwrapper;
     }
     public function isConflicting(PropertyRename $propertyRename) : bool
     {

@@ -21,26 +21,6 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
 final class NodeNameResolver
 {
     /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\Regex\RegexPatternDetector
-     */
-    private $regexPatternDetector;
-    /**
-     * @readonly
-     * @var \Rector\CodingStyle\Naming\ClassNaming
-     */
-    private $classNaming;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\CallAnalyzer
-     */
-    private $callAnalyzer;
-    /**
-     * @var NodeNameResolverInterface[]
-     * @readonly
-     */
-    private $nodeNameResolvers = [];
-    /**
      * Used to check if a string might contain a regex or fnmatch pattern
      *
      * @var string
@@ -50,16 +30,29 @@ final class NodeNameResolver
     /**
      * @var array<string, NodeNameResolverInterface|null>
      */
-    private $nodeNameResolversByClass = [];
+    private array $nodeNameResolversByClass = [];
     /**
      * @param NodeNameResolverInterface[] $nodeNameResolvers
      */
-    public function __construct(RegexPatternDetector $regexPatternDetector, ClassNaming $classNaming, CallAnalyzer $callAnalyzer, iterable $nodeNameResolvers = [])
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly RegexPatternDetector $regexPatternDetector,
+        /**
+         * @readonly
+         */
+        private readonly ClassNaming $classNaming,
+        /**
+         * @readonly
+         */
+        private readonly CallAnalyzer $callAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly iterable $nodeNameResolvers = []
+    )
     {
-        $this->regexPatternDetector = $regexPatternDetector;
-        $this->classNaming = $classNaming;
-        $this->callAnalyzer = $callAnalyzer;
-        $this->nodeNameResolvers = $nodeNameResolvers;
     }
     /**
      * @param string[] $names
@@ -200,7 +193,7 @@ final class NodeNameResolver
                 return StringUtils::isMatch($resolvedName, $desiredName);
             }
             // is probably fnmatch
-            if (\strpos($desiredName, '*') !== \false) {
+            if (str_contains($desiredName, '*')) {
                 return \fnmatch($desiredName, $resolvedName, \FNM_NOESCAPE);
             }
         }
@@ -230,7 +223,7 @@ final class NodeNameResolver
     }
     private function resolveNodeName(Node $node, ?Scope $scope) : ?string
     {
-        $nodeClass = \get_class($node);
+        $nodeClass = $node::class;
         if (\array_key_exists($nodeClass, $this->nodeNameResolversByClass)) {
             $resolver = $this->nodeNameResolversByClass[$nodeClass];
             if ($resolver instanceof NodeNameResolverInterface) {

@@ -11,21 +11,21 @@ use RectorPrefix202308\Nette;
 /**
  * DateTime.
  */
-class DateTime extends \DateTime implements \JsonSerializable
+class DateTime extends \DateTime implements \JsonSerializable, \Stringable
 {
     use Nette\SmartObject;
     /** minute in seconds */
-    public const MINUTE = 60;
+    final public const MINUTE = 60;
     /** hour in seconds */
-    public const HOUR = 60 * self::MINUTE;
+    final public const HOUR = 60 * self::MINUTE;
     /** day in seconds */
-    public const DAY = 24 * self::HOUR;
+    final public const DAY = 24 * self::HOUR;
     /** week in seconds */
-    public const WEEK = 7 * self::DAY;
+    final public const WEEK = 7 * self::DAY;
     /** average month in seconds */
-    public const MONTH = 2629800;
+    final public const MONTH = 2_629_800;
     /** average year in seconds */
-    public const YEAR = 31557600;
+    final public const YEAR = 31_557_600;
     /**
      * Creates a DateTime object from a string, UNIX timestamp, or other DateTimeInterface object.
      * @param  string|int|\DateTimeInterface  $time

@@ -28,14 +28,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class IfToSpaceshipRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Php70\NodeAnalyzer\BattleshipTernaryAnalyzer
-     */
-    private $battleshipTernaryAnalyzer;
-    public function __construct(BattleshipTernaryAnalyzer $battleshipTernaryAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly BattleshipTernaryAnalyzer $battleshipTernaryAnalyzer
+    )
     {
-        $this->battleshipTernaryAnalyzer = $battleshipTernaryAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

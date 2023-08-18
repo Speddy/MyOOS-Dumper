@@ -35,9 +35,9 @@ if ($res) {
             'FIELD_NAME' => $row->Field,
             'FIELD_ID' => correct_post_index($row->Field), ]);
 
-        $type = strtoupper($row->Type);
+        $type = strtoupper((string) $row->Type);
 
-        if ('YES' == strtoupper($row->Null)) {
+        if ('YES' == strtoupper((string) $row->Null)) {
             //field is nullable
             $tpl->assign_block_vars('ROW.IS_NULLABLE', []);
         }
@@ -54,7 +54,7 @@ if ($res) {
 
 $tpl->assign_vars([
     'HIDDEN_FIELDS' => FormHiddenParams(),
-    'FIELDNAMES' => substr($feldnamen, 0, strlen($feldnamen ?? '') - 1),
+    'FIELDNAMES' => substr((string) $feldnamen, 0, strlen($feldnamen ?? '') - 1),
     'SQL_STATEMENT' => my_quotes($sql['sql_statement']), ]);
 
 $tpl->pparse('show');

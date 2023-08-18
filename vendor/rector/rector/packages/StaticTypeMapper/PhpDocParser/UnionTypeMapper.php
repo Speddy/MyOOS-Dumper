@@ -16,34 +16,27 @@ use Rector\StaticTypeMapper\Contract\PhpDocParser\PhpDocTypeMapperInterface;
 /**
  * @implements PhpDocTypeMapperInterface<UnionTypeNode>
  */
-final class UnionTypeMapper implements PhpDocTypeMapperInterface
+final readonly class UnionTypeMapper implements PhpDocTypeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
-     */
-    private $typeFactory;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\PhpDocParser\IdentifierTypeMapper
-     */
-    private $identifierTypeMapper;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\PhpDocParser\IntersectionTypeMapper
-     */
-    private $intersectionTypeMapper;
-    /**
-     * @readonly
-     * @var \PHPStan\PhpDoc\TypeNodeResolver
-     */
-    private $typeNodeResolver;
-    public function __construct(TypeFactory $typeFactory, \Rector\StaticTypeMapper\PhpDocParser\IdentifierTypeMapper $identifierTypeMapper, \Rector\StaticTypeMapper\PhpDocParser\IntersectionTypeMapper $intersectionTypeMapper, TypeNodeResolver $typeNodeResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private TypeFactory $typeFactory,
+        /**
+         * @readonly
+         */
+        private \Rector\StaticTypeMapper\PhpDocParser\IdentifierTypeMapper $identifierTypeMapper,
+        /**
+         * @readonly
+         */
+        private \Rector\StaticTypeMapper\PhpDocParser\IntersectionTypeMapper $intersectionTypeMapper,
+        /**
+         * @readonly
+         */
+        private TypeNodeResolver $typeNodeResolver
+    )
     {
-        $this->typeFactory = $typeFactory;
-        $this->identifierTypeMapper = $identifierTypeMapper;
-        $this->intersectionTypeMapper = $intersectionTypeMapper;
-        $this->typeNodeResolver = $typeNodeResolver;
     }
     public function getNodeType() : string
     {

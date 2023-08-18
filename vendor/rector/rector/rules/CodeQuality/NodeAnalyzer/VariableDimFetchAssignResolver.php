@@ -13,22 +13,19 @@ use PhpParser\Node\Stmt\Expression;
 use Rector\CodeQuality\ValueObject\KeyAndExpr;
 use Rector\Core\PhpParser\Comparing\NodeComparator;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
-final class VariableDimFetchAssignResolver
+final readonly class VariableDimFetchAssignResolver
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
-     */
-    private $nodeComparator;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    public function __construct(NodeComparator $nodeComparator, BetterNodeFinder $betterNodeFinder)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeComparator $nodeComparator,
+        /**
+         * @readonly
+         */
+        private BetterNodeFinder $betterNodeFinder
+    )
     {
-        $this->nodeComparator = $nodeComparator;
-        $this->betterNodeFinder = $betterNodeFinder;
     }
     /**
      * @param Stmt[] $stmts
@@ -65,9 +62,7 @@ final class VariableDimFetchAssignResolver
         if (!$this->nodeComparator->areNodesEqual($arrayDimFetch->var, $variable)) {
             return null;
         }
-        $isFoundInExpr = (bool) $this->betterNodeFinder->findFirst($assign->expr, function (Node $subNode) use($variable) : bool {
-            return $this->nodeComparator->areNodesEqual($subNode, $variable);
-        });
+        $isFoundInExpr = (bool) $this->betterNodeFinder->findFirst($assign->expr, fn(Node $subNode): bool => $this->nodeComparator->areNodesEqual($subNode, $variable));
         if ($isFoundInExpr) {
             return null;
         }

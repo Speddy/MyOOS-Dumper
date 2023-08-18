@@ -76,10 +76,10 @@ use RectorPrefix202308\React\Promise\Deferred;
  */
 class TcpTransportExecutor implements ExecutorInterface
 {
-    private $nameserver;
+    private readonly string $nameserver;
     private $loop;
-    private $parser;
-    private $dumper;
+    private readonly \RectorPrefix202308\React\Dns\Protocol\Parser $parser;
+    private readonly \RectorPrefix202308\React\Dns\Protocol\BinaryDumper $dumper;
     /**
      * @var ?resource
      */
@@ -87,11 +87,11 @@ class TcpTransportExecutor implements ExecutorInterface
     /**
      * @var Deferred[]
      */
-    private $pending = array();
+    private array $pending = [];
     /**
      * @var string[]
      */
-    private $names = array();
+    private array $names = [];
     /**
      * Maximum idle time when socket is current unused (i.e. no pending queries outstanding)
      *
@@ -105,36 +105,34 @@ class TcpTransportExecutor implements ExecutorInterface
      * configuration because this may consume additional resources and also keep
      * the loop busy for longer than expected in some applications.
      *
-     * @var float
      * @link https://tools.ietf.org/html/rfc7766#section-6.2.1
      * @link https://tools.ietf.org/html/rfc7828
      */
-    private $idlePeriod = 0.001;
+    private float $idlePeriod = 0.001;
     /**
      * @var ?\React\EventLoop\TimerInterface
      */
     private $idleTimer;
-    private $writeBuffer = '';
-    private $writePending = \false;
-    private $readBuffer = '';
-    private $readPending = \false;
-    /** @var string */
-    private $readChunk = 0xffff;
+    private string $writeBuffer = '';
+    private bool $writePending = \false;
+    private string $readBuffer = '';
+    private bool $readPending = \false;
+    private int $readChunk = 0xffff;
     /**
      * @param string         $nameserver
      * @param ?LoopInterface $loop
      */
     public function __construct($nameserver, LoopInterface $loop = null)
     {
-        if (\strpos($nameserver, '[') === \false && \substr_count($nameserver, ':') >= 2 && \strpos($nameserver, '://') === \false) {
+        if (!str_contains($nameserver, '[') && \substr_count($nameserver, ':') >= 2 && !str_contains($nameserver, '://')) {
             // several colons, but not enclosed in square brackets => enclose IPv6 address in square brackets
             $nameserver = '[' . $nameserver . ']';
         }
-        $parts = \parse_url((\strpos($nameserver, '://') === \false ? 'tcp://' : '') . $nameserver);
+        $parts = \parse_url((!str_contains($nameserver, '://') ? 'tcp://' : '') . $nameserver);
         if (!isset($parts['scheme'], $parts['host']) || $parts['scheme'] !== 'tcp' || @\inet_pton(\trim($parts['host'], '[]')) === \false) {
             throw new \InvalidArgumentException('Invalid nameserver address given');
         }
-        $this->nameserver = 'tcp://' . $parts['host'] . ':' . (isset($parts['port']) ? $parts['port'] : 53);
+        $this->nameserver = 'tcp://' . $parts['host'] . ':' . ($parts['port'] ?? 53);
         $this->loop = $loop ?: Loop::get();
         $this->parser = new Parser();
         $this->dumper = new BinaryDumper();
@@ -144,7 +142,7 @@ class TcpTransportExecutor implements ExecutorInterface
         $request = Message::createRequestForQuery($query);
         // keep shuffing message ID to avoid using the same message ID for two pending queries at the same time
         while (isset($this->pending[$request->id])) {
-            $request->id = \mt_rand(0, 0xffff);
+            $request->id = random_int(0, 0xffff);
             // @codeCoverageIgnore
         }
         $queryData = $this->dumper->toBinary($request);
@@ -175,11 +173,11 @@ class TcpTransportExecutor implements ExecutorInterface
         $this->writeBuffer .= $queryData;
         if (!$this->writePending) {
             $this->writePending = \true;
-            $this->loop->addWriteStream($this->socket, array($this, 'handleWritable'));
+            $this->loop->addWriteStream($this->socket, $this->handleWritable(...));
         }
         $names =& $this->names;
         $that = $this;
-        $deferred = new Deferred(function () use($that, &$names, $request) {
+        $deferred = new Deferred(function () use($that, &$names, $request): never {
             // remove from list of pending names, but remember pending query
             $name = $names[$request->id];
             unset($names[$request->id]);
@@ -213,7 +211,7 @@ class TcpTransportExecutor implements ExecutorInterface
                 return;
             }
             $this->readPending = \true;
-            $this->loop->addReadStream($this->socket, array($this, 'handleRead'));
+            $this->loop->addReadStream($this->socket, $this->handleRead(...));
         }
         $errno = 0;
         $errstr = '';
@@ -222,16 +220,16 @@ class TcpTransportExecutor implements ExecutorInterface
             // fwrite(): Send of 327712 bytes failed with errno=32 Broken pipe
             \preg_match('/errno=(\\d+) (.+)/', $error, $m);
             $errno = isset($m[1]) ? (int) $m[1] : 0;
-            $errstr = isset($m[2]) ? $m[2] : $error;
+            $errstr = $m[2] ?? $error;
         });
-        $written = \fwrite($this->socket, $this->writeBuffer);
+        $written = \fwrite($this->socket, (string) $this->writeBuffer);
         \restore_error_handler();
         if ($written === \false || $written === 0) {
             $this->closeError('Unable to send query to DNS server ' . $this->nameserver . ' (' . $errstr . ')', $errno);
             return;
         }
         if (isset($this->writeBuffer[$written])) {
-            $this->writeBuffer = \substr($this->writeBuffer, $written);
+            $this->writeBuffer = \substr((string) $this->writeBuffer, $written);
         } else {
             $this->loop->removeWriteStream($this->socket);
             $this->writePending = \false;
@@ -255,7 +253,7 @@ class TcpTransportExecutor implements ExecutorInterface
         // response message header contains at least 12 bytes
         while (isset($this->readBuffer[11])) {
             // read response message length from first 2 bytes and ensure we have length + data in buffer
-            list(, $length) = \unpack('n', $this->readBuffer);
+            [, $length] = \unpack('n', $this->readBuffer);
             if (!isset($this->readBuffer[$length + 1])) {
                 return;
             }
@@ -263,7 +261,7 @@ class TcpTransportExecutor implements ExecutorInterface
             $this->readBuffer = (string) \substr($this->readBuffer, $length + 2);
             try {
                 $response = $this->parser->parseMessage($data);
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // reject all pending queries if we received an invalid message from remote server
                 $this->closeError('Invalid message received from DNS server ' . $this->nameserver);
                 return;
@@ -305,7 +303,7 @@ class TcpTransportExecutor implements ExecutorInterface
         foreach ($this->names as $id => $name) {
             $this->pending[$id]->reject(new \RuntimeException('DNS query for ' . $name . ' failed: ' . $reason, $code));
         }
-        $this->pending = $this->names = array();
+        $this->pending = $this->names = [];
     }
     /**
      * @internal

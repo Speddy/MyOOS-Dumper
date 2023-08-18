@@ -20,26 +20,20 @@ use RectorPrefix202308\Symfony\Component\Process\Process;
  */
 class UnixPipes extends AbstractPipes
 {
-    private $ttyMode;
-    private $ptyMode;
-    private $haveReadSupport;
     /**
      * @param mixed $input
      */
-    public function __construct(?bool $ttyMode, bool $ptyMode, $input, bool $haveReadSupport)
+    public function __construct(private readonly ?bool $ttyMode, private readonly bool $ptyMode, $input, private readonly bool $haveReadSupport)
     {
-        $this->ttyMode = $ttyMode;
-        $this->ptyMode = $ptyMode;
-        $this->haveReadSupport = $haveReadSupport;
         parent::__construct($input);
     }
     public function __sleep() : array
     {
-        throw new \BadMethodCallException('Cannot serialize ' . __CLASS__);
+        throw new \BadMethodCallException('Cannot serialize ' . self::class);
     }
     public function __wakeup()
     {
-        throw new \BadMethodCallException('Cannot unserialize ' . __CLASS__);
+        throw new \BadMethodCallException('Cannot unserialize ' . self::class);
     }
     public function __destruct()
     {
@@ -76,8 +70,8 @@ class UnixPipes extends AbstractPipes
         $r = $this->pipes;
         unset($r[0]);
         // let's have a look if something changed in streams
-        \set_error_handler(\Closure::fromCallable([$this, 'handleError']));
-        if (($r || $w) && \false === \stream_select($r, $w, $e, 0, $blocking ? Process::TIMEOUT_PRECISION * 1000000.0 : 0)) {
+        \set_error_handler(\Closure::fromCallable($this->handleError(...)));
+        if (($r || $w) && \false === \stream_select($r, $w, $e, 0, $blocking ? Process::TIMEOUT_PRECISION * 1_000_000.0 : 0)) {
             \restore_error_handler();
             // if a system call has been interrupted, forget about it, let's try again
             // otherwise, an error occurred, let's reset pipes

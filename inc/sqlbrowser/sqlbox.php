@@ -39,7 +39,7 @@ if (isset($_POST['submit_openfile'])) {
         $aus .= '<span class="error">'.$lang['L_FM_UPLOADFILEREQUEST'].'</span>';
     } else {
         $fn = $_FILES['upfile']['tmp_name'];
-        if ('.gz' == strtolower(substr($_FILES['upfile']['name'], -3))) {
+        if ('.gz' == strtolower(substr((string) $_FILES['upfile']['name'], -3))) {
             $read__user_sqlfile = gzfile($fn);
         } else {
             $read__user_sqlfile = file($fn);
@@ -60,8 +60,8 @@ $tpl->assign_vars([
     'LANG_SQL_WARNING' => $lang['L_SQL_WARNING'],
     'ICONPATH' => $config['files']['iconpath'],
     'MYSQL_REF' => $mysql_help_ref,
-    'BOXSIZE' => ((isset($config['interface_sqlboxsize'])) ? $config['interface_sqlboxsize'] : ''),
-    'BOXCONTENT' => ((isset($sql_loaded)) ? $sql_loaded : $sql['sql_statement'].$sql['order_statement']),
+    'BOXSIZE' => ($config['interface_sqlboxsize'] ?? ''),
+    'BOXCONTENT' => ($sql_loaded ?? $sql['sql_statement'].$sql['order_statement']),
     'LANG_SQL_BEFEHLE' => $lang['L_SQL_BEFEHLE'],
     'TABLE_COMBOBOX' => Table_ComboBox(),
     'LANG_SQL_EXEC' => $lang['L_SQL_EXEC'],

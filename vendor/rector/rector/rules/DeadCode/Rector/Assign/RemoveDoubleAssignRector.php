@@ -26,14 +26,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveDoubleAssignRector extends AbstractScopeAwareRector
 {
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\SideEffect\SideEffectNodeDetector
-     */
-    private $sideEffectNodeDetector;
-    public function __construct(SideEffectNodeDetector $sideEffectNodeDetector)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly SideEffectNodeDetector $sideEffectNodeDetector
+    )
     {
-        $this->sideEffectNodeDetector = $sideEffectNodeDetector;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -104,8 +103,6 @@ CODE_SAMPLE
     }
     private function isSelfReferencing(Assign $assign) : bool
     {
-        return (bool) $this->betterNodeFinder->findFirst($assign->expr, function (Node $subNode) use($assign) : bool {
-            return $this->nodeComparator->areNodesEqual($assign->var, $subNode);
-        });
+        return (bool) $this->betterNodeFinder->findFirst($assign->expr, fn(Node $subNode): bool => $this->nodeComparator->areNodesEqual($assign->var, $subNode));
     }
 }

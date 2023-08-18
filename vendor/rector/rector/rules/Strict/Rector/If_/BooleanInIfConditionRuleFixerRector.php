@@ -20,14 +20,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class BooleanInIfConditionRuleFixerRector extends AbstractFalsyScalarRuleFixerRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Strict\NodeFactory\ExactCompareFactory
-     */
-    private $exactCompareFactory;
-    public function __construct(ExactCompareFactory $exactCompareFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ExactCompareFactory $exactCompareFactory
+    )
     {
-        $this->exactCompareFactory = $exactCompareFactory;
     }
     public function getRuleDefinition() : RuleDefinition
     {

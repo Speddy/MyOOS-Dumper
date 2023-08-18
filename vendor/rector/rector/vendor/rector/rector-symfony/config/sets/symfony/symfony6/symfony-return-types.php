@@ -36,7 +36,7 @@ return static function (RectorConfig $rectorConfig) : void {
     $nullableValueGuessType = new UnionType([new NullType(), new ObjectType('Symfony\\Component\\Form\\Guess\\ValueGuess')]);
     $configurationType = new ObjectType('Symfony\\Component\\Config\\Definition\\ConfigurationInterface');
     $scalarTypes = [$arrayType, new BooleanType(), new StringType(), new IntegerType(), new FloatType(), new NullType()];
-    $scalarArrayObjectUnionedTypes = \array_merge($scalarTypes, [new ObjectType('ArrayObject')]);
+    $scalarArrayObjectUnionedTypes = [...$scalarTypes, new ObjectType('ArrayObject')];
     // cannot be crated with \PHPStan\Type\UnionTypeHelper::sortTypes() as ObjectType requires a class reflection we do not have here
     $unionTypeReflectionClass = new \ReflectionClass(UnionType::class);
     /** @var UnionType $scalarArrayObjectUnionType */

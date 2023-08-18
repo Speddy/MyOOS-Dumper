@@ -32,32 +32,25 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class StaticCallOnNonStaticToInstanceCallRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeCollector\StaticAnalyzer
-     */
-    private $staticAnalyzer;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeCollector\ScopeResolver\ParentClassScopeResolver
-     */
-    private $parentClassScopeResolver;
-    public function __construct(StaticAnalyzer $staticAnalyzer, ReflectionProvider $reflectionProvider, ReflectionResolver $reflectionResolver, ParentClassScopeResolver $parentClassScopeResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly StaticAnalyzer $staticAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private readonly ParentClassScopeResolver $parentClassScopeResolver
+    )
     {
-        $this->staticAnalyzer = $staticAnalyzer;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->parentClassScopeResolver = $parentClassScopeResolver;
     }
     public function provideMinPhpVersion() : int
     {

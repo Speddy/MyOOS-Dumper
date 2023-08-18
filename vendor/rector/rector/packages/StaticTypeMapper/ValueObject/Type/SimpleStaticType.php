@@ -6,14 +6,13 @@ namespace Rector\StaticTypeMapper\ValueObject\Type;
 use PHPStan\Type\StaticType;
 final class SimpleStaticType extends StaticType
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $className;
-    public function __construct(string $className)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly string $className
+    )
     {
-        $this->className = $className;
     }
     public function getClassName() : string
     {

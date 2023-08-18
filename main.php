@@ -38,7 +38,7 @@ include_once './inc/runtime.php';
 include_once './language/'.$config['language'].'/lang_main.php';
 include './inc/template.php';
 
-$action = (isset($_GET['action'])) ? $_GET['action'] : 'status';
+$action = $_GET['action'] ?? 'status';
 
 if ('phpinfo' == $action) {
     // output phpinfo
@@ -60,7 +60,7 @@ if ('deletehtaccess' == $action) {
 
 $check_update = false;
 
-$config['update_core'] = isset($config['update_core']) ? $config['update_core'] : 0;
+$config['update_core'] ??= 0;
 if ((isset($config['update_core']) && 1 == $config['update_core'])) {
 	if (extension_loaded('zlib')) {
 		$update = new AutoUpdate($config['paths']['temp'], $config['paths']['root'], 60);

@@ -8,13 +8,8 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\BinaryOp\Concat;
 use PhpParser\Node\Scalar\String_;
 use Rector\Core\PhpParser\Node\Value\ValueResolver;
-final class RegexMatcher
+final readonly class RegexMatcher
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
-     */
-    private $valueResolver;
     /**
      * @var string
      * @see https://regex101.com/r/Ok4wuE/1
@@ -30,9 +25,13 @@ final class RegexMatcher
      * @see https://www.php.net/manual/en/reference.pcre.pattern.modifiers.php
      */
     private const ALL_MODIFIERS_VALUES = ['i', 'm', 's', 'x', 'e', 'A', 'D', 'S', 'U', 'X', 'J', 'u'];
-    public function __construct(ValueResolver $valueResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ValueResolver $valueResolver
+    )
     {
-        $this->valueResolver = $valueResolver;
     }
     /**
      * @return \PhpParser\Node\Expr\BinaryOp\Concat|\PhpParser\Node\Scalar\String_|null
@@ -45,26 +44,16 @@ final class RegexMatcher
                 return null;
             }
             $delimiter = $pattern[0];
-            switch ($delimiter) {
-                case '(':
-                    $delimiter = ')';
-                    break;
-                case '{':
-                    $delimiter = '}';
-                    break;
-                case '[':
-                    $delimiter = ']';
-                    break;
-                case '<':
-                    $delimiter = '>';
-                    break;
-                default:
-                    $delimiter = $delimiter;
-                    break;
-            }
+            $delimiter = match ($delimiter) {
+                '(' => ')',
+                '{' => '}',
+                '[' => ']',
+                '<' => '>',
+                default => $delimiter,
+            };
             /** @var string $modifiers */
             $modifiers = $this->resolveModifiers((string) Strings::after($pattern, $delimiter, -1));
-            if (\strpos($modifiers, 'e') === \false) {
+            if (!str_contains($modifiers, 'e')) {
                 return null;
             }
             $patternWithoutE = $this->createPatternWithoutE($pattern, $delimiter, $modifiers);
@@ -102,7 +91,7 @@ final class RegexMatcher
         if (!isset($matches['modifiers'])) {
             return null;
         }
-        if (\strpos((string) $matches['modifiers'], 'e') === \false) {
+        if (!str_contains((string) $matches['modifiers'], 'e')) {
             return null;
         }
         // replace last "e" in the code

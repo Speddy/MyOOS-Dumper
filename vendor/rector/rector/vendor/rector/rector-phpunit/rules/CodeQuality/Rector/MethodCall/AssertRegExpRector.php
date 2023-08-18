@@ -22,11 +22,6 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class AssertRegExpRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
-     */
-    private $testsNodeAnalyzer;
-    /**
      * @var string
      */
     private const ASSERT_SAME = 'assertSame';
@@ -42,9 +37,13 @@ final class AssertRegExpRector extends AbstractRector
      * @var string
      */
     private const ASSERT_NOT_EQUALS = 'assertNotEquals';
-    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly TestsNodeAnalyzer $testsNodeAnalyzer
+    )
     {
-        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -16,14 +16,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class VarToPublicPropertyRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
-     */
-    private $visibilityManipulator;
-    public function __construct(VisibilityManipulator $visibilityManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly VisibilityManipulator $visibilityManipulator
+    )
     {
-        $this->visibilityManipulator = $visibilityManipulator;
     }
     public function provideMinPhpVersion() : int
     {

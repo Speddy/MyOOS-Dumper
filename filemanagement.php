@@ -50,13 +50,13 @@ $dk = filter_string_polyfill(filter_input(INPUT_POST, 'dk'));
 if ($dk === null) {
   $dk = '';
 }
-$dk = str_replace(':', '|', $dk); // remove : because of statusline
-$dump['sel_dump_encoding'] = (isset($_POST['sel_dump_encoding'])) ? $_POST['sel_dump_encoding'] : get_index($config['mysql_possible_character_sets'], $config['mysql_standard_character_set']);
-$dump['dump_encoding'] = isset($config['mysql_possible_character_sets'][$dump['sel_dump_encoding']]) ? $config['mysql_possible_character_sets'][$dump['sel_dump_encoding']] : 0;
+$dk = str_replace(':', '|', (string) $dk); // remove : because of statusline
+$dump['sel_dump_encoding'] = $_POST['sel_dump_encoding'] ?? get_index($config['mysql_possible_character_sets'], $config['mysql_standard_character_set']);
+$dump['dump_encoding'] = $config['mysql_possible_character_sets'][$dump['sel_dump_encoding']] ?? 0;
 
 if ('dl' == $action) {
     // Download of a backup file wanted
-    $file = './'.$config['paths']['backup'].urldecode($_GET['f']);
+    $file = './'.$config['paths']['backup'].urldecode((string) $_GET['f']);
     if (is_readable($file)) {
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
@@ -92,9 +92,9 @@ $databases['multi'] = [];
 if ('' == $databases['multisetting']) {
     $databases['multi'][0] = $databases['db_actual'];
 } else {
-    $databases['multi'] = explode(';', $databases['multisetting']);
+    $databases['multi'] = explode(';', (string) $databases['multisetting']);
     $multi_praefixe = [];
-    $multi_praefixe = explode(';', $databases['multisetting_praefix']);
+    $multi_praefixe = explode(';', (string) $databases['multisetting_praefix']);
     $toolboxstring = '<br>';
     if (is_array($databases['multi'])) {
         for ($i = 0; $i < sizeof($databases['multi']); ++$i) {
@@ -115,10 +115,10 @@ if (isset($_POST['dump_tbl'])) {
     if (true === !$check_dirs) {
         exit($check_dirs);
     }
-    $databases['db_actual_tableselected'] = substr($_POST['tbl_array'], 0, strlen($_POST['tbl_array'] ?? '') - 1);
+    $databases['db_actual_tableselected'] = substr((string) $_POST['tbl_array'], 0, strlen($_POST['tbl_array'] ?? '') - 1);
     WriteParams();
     $dump['fileoperations'] = 0;
-    echo '<script>parent.MyOOS_Dumper_content.location.href="dump.php?comment='.urlencode($dk).'&sel_dump_encoding='.$dump['sel_dump_encoding'].'&config='.urlencode($config['config_file']).'";</script></body></html>';
+    echo '<script>parent.MyOOS_Dumper_content.location.href="dump.php?comment='.urlencode($dk).'&sel_dump_encoding='.$dump['sel_dump_encoding'].'&config='.urlencode((string) $config['config_file']).'";</script></body></html>';
     exit();
 }
 
@@ -138,21 +138,21 @@ if (isset($_POST['dump'])) {
         WriteParams();
         $dump['fileoperations'] = 0;
 
-        $sUrl = 'dump.php?comment='.urlencode($dk).'&sel_dump_encoding='.$dump['sel_dump_encoding'].'&config='.urlencode($config['config_file']);
+        $sUrl = 'dump.php?comment='.urlencode($dk).'&sel_dump_encoding='.$dump['sel_dump_encoding'].'&config='.urlencode((string) $config['config_file']);
         if ((isset($config['optimize_tables_beforedump']) && (1 == $config['optimize_tables_beforedump']))) {
             echo '<div id="pagetitle">'.$lang['L_DUMP_HEADLINE'].'</div><div id="content"><p>';
             echo '<br><br><p>'.sprintf($lang['L_DUMP_INFO'], $sUrl).'</p></div>';
         }
-        echo '<script>parent.MyOOS_Dumper_content.location.href="dump.php?comment='.urlencode($dk).'&sel_dump_encoding='.$dump['sel_dump_encoding'].'&config='.urlencode($config['config_file']).'";</script></body></html>';
+        echo '<script>parent.MyOOS_Dumper_content.location.href="dump.php?comment='.urlencode($dk).'&sel_dump_encoding='.$dump['sel_dump_encoding'].'&config='.urlencode((string) $config['config_file']).'";</script></body></html>';
         exit();
     }
 }
 
 //*** Abfrage ob Restore nach Tabellenaufruf ***
 if (isset($_POST['restore_tbl'])) {
-    $databases['db_actual_tableselected'] = substr($_POST['tbl_array'], 0, strlen($_POST['tbl_array'] ?? '') - 1);
+    $databases['db_actual_tableselected'] = substr((string) $_POST['tbl_array'], 0, strlen($_POST['tbl_array'] ?? '') - 1);
     WriteParams();
-    echo '<script>parent.MyOOS_Dumper_content.location.href="restore.php?filename='.urlencode($_POST['filename']).'";</script></body></html>';
+    echo '<script>parent.MyOOS_Dumper_content.location.href="restore.php?filename='.urlencode((string) $_POST['filename']).'";</script></body></html>';
 
     exit();
 }
@@ -163,7 +163,7 @@ if (isset($_POST['restore'])) {
         if (isset($_POST['tblfrage']) && 1 == $_POST['tblfrage']) {
             //Tabellenabfrage
             $tblfrage_refer = 'restore';
-            $filename = urldecode($_POST['file'][0]);
+            $filename = urldecode((string) $_POST['file'][0]);
             include 'inc/table_query.php';
             exit();
         } else {
@@ -171,7 +171,7 @@ if (isset($_POST['restore'])) {
             $statusline = read_statusline_from_file($file);
             if (isset($_POST['sel_dump_encoding_restore'])) {
                 $encodingstring = $config['mysql_possible_character_sets'][$_POST['sel_dump_encoding_restore']];
-                $encoding = explode(' ', $encodingstring);
+                $encoding = explode(' ', (string) $encodingstring);
                 $dump_encoding = $encoding[0];
             } else {
                 if (!isset($statusline['charset']) || '?' == trim((string) $statusline['charset'])) {
@@ -210,9 +210,9 @@ $del = [];
 if (isset($_POST['delete'])) {
     if (isset($_POST['file'])) {
         $delfiles = [];
-        for ($i = 0; $i < count($_POST['file']); ++$i) {
-            if (false === !strpos($_POST['file'][$i], '_part_')) {
-                $delfiles[] = substr($_POST['file'][$i], 0, strpos($_POST['file'][$i], '_part_') + 6).'*';
+        for ($i = 0; $i < (is_countable($_POST['file']) ? count($_POST['file']) : 0); ++$i) {
+            if (false === !strpos((string) $_POST['file'][$i], '_part_')) {
+                $delfiles[] = substr((string) $_POST['file'][$i], 0, strpos((string) $_POST['file'][$i], '_part_') + 6).'*';
             } else {
                 $delfiles[] = $_POST['file'][$i];
             }
@@ -265,7 +265,7 @@ if (isset($_POST['upload'])) {
     } else {
         if (!file_exists($fpath.$_FILES['upfile']['name'])) {
             // Extension ermitteln -strrpos f&auml;ngt hinten an und ermittelt somit den letzten Punkt
-            $endung = strrchr($_FILES['upfile']['name'], '.');
+            $endung = strrchr((string) $_FILES['upfile']['name'], '.');
             $erlaubt = [
             '.gz', '.sql', ];
             if (!in_array($endung, $erlaubt)) {
@@ -295,7 +295,7 @@ $tbl_abfrage = '';
 if (isset($config['multi_dump']) && (0 == $config['multi_dump'])) {
     $tbl_abfrage = '<tr><td>'.$lang['L_FM_SELECTTABLES'].'</td><td><input type="checkbox" class="checkbox" name="tblfrage" value="1"></td></tr>';
 }
-$dk = (isset($_POST['dumpKommentar'])) ? htmlentities($_POST['dumpKommentar']) : '';
+$dk = (isset($_POST['dumpKommentar'])) ? htmlentities((string) $_POST['dumpKommentar']) : '';
 $tbl_abfrage .= '<tr><td>'.$lang['L_FM_COMMENT'].':</td><td><input type="text" class="text" style="width:260px;" name="dumpKommentar" value="'.$dk.'"></td></tr>';
 $autodel = '<p class="autodel">'.$lang['L_AUTODELETE'].': ';
 $autodel .= (isset($config['auto_delete']) && (0 == $config['auto_delete'])) ? $lang['L_NOT_ACTIVATED'] : $lang['L_ACTIVATED'];
@@ -324,18 +324,18 @@ switch ($action) {
 		$server_name = filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_URL);
 		
         $actualUrl = substr($script_name, 0, strrpos($script_name, '/') + 1);
-        if ('/' != substr($actualUrl, -1)) {
+        if (!str_ends_with($actualUrl, '/')) {
             $actualUrl .= '/';
         }
-        if ('/' != substr($actualUrl, 0, 1)) {
+        if (!str_starts_with($actualUrl, '/')) {
             $actualUrl = "/$actualUrl";
         }
-        $refdir = ('/' == substr($config['cron_execution_path'], 0, 1)) ? '' : $actualUrl;
+        $refdir = (str_starts_with((string) $config['cron_execution_path'], '/')) ? '' : $actualUrl;
         $scriptdir = $config['cron_execution_path'].'crondump.'.$cext;
         $sfile = $config['cron_execution_path']."perltest.$cext";
         $simplefile = $config['cron_execution_path']."simpletest.$cext";
         $scriptentry = Realpfad('./').$config['paths']['config'];
-        $cronabsolute = ('/' == substr($config['cron_execution_path'], 0, 1)) ? $document_root.$scriptdir : Realpfad('./').$scriptdir;
+        $cronabsolute = (str_starts_with((string) $config['cron_execution_path'], '/')) ? $document_root.$scriptdir : Realpfad('./').$scriptdir;
         $confabsolute = $config['config_file'];
 		
 
@@ -380,7 +380,7 @@ switch ($action) {
         echo '<table>';
         echo '<tr><td>'.$lang['L_DB'].':</td><td><strong>';
         if (isset($config['multi_dump']) && (1 == $config['multi_dump'])) {
-            echo 'Multidump ('.count($databases['multi']).' '.$lang['L_DBS'].')</strong>';
+            echo 'Multidump ('.(is_countable($databases['multi']) ? count($databases['multi']) : 0).' '.$lang['L_DBS'].')</strong>';
             echo '<span class="small">'.$toolboxstring.'</span>';
         } else {
             echo $databases['db_actual'];
@@ -415,10 +415,10 @@ switch ($action) {
 
         for ($x = 0; $x < 3; ++$x) {
             if (isset($config['ftp_transfer'][$x]) && $config['ftp_transfer'][$x] > 0) {
-                echo table_output($lang['L_FTP_TRANSFER'], sprintf(str_replace('<br>', ' ', $lang['L_FTP_SEND_TO']), $config['ftp_server'][$x], $config['ftp_dir'][$x]), 1, 2);
+                echo table_output($lang['L_FTP_TRANSFER'], sprintf(str_replace('<br>', ' ', (string) $lang['L_FTP_SEND_TO']), $config['ftp_server'][$x], $config['ftp_dir'][$x]), 1, 2);
             }
             if (isset($config['sftp_transfer'][$x]) && $config['sftp_transfer'][$x] > 0) {
-                echo table_output($lang['L_SFTP_TRANSFER'], sprintf(str_replace('<br>', ' ', $lang['L_SFTP_SEND_TO']), $config['sftp_server'][$x], $config['sftp_dir'][$x]), 1, 2);
+                echo table_output($lang['L_SFTP_TRANSFER'], sprintf(str_replace('<br>', ' ', (string) $lang['L_SFTP_SEND_TO']), $config['sftp_server'][$x], $config['sftp_dir'][$x]), 1, 2);
             }
         }
         //echo '</td></tr>';
@@ -442,7 +442,7 @@ switch ($action) {
             $cron_dbpraefix = '';
         } elseif (-2 == $config['cron_dbindex']) {
             //$cron_dbname='Multidump ('.count($databases['multi']).' '.$lang['L_DBS'].')';
-            $cron_dbname = 'Multidump ('.count($databases['multi']).' '.$lang['L_DBS'].')</strong>';
+            $cron_dbname = 'Multidump ('.(is_countable($databases['multi']) ? count($databases['multi']) : 0).' '.$lang['L_DBS'].')</strong>';
             $cron_dbname .= '<span class="small">'.$toolboxstring.'</span>';
             $cron_dbpraefix = '';
         } else {
@@ -482,10 +482,10 @@ switch ($action) {
 
         for ($x = 0; $x < 3; ++$x) {
             if (isset($config['ftp_transfer'][$x]) && $config['ftp_transfer'][$x] > 0) {
-                echo table_output($lang['L_FTP_TRANSFER'], sprintf(str_replace('<br>', ' ', $lang['L_FTP_SEND_TO']), $config['ftp_server'][$x], $config['ftp_dir'][$x]), 1, 2);
+                echo table_output($lang['L_FTP_TRANSFER'], sprintf(str_replace('<br>', ' ', (string) $lang['L_FTP_SEND_TO']), $config['ftp_server'][$x], $config['ftp_dir'][$x]), 1, 2);
             }
             if (isset($config['sftp_transfer'][$x]) && $config['sftp_transfer'][$x] > 0) {
-                echo table_output($lang['L_SFTP_TRANSFER'], sprintf(str_replace('<br>', ' ', $lang['L_SFTP_SEND_TO']), $config['sftp_server'][$x], $config['sftp_dir'][$x]), 1, 2);
+                echo table_output($lang['L_SFTP_TRANSFER'], sprintf(str_replace('<br>', ' ', (string) $lang['L_SFTP_SEND_TO']), $config['sftp_server'][$x], $config['sftp_dir'][$x]), 1, 2);
             }
         }
         //echo '</td></tr>';
@@ -516,7 +516,7 @@ switch ($action) {
         break;
     case 'files':
         $sysfedit = (isset($_POST['sysfedit'])) ? 1 : 0;
-        $sysfedit = (isset($_GET['sysfedit'])) ? $_GET['sysfedit'] : $sysfedit;
+        $sysfedit = $_GET['sysfedit'] ?? $sysfedit;
         echo headline($lang['L_FILE_MANAGE']);
         echo ($msg > '') ? $msg.'<br>' : '';
         echo $autodel;

@@ -36,8 +36,6 @@ abstract class EvalBarrett extends Base
      * This calls a dynamically generated loop unrolled function that's specific to a given modulo.
      * Array lookups are avoided as are if statements testing for how many bits the host OS supports, etc.
      *
-     * @param array $n
-     * @param array $m
      * @param string $class
      * @return array
      */
@@ -50,13 +48,12 @@ abstract class EvalBarrett extends Base
     /**
      * Generate Custom Reduction
      *
-     * @param PHP $m
      * @param string $class
      * @return callable
      */
     protected static function generateCustomReduction(PHP $m, $class)
     {
-        $m_length = count($m->value);
+        $m_length = is_countable($m->value) ? count($m->value) : 0;
 
         if ($m_length < 5) {
             $code = '
@@ -81,7 +78,7 @@ abstract class EvalBarrett extends Base
         $lhs_value[] = 1;
         $rhs = new $class();
 
-        list($u, $m1) = $lhs->divide($m);
+        [$u, $m1] = $lhs->divide($m);
 
         if ($class::BASE != 26) {
             $u = $u->value;
@@ -90,17 +87,17 @@ abstract class EvalBarrett extends Base
             $lhs_value[] = 1;
             $rhs = new $class();
 
-            list($u) = $lhs->divide($m);
+            [$u] = $lhs->divide($m);
             $u = $u->value;
         }
 
         $m = $m->value;
         $m1 = $m1->value;
 
-        $cutoff = count($m) + (count($m) >> 1);
+        $cutoff = (is_countable($m) ? count($m) : 0) + ((is_countable($m) ? count($m) : 0) >> 1);
 
         $code = '
-            if (count($n) > ' . (2 * count($m)) . ') {
+            if (count($n) > ' . (2 * (is_countable($m) ? count($m) : 0)) . ') {
                 $lhs = new ' . $class . '();
                 $rhs = new ' . $class . '();
                 $lhs->value = $n;
@@ -117,13 +114,13 @@ abstract class EvalBarrett extends Base
         $code .= self::generateInlineMultiply('msd', $m1, 'temp', $class);
         $code .= self::generateInlineAdd('lsd', 'temp', 'n', $class);
 
-        $code .= '$temp = array_slice($n, ' . (count($m) - 1) . ');';
+        $code .= '$temp = array_slice($n, ' . ((is_countable($m) ? count($m) : 0) - 1) . ');';
         $code .= self::generateInlineMultiply('temp', $u, 'temp2', $class);
         $code .= self::generateInlineTrim('temp2');
 
         $code .= $class::BASE == 26 ?
-            '$temp = array_slice($temp2, ' . (count($m) + 1) . ');' :
-            '$temp = array_slice($temp2, ' . ((count($m) >> 1) + 1) . ');';
+            '$temp = array_slice($temp2, ' . ((is_countable($m) ? count($m) : 0) + 1) . ');' :
+            '$temp = array_slice($temp2, ' . (((is_countable($m) ? count($m) : 0) >> 1) + 1) . ');';
         $code .= self::generateInlineMultiply('temp', $m, 'temp2', $class);
         $code .= self::generateInlineTrim('temp2');
 
@@ -175,7 +172,6 @@ abstract class EvalBarrett extends Base
      * Inline Multiply (unknown, known)
      *
      * @param string $input
-     * @param array $arr
      * @param string $output
      * @param string $class
      * @return string
@@ -357,7 +353,6 @@ abstract class EvalBarrett extends Base
      * For when $unknown is more digits than $known. This is the easier use case to optimize for.
      *
      * @param string $unknown
-     * @param array $known
      * @param string $result
      * @param string $class
      * @return string
@@ -420,7 +415,6 @@ abstract class EvalBarrett extends Base
      *
      * If $unknown >= $known then loop
      *
-     * @param array $known
      * @param string $unknown
      * @param string $subcode
      * @return string

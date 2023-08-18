@@ -27,10 +27,7 @@ use RectorPrefix202308\Symfony\Component\Console\Formatter\OutputFormatterInterf
  */
 abstract class Output implements OutputInterface
 {
-    /**
-     * @var int
-     */
-    private $verbosity;
+    private int $verbosity;
     /**
      * @var \Symfony\Component\Console\Formatter\OutputFormatterInterface
      */
@@ -127,7 +124,7 @@ abstract class Output implements OutputInterface
                 case OutputInterface::OUTPUT_RAW:
                     break;
                 case OutputInterface::OUTPUT_PLAIN:
-                    $message = \strip_tags($this->formatter->format($message));
+                    $message = \strip_tags((string) $this->formatter->format($message));
                     break;
             }
             $this->doWrite($message ?? '', $newline);

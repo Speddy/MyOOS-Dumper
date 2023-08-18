@@ -36,20 +36,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ExplicitBoolCompareRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\TypeAnalyzer\StringTypeAnalyzer
-     */
-    private $stringTypeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\TypeAnalyzer\ArrayTypeAnalyzer
-     */
-    private $arrayTypeAnalyzer;
-    public function __construct(StringTypeAnalyzer $stringTypeAnalyzer, ArrayTypeAnalyzer $arrayTypeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly StringTypeAnalyzer $stringTypeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ArrayTypeAnalyzer $arrayTypeAnalyzer
+    )
     {
-        $this->stringTypeAnalyzer = $stringTypeAnalyzer;
-        $this->arrayTypeAnalyzer = $arrayTypeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

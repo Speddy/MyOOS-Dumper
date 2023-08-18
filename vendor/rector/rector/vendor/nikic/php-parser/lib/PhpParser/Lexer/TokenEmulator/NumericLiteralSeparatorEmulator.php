@@ -6,13 +6,13 @@ namespace PhpParser\Lexer\TokenEmulator;
 use PhpParser\Lexer\Emulative;
 final class NumericLiteralSeparatorEmulator extends \PhpParser\Lexer\TokenEmulator\TokenEmulator
 {
-    const BIN = '(?:0b[01]+(?:_[01]+)*)';
-    const HEX = '(?:0x[0-9a-f]+(?:_[0-9a-f]+)*)';
-    const DEC = '(?:[0-9]+(?:_[0-9]+)*)';
-    const SIMPLE_FLOAT = '(?:' . self::DEC . '\\.' . self::DEC . '?|\\.' . self::DEC . ')';
-    const EXP = '(?:e[+-]?' . self::DEC . ')';
-    const FLOAT = '(?:' . self::SIMPLE_FLOAT . self::EXP . '?|' . self::DEC . self::EXP . ')';
-    const NUMBER = '~' . self::FLOAT . '|' . self::BIN . '|' . self::HEX . '|' . self::DEC . '~iA';
+    public const BIN = '(?:0b[01]+(?:_[01]+)*)';
+    public const HEX = '(?:0x[0-9a-f]+(?:_[0-9a-f]+)*)';
+    public const DEC = '(?:[0-9]+(?:_[0-9]+)*)';
+    public const SIMPLE_FLOAT = '(?:' . self::DEC . '\\.' . self::DEC . '?|\\.' . self::DEC . ')';
+    public const EXP = '(?:e[+-]?' . self::DEC . ')';
+    public const FLOAT = '(?:' . self::SIMPLE_FLOAT . self::EXP . '?|' . self::DEC . self::EXP . ')';
+    public const NUMBER = '~' . self::FLOAT . '|' . self::BIN . '|' . self::HEX . '|' . self::DEC . '~iA';
     public function getPhpVersion() : string
     {
         return Emulative::PHP_7_4;
@@ -49,12 +49,12 @@ final class NumericLiteralSeparatorEmulator extends \PhpParser\Lexer\TokenEmulat
             while ($matchLen > $len) {
                 $nextToken = $tokens[$i + $numTokens];
                 $nextTokenText = \is_array($nextToken) ? $nextToken[1] : $nextToken;
-                $nextTokenLen = \strlen($nextTokenText);
+                $nextTokenLen = \strlen((string) $nextTokenText);
                 $numTokens++;
                 if ($matchLen < $len + $nextTokenLen) {
                     // Split trailing characters into a partial token.
                     \assert(\is_array($nextToken), "Partial token should be an array token");
-                    $partialText = \substr($nextTokenText, $matchLen - $len);
+                    $partialText = \substr((string) $nextTokenText, $matchLen - $len);
                     $newTokens[] = [$nextToken[0], $partialText, $nextToken[2]];
                     break;
                 }

@@ -5,28 +5,19 @@ namespace Rector\Arguments\ValueObject;
 
 use PHPStan\Type\ObjectType;
 use Rector\Core\Validation\RectorAssert;
-final class RemoveMethodCallParam
+final readonly class RemoveMethodCallParam
 {
-    /**
+    public function __construct(/**
      * @readonly
-     * @var string
      */
-    private $class;
-    /**
+    private string $class, /**
      * @readonly
-     * @var string
      */
-    private $methodName;
-    /**
+    private string $methodName, /**
      * @readonly
-     * @var int
      */
-    private $paramPosition;
-    public function __construct(string $class, string $methodName, int $paramPosition)
+    private int $paramPosition)
     {
-        $this->class = $class;
-        $this->methodName = $methodName;
-        $this->paramPosition = $paramPosition;
         RectorAssert::className($class);
         RectorAssert::methodName($methodName);
     }

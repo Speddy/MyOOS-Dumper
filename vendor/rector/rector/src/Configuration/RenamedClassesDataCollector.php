@@ -10,7 +10,7 @@ final class RenamedClassesDataCollector implements ResetableInterface
     /**
      * @var array<string, string>
      */
-    private $oldToNewClasses = [];
+    private array $oldToNewClasses = [];
     /**
      * @api for fast tests with single container
      */
@@ -28,7 +28,7 @@ final class RenamedClassesDataCollector implements ResetableInterface
     public function addOldToNewClasses(array $oldToNewClasses) : void
     {
         /** @var array<string, string> $oldToNewClasses */
-        $oldToNewClasses = \array_merge($this->oldToNewClasses, $oldToNewClasses);
+        $oldToNewClasses = [...$this->oldToNewClasses, ...$oldToNewClasses];
         $this->oldToNewClasses = $oldToNewClasses;
     }
     /**

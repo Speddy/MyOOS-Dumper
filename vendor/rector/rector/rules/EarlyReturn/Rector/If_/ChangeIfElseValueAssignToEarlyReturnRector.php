@@ -23,20 +23,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ChangeIfElseValueAssignToEarlyReturnRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\IfManipulator
-     */
-    private $ifManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\StmtsManipulator
-     */
-    private $stmtsManipulator;
-    public function __construct(IfManipulator $ifManipulator, StmtsManipulator $stmtsManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly IfManipulator $ifManipulator,
+        /**
+         * @readonly
+         */
+        private readonly StmtsManipulator $stmtsManipulator
+    )
     {
-        $this->ifManipulator = $ifManipulator;
-        $this->stmtsManipulator = $stmtsManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -99,8 +96,7 @@ CODE_SAMPLE
             if (!$this->ifManipulator->isIfAndElseWithSameVariableAssignAsLastStmts($if, $stmt->expr)) {
                 continue;
             }
-            \end($if->stmts);
-            $lastIfStmtKey = \key($if->stmts);
+            $lastIfStmtKey = array_key_last($if->stmts);
             /** @var Assign $assign */
             $assign = $this->stmtsManipulator->getUnwrappedLastStmt($if->stmts);
             $returnLastIf = new Return_($assign->expr);

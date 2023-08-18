@@ -40,72 +40,41 @@ use Rector\StaticTypeMapper\StaticTypeMapper;
 final class PhpDocInfo
 {
     /**
-     * @readonly
-     * @var \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode
-     */
-    private $phpDocNode;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\ValueObject\Parser\BetterTokenIterator
-     */
-    private $betterTokenIterator;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\StaticTypeMapper
-     */
-    private $staticTypeMapper;
-    /**
-     * @readonly
-     * @var \PhpParser\Node
-     */
-    private $node;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\Annotation\AnnotationNaming
-     */
-    private $annotationNaming;
-    /**
-     * @readonly
-     * @var \Rector\Core\Configuration\CurrentNodeProvider
-     */
-    private $currentNodeProvider;
-    /**
-     * @readonly
-     * @var \Rector\ChangesReporting\Collector\RectorChangeCollector
-     */
-    private $rectorChangeCollector;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocNodeFinder\PhpDocNodeByTypeFinder
-     */
-    private $phpDocNodeByTypeFinder;
-    /**
      * @var array<class-string<PhpDocTagValueNode>, string>
      */
     private const TAGS_TYPES_TO_NAMES = [ReturnTagValueNode::class => '@return', ParamTagValueNode::class => '@param', VarTagValueNode::class => '@var', MethodTagValueNode::class => '@method', PropertyTagValueNode::class => '@property'];
-    /**
-     * @var bool
-     */
-    private $isSingleLine = \false;
+    private bool $isSingleLine = \false;
     /**
      * @readonly
-     * @var \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode
      */
-    private $originalPhpDocNode;
-    /**
-     * @var bool
+    private readonly \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode $originalPhpDocNode;
+    private bool $hasChanged = \false;
+    public function __construct(/**
+     * @readonly
      */
-    private $hasChanged = \false;
-    public function __construct(PhpDocNode $phpDocNode, BetterTokenIterator $betterTokenIterator, StaticTypeMapper $staticTypeMapper, \PhpParser\Node $node, AnnotationNaming $annotationNaming, CurrentNodeProvider $currentNodeProvider, RectorChangeCollector $rectorChangeCollector, PhpDocNodeByTypeFinder $phpDocNodeByTypeFinder)
+    private readonly PhpDocNode $phpDocNode, /**
+     * @readonly
+     */
+    private readonly BetterTokenIterator $betterTokenIterator, /**
+     * @readonly
+     */
+    private readonly StaticTypeMapper $staticTypeMapper, /**
+     * @readonly
+     */
+    private readonly \PhpParser\Node $node, /**
+     * @readonly
+     */
+    private readonly AnnotationNaming $annotationNaming, /**
+     * @readonly
+     */
+    private readonly CurrentNodeProvider $currentNodeProvider, /**
+     * @readonly
+     */
+    private readonly RectorChangeCollector $rectorChangeCollector, /**
+     * @readonly
+     */
+    private readonly PhpDocNodeByTypeFinder $phpDocNodeByTypeFinder)
     {
-        $this->phpDocNode = $phpDocNode;
-        $this->betterTokenIterator = $betterTokenIterator;
-        $this->staticTypeMapper = $staticTypeMapper;
-        $this->node = $node;
-        $this->annotationNaming = $annotationNaming;
-        $this->currentNodeProvider = $currentNodeProvider;
-        $this->rectorChangeCollector = $rectorChangeCollector;
-        $this->phpDocNodeByTypeFinder = $phpDocNodeByTypeFinder;
         $this->originalPhpDocNode = clone $phpDocNode;
         if (!$betterTokenIterator->containsTokenType(Lexer::TOKEN_PHPDOC_EOL)) {
             $this->isSingleLine = \true;
@@ -150,14 +119,12 @@ final class PhpDocInfo
     public function getTagsByName(string $name) : array
     {
         // for simple tag names only
-        if (\strpos($name, '\\') !== \false) {
+        if (str_contains($name, '\\')) {
             return [];
         }
         $tags = $this->phpDocNode->getTags();
         $name = $this->annotationNaming->normalizeName($name);
-        $tags = \array_filter($tags, static function (PhpDocTagNode $phpDocTagNode) use($name) : bool {
-            return $phpDocTagNode->name === $name;
-        });
+        $tags = \array_filter($tags, static fn(PhpDocTagNode $phpDocTagNode): bool => $phpDocTagNode->name === $name);
         return \array_values($tags);
     }
     public function getParamType(string $name) : Type
@@ -264,10 +231,10 @@ final class PhpDocInfo
         $phpDocNodeTraverser->traverseWithCallable($this->phpDocNode, '', function (Node $node) use($typeToRemove) : ?int {
             if ($node instanceof PhpDocTagNode && $node->value instanceof $typeToRemove) {
                 // keep special annotation for tools
-                if (\strncmp($node->name, '@psalm-', \strlen('@psalm-')) === 0) {
+                if (str_starts_with($node->name, '@psalm-')) {
                     return null;
                 }
-                if (\strncmp($node->name, '@phpstan-', \strlen('@phpstan-')) === 0) {
+                if (str_starts_with($node->name, '@phpstan-')) {
                     return null;
                 }
                 $this->markAsChanged();

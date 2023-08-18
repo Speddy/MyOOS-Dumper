@@ -28,12 +28,12 @@ abstract class Base extends PHP
      * $cache[self::VARIABLE] tells us whether or not the cached data is still valid.
      *
      */
-    const VARIABLE = 0;
+    public const VARIABLE = 0;
     /**
      * $cache[self::DATA] contains the cached data.
      *
      */
-    const DATA = 1;
+    public const DATA = 1;
 
     /**
      * Test for engine validity
@@ -42,7 +42,7 @@ abstract class Base extends PHP
      */
     public static function isValidEngine()
     {
-        return static::class != __CLASS__;
+        return static::class != self::class;
     }
 
     /**
@@ -68,9 +68,6 @@ abstract class Base extends PHP
      * the other, a power of two - and recombine them, later.  This is the method that this modPow function uses.
      * {@link http://islab.oregonstate.edu/papers/j34monex.pdf Montgomery Reduction with Even Modulus} elaborates.
      *
-     * @param PHP $x
-     * @param PHP $e
-     * @param PHP $n
      * @param string $class
      * @return PHP
      */
@@ -83,14 +80,14 @@ abstract class Base extends PHP
         }
 
         if ($e->value == [1]) {
-            list(, $temp) = $x->divide($n);
+            [, $temp] = $x->divide($n);
             return $x->normalize($temp);
         }
 
         if ($e->value == [2]) {
             $temp = new $class();
             $temp->value = $class::square($x->value);
-            list(, $temp) = $temp->divide($n);
+            [, $temp] = $temp->divide($n);
             return $x->normalize($temp);
         }
 
@@ -100,8 +97,6 @@ abstract class Base extends PHP
     /**
      * Modular reduction preparation
      *
-     * @param array $x
-     * @param array $n
      * @param string $class
      * @see self::slidingWindow()
      * @return array
@@ -114,9 +109,6 @@ abstract class Base extends PHP
     /**
      * Modular multiply
      *
-     * @param array $x
-     * @param array $y
-     * @param array $n
      * @param string $class
      * @see self::slidingWindow()
      * @return array
@@ -130,8 +122,6 @@ abstract class Base extends PHP
     /**
      * Modular square
      *
-     * @param array $x
-     * @param array $n
      * @param string $class
      * @see self::slidingWindow()
      * @return array

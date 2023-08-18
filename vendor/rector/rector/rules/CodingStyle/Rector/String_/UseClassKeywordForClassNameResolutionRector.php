@@ -19,18 +19,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class UseClassKeywordForClassNameResolutionRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
      * @var string
      * @see https://regex101.com/r/Vv41Qr/1/
      */
     private const CLASS_BEFORE_STATIC_ACCESS_REGEX = '#(?<class_name>[\\\\a-zA-Z0-9_\\x80-\\xff]*)::#';
-    public function __construct(ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -79,9 +78,7 @@ CODE_SAMPLE
         $quotedClassNames = \array_map('preg_quote', $classNames);
         // @see https://regex101.com/r/8nGS0F/1
         $parts = Strings::split($string->value, '#(' . \implode('|', $quotedClassNames) . ')#');
-        return \array_filter($parts, static function (string $className) : bool {
-            return $className !== '';
-        });
+        return \array_filter($parts, static fn(string $className): bool => $className !== '');
     }
     /**
      * @return string[]
@@ -124,8 +121,6 @@ CODE_SAMPLE
      */
     private function filterOurShortClasses(array $classNames) : array
     {
-        return \array_filter($classNames, static function (string $className) : bool {
-            return \strpos($className, '\\') !== \false;
-        });
+        return \array_filter($classNames, static fn(string $className): bool => str_contains($className, '\\'));
     }
 }

@@ -25,17 +25,16 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class ParentClassToTraitsRector extends AbstractRector implements ConfigurableRectorInterface
 {
     /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ClassAnalyzer
-     */
-    private $classAnalyzer;
-    /**
      * @var ParentClassToTraits[]
      */
-    private $parentClassToTraits = [];
-    public function __construct(ClassAnalyzer $classAnalyzer)
+    private array $parentClassToTraits = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ClassAnalyzer $classAnalyzer
+    )
     {
-        $this->classAnalyzer = $classAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

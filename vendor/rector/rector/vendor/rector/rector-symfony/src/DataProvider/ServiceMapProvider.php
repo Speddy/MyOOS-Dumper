@@ -12,19 +12,14 @@ use Rector\Symfony\ValueObjectFactory\ServiceMapFactory;
  */
 final class ServiceMapProvider
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\ValueObjectFactory\ServiceMapFactory
-     */
-    private $serviceMapFactory;
-    /**
-     * @var \Rector\Symfony\ValueObject\ServiceMap\ServiceMap|null
-     */
-    private $serviceMap;
-    public function __construct(ServiceMapFactory $serviceMapFactory, ?ServiceMap $serviceMap = null)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ServiceMapFactory $serviceMapFactory,
+        private ?ServiceMap $serviceMap = null
+    )
     {
-        $this->serviceMapFactory = $serviceMapFactory;
-        $this->serviceMap = $serviceMap;
     }
     public function provide() : ServiceMap
     {

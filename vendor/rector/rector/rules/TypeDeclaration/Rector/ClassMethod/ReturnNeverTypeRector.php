@@ -29,14 +29,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReturnNeverTypeRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\VendorLocker\NodeVendorLocker\ClassMethodReturnTypeOverrideGuard
-     */
-    private $classMethodReturnTypeOverrideGuard;
-    public function __construct(ClassMethodReturnTypeOverrideGuard $classMethodReturnTypeOverrideGuard)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ClassMethodReturnTypeOverrideGuard $classMethodReturnTypeOverrideGuard
+    )
     {
-        $this->classMethodReturnTypeOverrideGuard = $classMethodReturnTypeOverrideGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -94,7 +93,7 @@ CODE_SAMPLE
         if ($hasReturn) {
             return \true;
         }
-        $hasNotNeverNodes = $this->betterNodeFinder->hasInstancesOfInFunctionLikeScoped($node, \array_merge([Yield_::class], ControlStructure::CONDITIONAL_NODE_SCOPE_TYPES));
+        $hasNotNeverNodes = $this->betterNodeFinder->hasInstancesOfInFunctionLikeScoped($node, [Yield_::class, ...ControlStructure::CONDITIONAL_NODE_SCOPE_TYPES]);
         if ($hasNotNeverNodes) {
             return \true;
         }

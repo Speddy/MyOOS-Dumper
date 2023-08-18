@@ -17,38 +17,31 @@ use Rector\Php80\Contract\StrStartWithMatchAndRefactorInterface;
 use Rector\Php80\NodeFactory\StrStartsWithFuncCallFactory;
 use Rector\Php80\ValueObject\StrStartsWith;
 use Rector\Php80\ValueObjectFactory\StrStartsWithFactory;
-final class StrncmpMatchAndRefactor implements StrStartWithMatchAndRefactorInterface
+final readonly class StrncmpMatchAndRefactor implements StrStartWithMatchAndRefactorInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Php80\ValueObjectFactory\StrStartsWithFactory
-     */
-    private $strStartsWithFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
-     */
-    private $nodeComparator;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeFactory\StrStartsWithFuncCallFactory
-     */
-    private $strStartsWithFuncCallFactory;
     /**
      * @var string
      */
     private const FUNCTION_NAME = 'strncmp';
-    public function __construct(NodeNameResolver $nodeNameResolver, StrStartsWithFactory $strStartsWithFactory, NodeComparator $nodeComparator, StrStartsWithFuncCallFactory $strStartsWithFuncCallFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private StrStartsWithFactory $strStartsWithFactory,
+        /**
+         * @readonly
+         */
+        private NodeComparator $nodeComparator,
+        /**
+         * @readonly
+         */
+        private StrStartsWithFuncCallFactory $strStartsWithFuncCallFactory
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->strStartsWithFactory = $strStartsWithFactory;
-        $this->nodeComparator = $nodeComparator;
-        $this->strStartsWithFuncCallFactory = $strStartsWithFuncCallFactory;
     }
     /**
      * @param \PhpParser\Node\Expr\BinaryOp\Identical|\PhpParser\Node\Expr\BinaryOp\NotIdentical|\PhpParser\Node\Expr\BinaryOp\Equal|\PhpParser\Node\Expr\BinaryOp\NotEqual $binaryOp

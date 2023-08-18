@@ -75,7 +75,7 @@ final class ServiceMapFactory
     private function createServiceFromXmlAndTagsData(SimpleXMLElement $attrs, array $tags) : ServiceDefinition
     {
         $tags = $this->createTagsFromData($tags);
-        return new ServiceDefinition(\strncmp((string) $attrs->id, '.', \strlen('.')) === 0 ? Strings::substring((string) $attrs->id, 1) : (string) $attrs->id, \property_exists($attrs, 'class') && $attrs->class instanceof SimpleXMLElement ? (string) $attrs->class : null, !(\property_exists($attrs, 'public') && $attrs->public instanceof SimpleXMLElement) || (string) $attrs->public !== 'false', \property_exists($attrs, 'synthetic') && $attrs->synthetic instanceof SimpleXMLElement && (string) $attrs->synthetic === 'true', \property_exists($attrs, 'alias') && $attrs->alias instanceof SimpleXMLElement ? (string) $attrs->alias : null, $tags);
+        return new ServiceDefinition(str_starts_with((string) $attrs->id, '.') ? Strings::substring((string) $attrs->id, 1) : (string) $attrs->id, \property_exists($attrs, 'class') && $attrs->class instanceof SimpleXMLElement ? (string) $attrs->class : null, !(\property_exists($attrs, 'public') && $attrs->public instanceof SimpleXMLElement) || (string) $attrs->public !== 'false', \property_exists($attrs, 'synthetic') && $attrs->synthetic instanceof SimpleXMLElement && (string) $attrs->synthetic === 'true', \property_exists($attrs, 'alias') && $attrs->alias instanceof SimpleXMLElement ? (string) $attrs->alias : null, $tags);
     }
     /**
      * @param ServiceDefinition[] $aliases

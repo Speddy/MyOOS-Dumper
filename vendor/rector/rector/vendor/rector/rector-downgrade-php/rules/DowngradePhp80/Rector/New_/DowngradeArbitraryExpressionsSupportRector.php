@@ -27,14 +27,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeArbitraryExpressionsSupportRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeFactory\NamedVariableFactory
-     */
-    private $namedVariableFactory;
-    public function __construct(NamedVariableFactory $namedVariableFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly NamedVariableFactory $namedVariableFactory
+    )
     {
-        $this->namedVariableFactory = $namedVariableFactory;
     }
     public function getRuleDefinition() : RuleDefinition
     {

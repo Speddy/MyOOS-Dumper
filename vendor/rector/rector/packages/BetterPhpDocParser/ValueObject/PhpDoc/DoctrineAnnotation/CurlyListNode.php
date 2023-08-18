@@ -6,19 +6,16 @@ namespace Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation;
 use Rector\BetterPhpDocParser\PhpDoc\ArrayItemNode;
 use Stringable;
 use RectorPrefix202308\Webmozart\Assert\Assert;
-final class CurlyListNode extends \Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\AbstractValuesAwareNode
+final class CurlyListNode extends \Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\AbstractValuesAwareNode implements \Stringable
 {
-    /**
-     * @var ArrayItemNode[]
-     * @readonly
-     */
-    private $arrayItemNodes = [];
     /**
      * @param ArrayItemNode[] $arrayItemNodes
      */
-    public function __construct(array $arrayItemNodes = [])
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly array $arrayItemNodes = [])
     {
-        $this->arrayItemNodes = $arrayItemNodes;
         Assert::allIsInstanceOf($this->arrayItemNodes, ArrayItemNode::class);
         parent::__construct($this->arrayItemNodes);
     }
@@ -33,8 +30,7 @@ final class CurlyListNode extends \Rector\BetterPhpDocParser\ValueObject\PhpDoc\
     private function implode(array $array) : string
     {
         $itemContents = '';
-        \end($array);
-        $lastItemKey = \key($array);
+        $lastItemKey = array_key_last($array);
         foreach ($array as $key => $value) {
             if (\is_int($key)) {
                 $itemContents .= (string) $value;

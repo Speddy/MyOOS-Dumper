@@ -40,32 +40,25 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class CountOnNullRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\TypeAnalyzer\CountableTypeAnalyzer
-     */
-    private $countableTypeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Php71\NodeAnalyzer\CountableAnalyzer
-     */
-    private $countableAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\VariableAnalyzer
-     */
-    private $variableAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    public function __construct(CountableTypeAnalyzer $countableTypeAnalyzer, CountableAnalyzer $countableAnalyzer, VariableAnalyzer $variableAnalyzer, PhpVersionProvider $phpVersionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly CountableTypeAnalyzer $countableTypeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly CountableAnalyzer $countableAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly VariableAnalyzer $variableAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly PhpVersionProvider $phpVersionProvider
+    )
     {
-        $this->countableTypeAnalyzer = $countableTypeAnalyzer;
-        $this->countableAnalyzer = $countableAnalyzer;
-        $this->variableAnalyzer = $variableAnalyzer;
-        $this->phpVersionProvider = $phpVersionProvider;
     }
     public function provideMinPhpVersion() : int
     {

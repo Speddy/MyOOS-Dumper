@@ -13,10 +13,9 @@ namespace RectorPrefix202308\React\Promise;
  *
  * If `$promiseOrValue` is a promise, it will be returned as is.
  *
- * @param mixed $promiseOrValue
  * @return PromiseInterface
  */
-function resolve($promiseOrValue = null)
+function resolve(mixed $promiseOrValue = null)
 {
     if ($promiseOrValue instanceof ExtendedPromiseInterface) {
         return $promiseOrValue;
@@ -47,15 +46,12 @@ function resolve($promiseOrValue = null)
  * throwing an exception. For example, it allows you to propagate a rejection with
  * the value of another promise.
  *
- * @param mixed $promiseOrValue
  * @return PromiseInterface
  */
-function reject($promiseOrValue = null)
+function reject(mixed $promiseOrValue = null)
 {
     if ($promiseOrValue instanceof PromiseInterface) {
-        return resolve($promiseOrValue)->then(function ($value) {
-            return new RejectedPromise($value);
-        });
+        return resolve($promiseOrValue)->then(fn($value) => new RejectedPromise($value));
     }
     return new RejectedPromise($promiseOrValue);
 }
@@ -70,9 +66,7 @@ function reject($promiseOrValue = null)
  */
 function all($promisesOrValues)
 {
-    return map($promisesOrValues, function ($val) {
-        return $val;
-    });
+    return map($promisesOrValues, fn($val) => $val);
 }
 /**
  * Initiates a competitive race that allows one winner. Returns a promise which is
@@ -117,9 +111,7 @@ function race($promisesOrValues)
  */
 function any($promisesOrValues)
 {
-    return some($promisesOrValues, 1)->then(function ($val) {
-        return \array_shift($val);
-    });
+    return some($promisesOrValues, 1)->then(fn($val) => \array_shift($val));
 }
 /**
  * Returns a promise that will resolve when `$howMany` of the supplied items in
@@ -190,7 +182,6 @@ function some($promisesOrValues, $howMany)
  * value of a promise or value in `$promisesOrValues`.
  *
  * @param array $promisesOrValues
- * @param callable $mapFunc
  * @return PromiseInterface
  */
 function map($promisesOrValues, callable $mapFunc)
@@ -225,11 +216,9 @@ function map($promisesOrValues, callable $mapFunc)
  * value.
  *
  * @param array $promisesOrValues
- * @param callable $reduceFunc
- * @param mixed $initialValue
  * @return PromiseInterface
  */
-function reduce($promisesOrValues, callable $reduceFunc, $initialValue = null)
+function reduce($promisesOrValues, callable $reduceFunc, mixed $initialValue = null)
 {
     $cancellationQueue = new CancellationQueue();
     $cancellationQueue->enqueue($promisesOrValues);

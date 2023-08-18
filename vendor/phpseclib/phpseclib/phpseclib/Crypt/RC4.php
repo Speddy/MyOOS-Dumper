@@ -54,12 +54,12 @@ class RC4 extends StreamCipher
     /**
      * @see \phpseclib3\Crypt\RC4::_crypt()
      */
-    const ENCRYPT = 0;
+    final public const ENCRYPT = 0;
 
     /**
      * @see \phpseclib3\Crypt\RC4::_crypt()
      */
-    const DECRYPT = 1;
+    final public const DECRYPT = 1;
 
     /**
      * Key Length (in bytes)
@@ -89,9 +89,8 @@ class RC4 extends StreamCipher
      * The Key Stream for decryption and encryption
      *
      * @see self::setKey()
-     * @var array
      */
-    private $stream;
+    private ?array $stream = null;
 
     /**
      * Test for engine validity

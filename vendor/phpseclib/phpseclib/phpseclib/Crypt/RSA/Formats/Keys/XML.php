@@ -59,7 +59,7 @@ abstract class XML
         $use_errors = libxml_use_internal_errors(true);
 
         $dom = new \DOMDocument();
-        if (substr($key, 0, 5) != '<?xml') {
+        if (!str_starts_with($key, '<?xml')) {
             $key = '<xml>' . $key . '</xml>';
         }
         if (!$dom->loadXML($key)) {
@@ -123,12 +123,6 @@ abstract class XML
     /**
      * Convert a private key to the appropriate format.
      *
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
-     * @param \phpseclib3\Math\BigInteger $d
-     * @param array $primes
-     * @param array $exponents
-     * @param array $coefficients
      * @param string $password optional
      * @return string
      */
@@ -157,8 +151,6 @@ abstract class XML
     /**
      * Convert a public key to the appropriate format
      *
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
      * @return string
      */
     public static function savePublicKey(BigInteger $n, BigInteger $e)

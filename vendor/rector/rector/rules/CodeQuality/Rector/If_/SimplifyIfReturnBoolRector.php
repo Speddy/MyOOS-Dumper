@@ -23,26 +23,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class SimplifyIfReturnBoolRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\Comment\CommentsMerger
-     */
-    private $commentsMerger;
-    /**
-     * @readonly
-     * @var \Rector\CodeQuality\NodeManipulator\ExprBoolCaster
-     */
-    private $exprBoolCaster;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Printer\BetterStandardPrinter
-     */
-    private $betterStandardPrinter;
-    public function __construct(CommentsMerger $commentsMerger, ExprBoolCaster $exprBoolCaster, BetterStandardPrinter $betterStandardPrinter)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly CommentsMerger $commentsMerger,
+        /**
+         * @readonly
+         */
+        private readonly ExprBoolCaster $exprBoolCaster,
+        /**
+         * @readonly
+         */
+        private readonly BetterStandardPrinter $betterStandardPrinter
+    )
     {
-        $this->commentsMerger = $commentsMerger;
-        $this->exprBoolCaster = $exprBoolCaster;
-        $this->betterStandardPrinter = $betterStandardPrinter;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -130,7 +125,7 @@ CODE_SAMPLE
             return !$this->valueResolver->isTrueOrFalse($return->expr);
         }
         $condString = $this->betterStandardPrinter->print($if->cond);
-        if (\strpos($condString, '!=') === \false) {
+        if (!str_contains($condString, '!=')) {
             return !$this->valueResolver->isTrueOrFalse($return->expr);
         }
         return !$if->cond instanceof NotIdentical;

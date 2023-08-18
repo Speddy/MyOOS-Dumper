@@ -20,14 +20,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class UseIdenticalOverEqualWithSameTypeRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ExprAnalyzer
-     */
-    private $exprAnalyzer;
-    public function __construct(ExprAnalyzer $exprAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ExprAnalyzer $exprAnalyzer
+    )
     {
-        $this->exprAnalyzer = $exprAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

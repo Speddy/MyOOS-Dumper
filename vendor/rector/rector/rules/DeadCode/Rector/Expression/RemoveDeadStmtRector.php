@@ -22,26 +22,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveDeadStmtRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\NodeManipulator\LivingCodeManipulator
-     */
-    private $livingCodeManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
-     */
-    private $propertyFetchAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(LivingCodeManipulator $livingCodeManipulator, PropertyFetchAnalyzer $propertyFetchAnalyzer, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly LivingCodeManipulator $livingCodeManipulator,
+        /**
+         * @readonly
+         */
+        private readonly PropertyFetchAnalyzer $propertyFetchAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver
+    )
     {
-        $this->livingCodeManipulator = $livingCodeManipulator;
-        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

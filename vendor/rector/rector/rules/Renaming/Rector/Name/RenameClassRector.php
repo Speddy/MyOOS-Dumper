@@ -23,20 +23,17 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
  */
 final class RenameClassRector extends AbstractRector implements ConfigurableRectorInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Configuration\RenamedClassesDataCollector
-     */
-    private $renamedClassesDataCollector;
-    /**
-     * @readonly
-     * @var \Rector\Renaming\NodeManipulator\ClassRenamer
-     */
-    private $classRenamer;
-    public function __construct(RenamedClassesDataCollector $renamedClassesDataCollector, ClassRenamer $classRenamer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly RenamedClassesDataCollector $renamedClassesDataCollector,
+        /**
+         * @readonly
+         */
+        private readonly ClassRenamer $classRenamer
+    )
     {
-        $this->renamedClassesDataCollector = $renamedClassesDataCollector;
-        $this->classRenamer = $classRenamer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

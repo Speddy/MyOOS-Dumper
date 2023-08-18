@@ -4,22 +4,19 @@ declare (strict_types=1);
 namespace Rector\Php80\ValueObject;
 
 use Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode;
-final class NestedDoctrineTagAndAnnotationToAttribute
+final readonly class NestedDoctrineTagAndAnnotationToAttribute
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode
-     */
-    private $doctrineAnnotationTagValueNode;
-    /**
-     * @readonly
-     * @var \Rector\Php80\ValueObject\NestedAnnotationToAttribute
-     */
-    private $nestedAnnotationToAttribute;
-    public function __construct(DoctrineAnnotationTagValueNode $doctrineAnnotationTagValueNode, \Rector\Php80\ValueObject\NestedAnnotationToAttribute $nestedAnnotationToAttribute)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private DoctrineAnnotationTagValueNode $doctrineAnnotationTagValueNode,
+        /**
+         * @readonly
+         */
+        private \Rector\Php80\ValueObject\NestedAnnotationToAttribute $nestedAnnotationToAttribute
+    )
     {
-        $this->doctrineAnnotationTagValueNode = $doctrineAnnotationTagValueNode;
-        $this->nestedAnnotationToAttribute = $nestedAnnotationToAttribute;
     }
     public function getDoctrineAnnotationTagValueNode() : DoctrineAnnotationTagValueNode
     {

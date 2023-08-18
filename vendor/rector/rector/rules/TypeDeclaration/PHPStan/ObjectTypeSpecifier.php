@@ -28,23 +28,17 @@ use Rector\TypeDeclaration\PHPStan\TypeSpecifier\SelfStaticParentTypeSpecifier;
 final class ObjectTypeSpecifier
 {
     /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\UseImportsResolver
-     */
-    private $useImportsResolver;
-    /**
      * @var TypeWithClassTypeSpecifierInterface[]
      */
-    private $typeWithClassTypeSpecifiers = [];
-    public function __construct(ReflectionProvider $reflectionProvider, UseImportsResolver $useImportsResolver, SelfStaticParentTypeSpecifier $selfStaticParentTypeSpecifier, SameNamespacedTypeSpecifier $sameNamespacedTypeSpecifier)
+    private array $typeWithClassTypeSpecifiers = [];
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly ReflectionProvider $reflectionProvider, /**
+     * @readonly
+     */
+    private readonly UseImportsResolver $useImportsResolver, SelfStaticParentTypeSpecifier $selfStaticParentTypeSpecifier, SameNamespacedTypeSpecifier $sameNamespacedTypeSpecifier)
     {
-        $this->reflectionProvider = $reflectionProvider;
-        $this->useImportsResolver = $useImportsResolver;
         $this->typeWithClassTypeSpecifiers = [$selfStaticParentTypeSpecifier, $sameNamespacedTypeSpecifier];
     }
     /**
@@ -156,7 +150,7 @@ final class ObjectTypeSpecifier
     private function matchPartialNamespaceObjectType(string $prefix, ObjectType $objectType, UseUse $useUse) : ?ShortenedObjectType
     {
         // partial namespace
-        if (\strncmp($objectType->getClassName(), $useUse->name->getLast() . '\\', \strlen($useUse->name->getLast() . '\\')) !== 0) {
+        if (!str_starts_with($objectType->getClassName(), $useUse->name->getLast() . '\\')) {
             return null;
         }
         $classNameWithoutLastUsePart = Strings::after($objectType->getClassName(), '\\', 1);

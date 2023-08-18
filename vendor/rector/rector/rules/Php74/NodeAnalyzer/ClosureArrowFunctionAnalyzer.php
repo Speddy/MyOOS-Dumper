@@ -12,28 +12,23 @@ use PhpParser\Node\Stmt\Return_;
 use Rector\Core\PhpParser\Comparing\NodeComparator;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\Core\Util\ArrayChecker;
-final class ClosureArrowFunctionAnalyzer
+final readonly class ClosureArrowFunctionAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
-     */
-    private $nodeComparator;
-    /**
-     * @readonly
-     * @var \Rector\Core\Util\ArrayChecker
-     */
-    private $arrayChecker;
-    public function __construct(BetterNodeFinder $betterNodeFinder, NodeComparator $nodeComparator, ArrayChecker $arrayChecker)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private BetterNodeFinder $betterNodeFinder,
+        /**
+         * @readonly
+         */
+        private NodeComparator $nodeComparator,
+        /**
+         * @readonly
+         */
+        private ArrayChecker $arrayChecker
+    )
     {
-        $this->betterNodeFinder = $betterNodeFinder;
-        $this->nodeComparator = $nodeComparator;
-        $this->arrayChecker = $arrayChecker;
     }
     public function matchArrowFunctionExpr(Closure $closure) : ?Expr
     {
@@ -83,9 +78,7 @@ final class ClosureArrowFunctionAnalyzer
                 return \false;
             }
             foreach ($referencedValues as $referencedValue) {
-                $isFoundInInnerUses = $this->arrayChecker->doesExist($subNode->uses, function (ClosureUse $closureUse) use($referencedValue) : bool {
-                    return $closureUse->byRef && $this->nodeComparator->areNodesEqual($closureUse->var, $referencedValue);
-                });
+                $isFoundInInnerUses = $this->arrayChecker->doesExist($subNode->uses, fn(ClosureUse $closureUse): bool => $closureUse->byRef && $this->nodeComparator->areNodesEqual($closureUse->var, $referencedValue));
                 if ($isFoundInInnerUses) {
                     return \true;
                 }

@@ -20,26 +20,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveDataProviderTestPrefixRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
-     */
-    private $testsNodeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeFinder\DataProviderClassMethodFinder
-     */
-    private $dataProviderClassMethodFinder;
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\PhpDoc\DataProviderMethodRenamer
-     */
-    private $dataProviderMethodRenamer;
-    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer, DataProviderClassMethodFinder $dataProviderClassMethodFinder, DataProviderMethodRenamer $dataProviderMethodRenamer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly DataProviderClassMethodFinder $dataProviderClassMethodFinder,
+        /**
+         * @readonly
+         */
+        private readonly DataProviderMethodRenamer $dataProviderMethodRenamer
+    )
     {
-        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
-        $this->dataProviderClassMethodFinder = $dataProviderClassMethodFinder;
-        $this->dataProviderMethodRenamer = $dataProviderMethodRenamer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -44,54 +44,38 @@ use RectorPrefix202308\Webmozart\Assert\InvalidArgumentException;
  */
 final class UnionTypeMapper implements TypeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\DoctrineTypeAnalyzer
-     */
-    private $doctrineTypeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeAnalyzer
-     */
-    private $unionTypeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\TypeAnalyzer\BoolUnionTypeAnalyzer
-     */
-    private $boolUnionTypeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeCommonTypeNarrower
-     */
-    private $unionTypeCommonTypeNarrower;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
-     */
-    private $typeFactory;
-    /**
-     * @var \Rector\PHPStanStaticTypeMapper\PHPStanStaticTypeMapper
-     */
-    private $phpStanStaticTypeMapper;
-    public function __construct(DoctrineTypeAnalyzer $doctrineTypeAnalyzer, PhpVersionProvider $phpVersionProvider, UnionTypeAnalyzer $unionTypeAnalyzer, BoolUnionTypeAnalyzer $boolUnionTypeAnalyzer, UnionTypeCommonTypeNarrower $unionTypeCommonTypeNarrower, NodeNameResolver $nodeNameResolver, TypeFactory $typeFactory)
+    private ?\Rector\PHPStanStaticTypeMapper\PHPStanStaticTypeMapper $phpStanStaticTypeMapper = null;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly DoctrineTypeAnalyzer $doctrineTypeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly PhpVersionProvider $phpVersionProvider,
+        /**
+         * @readonly
+         */
+        private readonly UnionTypeAnalyzer $unionTypeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly BoolUnionTypeAnalyzer $boolUnionTypeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly UnionTypeCommonTypeNarrower $unionTypeCommonTypeNarrower,
+        /**
+         * @readonly
+         */
+        private readonly NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private readonly TypeFactory $typeFactory
+    )
     {
-        $this->doctrineTypeAnalyzer = $doctrineTypeAnalyzer;
-        $this->phpVersionProvider = $phpVersionProvider;
-        $this->unionTypeAnalyzer = $unionTypeAnalyzer;
-        $this->boolUnionTypeAnalyzer = $boolUnionTypeAnalyzer;
-        $this->unionTypeCommonTypeNarrower = $unionTypeCommonTypeNarrower;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->typeFactory = $typeFactory;
     }
     public function autowire(PHPStanStaticTypeMapper $phpStanStaticTypeMapper) : void
     {
@@ -151,7 +135,7 @@ final class UnionTypeMapper implements TypeMapperInterface
             try {
                 Assert::isAnyOf($firstType, [Name::class, Identifier::class]);
                 Assert::isAnyOf($secondType, [Name::class, Identifier::class]);
-            } catch (InvalidArgumentException $exception) {
+            } catch (InvalidArgumentException) {
                 return $this->resolveUnionTypes($phpParserUnionType, $totalTypes);
             }
             $firstTypeValue = $firstType->toString();
@@ -201,7 +185,7 @@ final class UnionTypeMapper implements TypeMapperInterface
         if (!$nullabledTypeNode instanceof Node) {
             return null;
         }
-        if (\in_array(\get_class($nullabledTypeNode), [NullableType::class, ComplexType::class], \true)) {
+        if (\in_array($nullabledTypeNode::class, [NullableType::class, ComplexType::class], \true)) {
             return $nullabledTypeNode;
         }
         /** @var Name $nullabledTypeNode */
@@ -256,9 +240,7 @@ final class UnionTypeMapper implements TypeMapperInterface
         if (!\in_array('false', $identifierNames, \true)) {
             return $phpParserUnionType;
         }
-        $phpParserUnionType->types = \array_filter($phpParserUnionType->types, static function (Node $node) : bool {
-            return !$node instanceof Identifier || $node->toString() !== 'false';
-        });
+        $phpParserUnionType->types = \array_filter($phpParserUnionType->types, static fn(Node $node): bool => !$node instanceof Identifier || $node->toString() !== 'false');
         $phpParserUnionType->types = \array_values($phpParserUnionType->types);
         return $phpParserUnionType;
     }
@@ -349,7 +331,7 @@ final class UnionTypeMapper implements TypeMapperInterface
         $phpParserUnionedTypes = [];
         foreach ($unionType->getTypes() as $unionedType) {
             // void type and mixed type are not allowed in union
-            if (\in_array(\get_class($unionedType), [MixedType::class, VoidType::class], \true)) {
+            if (\in_array($unionedType::class, [MixedType::class, VoidType::class], \true)) {
                 return null;
             }
             /**
@@ -428,10 +410,10 @@ final class UnionTypeMapper implements TypeMapperInterface
     private function correctObjectType(TypeWithClassName $typeWithClassName) : TypeWithClassName
     {
         if ($typeWithClassName->getClassName() === NodeAbstract::class) {
-            return new ObjectType('PhpParser\\Node');
+            return new ObjectType(\PhpParser\Node::class);
         }
         if ($typeWithClassName->getClassName() === AbstractRector::class) {
-            return new ObjectType('Rector\\Core\\Contract\\Rector\\RectorInterface');
+            return new ObjectType(\Rector\Core\Contract\Rector\RectorInterface::class);
         }
         return $typeWithClassName;
     }

@@ -6,28 +6,23 @@ namespace Rector\Skipper\Matcher;
 use Rector\Skipper\FileSystem\FnMatchPathNormalizer;
 use Rector\Skipper\Fnmatcher;
 use Rector\Skipper\RealpathMatcher;
-final class FileInfoMatcher
+final readonly class FileInfoMatcher
 {
-    /**
-     * @readonly
-     * @var \Rector\Skipper\FileSystem\FnMatchPathNormalizer
-     */
-    private $fnMatchPathNormalizer;
-    /**
-     * @readonly
-     * @var \Rector\Skipper\Fnmatcher
-     */
-    private $fnmatcher;
-    /**
-     * @readonly
-     * @var \Rector\Skipper\RealpathMatcher
-     */
-    private $realpathMatcher;
-    public function __construct(FnMatchPathNormalizer $fnMatchPathNormalizer, Fnmatcher $fnmatcher, RealpathMatcher $realpathMatcher)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private FnMatchPathNormalizer $fnMatchPathNormalizer,
+        /**
+         * @readonly
+         */
+        private Fnmatcher $fnmatcher,
+        /**
+         * @readonly
+         */
+        private RealpathMatcher $realpathMatcher
+    )
     {
-        $this->fnMatchPathNormalizer = $fnMatchPathNormalizer;
-        $this->fnmatcher = $fnmatcher;
-        $this->realpathMatcher = $realpathMatcher;
     }
     /**
      * @param string[] $filePatterns
@@ -54,10 +49,10 @@ final class FileInfoMatcher
         if ($ignoredPath === '') {
             return \false;
         }
-        if (\strncmp($filePath, $ignoredPath, \strlen($ignoredPath)) === 0) {
+        if (str_starts_with($filePath, $ignoredPath)) {
             return \true;
         }
-        if (\substr_compare($filePath, $ignoredPath, -\strlen($ignoredPath)) === 0) {
+        if (str_ends_with($filePath, $ignoredPath)) {
             return \true;
         }
         if ($this->fnmatcher->match($ignoredPath, $filePath)) {

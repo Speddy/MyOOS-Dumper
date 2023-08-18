@@ -89,46 +89,19 @@ CODE_SAMPLE;
      * @var \PhpParser\Node\Stmt|null
      */
     protected $currentStmt;
-    /**
-     * @var \Rector\Core\Application\ChangedNodeScopeRefresher
-     */
-    private $changedNodeScopeRefresher;
-    /**
-     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
-     */
-    private $simpleCallableNodeTraverser;
-    /**
-     * @var \Rector\Core\Logging\CurrentRectorProvider
-     */
-    private $currentRectorProvider;
-    /**
-     * @var \Rector\Core\Configuration\CurrentNodeProvider
-     */
-    private $currentNodeProvider;
-    /**
-     * @var \Rector\Skipper\Skipper\Skipper
-     */
-    private $skipper;
-    /**
-     * @var \Rector\Core\Provider\CurrentFileProvider
-     */
-    private $currentFileProvider;
+    private ?\Rector\Core\Application\ChangedNodeScopeRefresher $changedNodeScopeRefresher = null;
+    private ?\Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser $simpleCallableNodeTraverser = null;
+    private ?\Rector\Core\Logging\CurrentRectorProvider $currentRectorProvider = null;
+    private ?\Rector\Core\Configuration\CurrentNodeProvider $currentNodeProvider = null;
+    private ?\Rector\Skipper\Skipper\Skipper $skipper = null;
+    private ?\Rector\Core\Provider\CurrentFileProvider $currentFileProvider = null;
     /**
      * @var array<string, Node[]|Node>
      */
-    private $nodesToReturn = [];
-    /**
-     * @var \Rector\Core\NodeDecorator\CreatedByRuleDecorator
-     */
-    private $createdByRuleDecorator;
-    /**
-     * @var \Rector\Core\Logging\RectorOutput
-     */
-    private $rectorOutput;
-    /**
-     * @var string|null
-     */
-    private $toBeRemovedNodeHash;
+    private array $nodesToReturn = [];
+    private ?\Rector\Core\NodeDecorator\CreatedByRuleDecorator $createdByRuleDecorator = null;
+    private ?\Rector\Core\Logging\RectorOutput $rectorOutput = null;
+    private ?string $toBeRemovedNodeHash = null;
     public function autowire(NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, NodeFactory $nodeFactory, PhpDocInfoFactory $phpDocInfoFactory, StaticTypeMapper $staticTypeMapper, CurrentRectorProvider $currentRectorProvider, CurrentNodeProvider $currentNodeProvider, Skipper $skipper, ValueResolver $valueResolver, BetterNodeFinder $betterNodeFinder, NodeComparator $nodeComparator, CurrentFileProvider $currentFileProvider, CreatedByRuleDecorator $createdByRuleDecorator, ChangedNodeScopeRefresher $changedNodeScopeRefresher, RectorOutput $rectorOutput) : void
     {
         $this->nodeNameResolver = $nodeNameResolver;
@@ -313,7 +286,7 @@ CODE_SAMPLE;
     }
     private function isMatchingNodeType(Node $node) : bool
     {
-        $nodeClass = \get_class($node);
+        $nodeClass = $node::class;
         foreach ($this->getNodeTypes() as $nodeType) {
             if (!\is_a($nodeClass, $nodeType, \true)) {
                 if ($node instanceof Stmt) {

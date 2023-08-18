@@ -9,26 +9,23 @@ use PhpParser\Node\Scalar\String_;
 use PHPStan\PhpDocParser\Ast\PhpDoc\GenericTagValueNode;
 use PHPStan\Reflection\ReflectionProvider;
 use Rector\Core\PhpParser\Node\NodeFactory;
-final class PhpDocValueToNodeMapper
+final readonly class PhpDocValueToNodeMapper
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    public function __construct(NodeFactory $nodeFactory, ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory,
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider
+    )
     {
-        $this->nodeFactory = $nodeFactory;
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function mapGenericTagValueNode(GenericTagValueNode $genericTagValueNode) : Expr
     {
-        if (\strpos($genericTagValueNode->value, '::') !== \false) {
+        if (str_contains($genericTagValueNode->value, '::')) {
             [$class, $constant] = \explode('::', $genericTagValueNode->value);
             $name = new Name($class);
             return $this->nodeFactory->createClassConstFetchFromName($name, $constant);

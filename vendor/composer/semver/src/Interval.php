@@ -15,15 +15,8 @@ use Composer\Semver\Constraint\Constraint;
 
 class Interval
 {
-    /** @var Constraint */
-    private $start;
-    /** @var Constraint */
-    private $end;
-
-    public function __construct(Constraint $start, Constraint $end)
+    public function __construct(private readonly Constraint $start, private readonly Constraint $end)
     {
-        $this->start = $start;
-        $this->end = $end;
     }
 
     /**
@@ -84,7 +77,7 @@ class Interval
     public static function anyDev()
     {
         // any == exclude nothing
-        return array('names' => array(), 'exclude' => true);
+        return ['names' => [], 'exclude' => true];
     }
 
     /**
@@ -93,6 +86,6 @@ class Interval
     public static function noDev()
     {
         // nothing == no names included
-        return array('names' => array(), 'exclude' => false);
+        return ['names' => [], 'exclude' => false];
     }
 }

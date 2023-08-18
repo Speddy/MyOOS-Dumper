@@ -20,29 +20,24 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class AddSeeTestAnnotationRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
-     */
-    private $phpDocTagRemover;
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\Naming\TestClassNameResolver
-     */
-    private $testClassNameResolver;
-    /**
      * @var string
      */
     private const SEE = 'see';
-    public function __construct(ReflectionProvider $reflectionProvider, PhpDocTagRemover $phpDocTagRemover, TestClassNameResolver $testClassNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTagRemover $phpDocTagRemover,
+        /**
+         * @readonly
+         */
+        private readonly TestClassNameResolver $testClassNameResolver
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
-        $this->phpDocTagRemover = $phpDocTagRemover;
-        $this->testClassNameResolver = $testClassNameResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -170,10 +165,10 @@ CODE_SAMPLE
     }
     private function isSeeTestCaseClass(string $possibleClassName) : bool
     {
-        if (\strncmp($possibleClassName, '\\', \strlen('\\')) !== 0) {
+        if (!str_starts_with($possibleClassName, '\\')) {
             return \false;
         }
-        return \substr_compare($possibleClassName, 'Test', -\strlen('Test')) === 0;
+        return str_ends_with($possibleClassName, 'Test');
     }
     /**
      * @param string[] $classNames

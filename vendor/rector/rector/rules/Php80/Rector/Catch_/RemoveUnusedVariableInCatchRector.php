@@ -20,14 +20,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveUnusedVariableInCatchRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\StmtsManipulator
-     */
-    private $stmtsManipulator;
-    public function __construct(StmtsManipulator $stmtsManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly StmtsManipulator $stmtsManipulator
+    )
     {
-        $this->stmtsManipulator = $stmtsManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {

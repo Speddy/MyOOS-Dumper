@@ -29,31 +29,28 @@ class InputDefinition
     /**
      * @var mixed[]
      */
-    private $arguments = [];
-    /**
-     * @var int
-     */
-    private $requiredCount = 0;
+    private array $arguments = [];
+    private int $requiredCount = 0;
     /**
      * @var \Symfony\Component\Console\Input\InputArgument|null
      */
-    private $lastArrayArgument;
+    private ?\RectorPrefix202308\Symfony\Component\Console\Input\InputArgument $lastArrayArgument = null;
     /**
      * @var \Symfony\Component\Console\Input\InputArgument|null
      */
-    private $lastOptionalArgument;
+    private ?\RectorPrefix202308\Symfony\Component\Console\Input\InputArgument $lastOptionalArgument = null;
     /**
      * @var mixed[]
      */
-    private $options = [];
+    private array $options = [];
     /**
      * @var mixed[]
      */
-    private $negations = [];
+    private array $negations = [];
     /**
      * @var mixed[]
      */
-    private $shortcuts = [];
+    private array $shortcuts = [];
     /**
      * @param array $definition An array of InputArgument and InputOption instance
      */

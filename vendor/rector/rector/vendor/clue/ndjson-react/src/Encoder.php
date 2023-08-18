@@ -9,18 +9,16 @@ use RectorPrefix202308\React\Stream\WritableStreamInterface;
  */
 class Encoder extends EventEmitter implements WritableStreamInterface
 {
-    private $output;
     private $options;
     private $depth;
-    private $closed = \false;
+    private bool $closed = \false;
     /**
-     * @param WritableStreamInterface $output
      * @param int $options
      * @param int $depth (requires PHP 5.5+)
      * @throws \InvalidArgumentException
      * @throws \BadMethodCallException
      */
-    public function __construct(WritableStreamInterface $output, $options = 0, $depth = 512)
+    public function __construct(private readonly WritableStreamInterface $output, $options = 0, $depth = 512)
     {
         // @codeCoverageIgnoreStart
         if (\defined('JSON_PRETTY_PRINT') && $options & \JSON_PRETTY_PRINT) {
@@ -32,17 +30,15 @@ class Encoder extends EventEmitter implements WritableStreamInterface
         if (\defined('JSON_THROW_ON_ERROR')) {
             $options = $options & ~\JSON_THROW_ON_ERROR;
         }
-        // @codeCoverageIgnoreEnd
-        $this->output = $output;
         if (!$output->isWritable()) {
             $this->close();
             return;
         }
         $this->options = $options;
         $this->depth = $depth;
-        $this->output->on('drain', array($this, 'handleDrain'));
-        $this->output->on('error', array($this, 'handleError'));
-        $this->output->on('close', array($this, 'close'));
+        $this->output->on('drain', $this->handleDrain(...));
+        $this->output->on('error', $this->handleError(...));
+        $this->output->on('close', $this->close(...));
     }
     public function write($data)
     {
@@ -114,9 +110,9 @@ class Encoder extends EventEmitter implements WritableStreamInterface
         $this->emit('drain');
     }
     /** @internal */
-    public function handleError(\Exception $error)
+    public function handleError(\Throwable $error)
     {
-        $this->emit('error', array($error));
+        $this->emit('error', [$error]);
         $this->close();
     }
 }

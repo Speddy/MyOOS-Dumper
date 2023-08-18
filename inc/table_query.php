@@ -62,7 +62,7 @@ if ('Backup' == $tblr) {
         $klasse = ($i % 2) ? 1 : '';
         $table_size = $row['Data_length'] + $row['Index_length'];
         $table_type = $row['Engine'];
-        if ('VIEW' == substr($row['Comment'], 0, 4)) {
+        if (str_starts_with((string) $row['Comment'], 'VIEW')) {
             $table_type = 'View';
             $table_size = '-';
         }
@@ -83,7 +83,7 @@ if ('Backup' == $tblr) {
     ]);
     //Restore - Header aus Backupfile lesen
     $button_name = 'restore_tbl';
-    $gz = (substr($filename, -3)) == '.gz' ? 1 : 0;
+    $gz = str_ends_with((string) $filename, '.gz') ? 1 : 0;
     if ($gz) {
         $fp = gzopen($fpath.$filename, 'r');
         $statusline = gzgets($fp, 40960);
@@ -99,7 +99,7 @@ if ('Backup' == $tblr) {
     $anzahl_tabellen = $sline['tables'];
     $anzahl_eintraege = $sline['records'];
     $tbl_zeile = '';
-    $part = ('' == $sline['part']) ? 0 : substr($sline['part'], 3);
+    $part = ('' == $sline['part']) ? 0 : substr((string) $sline['part'], 3);
     if (-1 == $anzahl_eintraege) {
         // not a backup of MySQLDumper
         $tpl->assign_block_vars('NO_MOD_BACKUP', []);
@@ -112,19 +112,19 @@ if ('Backup' == $tblr) {
         while (!$eof) {
             $line = $gz ? gzgets($fp, 40960) : fgets($fp, 40960);
 
-            if ('-- TABLE|' == substr($line, 0, 9)) {
+            if (str_starts_with($line, '-- TABLE|')) {
                 $d = explode('|', $line);
                 $tabledata[$i]['name'] = $d[1];
                 $tabledata[$i]['records'] = $d[2];
                 $tabledata[$i]['size'] = $d[3];
                 $tabledata[$i]['update'] = $d[4];
-                $tabledata[$i]['engine'] = isset($d[5]) ? $d[5] : '';
+                $tabledata[$i]['engine'] = $d[5] ?? '';
                 ++$i;
             }
-            if ('-- EOF' == substr($line, 0, 6)) {
+            if (str_starts_with($line, '-- EOF')) {
                 $eof = true;
             }
-            if ('create' == substr(strtolower($line), 0, 6)) {
+            if (str_starts_with(strtolower($line), 'create')) {
                 $eof = true;
             }
         }

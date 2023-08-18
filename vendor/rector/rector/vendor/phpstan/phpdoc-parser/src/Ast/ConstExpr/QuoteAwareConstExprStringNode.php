@@ -15,8 +15,8 @@ use function strlen;
 use const STR_PAD_LEFT;
 class QuoteAwareConstExprStringNode extends \PHPStan\PhpDocParser\Ast\ConstExpr\ConstExprStringNode implements \PHPStan\PhpDocParser\Ast\ConstExpr\ConstExprNode
 {
-    public const SINGLE_QUOTED = 1;
-    public const DOUBLE_QUOTED = 2;
+    final public const SINGLE_QUOTED = 1;
+    final public const DOUBLE_QUOTED = 2;
     use NodeAttributes;
     /** @var self::SINGLE_QUOTED|self::DOUBLE_QUOTED */
     public $quoteType;

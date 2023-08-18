@@ -10,16 +10,15 @@ use PHPStan\Type\ArrayType;
 use PHPStan\Type\MixedType;
 use PHPStan\Type\Type;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final class ArrayDimFetchTypeResolver
+final readonly class ArrayDimFetchTypeResolver
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    public function __construct(NodeTypeResolver $nodeTypeResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver
+    )
     {
-        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     public function resolve(ArrayDimFetch $arrayDimFetch, Assign $assign) : ArrayType
     {

@@ -86,14 +86,14 @@ class HostsFile
     public function getIpsForHost($name)
     {
         $name = \strtolower($name);
-        $ips = array();
+        $ips = [];
         foreach (\preg_split('/\\r?\\n/', $this->contents) as $line) {
             $parts = \preg_split('/\\s+/', $line);
             $ip = \array_shift($parts);
             if ($parts && \array_search($name, $parts) !== \false) {
                 // remove IPv6 zone ID (`fe80::1%lo0` => `fe80:1`)
-                if (\strpos($ip, ':') !== \false && ($pos = \strpos($ip, '%')) !== \false) {
-                    $ip = \substr($ip, 0, $pos);
+                if (str_contains((string) $ip, ':') && ($pos = \strpos((string) $ip, '%')) !== \false) {
+                    $ip = \substr((string) $ip, 0, $pos);
                 }
                 if (@\inet_pton($ip) !== \false) {
                     $ips[] = $ip;
@@ -113,14 +113,14 @@ class HostsFile
         // check binary representation of IP to avoid string case and short notation
         $ip = @\inet_pton($ip);
         if ($ip === \false) {
-            return array();
+            return [];
         }
-        $names = array();
+        $names = [];
         foreach (\preg_split('/\\r?\\n/', $this->contents) as $line) {
             $parts = \preg_split('/\\s+/', $line, -1, \PREG_SPLIT_NO_EMPTY);
             $addr = (string) \array_shift($parts);
             // remove IPv6 zone ID (`fe80::1%lo0` => `fe80:1`)
-            if (\strpos($addr, ':') !== \false && ($pos = \strpos($addr, '%')) !== \false) {
+            if (str_contains($addr, ':') && ($pos = \strpos($addr, '%')) !== \false) {
                 $addr = \substr($addr, 0, $pos);
             }
             if (@\inet_pton($addr) === $ip) {

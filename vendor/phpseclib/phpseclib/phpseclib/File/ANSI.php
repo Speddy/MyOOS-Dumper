@@ -28,16 +28,14 @@ class ANSI
     /**
      * Max Width
      *
-     * @var int
      */
-    private $max_x;
+    private int|float $max_x;
 
     /**
      * Max Height
      *
-     * @var int
      */
-    private $max_y;
+    private int|float $max_y;
 
     /**
      * Max History
@@ -49,30 +47,26 @@ class ANSI
     /**
      * History
      *
-     * @var array
      */
-    private $history;
+    private array $history;
 
     /**
      * History Attributes
      *
-     * @var array
      */
-    private $history_attrs;
+    private ?array $history_attrs = null;
 
     /**
      * Current Column
      *
-     * @var int
      */
-    private $x;
+    private int|float $x;
 
     /**
      * Current Row
      *
-     * @var int
      */
-    private $y;
+    private ?int $y = null;
 
     /**
      * Old Column
@@ -93,49 +87,45 @@ class ANSI
      *
      * @var object
      */
-    private $base_attr_cell;
+    private \stdClass $base_attr_cell;
 
     /**
      * The current attribute cell
      *
      * @var object
      */
-    private $attr_cell;
+    private readonly \stdClass $attr_cell;
 
     /**
      * An empty attribute row
      *
-     * @var array
      */
-    private $attr_row;
+    private array $attr_row;
 
     /**
      * The current screen text
      *
      * @var list<string>
      */
-    private $screen;
+    private array $screen;
 
     /**
      * The current screen attributes
      *
-     * @var array
      */
-    private $attrs;
+    private array $attrs;
 
     /**
      * Current ANSI code
      *
-     * @var string
      */
-    private $ansi;
+    private string $ansi;
 
     /**
      * Tokenization
      *
-     * @var array
      */
-    private $tokenization;
+    private ?array $tokenization = null;
 
     /**
      * Default Constructor.
@@ -435,8 +425,6 @@ class ANSI
     /**
      * Returns the current coordinate without preformating
      *
-     * @param \stdClass $last_attr
-     * @param \stdClass $cur_attr
      * @param string $char
      * @return string
      */
@@ -503,7 +491,7 @@ class ANSI
         for ($i = 0; $i <= $this->max_y; $i++) {
             for ($j = 0; $j <= $this->max_x; $j++) {
                 $cur_attr = $this->attrs[$i][$j];
-                $output .= $this->processCoordinate($last_attr, $cur_attr, isset($this->screen[$i][$j]) ? $this->screen[$i][$j] : '');
+                $output .= $this->processCoordinate($last_attr, $cur_attr, $this->screen[$i][$j] ?? '');
                 $last_attr = $this->attrs[$i][$j];
             }
             $output .= "\r\n";
@@ -536,7 +524,7 @@ class ANSI
         for ($i = 0; $i < count($this->history); $i++) {
             for ($j = 0; $j <= $this->max_x + 1; $j++) {
                 $cur_attr = $this->history_attrs[$i][$j];
-                $scrollback .= $this->processCoordinate($last_attr, $cur_attr, isset($this->history[$i][$j]) ? $this->history[$i][$j] : '');
+                $scrollback .= $this->processCoordinate($last_attr, $cur_attr, $this->history[$i][$j] ?? '');
                 $last_attr = $this->history_attrs[$i][$j];
             }
             $scrollback .= "\r\n";

@@ -10,16 +10,15 @@ use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Node\Scalar\String_;
 use Rector\Core\PhpParser\Node\NodeFactory;
-final class LiteralCallLikeConstFetchReplacer
+final readonly class LiteralCallLikeConstFetchReplacer
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    public function __construct(NodeFactory $nodeFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory
+    )
     {
-        $this->nodeFactory = $nodeFactory;
     }
     /**
      * @template TCallLike as MethodCall|New_|StaticCall

@@ -13,10 +13,10 @@ use RectorPrefix202308\React\EventLoop\TimerInterface;
  */
 final class Timer implements TimerInterface
 {
-    const MIN_INTERVAL = 1.0E-6;
-    private $interval;
+    public const MIN_INTERVAL = 1.0E-6;
+    private readonly float $interval;
     private $callback;
-    private $periodic;
+    private readonly bool $periodic;
     /**
      * Constructor initializes the fields of the Timer
      *

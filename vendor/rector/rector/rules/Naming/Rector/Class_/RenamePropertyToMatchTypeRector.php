@@ -21,36 +21,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RenamePropertyToMatchTypeRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Naming\PropertyRenamer\MatchTypePropertyRenamer
-     */
-    private $matchTypePropertyRenamer;
-    /**
-     * @readonly
-     * @var \Rector\Naming\ValueObjectFactory\PropertyRenameFactory
-     */
-    private $propertyRenameFactory;
-    /**
-     * @readonly
-     * @var \Rector\Naming\ExpectedNameResolver\MatchPropertyTypeExpectedNameResolver
-     */
-    private $matchPropertyTypeExpectedNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Naming\PropertyRenamer\PropertyPromotionRenamer
-     */
-    private $propertyPromotionRenamer;
-    /**
-     * @var bool
-     */
-    private $hasChanged = \false;
-    public function __construct(MatchTypePropertyRenamer $matchTypePropertyRenamer, PropertyRenameFactory $propertyRenameFactory, MatchPropertyTypeExpectedNameResolver $matchPropertyTypeExpectedNameResolver, PropertyPromotionRenamer $propertyPromotionRenamer)
+    private bool $hasChanged = \false;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly MatchTypePropertyRenamer $matchTypePropertyRenamer,
+        /**
+         * @readonly
+         */
+        private readonly PropertyRenameFactory $propertyRenameFactory,
+        /**
+         * @readonly
+         */
+        private readonly MatchPropertyTypeExpectedNameResolver $matchPropertyTypeExpectedNameResolver,
+        /**
+         * @readonly
+         */
+        private readonly PropertyPromotionRenamer $propertyPromotionRenamer
+    )
     {
-        $this->matchTypePropertyRenamer = $matchTypePropertyRenamer;
-        $this->propertyRenameFactory = $propertyRenameFactory;
-        $this->matchPropertyTypeExpectedNameResolver = $matchPropertyTypeExpectedNameResolver;
-        $this->propertyPromotionRenamer = $propertyPromotionRenamer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

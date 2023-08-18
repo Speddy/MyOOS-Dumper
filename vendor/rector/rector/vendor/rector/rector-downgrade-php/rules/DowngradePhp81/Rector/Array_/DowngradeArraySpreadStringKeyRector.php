@@ -22,20 +22,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeArraySpreadStringKeyRector extends AbstractScopeAwareRector
 {
-    /**
-     * @readonly
-     * @var \Rector\DowngradePhp81\NodeFactory\ArrayMergeFromArraySpreadFactory
-     */
-    private $arrayMergeFromArraySpreadFactory;
-    /**
-     * @readonly
-     * @var \Rector\DowngradePhp81\NodeAnalyzer\ArraySpreadAnalyzer
-     */
-    private $arraySpreadAnalyzer;
-    public function __construct(ArrayMergeFromArraySpreadFactory $arrayMergeFromArraySpreadFactory, ArraySpreadAnalyzer $arraySpreadAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ArrayMergeFromArraySpreadFactory $arrayMergeFromArraySpreadFactory,
+        /**
+         * @readonly
+         */
+        private readonly ArraySpreadAnalyzer $arraySpreadAnalyzer
+    )
     {
-        $this->arrayMergeFromArraySpreadFactory = $arrayMergeFromArraySpreadFactory;
-        $this->arraySpreadAnalyzer = $arraySpreadAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

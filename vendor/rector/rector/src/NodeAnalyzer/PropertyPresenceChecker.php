@@ -18,34 +18,27 @@ use Rector\PostRector\ValueObject\PropertyMetadata;
 /**
  * Can be local property, parent property etc.
  */
-final class PropertyPresenceChecker
+final readonly class PropertyPresenceChecker
 {
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\PromotedPropertyResolver
-     */
-    private $promotedPropertyResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    public function __construct(PromotedPropertyResolver $promotedPropertyResolver, NodeNameResolver $nodeNameResolver, ReflectionProvider $reflectionProvider, AstResolver $astResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PromotedPropertyResolver $promotedPropertyResolver,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private AstResolver $astResolver
+    )
     {
-        $this->promotedPropertyResolver = $promotedPropertyResolver;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->astResolver = $astResolver;
     }
     /**
      * Includes parent classes and traits

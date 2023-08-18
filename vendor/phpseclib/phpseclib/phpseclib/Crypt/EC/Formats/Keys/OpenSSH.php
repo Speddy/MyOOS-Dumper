@@ -56,17 +56,17 @@ abstract class OpenSSH extends Progenitor
 
         if (isset($parsed['paddedKey'])) {
             $paddedKey = $parsed['paddedKey'];
-            list($type) = Strings::unpackSSH2('s', $paddedKey);
+            [$type] = Strings::unpackSSH2('s', $paddedKey);
             if ($type != $parsed['type']) {
                 throw new \RuntimeException("The public and private keys are not of the same type ($type vs $parsed[type])");
             }
             if ($type == 'ssh-ed25519') {
-                list(, $key, $comment) = Strings::unpackSSH2('sss', $paddedKey);
+                [, $key, $comment] = Strings::unpackSSH2('sss', $paddedKey);
                 $key = libsodium::load($key);
                 $key['comment'] = $comment;
                 return $key;
             }
-            list($curveName, $publicKey, $privateKey, $comment) = Strings::unpackSSH2('ssis', $paddedKey);
+            [$curveName, $publicKey, $privateKey, $comment] = Strings::unpackSSH2('ssis', $paddedKey);
             $curve = self::loadCurveByParam(['namedCurve' => $curveName]);
             $curve->rangeCheck($privateKey);
             return [
@@ -85,7 +85,7 @@ abstract class OpenSSH extends Progenitor
             $curve = new Ed25519();
             $qa = self::extractPoint($parsed['publicKey'], $curve);
         } else {
-            list($curveName, $publicKey) = Strings::unpackSSH2('ss', $parsed['publicKey']);
+            [$curveName, $publicKey] = Strings::unpackSSH2('ss', $parsed['publicKey']);
             $curveName = '\phpseclib3\Crypt\EC\Curves\\' . $curveName;
             $curve = new $curveName();
 
@@ -112,9 +112,7 @@ abstract class OpenSSH extends Progenitor
         $name = $reflect->getShortName();
 
         $oid = self::$curveOIDs[$name];
-        $aliases = array_filter(self::$curveOIDs, function ($v) use ($oid) {
-            return $v == $oid;
-        });
+        $aliases = array_filter(self::$curveOIDs, fn($v) => $v == $oid);
         $aliases = array_keys($aliases);
 
         for ($i = 0; $i < count($aliases); $i++) {
@@ -134,19 +132,18 @@ abstract class OpenSSH extends Progenitor
     /**
      * Convert an EC public key to the appropriate format
      *
-     * @param \phpseclib3\Crypt\EC\BaseCurves\Base $curve
      * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param array $options optional
      * @return string
      */
     public static function savePublicKey(BaseCurve $curve, array $publicKey, array $options = [])
     {
-        $comment = isset($options['comment']) ? $options['comment'] : self::$comment;
+        $comment = $options['comment'] ?? self::$comment;
 
         if ($curve instanceof Ed25519) {
             $key = Strings::packSSH2('ss', 'ssh-ed25519', $curve->encodePoint($publicKey));
 
-            if (isset($options['binary']) ? $options['binary'] : self::$binary) {
+            if ($options['binary'] ?? self::$binary) {
                 return $key;
             }
 
@@ -159,7 +156,7 @@ abstract class OpenSSH extends Progenitor
         $points = "\4" . $publicKey[0]->toBytes() . $publicKey[1]->toBytes();
         $key = Strings::packSSH2('sss', 'ecdsa-sha2-' . $alias, $alias, $points);
 
-        if (isset($options['binary']) ? $options['binary'] : self::$binary) {
+        if ($options['binary'] ?? self::$binary) {
             return $key;
         }
 
@@ -171,7 +168,6 @@ abstract class OpenSSH extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
-     * @param \phpseclib3\Math\BigInteger $privateKey
      * @param \phpseclib3\Crypt\EC\Curves\Ed25519 $curve
      * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param string $secret optional

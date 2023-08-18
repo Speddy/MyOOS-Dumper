@@ -22,22 +22,14 @@ use Monolog\Utils;
  */
 class PsrLogMessageProcessor implements ProcessorInterface
 {
-    public const SIMPLE_DATE = "Y-m-d\TH:i:s.uP";
-
-    /** @var string|null */
-    private $dateFormat;
-
-    /** @var bool */
-    private $removeUsedContextFields;
+    final public const SIMPLE_DATE = "Y-m-d\TH:i:s.uP";
 
     /**
      * @param string|null $dateFormat              The format of the timestamp: one supported by DateTime::format
      * @param bool        $removeUsedContextFields If set to true the fields interpolated into message gets unset
      */
-    public function __construct(?string $dateFormat = null, bool $removeUsedContextFields = false)
+    public function __construct(private readonly ?string $dateFormat = null, private readonly bool $removeUsedContextFields = false)
     {
-        $this->dateFormat = $dateFormat;
-        $this->removeUsedContextFields = $removeUsedContextFields;
     }
 
     /**
@@ -45,14 +37,14 @@ class PsrLogMessageProcessor implements ProcessorInterface
      */
     public function __invoke(array $record): array
     {
-        if (false === strpos($record['message'], '{')) {
+        if (!str_contains($record['message'], '{')) {
             return $record;
         }
 
         $replacements = [];
         foreach ($record['context'] as $key => $val) {
             $placeholder = '{' . $key . '}';
-            if (strpos($record['message'], $placeholder) === false) {
+            if (!str_contains($record['message'], $placeholder)) {
                 continue;
             }
 

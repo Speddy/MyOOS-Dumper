@@ -10,16 +10,15 @@ use Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode;
 use Rector\Php80\Contract\ValueObject\AnnotationToAttributeInterface;
 use Rector\PhpAttribute\UseAliasNameMatcher;
 use Rector\PhpAttribute\ValueObject\UseAliasMetadata;
-final class AttributeNameFactory
+final readonly class AttributeNameFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\UseAliasNameMatcher
-     */
-    private $useAliasNameMatcher;
-    public function __construct(UseAliasNameMatcher $useAliasNameMatcher)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private UseAliasNameMatcher $useAliasNameMatcher
+    )
     {
-        $this->useAliasNameMatcher = $useAliasNameMatcher;
     }
     /**
      * @param Use_[] $uses

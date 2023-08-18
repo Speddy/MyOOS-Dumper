@@ -14,21 +14,20 @@ use ReflectionClass;
 /**
  * @see \Rector\Core\Tests\Php\PhpVersionProviderTest
  */
-final class PhpVersionProvider
+final readonly class PhpVersionProvider
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionResolver\ProjectComposerJsonPhpVersionResolver
-     */
-    private $projectComposerJsonPhpVersionResolver;
     /**
      * @var string
      * @see https://regex101.com/r/qBMnbl/1
      */
     private const VALID_PHP_VERSION_REGEX = '#^\\d{5,6}$#';
-    public function __construct(ProjectComposerJsonPhpVersionResolver $projectComposerJsonPhpVersionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ProjectComposerJsonPhpVersionResolver $projectComposerJsonPhpVersionResolver
+    )
     {
-        $this->projectComposerJsonPhpVersionResolver = $projectComposerJsonPhpVersionResolver;
     }
     /**
      * @return PhpVersion::*
@@ -61,10 +60,7 @@ final class PhpVersionProvider
     {
         return $phpVersion <= $this->provide();
     }
-    /**
-     * @param mixed $phpVersionFeatures
-     */
-    private function validatePhpVersionFeaturesParameter($phpVersionFeatures) : void
+    private function validatePhpVersionFeaturesParameter(mixed $phpVersionFeatures) : void
     {
         if ($phpVersionFeatures === null) {
             return;
@@ -85,9 +81,8 @@ final class PhpVersionProvider
     }
     /**
      * @return never
-     * @param mixed $phpVersionFeatures
      */
-    private function throwInvalidTypeException($phpVersionFeatures)
+    private function throwInvalidTypeException(mixed $phpVersionFeatures): never
     {
         $errorMessage = \sprintf('Parameter "%s::%s" must be int, "%s" given.%sUse constant from "%s" to provide it, e.g. "%s::%s"', Option::class, 'PHP_VERSION_FEATURES', (string) $phpVersionFeatures, \PHP_EOL, PhpVersion::class, PhpVersion::class, 'PHP_80');
         throw new InvalidConfigurationException($errorMessage);

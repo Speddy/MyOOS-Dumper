@@ -13,31 +13,26 @@ use Rector\Core\Configuration\RenamedClassesDataCollector;
 use Rector\Core\ValueObject\Application\File;
 use Rector\Naming\Naming\UseImportsResolver;
 use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
-final class ClassNameImportSkipper
+final readonly class ClassNameImportSkipper
 {
-    /**
-     * @var ClassNameImportSkipVoterInterface[]
-     * @readonly
-     */
-    private $classNameImportSkipVoters;
-    /**
-     * @readonly
-     * @var \Rector\Core\Configuration\RenamedClassesDataCollector
-     */
-    private $renamedClassesDataCollector;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\UseImportsResolver
-     */
-    private $useImportsResolver;
     /**
      * @param ClassNameImportSkipVoterInterface[] $classNameImportSkipVoters
      */
-    public function __construct(iterable $classNameImportSkipVoters, RenamedClassesDataCollector $renamedClassesDataCollector, UseImportsResolver $useImportsResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private iterable $classNameImportSkipVoters,
+        /**
+         * @readonly
+         */
+        private RenamedClassesDataCollector $renamedClassesDataCollector,
+        /**
+         * @readonly
+         */
+        private UseImportsResolver $useImportsResolver
+    )
     {
-        $this->classNameImportSkipVoters = $classNameImportSkipVoters;
-        $this->renamedClassesDataCollector = $renamedClassesDataCollector;
-        $this->useImportsResolver = $useImportsResolver;
     }
     public function shouldSkipNameForFullyQualifiedObjectType(File $file, Node $node, FullyQualifiedObjectType $fullyQualifiedObjectType) : bool
     {

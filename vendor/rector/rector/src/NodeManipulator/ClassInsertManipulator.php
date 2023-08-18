@@ -11,16 +11,15 @@ use PhpParser\Node\Stmt\Property;
 use PHPStan\Type\Type;
 use Rector\Core\PhpParser\Node\NodeFactory;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final class ClassInsertManipulator
+final readonly class ClassInsertManipulator
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    public function __construct(NodeFactory $nodeFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory
+    )
     {
-        $this->nodeFactory = $nodeFactory;
     }
     /**
      * @api

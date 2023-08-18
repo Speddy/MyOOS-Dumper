@@ -34,12 +34,10 @@ use OverflowException;
  */
 class LimitingServer extends EventEmitter implements ServerInterface
 {
-    private $connections = array();
-    private $server;
-    private $limit;
-    private $pauseOnLimit = \false;
-    private $autoPaused = \false;
-    private $manuPaused = \false;
+    private array $connections = [];
+    private bool $pauseOnLimit = \false;
+    private bool $autoPaused = \false;
+    private bool $manuPaused = \false;
     /**
      * Instantiates a new LimitingServer.
      *
@@ -85,19 +83,16 @@ class LimitingServer extends EventEmitter implements ServerInterface
      * });
      * ```
      *
-     * @param ServerInterface $server
-     * @param int|null        $connectionLimit
+     * @param int|null $limit
      * @param bool            $pauseOnLimit
      */
-    public function __construct(ServerInterface $server, $connectionLimit, $pauseOnLimit = \false)
+    public function __construct(private readonly ServerInterface $server, private $limit, $pauseOnLimit = \false)
     {
-        $this->server = $server;
-        $this->limit = $connectionLimit;
-        if ($connectionLimit !== null) {
+        if ($limit !== null) {
             $this->pauseOnLimit = $pauseOnLimit;
         }
-        $this->server->on('connection', array($this, 'handleConnection'));
-        $this->server->on('error', array($this, 'handleError'));
+        $this->server->on('connection', $this->handleConnection(...));
+        $this->server->on('error', $this->handleError(...));
     }
     /**
      * Returns an array with all currently active connections
@@ -161,7 +156,7 @@ class LimitingServer extends EventEmitter implements ServerInterface
                 $this->server->pause();
             }
         }
-        $this->emit('connection', array($connection));
+        $this->emit('connection', [$connection]);
     }
     /** @internal */
     public function handleDisconnection(ConnectionInterface $connection)
@@ -176,8 +171,8 @@ class LimitingServer extends EventEmitter implements ServerInterface
         }
     }
     /** @internal */
-    public function handleError(\Exception $error)
+    public function handleError(\Throwable $error)
     {
-        $this->emit('error', array($error));
+        $this->emit('error', [$error]);
     }
 }

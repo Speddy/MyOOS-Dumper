@@ -28,26 +28,6 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class AssertIssetToSpecificMethodRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeAnalyzer\IdentifierManipulator
-     */
-    private $identifierManipulator;
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
-     */
-    private $testsNodeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
      * @var string
      */
     private const ASSERT_TRUE = 'assertTrue';
@@ -55,12 +35,25 @@ final class AssertIssetToSpecificMethodRector extends AbstractRector
      * @var string
      */
     private const ASSERT_FALSE = 'assertFalse';
-    public function __construct(IdentifierManipulator $identifierManipulator, TestsNodeAnalyzer $testsNodeAnalyzer, AstResolver $astResolver, ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly IdentifierManipulator $identifierManipulator,
+        /**
+         * @readonly
+         */
+        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly AstResolver $astResolver,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider
+    )
     {
-        $this->identifierManipulator = $identifierManipulator;
-        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
-        $this->astResolver = $astResolver;
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -89,7 +82,7 @@ final class AssertIssetToSpecificMethodRector extends AbstractRector
         if (!$firstArgumentValue instanceof Isset_) {
             return null;
         }
-        $variableNodeClass = \get_class($firstArgumentValue->vars[0]);
+        $variableNodeClass = $firstArgumentValue->vars[0]::class;
         if (!\in_array($variableNodeClass, [ArrayDimFetch::class, PropertyFetch::class], \true)) {
             return null;
         }

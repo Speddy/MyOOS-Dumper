@@ -65,7 +65,7 @@ if ($table_selected > count($tables) - 1) {
 
 $offset = (isset($_POST['offset'])) ? intval($_POST['offset']) : 0;
 
-$tablename = isset($_GET['tablename']) ? urldecode($_GET['tablename']) : '';
+$tablename = isset($_GET['tablename']) ? urldecode((string) $_GET['tablename']) : '';
 
 // Delete
 if (isset($_GET['mode']) && 'kill' == $_GET['mode'] && $rk > '') {
@@ -84,7 +84,7 @@ function mysqli_search($db, $tabelle, $suchbegriffe, $suchart, $offset = 0, $anz
     $ret = false;
     $link = mod_mysqli_connect();
     if (sizeof($tables) > 0) {
-        $suchbegriffe = trim((string) str_replace('*', '', $suchbegriffe));
+        $suchbegriffe = trim((string) str_replace('*', '', (string) $suchbegriffe));
         $suchworte = explode(' ', $suchbegriffe);
         if (($suchbegriffe > '') && (is_array($suchworte))) {
             // Remove empty entries (due to double spaces)
@@ -109,7 +109,7 @@ function mysqli_search($db, $tabelle, $suchbegriffe, $suchart, $offset = 0, $anz
                 }
             }
 
-            $feldbedingung = '';
+            $feldbedingung = [];
             if ('CONCAT' == $suchart) {
                 if (count($felder) > 0) {
                     // Build Concat-String
@@ -176,8 +176,8 @@ function mysqli_search($db, $tabelle, $suchbegriffe, $suchart, $offset = 0, $anz
 // - if not found : returns the original string
 function markiere_suchtreffer($suchbegriff, $suchstring)
 {
-    $str = strtolower($suchstring);
-    $suchbegriff = strtolower($suchbegriff);
+    $str = strtolower((string) $suchstring);
+    $suchbegriff = strtolower((string) $suchbegriff);
     if ((strlen($str) > 0) && (strlen($suchbegriff ?? '') > 0)) {
         // Determine hit position
         $offset = 0;
@@ -217,10 +217,10 @@ function markiere_suchtreffer($suchbegriff, $suchstring)
                             }
                         }
                         if (!$in_html) {
-                            $ersetzen = substr($suchstring, $start, strlen($suchbegriff ?? ''));
-                            $str = substr($suchstring, 0, $start);
+                            $ersetzen = substr((string) $suchstring, $start, strlen($suchbegriff ?? ''));
+                            $str = substr((string) $suchstring, 0, $start);
                             $str .= chr(1).$ersetzen.chr(2);
-                            $str .= substr($suchstring, ($start + strlen($ersetzen ?? '')), (strlen($suchstring ?? '') - strlen($ersetzen ?? '')));
+                            $str .= substr((string) $suchstring, ($start + strlen($ersetzen ?? '')), (strlen($suchstring ?? '') - strlen($ersetzen ?? '')));
                             $suchstring = $str;
                         }
                         if ($in_html) {
@@ -245,7 +245,7 @@ function ersetze_suchtreffer($text)
     $ersetzen = [
         '<span class="treffer">',
         '</span>', ];
-    return str_replace($such, $ersetzen, htmlspecialchars($text));
+    return str_replace($such, $ersetzen, htmlspecialchars((string) $text));
 }
 
 $suchbegriffe = trim((string) $suchbegriffe); // Leerzeichen vorne und hinten wegschneiden
@@ -283,7 +283,7 @@ $tpl->set_filenames([
     'show' => './tpl/sqlbrowser/mysql_search.tpl', ]);
 
 $tpl->assign_vars([
-    'DB_NAME_URLENCODED' => urlencode($db),
+    'DB_NAME_URLENCODED' => urlencode((string) $db),
     'LANG_SQLSEARCH' => $lang['L_SQL_SEARCH'],
     'LANG_SQL_SEARCHWORDS' => $lang['L_SQL_SEARCHWORDS'],
     'SUCHBEGRIFFE' => $suchbegriffe,
@@ -332,7 +332,7 @@ if (is_array($treffer) && isset($treffer[0])) {
     $fieldinfos = getExtendedFieldinfo($db, $tables[$table_selected]);
     //v($fieldinfos);
     // auf zusammengesetzte Schlüssel untersuchen
-    $table_keys = isset($fieldinfos['primary_keys']) ? $fieldinfos['primary_keys'] : '';
+    $table_keys = $fieldinfos['primary_keys'] ?? '';
 
     for ($a = 0; $a < $zeige_treffer; ++$a) {
         $tablename = array_keys($treffer[$a]);
@@ -341,18 +341,18 @@ if (is_array($treffer) && isset($treffer[0])) {
             $keystring = '';
             foreach ($table_keys as $k) {
                 // remove hit marker from value
-                $x = str_replace('<span class="treffer">', '', $treffer[$a][$k]);
+                $x = str_replace('<span class="treffer">', '', (string) $treffer[$a][$k]);
                 $x = str_replace('</span>', '', $x);
                 $keystring .= '`'.$k.'`="'.addslashes($x).'" AND ';
             }
             $keystring = substr($keystring, 0, -5);
             $rk = build_recordkey($keystring);
         } else {
-            $rk = urlencode(build_where_from_record($treffer[$a])); // no keys
+            $rk = urlencode((string) build_where_from_record($treffer[$a])); // no keys
         }
 
-        $delete_link = 'sql.php?search=1&mode=kill&db='.urlencode($db).'&tablename='.urlencode($tables[$table_selected]).'&rk='.$rk;
-        $edit_link = 'sql.php?mode=searchedit&db='.urlencode($db).'&tablename='.urlencode($tables[$table_selected]).'&recordkey='.$rk;
+        $delete_link = 'sql.php?search=1&mode=kill&db='.urlencode((string) $db).'&tablename='.urlencode((string) $tables[$table_selected]).'&rk='.$rk;
+        $edit_link = 'sql.php?mode=searchedit&db='.urlencode((string) $db).'&tablename='.urlencode((string) $tables[$table_selected]).'&recordkey='.$rk;
 
         $tpl->assign_block_vars('HITS.TABLEROW', [
             'CLASS' => ($a % 2) ? 'dbrow' : 'dbrow1',

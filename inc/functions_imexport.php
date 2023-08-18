@@ -87,7 +87,7 @@ function ExportCSV()
     if (!isset($config['dbconnection'])) {
         mod_mysqli_connect();
     }
-    for ($table = 0; $table < count($sql['export']['tables']); ++$table) {
+    for ($table = 0; $table < (is_countable($sql['export']['tables']) ? count($sql['export']['tables']) : 0); ++$table) {
         $sqlt = 'SHOW Fields FROM `'.$sql['export']['db'].'`.`'.$sql['export']['tables'][$table].'`;';
         $res = mod_query($sqlt);
         if ($res) {
@@ -116,7 +116,7 @@ function ExportCSV()
                         $t .= $sql['export']['null'];
                     } elseif ('0' == $row[$feld] || '' != $row[$feld]) {
                         if ('' != $sql['export']['enc']) {
-                            $t .= $sql['export']['enc'].str_replace($sql['export']['enc'], $sql['export']['esc'].$sql['export']['enc'], $row[$feld]).$sql['export']['enc'];
+                            $t .= $sql['export']['enc'].str_replace($sql['export']['enc'], $sql['export']['esc'].$sql['export']['enc'], (string) $row[$feld]).$sql['export']['enc'];
                         } else {
                             $t .= $row[$feld];
                         }
@@ -172,7 +172,7 @@ function CSVOutput($str, $last = 0)
             $sql['export']['header_sent'] = 1;
         }
         if (1 == $sql['export']['compressed']) {
-            echo gzencode($str);
+            echo gzencode((string) $str);
         } else {
             echo $str;
         }
@@ -183,8 +183,8 @@ function DoImport()
 {
     global $sql, $lang;
     $r = '<span class="swarnung">';
-    $zeilen = count($sql['import']['csv']) - $sql['import']['namefirstline'];
-    $sql['import']['first_zeile'] = explode($sql['import']['trenn'], $sql['import']['csv'][0]);
+    $zeilen = (is_countable($sql['import']['csv']) ? count($sql['import']['csv']) : 0) - $sql['import']['namefirstline'];
+    $sql['import']['first_zeile'] = explode($sql['import']['trenn'], (string) $sql['import']['csv'][0]);
     $importfelder = count($sql['import']['first_zeile']);
 
     if (0 == $sql['import']['tablecreate']) {
@@ -215,7 +215,7 @@ function DoImport()
             if (1 == $sql['import']['createindex']) {
                 $insert .= "'', ";
             }
-            $zc .= trim((string) rtrim($sql['import']['csv'][$i]));
+            $zc .= trim((string) rtrim((string) $sql['import']['csv'][$i]));
             //echo "Zeile $i: $zc<br>";
             if ('' != $zc) { // && substr($zc,-1)== $enc) {
                 $zeile = explode($sql['import']['trenn'], $zc);
@@ -243,20 +243,20 @@ function ImportCreateTable()
     $tabellen = mod_query($sql);
     // while ($row = mysqli_fetch_row($num_tables))
     while ($row = mysqli_fetch_row($tabellen)) {
-        $tbl[] = strtolower($row[0]);
+        $tbl[] = strtolower((string) $row[0]);
     }
     $i = 0;
     $sql['import']['table'] = $sql['import']['table'].$i;
     while (in_array($sql['import']['table'], $tbl)) {
-        $sql['import']['table'] = substr($sql['import']['table'], 0, strlen($sql['import']['table']) - 1).++$i;
+        $sql['import']['table'] = substr((string) $sql['import']['table'], 0, strlen((string) $sql['import']['table']) - 1).++$i;
     }
     $create = 'CREATE TABLE `'.$sql['import']['table'].'` ('.((1 == $sql['import']['createindex']) ? '`import_id` int(11) unsigned NOT NULL auto_increment, ' : '');
     if ($sql['import']['namefirstline']) {
-        for ($i = 0; $i < count($sql['import']['first_zeile']); ++$i) {
+        for ($i = 0; $i < (is_countable($sql['import']['first_zeile']) ? count($sql['import']['first_zeile']) : 0); ++$i) {
             $create .= '`'.$sql['import']['first_zeile'][$i].'` VARCHAR(250) NOT NULL, ';
         }
     } else {
-        for ($i = 0; $i < count($sql['import']['first_zeile']); ++$i) {
+        for ($i = 0; $i < (is_countable($sql['import']['first_zeile']) ? count($sql['import']['first_zeile']) : 0); ++$i) {
             $create .= '`FIELD_'.$i.'` VARCHAR(250) NOT NULL, ';
         }
     }
@@ -283,7 +283,7 @@ function ExportXML()
     if (!isset($config['dbconnection'])) {
         mod_mysqli_connect();
     }
-    for ($table = 0; $table < count($sql['export']['tables']); ++$table) {
+    for ($table = 0; $table < (is_countable($sql['export']['tables']) ? count($sql['export']['tables']) : 0); ++$table) {
         $t .= str_repeat($tab, $level++).'<table name="'.$sql['export']['tables'][$table].'">'."\n";
         $sqlt = 'SHOW Fields FROM `'.$sql['export']['db'].'`.`'.$sql['export']['tables'][$table].'`;';
         $res = mod_query($sqlt);
@@ -353,7 +353,7 @@ function ExportHTML()
     if (!isset($config['dbconnection'])) {
         mod_mysqli_connect();
     }
-    for ($table = 0; $table < count($sql['export']['tables']); ++$table) {
+    for ($table = 0; $table < (is_countable($sql['export']['tables']) ? count($sql['export']['tables']) : 0); ++$table) {
         $content .= '<h2>Tabelle '.$sql['export']['tables'][$table].'</h2>'."\n";
         $fsql = 'show fields from `'.$sql['export']['tables'][$table].'`';
         $dsql = 'select * from `'.$sql['export']['tables'][$table].'`';
@@ -369,15 +369,15 @@ function ExportHTML()
 
                 if (0 == $feld) {
                     $structure .= "<tr class=\"Header\">\n";
-                    for ($i = 0; $i < count($row); ++$i) {
-                        $str = mysqli_fetch_field($res, $i);
+                    for ($i = 0; $i < ($row === null ? 0 : count($row)); ++$i) {
+                        $str = mysqli_fetch_field($res);
                         $fieldname[$i] = $str->name;
                         $fieldtyp[$i] = $str->type;
                         $structure .= '<th>'.$str->name."</th>\n";
                     }
                     $structure .= "</tr>\n<tr>\n";
                 }
-                for ($i = 0; $i < count($row); ++$i) {
+                for ($i = 0; $i < ($row === null ? 0 : count($row)); ++$i) {
                     $structure .= '<td class="Object">'.(('' != $row[$i]) ? $row[$i] : '&nbsp;')."</td>\n";
                 }
                 $structure .= "</tr>\n";
@@ -406,7 +406,7 @@ function ExportHTML()
             for ($d = 0; $d < $anz; ++$d) {
                 $row = mysqli_fetch_row($res);
                 $content .= "<tr>\n";
-                for ($i = 0; $i < count($row); ++$i) {
+                for ($i = 0; $i < ($row === null ? 0 : count($row)); ++$i) {
                     $content .= '<td class="Object">'.(('' != $row[$i]) ? $row[$i] : '&nbsp;')."</td>\n";
                 }
                 $content .= "</tr>\n";

@@ -23,14 +23,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class CleanupUnneededNullsafeOperatorRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeAnalyzer\ReturnStrictTypeAnalyzer
-     */
-    private $returnStrictTypeAnalyzer;
-    public function __construct(ReturnStrictTypeAnalyzer $returnStrictTypeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ReturnStrictTypeAnalyzer $returnStrictTypeAnalyzer
+    )
     {
-        $this->returnStrictTypeAnalyzer = $returnStrictTypeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

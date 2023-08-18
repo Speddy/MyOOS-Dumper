@@ -9,8 +9,8 @@ use RectorPrefix202308\React\Promise;
 final class HappyEyeBallsConnector implements ConnectorInterface
 {
     private $loop;
-    private $connector;
-    private $resolver;
+    private readonly \RectorPrefix202308\React\Socket\ConnectorInterface $connector;
+    private readonly \RectorPrefix202308\React\Dns\Resolver\ResolverInterface $resolver;
     public function __construct(LoopInterface $loop = null, ConnectorInterface $connector = null, ResolverInterface $resolver = null)
     {
         // $connector and $resolver arguments are actually required, marked
@@ -28,7 +28,7 @@ final class HappyEyeBallsConnector implements ConnectorInterface
     public function connect($uri)
     {
         $original = $uri;
-        if (\strpos($uri, '://') === \false) {
+        if (!str_contains($uri, '://')) {
             $uri = 'tcp://' . $uri;
             $parts = \parse_url($uri);
             if (isset($parts['scheme'])) {

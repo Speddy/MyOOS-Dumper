@@ -11,28 +11,23 @@ use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\StaticTypeMapper\ValueObject\Type\AliasedObjectType;
 use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
-final class UsedImportsResolver
+final readonly class UsedImportsResolver
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\CodingStyle\ClassNameImport\UseImportsTraverser
-     */
-    private $useImportsTraverser;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    public function __construct(BetterNodeFinder $betterNodeFinder, \Rector\CodingStyle\ClassNameImport\UseImportsTraverser $useImportsTraverser, NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private BetterNodeFinder $betterNodeFinder,
+        /**
+         * @readonly
+         */
+        private \Rector\CodingStyle\ClassNameImport\UseImportsTraverser $useImportsTraverser,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->betterNodeFinder = $betterNodeFinder;
-        $this->useImportsTraverser = $useImportsTraverser;
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @param Stmt[] $stmts

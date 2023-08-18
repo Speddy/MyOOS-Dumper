@@ -176,15 +176,12 @@ class Standard extends PrettyPrinterAbstract
             $sign = '';
             $str = (string) $node->value;
         }
-        switch ($kind) {
-            case Scalar\LNumber::KIND_BIN:
-                return $sign . '0b' . \base_convert($str, 10, 2);
-            case Scalar\LNumber::KIND_OCT:
-                return $sign . '0' . \base_convert($str, 10, 8);
-            case Scalar\LNumber::KIND_HEX:
-                return $sign . '0x' . \base_convert($str, 10, 16);
-        }
-        throw new \Exception('Invalid number kind');
+        return match ($kind) {
+            Scalar\LNumber::KIND_BIN => $sign . '0b' . \base_convert($str, 10, 2),
+            Scalar\LNumber::KIND_OCT => $sign . '0' . \base_convert($str, 10, 8),
+            Scalar\LNumber::KIND_HEX => $sign . '0x' . \base_convert($str, 10, 16),
+            default => throw new \Exception('Invalid number kind'),
+        };
     }
     protected function pScalar_DNumber(Scalar\DNumber $node)
     {
@@ -385,7 +382,7 @@ class Standard extends PrettyPrinterAbstract
     }
     protected function pExpr_Instanceof(Expr\Instanceof_ $node)
     {
-        list($precedence, $associativity) = $this->precedenceMap[Expr\Instanceof_::class];
+        [$precedence, $associativity] = $this->precedenceMap[Expr\Instanceof_::class];
         return $this->pPrec($node->expr, $precedence, $associativity, -1) . ' instanceof ' . $this->pNewVariable($node->class);
     }
     // Unary expressions
@@ -517,7 +514,7 @@ class Standard extends PrettyPrinterAbstract
         return 'list(' . $this->pCommaSeparated($node->items) . ')';
     }
     // Other
-    protected function pExpr_Error(Expr\Error $node)
+    protected function pExpr_Error(Expr\Error $node): never
     {
         throw new \LogicException('Cannot pretty-print AST with Error nodes');
     }
@@ -859,9 +856,9 @@ class Standard extends PrettyPrinterAbstract
     {
         if (null === $quote) {
             // For doc strings, don't escape newlines
-            $escaped = \addcslashes($string, "\t\f\v\$\\");
+            $escaped = \addcslashes((string) $string, "\t\f\v\$\\");
         } else {
-            $escaped = \addcslashes($string, "\n\r\t\f\v\$" . $quote . "\\");
+            $escaped = \addcslashes((string) $string, "\n\r\t\f\v\$" . $quote . "\\");
         }
         // Escape control characters and non-UTF-8 characters.
         // Regex based on https://stackoverflow.com/a/11709412/385378.
@@ -890,7 +887,7 @@ class Standard extends PrettyPrinterAbstract
     {
         $start = $atStart ? '(?:^|[\\r\\n])' : '[\\r\\n]';
         $end = $atEnd ? '(?:$|[;\\r\\n])' : '[;\\r\\n]';
-        return \false !== \strpos($string, $label) && \preg_match('/' . $start . $label . $end . '/', $string);
+        return str_contains((string) $string, (string) $label) && \preg_match('/' . $start . $label . $end . '/', (string) $string);
     }
     protected function encapsedContainsEndLabel(array $parts, $label)
     {

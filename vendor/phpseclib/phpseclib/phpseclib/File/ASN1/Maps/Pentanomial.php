@@ -22,7 +22,7 @@ use phpseclib3\File\ASN1;
  */
 abstract class Pentanomial
 {
-    const MAP = [
+    final public const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'k1' => ['type' => ASN1::TYPE_INTEGER], // k1 > 0

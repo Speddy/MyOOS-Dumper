@@ -10,8 +10,6 @@ namespace PhpParser\Internal;
  */
 class TokenStream
 {
-    /** @var array Tokens (in token_get_all format) */
-    private $tokens;
     /** @var int[] Map from position to indentation */
     private $indentMap;
     /**
@@ -19,9 +17,8 @@ class TokenStream
      *
      * @param array $tokens Tokens in token_get_all() format
      */
-    public function __construct(array $tokens)
+    public function __construct(private array $tokens)
     {
-        $this->tokens = $tokens;
         $this->indentMap = $this->calcIndentMap();
     }
     /**
@@ -231,9 +228,9 @@ class TokenStream
                 } else {
                     // TODO Handle non-space indentation
                     if ($indent < 0) {
-                        $result .= \str_replace("\n" . \str_repeat(" ", -$indent), "\n", $content);
+                        $result .= \str_replace("\n" . \str_repeat(" ", -$indent), "\n", (string) $content);
                     } elseif ($indent > 0) {
-                        $result .= \str_replace("\n", "\n" . \str_repeat(" ", $indent), $content);
+                        $result .= \str_replace("\n", "\n" . \str_repeat(" ", $indent), (string) $content);
                     } else {
                         $result .= $content;
                     }
@@ -257,9 +254,9 @@ class TokenStream
             $indentMap[] = $indent;
             if ($token[0] === \T_WHITESPACE) {
                 $content = $token[1];
-                $newlinePos = \strrpos($content, "\n");
+                $newlinePos = \strrpos((string) $content, "\n");
                 if (\false !== $newlinePos) {
-                    $indent = \strlen($content) - $newlinePos - 1;
+                    $indent = \strlen((string) $content) - $newlinePos - 1;
                 }
             }
         }

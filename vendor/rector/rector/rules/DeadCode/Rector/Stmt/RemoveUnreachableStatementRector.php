@@ -15,14 +15,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveUnreachableStatementRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\TerminatedNodeAnalyzer
-     */
-    private $terminatedNodeAnalyzer;
-    public function __construct(TerminatedNodeAnalyzer $terminatedNodeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly TerminatedNodeAnalyzer $terminatedNodeAnalyzer
+    )
     {
-        $this->terminatedNodeAnalyzer = $terminatedNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

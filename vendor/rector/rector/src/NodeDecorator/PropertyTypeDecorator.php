@@ -12,34 +12,27 @@ use Rector\Core\Php\PhpVersionProvider;
 use Rector\Core\ValueObject\PhpVersionFeature;
 use Rector\PHPStanStaticTypeMapper\Enum\TypeKind;
 use Rector\StaticTypeMapper\StaticTypeMapper;
-final class PropertyTypeDecorator
+final readonly class PropertyTypeDecorator
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\StaticTypeMapper
-     */
-    private $staticTypeMapper;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
-     */
-    private $phpDocTypeChanger;
-    public function __construct(PhpDocInfoFactory $phpDocInfoFactory, PhpVersionProvider $phpVersionProvider, StaticTypeMapper $staticTypeMapper, PhpDocTypeChanger $phpDocTypeChanger)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PhpDocInfoFactory $phpDocInfoFactory,
+        /**
+         * @readonly
+         */
+        private PhpVersionProvider $phpVersionProvider,
+        /**
+         * @readonly
+         */
+        private StaticTypeMapper $staticTypeMapper,
+        /**
+         * @readonly
+         */
+        private PhpDocTypeChanger $phpDocTypeChanger
+    )
     {
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
-        $this->phpVersionProvider = $phpVersionProvider;
-        $this->staticTypeMapper = $staticTypeMapper;
-        $this->phpDocTypeChanger = $phpDocTypeChanger;
     }
     public function decorate(Property $property, ?Type $type) : void
     {

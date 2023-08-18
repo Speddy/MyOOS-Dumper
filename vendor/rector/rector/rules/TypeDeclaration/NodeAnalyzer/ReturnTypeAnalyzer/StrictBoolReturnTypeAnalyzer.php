@@ -8,22 +8,19 @@ use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Function_;
 use Rector\TypeDeclaration\TypeAnalyzer\AlwaysStrictBoolExprAnalyzer;
-final class StrictBoolReturnTypeAnalyzer
+final readonly class StrictBoolReturnTypeAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeAnalyzer\AlwaysStrictBoolExprAnalyzer
-     */
-    private $alwaysStrictBoolExprAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\NodeAnalyzer\ReturnTypeAnalyzer\AlwaysStrictReturnAnalyzer
-     */
-    private $alwaysStrictReturnAnalyzer;
-    public function __construct(AlwaysStrictBoolExprAnalyzer $alwaysStrictBoolExprAnalyzer, \Rector\TypeDeclaration\NodeAnalyzer\ReturnTypeAnalyzer\AlwaysStrictReturnAnalyzer $alwaysStrictReturnAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private AlwaysStrictBoolExprAnalyzer $alwaysStrictBoolExprAnalyzer,
+        /**
+         * @readonly
+         */
+        private \Rector\TypeDeclaration\NodeAnalyzer\ReturnTypeAnalyzer\AlwaysStrictReturnAnalyzer $alwaysStrictReturnAnalyzer
+    )
     {
-        $this->alwaysStrictBoolExprAnalyzer = $alwaysStrictBoolExprAnalyzer;
-        $this->alwaysStrictReturnAnalyzer = $alwaysStrictReturnAnalyzer;
     }
     /**
      * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Expr\Closure|\PhpParser\Node\Stmt\Function_ $functionLike

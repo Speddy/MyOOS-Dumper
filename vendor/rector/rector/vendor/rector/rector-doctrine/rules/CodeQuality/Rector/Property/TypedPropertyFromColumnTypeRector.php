@@ -26,26 +26,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class TypedPropertyFromColumnTypeRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\NodeTypeAnalyzer\PropertyTypeDecorator
-     */
-    private $propertyTypeDecorator;
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\NodeManipulator\ColumnPropertyTypeResolver
-     */
-    private $columnPropertyTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\NodeManipulator\NullabilityColumnPropertyTypeResolver
-     */
-    private $nullabilityColumnPropertyTypeResolver;
-    public function __construct(PropertyTypeDecorator $propertyTypeDecorator, ColumnPropertyTypeResolver $columnPropertyTypeResolver, NullabilityColumnPropertyTypeResolver $nullabilityColumnPropertyTypeResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PropertyTypeDecorator $propertyTypeDecorator,
+        /**
+         * @readonly
+         */
+        private readonly ColumnPropertyTypeResolver $columnPropertyTypeResolver,
+        /**
+         * @readonly
+         */
+        private readonly NullabilityColumnPropertyTypeResolver $nullabilityColumnPropertyTypeResolver
+    )
     {
-        $this->propertyTypeDecorator = $propertyTypeDecorator;
-        $this->columnPropertyTypeResolver = $columnPropertyTypeResolver;
-        $this->nullabilityColumnPropertyTypeResolver = $nullabilityColumnPropertyTypeResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

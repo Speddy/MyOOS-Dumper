@@ -9,32 +9,24 @@ use RectorPrefix202308\React\Dns\RecordNotFoundException;
 /**
  * @see ResolverInterface for the base interface
  */
-final class Resolver implements ResolverInterface
+final readonly class Resolver implements ResolverInterface
 {
-    private $executor;
-    public function __construct(ExecutorInterface $executor)
+    public function __construct(private ExecutorInterface $executor)
     {
-        $this->executor = $executor;
     }
     public function resolve($domain)
     {
-        return $this->resolveAll($domain, Message::TYPE_A)->then(function (array $ips) {
-            return $ips[\array_rand($ips)];
-        });
+        return $this->resolveAll($domain, Message::TYPE_A)->then(fn(array $ips) => $ips[\array_rand($ips)]);
     }
     public function resolveAll($domain, $type)
     {
         $query = new Query($domain, $type, Message::CLASS_IN);
         $that = $this;
-        return $this->executor->query($query)->then(function (Message $response) use($query, $that) {
-            return $that->extractValues($query, $response);
-        });
+        return $this->executor->query($query)->then(fn(Message $response) => $that->extractValues($query, $response));
     }
     /**
      * [Internal] extract all resource record values from response for this query
      *
-     * @param Query   $query
-     * @param Message $response
      * @return array
      * @throws RecordNotFoundException when response indicates an error or contains no data
      * @internal
@@ -44,25 +36,14 @@ final class Resolver implements ResolverInterface
         // reject if response code indicates this is an error response message
         $code = $response->rcode;
         if ($code !== Message::RCODE_OK) {
-            switch ($code) {
-                case Message::RCODE_FORMAT_ERROR:
-                    $message = 'Format Error';
-                    break;
-                case Message::RCODE_SERVER_FAILURE:
-                    $message = 'Server Failure';
-                    break;
-                case Message::RCODE_NAME_ERROR:
-                    $message = 'Non-Existent Domain / NXDOMAIN';
-                    break;
-                case Message::RCODE_NOT_IMPLEMENTED:
-                    $message = 'Not Implemented';
-                    break;
-                case Message::RCODE_REFUSED:
-                    $message = 'Refused';
-                    break;
-                default:
-                    $message = 'Unknown error response code ' . $code;
-            }
+            $message = match ($code) {
+                Message::RCODE_FORMAT_ERROR => 'Format Error',
+                Message::RCODE_SERVER_FAILURE => 'Server Failure',
+                Message::RCODE_NAME_ERROR => 'Non-Existent Domain / NXDOMAIN',
+                Message::RCODE_NOT_IMPLEMENTED => 'Not Implemented',
+                Message::RCODE_REFUSED => 'Refused',
+                default => 'Unknown error response code ' . $code,
+            };
             throw new RecordNotFoundException('DNS query for ' . $query->describe() . ' returned an error response (' . $message . ')', $code);
         }
         $answers = $response->answers;
@@ -107,15 +88,11 @@ final class Resolver implements ResolverInterface
     }
     private function filterByField(array $answers, $field, $value)
     {
-        $value = \strtolower($value);
-        return \array_filter($answers, function ($answer) use($field, $value) {
-            return $value === \strtolower($answer->{$field});
-        });
+        $value = \strtolower((string) $value);
+        return \array_filter($answers, fn($answer) => $value === \strtolower((string) $answer->{$field}));
     }
     private function mapRecordData(array $records)
     {
-        return \array_map(function ($record) {
-            return $record->data;
-        }, $records);
+        return \array_map(fn($record) => $record->data, $records);
     }
 }

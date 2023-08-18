@@ -9,28 +9,8 @@ use Rector\Core\Contract\Rector\RectorInterface;
 use Rector\Parallel\ValueObject\Name;
 use RectorPrefix202308\Symplify\EasyParallel\Contract\SerializableInterface;
 use RectorPrefix202308\Webmozart\Assert\Assert;
-final class FileDiff implements SerializableInterface
+final readonly class FileDiff implements SerializableInterface
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $relativeFilePath;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $diff;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $diffConsoleFormatted;
-    /**
-     * @var RectorWithLineChange[]
-     * @readonly
-     */
-    private $rectorsWithLineChanges = [];
     /**
      * @var string
      * @se https://regex101.com/r/AUPIX4/1
@@ -43,12 +23,20 @@ final class FileDiff implements SerializableInterface
     /**
      * @param RectorWithLineChange[] $rectorsWithLineChanges
      */
-    public function __construct(string $relativeFilePath, string $diff, string $diffConsoleFormatted, array $rectorsWithLineChanges = [])
+    public function __construct(/**
+     * @readonly
+     */
+    private string $relativeFilePath, /**
+     * @readonly
+     */
+    private string $diff, /**
+     * @readonly
+     */
+    private string $diffConsoleFormatted, /**
+     * @readonly
+     */
+    private array $rectorsWithLineChanges = [])
     {
-        $this->relativeFilePath = $relativeFilePath;
-        $this->diff = $diff;
-        $this->diffConsoleFormatted = $diffConsoleFormatted;
-        $this->rectorsWithLineChanges = $rectorsWithLineChanges;
         Assert::allIsInstanceOf($rectorsWithLineChanges, RectorWithLineChange::class);
     }
     public function getDiff() : string

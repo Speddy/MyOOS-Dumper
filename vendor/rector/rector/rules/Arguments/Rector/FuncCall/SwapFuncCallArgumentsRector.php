@@ -24,7 +24,7 @@ final class SwapFuncCallArgumentsRector extends AbstractRector implements Config
     /**
      * @var SwapFuncCallArguments[]
      */
-    private $functionArgumentSwaps = [];
+    private array $functionArgumentSwaps = [];
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Reorder arguments in function calls', [new ConfiguredCodeSample(<<<'CODE_SAMPLE'

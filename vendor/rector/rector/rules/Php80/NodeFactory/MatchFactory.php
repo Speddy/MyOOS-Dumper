@@ -16,28 +16,23 @@ use Rector\Php80\Enum\MatchKind;
 use Rector\Php80\NodeAnalyzer\MatchSwitchAnalyzer;
 use Rector\Php80\ValueObject\CondAndExpr;
 use Rector\Php80\ValueObject\MatchResult;
-final class MatchFactory
+final readonly class MatchFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeFactory\MatchArmsFactory
-     */
-    private $matchArmsFactory;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\MatchSwitchAnalyzer
-     */
-    private $matchSwitchAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
-     */
-    private $nodeComparator;
-    public function __construct(\Rector\Php80\NodeFactory\MatchArmsFactory $matchArmsFactory, MatchSwitchAnalyzer $matchSwitchAnalyzer, NodeComparator $nodeComparator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private \Rector\Php80\NodeFactory\MatchArmsFactory $matchArmsFactory,
+        /**
+         * @readonly
+         */
+        private MatchSwitchAnalyzer $matchSwitchAnalyzer,
+        /**
+         * @readonly
+         */
+        private NodeComparator $nodeComparator
+    )
     {
-        $this->matchArmsFactory = $matchArmsFactory;
-        $this->matchSwitchAnalyzer = $matchSwitchAnalyzer;
-        $this->nodeComparator = $nodeComparator;
     }
     /**
      * @param CondAndExpr[] $condAndExprs

@@ -15,14 +15,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeUnionTypeTypedPropertyRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeManipulator\PropertyDecorator
-     */
-    private $PropertyDecorator;
-    public function __construct(PropertyDecorator $PropertyDecorator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PropertyDecorator $PropertyDecorator
+    )
     {
-        $this->PropertyDecorator = $PropertyDecorator;
     }
     /**
      * @return array<class-string<Node>>

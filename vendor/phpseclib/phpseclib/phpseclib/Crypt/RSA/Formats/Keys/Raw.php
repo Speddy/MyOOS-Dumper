@@ -75,7 +75,7 @@ abstract class Raw
                 ['prime1', 'prime2']
             ];
             foreach ($indices as $index) {
-                list($i0, $i1) = $index;
+                [$i0, $i1] = $index;
                 if (isset($key[$i0]) && isset($key[$i1])) {
                     $components['primes'] = [1 => $key[$i0], $key[$i1]];
                 }
@@ -90,7 +90,7 @@ abstract class Raw
                 ['exponent1', 'exponent2']
             ];
             foreach ($indices as $index) {
-                list($i0, $i1) = $index;
+                [$i0, $i1] = $index;
                 if (isset($key[$i0]) && isset($key[$i1])) {
                     $components['exponents'] = [1 => $key[$i0], $key[$i1]];
                 }
@@ -138,12 +138,6 @@ abstract class Raw
     /**
      * Convert a private key to the appropriate format.
      *
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
-     * @param \phpseclib3\Math\BigInteger $d
-     * @param array $primes
-     * @param array $exponents
-     * @param array $coefficients
      * @param string $password optional
      * @param array $options optional
      * @return array
@@ -158,23 +152,15 @@ abstract class Raw
             'e' => clone $e,
             'n' => clone $n,
             'd' => clone $d,
-            'primes' => array_map(function ($var) {
-                return clone $var;
-            }, $primes),
-            'exponents' => array_map(function ($var) {
-                return clone $var;
-            }, $exponents),
-            'coefficients' => array_map(function ($var) {
-                return clone $var;
-            }, $coefficients)
+            'primes' => array_map(fn($var) => clone $var, $primes),
+            'exponents' => array_map(fn($var) => clone $var, $exponents),
+            'coefficients' => array_map(fn($var) => clone $var, $coefficients)
         ];
     }
 
     /**
      * Convert a public key to the appropriate format
      *
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
      * @return array
      */
     public static function savePublicKey(BigInteger $n, BigInteger $e)

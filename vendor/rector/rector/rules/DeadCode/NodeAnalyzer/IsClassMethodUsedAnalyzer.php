@@ -28,58 +28,43 @@ use Rector\NodeCollector\ValueObject\ArrayCallable;
 use Rector\NodeCollector\ValueObject\ArrayCallableDynamicMethod;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
-final class IsClassMethodUsedAnalyzer
+final readonly class IsClassMethodUsedAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
-     */
-    private $valueResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeCollector\NodeAnalyzer\ArrayCallableMethodMatcher
-     */
-    private $arrayCallableMethodMatcher;
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\NodeAnalyzer\CallCollectionAnalyzer
-     */
-    private $callCollectionAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
-     */
-    private $simpleCallableNodeTraverser;
-    public function __construct(NodeNameResolver $nodeNameResolver, AstResolver $astResolver, BetterNodeFinder $betterNodeFinder, ValueResolver $valueResolver, ArrayCallableMethodMatcher $arrayCallableMethodMatcher, \Rector\DeadCode\NodeAnalyzer\CallCollectionAnalyzer $callCollectionAnalyzer, ReflectionResolver $reflectionResolver, SimpleCallableNodeTraverser $simpleCallableNodeTraverser)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private AstResolver $astResolver,
+        /**
+         * @readonly
+         */
+        private BetterNodeFinder $betterNodeFinder,
+        /**
+         * @readonly
+         */
+        private ValueResolver $valueResolver,
+        /**
+         * @readonly
+         */
+        private ArrayCallableMethodMatcher $arrayCallableMethodMatcher,
+        /**
+         * @readonly
+         */
+        private \Rector\DeadCode\NodeAnalyzer\CallCollectionAnalyzer $callCollectionAnalyzer,
+        /**
+         * @readonly
+         */
+        private ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->astResolver = $astResolver;
-        $this->betterNodeFinder = $betterNodeFinder;
-        $this->valueResolver = $valueResolver;
-        $this->arrayCallableMethodMatcher = $arrayCallableMethodMatcher;
-        $this->callCollectionAnalyzer = $callCollectionAnalyzer;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
     }
     public function isClassMethodUsed(Class_ $class, ClassMethod $classMethod, Scope $scope) : bool
     {

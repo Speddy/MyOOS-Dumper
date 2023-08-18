@@ -20,7 +20,7 @@ final class RenameStringRector extends AbstractRector implements ConfigurableRec
     /**
      * @var array<string, string>
      */
-    private $stringChanges = [];
+    private array $stringChanges = [];
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Change string value', [new ConfiguredCodeSample(<<<'CODE_SAMPLE'

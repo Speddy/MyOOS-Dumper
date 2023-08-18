@@ -10,22 +10,19 @@ use PhpParser\Node\Stmt\Foreach_;
 use PhpParser\Node\Stmt\Function_;
 use Rector\Naming\ValueObject\VariableAndCallForeach;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class ForeachMatcher
+final readonly class ForeachMatcher
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Matcher\CallMatcher
-     */
-    private $callMatcher;
-    public function __construct(NodeNameResolver $nodeNameResolver, \Rector\Naming\Matcher\CallMatcher $callMatcher)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private \Rector\Naming\Matcher\CallMatcher $callMatcher
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->callMatcher = $callMatcher;
     }
     /**
      * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Expr\Closure|\PhpParser\Node\Stmt\Function_ $functionLike

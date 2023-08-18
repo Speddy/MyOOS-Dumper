@@ -11,28 +11,23 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Type\Type;
 use Rector\NodeTypeResolver\PHPStan\Type\TypeFactory;
 use Rector\TypeDeclaration\TypeAnalyzer\AlwaysStrictScalarExprAnalyzer;
-final class StrictScalarReturnTypeAnalyzer
+final readonly class StrictScalarReturnTypeAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\NodeAnalyzer\ReturnTypeAnalyzer\AlwaysStrictReturnAnalyzer
-     */
-    private $alwaysStrictReturnAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeAnalyzer\AlwaysStrictScalarExprAnalyzer
-     */
-    private $alwaysStrictScalarExprAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
-     */
-    private $typeFactory;
-    public function __construct(\Rector\TypeDeclaration\NodeAnalyzer\ReturnTypeAnalyzer\AlwaysStrictReturnAnalyzer $alwaysStrictReturnAnalyzer, AlwaysStrictScalarExprAnalyzer $alwaysStrictScalarExprAnalyzer, TypeFactory $typeFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private \Rector\TypeDeclaration\NodeAnalyzer\ReturnTypeAnalyzer\AlwaysStrictReturnAnalyzer $alwaysStrictReturnAnalyzer,
+        /**
+         * @readonly
+         */
+        private AlwaysStrictScalarExprAnalyzer $alwaysStrictScalarExprAnalyzer,
+        /**
+         * @readonly
+         */
+        private TypeFactory $typeFactory
+    )
     {
-        $this->alwaysStrictReturnAnalyzer = $alwaysStrictReturnAnalyzer;
-        $this->alwaysStrictScalarExprAnalyzer = $alwaysStrictScalarExprAnalyzer;
-        $this->typeFactory = $typeFactory;
     }
     /**
      * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Expr\Closure|\PhpParser\Node\Stmt\Function_ $functionLike

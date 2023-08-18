@@ -8,28 +8,23 @@ use Rector\Naming\Guard\DateTimeAtNamingConventionGuard;
 use Rector\Naming\Guard\HasMagicGetSetGuard;
 use Rector\Naming\ValueObject\PropertyRename;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final class PropertyRenameGuard
+final readonly class PropertyRenameGuard
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Guard\DateTimeAtNamingConventionGuard
-     */
-    private $dateTimeAtNamingConventionGuard;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Guard\HasMagicGetSetGuard
-     */
-    private $hasMagicGetSetGuard;
-    public function __construct(NodeTypeResolver $nodeTypeResolver, DateTimeAtNamingConventionGuard $dateTimeAtNamingConventionGuard, HasMagicGetSetGuard $hasMagicGetSetGuard)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver,
+        /**
+         * @readonly
+         */
+        private DateTimeAtNamingConventionGuard $dateTimeAtNamingConventionGuard,
+        /**
+         * @readonly
+         */
+        private HasMagicGetSetGuard $hasMagicGetSetGuard
+    )
     {
-        $this->nodeTypeResolver = $nodeTypeResolver;
-        $this->dateTimeAtNamingConventionGuard = $dateTimeAtNamingConventionGuard;
-        $this->hasMagicGetSetGuard = $hasMagicGetSetGuard;
     }
     public function shouldSkip(PropertyRename $propertyRename) : bool
     {

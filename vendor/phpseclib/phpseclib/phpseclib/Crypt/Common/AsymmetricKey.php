@@ -25,7 +25,7 @@ use phpseclib3\Math\BigInteger;
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-abstract class AsymmetricKey
+abstract class AsymmetricKey implements \Stringable
 {
     /**
      * Precomputed Zero
@@ -58,25 +58,22 @@ abstract class AsymmetricKey
     /**
      * HMAC function
      *
-     * @var \phpseclib3\Crypt\Hash
      */
-    private $hmac;
+    private \phpseclib3\Crypt\Hash $hmac;
 
     /**
      * Supported plugins (lower case)
      *
      * @see self::initialize_static_variables()
-     * @var array
      */
-    private static $plugins = [];
+    private static array $plugins = [];
 
     /**
      * Invisible plugins
      *
      * @see self::initialize_static_variables()
-     * @var array
      */
-    private static $invisiblePlugins = [];
+    private static array $invisiblePlugins = [];
 
     /**
      * Available Engines
@@ -148,7 +145,7 @@ abstract class AsymmetricKey
             }
             try {
                 $components = $format::load($key, $password);
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 $components = false;
             }
             if ($components !== false) {
@@ -161,8 +158,8 @@ abstract class AsymmetricKey
         }
 
         $components['format'] = $format;
-        $components['secret'] = isset($components['secret']) ? $components['secret'] : '';
-        $comment = isset($components['comment']) ? $components['comment'] : null;
+        $components['secret'] ??= '';
+        $comment = $components['comment'] ?? null;
         $new = static::onLoad($components);
         $new->format = $format;
         $new->comment = $comment;
@@ -241,7 +238,7 @@ abstract class AsymmetricKey
         }
 
         $components['format'] = $format;
-        $components['secret'] = isset($components['secret']) ? $components['secret'] : '';
+        $components['secret'] ??= '';
 
         $new = static::onLoad($components);
         $new->format = $format;
@@ -382,7 +379,7 @@ abstract class AsymmetricKey
             $shortname = $meta->getShortName();
             self::$plugins[static::ALGORITHM]['Keys'][strtolower($shortname)] = $fullname;
             if ($meta->hasConstant('IS_INVISIBLE')) {
-                self::$invisiblePlugins[static::ALGORITHM] = strtolower($name);
+                self::$invisiblePlugins[static::ALGORITHM] = strtolower((string) $name);
             }
         }
     }
@@ -454,7 +451,7 @@ abstract class AsymmetricKey
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->toString('PKCS8');
     }

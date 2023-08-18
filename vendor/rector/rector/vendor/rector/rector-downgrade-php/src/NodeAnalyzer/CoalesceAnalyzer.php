@@ -17,7 +17,7 @@ final class CoalesceAnalyzer
     private const ISSETABLE_EXPR = [Variable::class, ArrayDimFetch::class, PropertyFetch::class, StaticPropertyFetch::class];
     public function hasIssetableLeft(Coalesce $coalesce) : bool
     {
-        $leftClass = \get_class($coalesce->left);
+        $leftClass = $coalesce->left::class;
         return \in_array($leftClass, self::ISSETABLE_EXPR, \true);
     }
 }

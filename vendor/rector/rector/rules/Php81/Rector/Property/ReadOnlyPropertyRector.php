@@ -34,32 +34,25 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReadOnlyPropertyRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\PropertyManipulator
-     */
-    private $propertyManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\PropertyFetchAssignManipulator
-     */
-    private $propertyFetchAssignManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ParamAnalyzer
-     */
-    private $paramAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
-     */
-    private $visibilityManipulator;
-    public function __construct(PropertyManipulator $propertyManipulator, PropertyFetchAssignManipulator $propertyFetchAssignManipulator, ParamAnalyzer $paramAnalyzer, VisibilityManipulator $visibilityManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PropertyManipulator $propertyManipulator,
+        /**
+         * @readonly
+         */
+        private readonly PropertyFetchAssignManipulator $propertyFetchAssignManipulator,
+        /**
+         * @readonly
+         */
+        private readonly ParamAnalyzer $paramAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly VisibilityManipulator $visibilityManipulator
+    )
     {
-        $this->propertyManipulator = $propertyManipulator;
-        $this->propertyFetchAssignManipulator = $propertyFetchAssignManipulator;
-        $this->paramAnalyzer = $paramAnalyzer;
-        $this->visibilityManipulator = $visibilityManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {

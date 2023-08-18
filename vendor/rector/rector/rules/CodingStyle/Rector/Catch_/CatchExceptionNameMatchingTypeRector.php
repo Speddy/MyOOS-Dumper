@@ -31,30 +31,25 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class CatchExceptionNameMatchingTypeRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\Naming\Naming\PropertyNaming
-     */
-    private $propertyNaming;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\AliasNameResolver
-     */
-    private $aliasNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\UseImportsResolver
-     */
-    private $useImportsResolver;
-    /**
      * @var string
      * @see https://regex101.com/r/xmfMAX/1
      */
     private const STARTS_WITH_ABBREVIATION_REGEX = '#^([A-Za-z]+?)([A-Z]{1}[a-z]{1})([A-Za-z]*)#';
-    public function __construct(PropertyNaming $propertyNaming, AliasNameResolver $aliasNameResolver, UseImportsResolver $useImportsResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PropertyNaming $propertyNaming,
+        /**
+         * @readonly
+         */
+        private readonly AliasNameResolver $aliasNameResolver,
+        /**
+         * @readonly
+         */
+        private readonly UseImportsResolver $useImportsResolver
+    )
     {
-        $this->propertyNaming = $propertyNaming;
-        $this->aliasNameResolver = $aliasNameResolver;
-        $this->useImportsResolver = $useImportsResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

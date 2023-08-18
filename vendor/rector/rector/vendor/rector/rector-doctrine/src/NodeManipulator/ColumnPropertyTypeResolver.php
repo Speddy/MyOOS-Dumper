@@ -23,25 +23,10 @@ use Rector\NodeTypeResolver\PHPStan\Type\TypeFactory;
 final class ColumnPropertyTypeResolver
 {
     /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
-     */
-    private $typeFactory;
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\NodeAnalyzer\AttributeFinder
-     */
-    private $attributeFinder;
-    /**
      * @var array<string, Type>
      * @readonly
      */
-    private $doctrineTypeToScalarType;
+    private array $doctrineTypeToScalarType;
     /**
      * @var string
      */
@@ -54,9 +39,18 @@ final class ColumnPropertyTypeResolver
      * @param array<string, Type> $doctrineTypeToScalarType
      * @see https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/basic-mapping.html#doctrine-mapping-types
      */
-    public function __construct(PhpDocInfoFactory $phpDocInfoFactory, TypeFactory $typeFactory, AttributeFinder $attributeFinder, array $doctrineTypeToScalarType = null)
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly PhpDocInfoFactory $phpDocInfoFactory, /**
+     * @readonly
+     */
+    private readonly TypeFactory $typeFactory, /**
+     * @readonly
+     */
+    private readonly AttributeFinder $attributeFinder, array $doctrineTypeToScalarType = null)
     {
-        $doctrineTypeToScalarType = $doctrineTypeToScalarType ?? [
+        $doctrineTypeToScalarType ??= [
             'tinyint' => new BooleanType(),
             'boolean' => new BooleanType(),
             // integers
@@ -93,9 +87,6 @@ final class ColumnPropertyTypeResolver
             'time' => new ObjectType(self::DATE_TIME_INTERFACE),
             'year' => new ObjectType(self::DATE_TIME_INTERFACE),
         ];
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
-        $this->typeFactory = $typeFactory;
-        $this->attributeFinder = $attributeFinder;
         $this->doctrineTypeToScalarType = $doctrineTypeToScalarType;
     }
     public function resolve(Property $property, bool $isNullable) : ?Type

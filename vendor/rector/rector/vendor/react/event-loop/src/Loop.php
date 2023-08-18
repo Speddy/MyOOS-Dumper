@@ -11,8 +11,7 @@ final class Loop
      * @var ?LoopInterface
      */
     private static $instance;
-    /** @var bool */
-    private static $stopped = \false;
+    private static bool $stopped = \false;
     /**
      * Returns the event loop.
      * When no loop is set, it will call the factory to create one.
@@ -42,7 +41,7 @@ final class Loop
         \register_shutdown_function(function () use($loop, &$hasRun, &$stopped) {
             // Don't run if we're coming from a fatal error (uncaught exception).
             $error = \error_get_last();
-            if ((isset($error['type']) ? $error['type'] : 0) & (\E_ERROR | \E_CORE_ERROR | \E_COMPILE_ERROR | \E_USER_ERROR | \E_RECOVERABLE_ERROR)) {
+            if (($error['type'] ?? 0) & (\E_ERROR | \E_CORE_ERROR | \E_COMPILE_ERROR | \E_USER_ERROR | \E_RECOVERABLE_ERROR)) {
                 return;
             }
             if (!$hasRun && !$stopped) {
@@ -158,7 +157,6 @@ final class Loop
     /**
      * Cancel a pending timer.
      *
-     * @param TimerInterface $timer
      * @return void
      * @see LoopInterface::cancelTimer()
      */

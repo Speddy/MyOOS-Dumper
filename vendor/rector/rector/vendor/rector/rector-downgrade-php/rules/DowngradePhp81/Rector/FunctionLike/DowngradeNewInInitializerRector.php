@@ -39,14 +39,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeNewInInitializerRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Php72\NodeFactory\AnonymousFunctionFactory
-     */
-    private $anonymousFunctionFactory;
-    public function __construct(AnonymousFunctionFactory $anonymousFunctionFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly AnonymousFunctionFactory $anonymousFunctionFactory
+    )
     {
-        $this->anonymousFunctionFactory = $anonymousFunctionFactory;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -152,7 +151,7 @@ CODE_SAMPLE
             $stmts[] = new Expression($assign);
             $param->default = $this->nodeFactory->createNull();
         }
-        $functionLike->stmts = $functionLike->stmts ?? [];
+        $functionLike->stmts ??= [];
         $functionLike->stmts = \array_merge($stmts, $functionLike->stmts);
         return $functionLike;
     }

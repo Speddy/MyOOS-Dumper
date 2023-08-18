@@ -19,26 +19,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReadOnlyOptionToAttributeRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeManipulator\ArrayManipulator
-     */
-    private $arrayManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\FormAddMethodCallAnalyzer
-     */
-    private $formAddMethodCallAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\FormOptionsArrayMatcher
-     */
-    private $formOptionsArrayMatcher;
-    public function __construct(ArrayManipulator $arrayManipulator, FormAddMethodCallAnalyzer $formAddMethodCallAnalyzer, FormOptionsArrayMatcher $formOptionsArrayMatcher)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ArrayManipulator $arrayManipulator,
+        /**
+         * @readonly
+         */
+        private readonly FormAddMethodCallAnalyzer $formAddMethodCallAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly FormOptionsArrayMatcher $formOptionsArrayMatcher
+    )
     {
-        $this->arrayManipulator = $arrayManipulator;
-        $this->formAddMethodCallAnalyzer = $formAddMethodCallAnalyzer;
-        $this->formOptionsArrayMatcher = $formOptionsArrayMatcher;
     }
     public function getRuleDefinition() : RuleDefinition
     {

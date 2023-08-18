@@ -14,11 +14,8 @@ final class RectorStyle extends SymfonyStyle
     /**
      * @var \Symfony\Component\Console\Helper\ProgressBar|null
      */
-    private $progressBar;
-    /**
-     * @var bool|null
-     */
-    private $isCiDetected = null;
+    private ?\RectorPrefix202308\Symfony\Component\Console\Helper\ProgressBar $progressBar = null;
+    private ?bool $isCiDetected = null;
     public function __construct(InputInterface $input, OutputInterface $output)
     {
         parent::__construct($input, $output);

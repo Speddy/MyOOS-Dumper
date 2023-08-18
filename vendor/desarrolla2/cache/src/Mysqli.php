@@ -44,7 +44,6 @@ class Mysqli extends AbstractCache
     /**
      * Class constructor
      *
-     * @param Server $server
      */
     public function __construct(Server $server)
     {
@@ -90,7 +89,6 @@ class Mysqli extends AbstractCache
     /**
      * Set the table name
      *
-     * @param string $table
      */
     public function setTableOption(string $table)
     {

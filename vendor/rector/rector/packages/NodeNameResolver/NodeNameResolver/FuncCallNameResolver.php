@@ -14,16 +14,15 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
 /**
  * @implements NodeNameResolverInterface<FuncCall>
  */
-final class FuncCallNameResolver implements NodeNameResolverInterface
+final readonly class FuncCallNameResolver implements NodeNameResolverInterface
 {
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    public function __construct(ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function getNode() : string
     {

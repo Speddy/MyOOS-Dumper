@@ -8,28 +8,23 @@ use PhpParser\Node\VarLikeIdentifier;
 use Rector\Naming\Guard\PropertyConflictingNameGuard\MatchPropertyTypeConflictingNameGuard;
 use Rector\Naming\RenameGuard\PropertyRenameGuard;
 use Rector\Naming\ValueObject\PropertyRename;
-final class MatchTypePropertyRenamer
+final readonly class MatchTypePropertyRenamer
 {
-    /**
-     * @readonly
-     * @var \Rector\Naming\Guard\PropertyConflictingNameGuard\MatchPropertyTypeConflictingNameGuard
-     */
-    private $matchPropertyTypeConflictingNameGuard;
-    /**
-     * @readonly
-     * @var \Rector\Naming\RenameGuard\PropertyRenameGuard
-     */
-    private $propertyRenameGuard;
-    /**
-     * @readonly
-     * @var \Rector\Naming\PropertyRenamer\PropertyFetchRenamer
-     */
-    private $propertyFetchRenamer;
-    public function __construct(MatchPropertyTypeConflictingNameGuard $matchPropertyTypeConflictingNameGuard, PropertyRenameGuard $propertyRenameGuard, \Rector\Naming\PropertyRenamer\PropertyFetchRenamer $propertyFetchRenamer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private MatchPropertyTypeConflictingNameGuard $matchPropertyTypeConflictingNameGuard,
+        /**
+         * @readonly
+         */
+        private PropertyRenameGuard $propertyRenameGuard,
+        /**
+         * @readonly
+         */
+        private \Rector\Naming\PropertyRenamer\PropertyFetchRenamer $propertyFetchRenamer
+    )
     {
-        $this->matchPropertyTypeConflictingNameGuard = $matchPropertyTypeConflictingNameGuard;
-        $this->propertyRenameGuard = $propertyRenameGuard;
-        $this->propertyFetchRenamer = $propertyFetchRenamer;
     }
     public function rename(PropertyRename $propertyRename) : ?Property
     {

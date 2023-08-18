@@ -11,16 +11,15 @@ use Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeCommonTypeNarrower;
 /**
  * @see \Rector\Tests\NodeTypeResolver\TypeComparator\ArrayTypeComparatorTest
  */
-final class ArrayTypeComparator
+final readonly class ArrayTypeComparator
 {
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeCommonTypeNarrower
-     */
-    private $unionTypeCommonTypeNarrower;
-    public function __construct(UnionTypeCommonTypeNarrower $unionTypeCommonTypeNarrower)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private UnionTypeCommonTypeNarrower $unionTypeCommonTypeNarrower
+    )
     {
-        $this->unionTypeCommonTypeNarrower = $unionTypeCommonTypeNarrower;
     }
     public function isSubtype(ArrayType $checkedType, ArrayType $mainType) : bool
     {

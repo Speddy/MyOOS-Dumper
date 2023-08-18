@@ -57,7 +57,7 @@ CODE_SAMPLE
         if ($this->shouldSkip($node, $rawValue)) {
             return null;
         }
-        if (\strpos((string) $rawValue, '+') !== \false) {
+        if (str_contains((string) $rawValue, '+')) {
             return null;
         }
         $rawValueWithoutUnderscores = \str_replace('_', '', (string) $rawValue);
@@ -67,9 +67,8 @@ CODE_SAMPLE
     }
     /**
      * @param \PhpParser\Node\Scalar\LNumber|\PhpParser\Node\Scalar\DNumber $node
-     * @param mixed $rawValue
      */
-    private function shouldSkip($node, $rawValue) : bool
+    private function shouldSkip($node, mixed $rawValue) : bool
     {
         if (!\is_string($rawValue)) {
             return \true;
@@ -81,6 +80,6 @@ CODE_SAMPLE
                 return \true;
             }
         }
-        return \strpos($rawValue, '_') === \false;
+        return !str_contains($rawValue, '_');
     }
 }

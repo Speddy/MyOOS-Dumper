@@ -17,10 +17,7 @@ namespace RectorPrefix202308\Symfony\Component\Finder\Iterator;
  */
 class LazyIterator implements \IteratorAggregate
 {
-    /**
-     * @var \Closure
-     */
-    private $iteratorFactory;
+    private readonly \Closure $iteratorFactory;
     public function __construct(callable $iteratorFactory)
     {
         $this->iteratorFactory = \Closure::fromCallable($iteratorFactory);

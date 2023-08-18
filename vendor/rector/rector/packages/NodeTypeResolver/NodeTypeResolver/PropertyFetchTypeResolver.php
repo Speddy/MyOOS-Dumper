@@ -22,24 +22,18 @@ use Rector\NodeTypeResolver\NodeTypeResolver;
  */
 final class PropertyFetchTypeResolver implements NodeTypeResolverInterface, NodeTypeResolverAwareInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    public function __construct(NodeNameResolver $nodeNameResolver, ReflectionProvider $reflectionProvider)
+    private ?\Rector\NodeTypeResolver\NodeTypeResolver $nodeTypeResolver = null;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function autowire(NodeTypeResolver $nodeTypeResolver) : void
     {

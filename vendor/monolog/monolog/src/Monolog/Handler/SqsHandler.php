@@ -29,15 +29,12 @@ class SqsHandler extends AbstractProcessingHandler
 
     /** @var SqsClient */
     private $client;
-    /** @var string */
-    private $queueUrl;
 
-    public function __construct(SqsClient $sqsClient, string $queueUrl, $level = Logger::DEBUG, bool $bubble = true)
+    public function __construct(SqsClient $sqsClient, private readonly string $queueUrl, $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
 
         $this->client = $sqsClient;
-        $this->queueUrl = $queueUrl;
     }
 
     /**

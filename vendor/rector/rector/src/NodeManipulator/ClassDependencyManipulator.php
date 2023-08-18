@@ -26,70 +26,51 @@ use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\PostRector\ValueObject\PropertyMetadata;
 use Rector\TypeDeclaration\NodeAnalyzer\AutowiredClassMethodOrPropertyAnalyzer;
-final class ClassDependencyManipulator
+final readonly class ClassDependencyManipulator
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\ClassInsertManipulator
-     */
-    private $classInsertManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\ClassMethodAssignManipulator
-     */
-    private $classMethodAssignManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\StmtsManipulator
-     */
-    private $stmtsManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\PropertyPresenceChecker
-     */
-    private $propertyPresenceChecker;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\NodeAnalyzer\AutowiredClassMethodOrPropertyAnalyzer
-     */
-    private $autowiredClassMethodOrPropertyAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\Dependency\DependencyClassMethodDecorator
-     */
-    private $dependencyClassMethodDecorator;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(\Rector\Core\NodeManipulator\ClassInsertManipulator $classInsertManipulator, \Rector\Core\NodeManipulator\ClassMethodAssignManipulator $classMethodAssignManipulator, NodeFactory $nodeFactory, \Rector\Core\NodeManipulator\StmtsManipulator $stmtsManipulator, PhpVersionProvider $phpVersionProvider, PropertyPresenceChecker $propertyPresenceChecker, NodeNameResolver $nodeNameResolver, AutowiredClassMethodOrPropertyAnalyzer $autowiredClassMethodOrPropertyAnalyzer, DependencyClassMethodDecorator $dependencyClassMethodDecorator, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private \Rector\Core\NodeManipulator\ClassInsertManipulator $classInsertManipulator,
+        /**
+         * @readonly
+         */
+        private \Rector\Core\NodeManipulator\ClassMethodAssignManipulator $classMethodAssignManipulator,
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory,
+        /**
+         * @readonly
+         */
+        private \Rector\Core\NodeManipulator\StmtsManipulator $stmtsManipulator,
+        /**
+         * @readonly
+         */
+        private PhpVersionProvider $phpVersionProvider,
+        /**
+         * @readonly
+         */
+        private PropertyPresenceChecker $propertyPresenceChecker,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private AutowiredClassMethodOrPropertyAnalyzer $autowiredClassMethodOrPropertyAnalyzer,
+        /**
+         * @readonly
+         */
+        private DependencyClassMethodDecorator $dependencyClassMethodDecorator,
+        /**
+         * @readonly
+         */
+        private ReflectionResolver $reflectionResolver
+    )
     {
-        $this->classInsertManipulator = $classInsertManipulator;
-        $this->classMethodAssignManipulator = $classMethodAssignManipulator;
-        $this->nodeFactory = $nodeFactory;
-        $this->stmtsManipulator = $stmtsManipulator;
-        $this->phpVersionProvider = $phpVersionProvider;
-        $this->propertyPresenceChecker = $propertyPresenceChecker;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->autowiredClassMethodOrPropertyAnalyzer = $autowiredClassMethodOrPropertyAnalyzer;
-        $this->dependencyClassMethodDecorator = $dependencyClassMethodDecorator;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function addConstructorDependency(Class_ $class, PropertyMetadata $propertyMetadata) : void
     {

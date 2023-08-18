@@ -27,7 +27,7 @@ class ErrorLevelActivationStrategy implements ActivationStrategyInterface
     /**
      * @var Level
      */
-    private $actionLevel;
+    private readonly int $actionLevel;
 
     /**
      * @param int|string $actionLevel Level or name or value

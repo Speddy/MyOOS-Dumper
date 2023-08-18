@@ -10,22 +10,19 @@ use Rector\Core\NodeManipulator\ClassInsertManipulator;
 use Rector\Core\PhpParser\Node\NodeFactory;
 use Rector\Core\ValueObject\MethodName;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final class ConstructorManipulator
+final readonly class ConstructorManipulator
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\ClassInsertManipulator
-     */
-    private $classInsertManipulator;
-    public function __construct(NodeFactory $nodeFactory, ClassInsertManipulator $classInsertManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory,
+        /**
+         * @readonly
+         */
+        private ClassInsertManipulator $classInsertManipulator
+    )
     {
-        $this->nodeFactory = $nodeFactory;
-        $this->classInsertManipulator = $classInsertManipulator;
     }
     public function addStmtToConstructor(Class_ $class, Expression $newExpression) : void
     {

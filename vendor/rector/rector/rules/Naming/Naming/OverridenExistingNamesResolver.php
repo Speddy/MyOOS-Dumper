@@ -15,29 +15,24 @@ use Rector\NodeNameResolver\NodeNameResolver;
 final class OverridenExistingNamesResolver
 {
     /**
-     * @readonly
-     * @var \Rector\Naming\PhpArray\ArrayFilter
-     */
-    private $arrayFilter;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
      * @var array<string, array<int, string>>
      */
-    private $overridenExistingVariableNamesByClassMethod = [];
-    public function __construct(ArrayFilter $arrayFilter, BetterNodeFinder $betterNodeFinder, NodeNameResolver $nodeNameResolver)
+    private array $overridenExistingVariableNamesByClassMethod = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ArrayFilter $arrayFilter,
+        /**
+         * @readonly
+         */
+        private readonly BetterNodeFinder $betterNodeFinder,
+        /**
+         * @readonly
+         */
+        private readonly NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->arrayFilter = $arrayFilter;
-        $this->betterNodeFinder = $betterNodeFinder;
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Stmt\Function_|\PhpParser\Node\Expr\Closure $functionLike

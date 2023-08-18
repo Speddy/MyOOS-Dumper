@@ -9,28 +9,23 @@ use Rector\Core\Differ\DefaultDiffer;
 use Rector\Core\FileSystem\FilePathHelper;
 use Rector\Core\ValueObject\Application\File;
 use Rector\Core\ValueObject\Reporting\FileDiff;
-final class FileDiffFactory
+final readonly class FileDiffFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Differ\DefaultDiffer
-     */
-    private $defaultDiffer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Console\Formatter\ConsoleDiffer
-     */
-    private $consoleDiffer;
-    /**
-     * @readonly
-     * @var \Rector\Core\FileSystem\FilePathHelper
-     */
-    private $filePathHelper;
-    public function __construct(DefaultDiffer $defaultDiffer, ConsoleDiffer $consoleDiffer, FilePathHelper $filePathHelper)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private DefaultDiffer $defaultDiffer,
+        /**
+         * @readonly
+         */
+        private ConsoleDiffer $consoleDiffer,
+        /**
+         * @readonly
+         */
+        private FilePathHelper $filePathHelper
+    )
     {
-        $this->defaultDiffer = $defaultDiffer;
-        $this->consoleDiffer = $consoleDiffer;
-        $this->filePathHelper = $filePathHelper;
     }
     /**
      * @param RectorWithLineChange[] $rectorsWithLineChanges

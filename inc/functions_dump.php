@@ -56,7 +56,7 @@ function new_file($last_groesse = 0)
     if ($dump['part'] - $dump['part_offset'] == 1) {
         if (isset($config['multi_part']) && (0 == $config['multi_part'])) {
             if (isset($config['multi_part']) && 1 == $config['multi_dump'] && 0 == $dump['dbindex']) {
-                WriteLog('starting Multidump with '.count($databases['multi']).' Datenbases.');
+                WriteLog('starting Multidump with '.(is_countable($databases['multi']) ? count($databases['multi']) : 0).' Datenbases.');
             }
             WriteLog('Start Dump \''.$dump['backupdatei'].'\'');
         } else {
@@ -90,7 +90,7 @@ function GetStatusLine($kind = 'php')
 
     global $databases, $config, $lang, $dump, $mysql_commentstring;
 
-    $t_array = explode('|', $databases['db_actual_tableselected']);
+    $t_array = explode('|', (string) $databases['db_actual_tableselected']);
     $t = 0;
     $r = 0;
     $t_zeile = "$mysql_commentstring\n$mysql_commentstring TABLE-INFO\r\n";
@@ -116,7 +116,7 @@ function GetStatusLine($kind = 'php')
             $row2 = mysqli_fetch_array($res2);
             $erg['Rows'] = $row2['count_records'];
 
-            if (('' == $databases['db_actual_tableselected'] || ('' != $databases['db_actual_tableselected'] && (in_array($erg[0], $t_array)))) && (substr($erg[0], 0, strlen($databases['praefix'][$dump['dbindex']] ?? '')) == $databases['praefix'][$dump['dbindex']])) {
+            if (('' == $databases['db_actual_tableselected'] || ('' != $databases['db_actual_tableselected'] && (in_array($erg[0], $t_array)))) && (substr((string) $erg[0], 0, strlen($databases['praefix'][$dump['dbindex']] ?? '')) == $databases['praefix'][$dump['dbindex']])) {
                 ++$t;
                 $r += $erg['Rows'];
                 if (isset($erg['Type'])) {
@@ -208,12 +208,12 @@ function get_content($db, $table)
                     $fieldinfo = mysqli_fetch_field_direct($result, $j);
                     if (($fieldinfo->flags & 128) == true && isset($config['use_binary_container']) && 1 == $config['use_binary_container']) {
                         if ('' != $row[$j]) {
-                            $insert .= '_binary 0x'.bin2hex($row[$j]).',';
+                            $insert .= '_binary 0x'.bin2hex((string) $row[$j]).',';
                         } else {
                             $insert .= '_binary \'\',';
                         }
                     } elseif ('' != $row[$j]) {
-                        $insert .= '\''.mysqli_real_escape_string($config['dbconnection'], $row[$j]).'\',';
+                        $insert .= '\''.mysqli_real_escape_string($config['dbconnection'], (string) $row[$j]).'\',';
                     } else {
                         $insert .= '\'\',';
                     }
@@ -222,8 +222,8 @@ function get_content($db, $table)
             $insert = substr($insert, 0, -1).');'.$nl;
             $dump['data'] .= $insert;
             ++$dump['countdata'];
-            $config['memory_limit'] = isset($config['memory_limit']) ? $config['memory_limit'] : 0;
-            if (strlen($dump['data']) > $config['memory_limit'] || (1 == $config['multi_part'] && strlen($dump['data'] ?? '') + $buffer > $config['multipart_groesse'])) {
+            $config['memory_limit'] ??= 0;
+            if (strlen((string) $dump['data']) > $config['memory_limit'] || (1 == $config['multi_part'] && strlen($dump['data'] ?? '') + $buffer > $config['multipart_groesse'])) {
                 WriteToDumpFile();
             }
         }
@@ -253,13 +253,13 @@ function WriteToDumpFile()
     if (isset($config['compression']) && (1 == $config['compression'])) {
         if ('' != $dump['data']) {
             $fp = gzopen($df, 'ab');
-            gzwrite($fp, $dump['data']);
+            gzwrite($fp, (string) $dump['data']);
             gzclose($fp);
         }
     } else {
         if ('' != $dump['data']) {
             $fp = fopen($df, 'ab');
-            fwrite($fp, $dump['data']);
+            fwrite($fp, (string) $dump['data']);
             fclose($fp);
         }
     }
@@ -296,11 +296,11 @@ function ExecuteCommand($when)
 
     if ('' != $cd) {
         //jetzt ausführen
-        if ('system:' != substr(strtolower($cd), 0, 7)) {
+        if (!str_starts_with(strtolower((string) $cd), 'system:')) {
             $cad = [];
             @mysqli_select_db($config['dbconnection'], $databases['Name'][$dump['dbindex']]);
-            if (strpos($cd, ';')) {
-                $cad = explode(';', $cd);
+            if (strpos((string) $cd, ';')) {
+                $cad = explode(';', (string) $cd);
             } else {
                 $cad[0] = $cd;
             }
@@ -320,8 +320,8 @@ function ExecuteCommand($when)
                     }
                 }
             }
-        } elseif ('system:' == substr(strtolower($cd), 0, 7)) {
-            $command = substr($cd, 7);
+        } elseif (str_starts_with(strtolower((string) $cd), 'system:')) {
+            $command = substr((string) $cd, 7);
             $result = @system($command, $returnval);
             if (!$result) {
                 WriteLog("Error while executing System Command '$command'");
@@ -349,7 +349,7 @@ function DoEmail()
     }
 
     // load the appropriate language version
-	$sLang = (isset($config['language']) ? $config['language'] : 'en');
+	$sLang = ($config['language'] ?? 'en');
     $phpmailer->setLanguage($sLang, MOD_INCLUDE_PATH . '/inc/lib/phpmailer/language/');
 
     // Empty out the values that may be set.
@@ -406,7 +406,7 @@ function DoEmail()
 
     if (0 == $config['multi_part']) {
         $file = $dump['backupdatei'];
-        $file_name = (strpos('/', $file)) ? substr($file, strrpos('/', $file)) : $file;
+        $file_name = (strpos('/', (string) $file)) ? substr((string) $file, strrpos('/', (string) $file)) : $file;
         $file_type = filetype($config['paths']['backup'].$file);
         $file_size = filesize($config['paths']['backup'].$file);
         if (($config['email_maxsize'] > 0 && $file_size > $config['email_maxsize']) || 0 == $config['send_mail_dump']) {
@@ -415,12 +415,12 @@ function DoEmail()
 			$phpmailer->Subject = $subject;
 
             if (0 != $config['send_mail_dump']) {
-                $msg_body = sprintf(addslashes($lang['L_EMAILBODY_TOOBIG']), byte_output($config['email_maxsize']), $databases['Name'][$dump['dbindex']], "$file (".byte_output(filesize($config['paths']['backup'].$file)).')<br>');
+                $msg_body = sprintf(addslashes((string) $lang['L_EMAILBODY_TOOBIG']), byte_output($config['email_maxsize']), $databases['Name'][$dump['dbindex']], "$file (".byte_output(filesize($config['paths']['backup'].$file)).')<br>');
             } else {
-                $msg_body = sprintf(addslashes($lang['L_EMAILBODY_NOATTACH']), $databases['Name'][$dump['dbindex']], "$file (".byte_output(filesize($config['paths']['backup'].$file)).')');
+                $msg_body = sprintf(addslashes((string) $lang['L_EMAILBODY_NOATTACH']), $databases['Name'][$dump['dbindex']], "$file (".byte_output(filesize($config['paths']['backup'].$file)).')');
             }
             include_once './inc/functions.php';
-            $msg_body .= '<a href="'.getServerProtocol().$_SERVER['HTTP_HOST'].substr($_SERVER['PHP_SELF'], 0, strrpos($_SERVER['PHP_SELF'], '/')).'/'.$config['paths']['backup'].$file.'">'.$file.'</a>';
+            $msg_body .= '<a href="'.getServerProtocol().$_SERVER['HTTP_HOST'].substr((string) $_SERVER['PHP_SELF'], 0, strrpos((string) $_SERVER['PHP_SELF'], '/')).'/'.$config['paths']['backup'].$file.'">'.$file.'</a>';
 
 			// Build the text version
 			$text = strip_tags($msg_body);
@@ -433,7 +433,7 @@ function DoEmail()
             $email_out = $lang['L_EMAIL_WAS_SEND'].'`'.$config['email_recipient'].'`<br>';
         } else {
             //alles ok, anhang generieren
-            $msg_body = sprintf(addslashes($lang['L_EMAILBODY_ATTACH']), $databases['Name'][$dump['dbindex']], "$file (".byte_output(filesize($config['paths']['backup'].$file)).')');
+            $msg_body = sprintf(addslashes((string) $lang['L_EMAILBODY_ATTACH']), $databases['Name'][$dump['dbindex']], "$file (".byte_output(filesize($config['paths']['backup'].$file)).')');
             $subject = "Backup '".$databases['Name'][$dump['dbindex']]."' - ".date("d\.m\.Y", time());
 			$phpmailer->Subject = $subject;
 			
@@ -455,7 +455,7 @@ function DoEmail()
         $subject = $mp_sub;
 		$phpmailer->Subject = $subject;
 		
-        $dateistamm = substr($dump['backupdatei'], 0, strrpos($dump['backupdatei'], 'part_')).'part_';
+        $dateistamm = substr((string) $dump['backupdatei'], 0, strrpos((string) $dump['backupdatei'], 'part_')).'part_';
         $dateiendung = (1 == $config['compression']) ? '.sql.gz' : '.sql';
         $mpdatei = [];
         $mpfiles = '';
@@ -466,7 +466,7 @@ function DoEmail()
 	
 			
         }
-        $msg_body = (1 == $config['send_mail_dump']) ? sprintf(addslashes($lang['L_EMAILBODY_MP_ATTACH']), $databases['Name'][$dump['dbindex']], $mpfiles) : sprintf(addslashes($lang['L_EMAILBODY_MP_NOATTACH']), $databases['Name'][$dump['dbindex']], $mpfiles);
+        $msg_body = (1 == $config['send_mail_dump']) ? sprintf(addslashes((string) $lang['L_EMAILBODY_MP_ATTACH']), $databases['Name'][$dump['dbindex']], $mpfiles) : sprintf(addslashes((string) $lang['L_EMAILBODY_MP_NOATTACH']), $databases['Name'][$dump['dbindex']], $mpfiles);
 
 
 		// Build the text version
@@ -545,7 +545,7 @@ function DoFTP($i)
     if (0 == $config['multi_part']) {
         SendViaFTP($i, $dump['backupdatei'], 1);
     } else {
-        $dateistamm = substr($dump['backupdatei'], 0, strrpos($dump['backupdatei'], 'part_')).'part_';
+        $dateistamm = substr((string) $dump['backupdatei'], 0, strrpos((string) $dump['backupdatei'], 'part_')).'part_';
         $dateiendung = (1 == $config['compression']) ? '.sql.gz' : '.sql';
         for ($a = 1; $a < ($dump['part'] - $dump['part_offset']); ++$a) {
             $mpdatei = $dateistamm.$a.$dateiendung;
@@ -606,7 +606,7 @@ function DoSFTP($i)
     if (0 == $config['multi_part']) {
         SendViaSFTP($i, $dump['backupdatei'], 1);
     } else {
-        $dateistamm = substr($dump['backupdatei'], 0, strrpos($dump['backupdatei'], 'part_')).'part_';
+        $dateistamm = substr((string) $dump['backupdatei'], 0, strrpos((string) $dump['backupdatei'], 'part_')).'part_';
         $dateiendung = (1 == $config['compression']) ? '.sql.gz' : '.sql';
         for ($a = 1; $a < ($dump['part'] - $dump['part_offset']); ++$a) {
             $mpdatei = $dateistamm.$a.$dateiendung;

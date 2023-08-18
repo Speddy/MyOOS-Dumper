@@ -38,7 +38,7 @@ abstract class AbstractUnicodeString extends AbstractString
     // the subset of https://github.com/unicode-org/cldr/blob/master/common/transforms/Latin-ASCII.xml that is not in NFKD
     private const TRANSLIT_FROM = ['Æ', 'Ð', 'Ø', 'Þ', 'ß', 'æ', 'ð', 'ø', 'þ', 'Đ', 'đ', 'Ħ', 'ħ', 'ı', 'ĸ', 'Ŀ', 'ŀ', 'Ł', 'ł', 'ŉ', 'Ŋ', 'ŋ', 'Œ', 'œ', 'Ŧ', 'ŧ', 'ƀ', 'Ɓ', 'Ƃ', 'ƃ', 'Ƈ', 'ƈ', 'Ɖ', 'Ɗ', 'Ƌ', 'ƌ', 'Ɛ', 'Ƒ', 'ƒ', 'Ɠ', 'ƕ', 'Ɩ', 'Ɨ', 'Ƙ', 'ƙ', 'ƚ', 'Ɲ', 'ƞ', 'Ƣ', 'ƣ', 'Ƥ', 'ƥ', 'ƫ', 'Ƭ', 'ƭ', 'Ʈ', 'Ʋ', 'Ƴ', 'ƴ', 'Ƶ', 'ƶ', 'Ǆ', 'ǅ', 'ǆ', 'Ǥ', 'ǥ', 'ȡ', 'Ȥ', 'ȥ', 'ȴ', 'ȵ', 'ȶ', 'ȷ', 'ȸ', 'ȹ', 'Ⱥ', 'Ȼ', 'ȼ', 'Ƚ', 'Ⱦ', 'ȿ', 'ɀ', 'Ƀ', 'Ʉ', 'Ɇ', 'ɇ', 'Ɉ', 'ɉ', 'Ɍ', 'ɍ', 'Ɏ', 'ɏ', 'ɓ', 'ɕ', 'ɖ', 'ɗ', 'ɛ', 'ɟ', 'ɠ', 'ɡ', 'ɢ', 'ɦ', 'ɧ', 'ɨ', 'ɪ', 'ɫ', 'ɬ', 'ɭ', 'ɱ', 'ɲ', 'ɳ', 'ɴ', 'ɶ', 'ɼ', 'ɽ', 'ɾ', 'ʀ', 'ʂ', 'ʈ', 'ʉ', 'ʋ', 'ʏ', 'ʐ', 'ʑ', 'ʙ', 'ʛ', 'ʜ', 'ʝ', 'ʟ', 'ʠ', 'ʣ', 'ʥ', 'ʦ', 'ʪ', 'ʫ', 'ᴀ', 'ᴁ', 'ᴃ', 'ᴄ', 'ᴅ', 'ᴆ', 'ᴇ', 'ᴊ', 'ᴋ', 'ᴌ', 'ᴍ', 'ᴏ', 'ᴘ', 'ᴛ', 'ᴜ', 'ᴠ', 'ᴡ', 'ᴢ', 'ᵫ', 'ᵬ', 'ᵭ', 'ᵮ', 'ᵯ', 'ᵰ', 'ᵱ', 'ᵲ', 'ᵳ', 'ᵴ', 'ᵵ', 'ᵶ', 'ᵺ', 'ᵻ', 'ᵽ', 'ᵾ', 'ᶀ', 'ᶁ', 'ᶂ', 'ᶃ', 'ᶄ', 'ᶅ', 'ᶆ', 'ᶇ', 'ᶈ', 'ᶉ', 'ᶊ', 'ᶌ', 'ᶍ', 'ᶎ', 'ᶏ', 'ᶑ', 'ᶒ', 'ᶓ', 'ᶖ', 'ᶙ', 'ẚ', 'ẜ', 'ẝ', 'ẞ', 'Ỻ', 'ỻ', 'Ỽ', 'ỽ', 'Ỿ', 'ỿ', '©', '®', '₠', '₢', '₣', '₤', '₧', '₺', '₹', 'ℌ', '℞', '㎧', '㎮', '㏆', '㏗', '㏞', '㏟', '¼', '½', '¾', '⅓', '⅔', '⅕', '⅖', '⅗', '⅘', '⅙', '⅚', '⅛', '⅜', '⅝', '⅞', '⅟', '〇', '‘', '’', '‚', '‛', '“', '”', '„', '‟', '′', '″', '〝', '〞', '«', '»', '‹', '›', '‐', '‑', '‒', '–', '—', '―', '︱', '︲', '﹘', '‖', '⁄', '⁅', '⁆', '⁎', '、', '。', '〈', '〉', '《', '》', '〔', '〕', '〘', '〙', '〚', '〛', '︑', '︒', '︹', '︺', '︽', '︾', '︿', '﹀', '﹑', '﹝', '﹞', '｟', '｠', '｡', '､', '×', '÷', '−', '∕', '∖', '∣', '∥', '≪', '≫', '⦅', '⦆'];
     private const TRANSLIT_TO = ['AE', 'D', 'O', 'TH', 'ss', 'ae', 'd', 'o', 'th', 'D', 'd', 'H', 'h', 'i', 'q', 'L', 'l', 'L', 'l', '\'n', 'N', 'n', 'OE', 'oe', 'T', 't', 'b', 'B', 'B', 'b', 'C', 'c', 'D', 'D', 'D', 'd', 'E', 'F', 'f', 'G', 'hv', 'I', 'I', 'K', 'k', 'l', 'N', 'n', 'OI', 'oi', 'P', 'p', 't', 'T', 't', 'T', 'V', 'Y', 'y', 'Z', 'z', 'DZ', 'Dz', 'dz', 'G', 'g', 'd', 'Z', 'z', 'l', 'n', 't', 'j', 'db', 'qp', 'A', 'C', 'c', 'L', 'T', 's', 'z', 'B', 'U', 'E', 'e', 'J', 'j', 'R', 'r', 'Y', 'y', 'b', 'c', 'd', 'd', 'e', 'j', 'g', 'g', 'G', 'h', 'h', 'i', 'I', 'l', 'l', 'l', 'm', 'n', 'n', 'N', 'OE', 'r', 'r', 'r', 'R', 's', 't', 'u', 'v', 'Y', 'z', 'z', 'B', 'G', 'H', 'j', 'L', 'q', 'dz', 'dz', 'ts', 'ls', 'lz', 'A', 'AE', 'B', 'C', 'D', 'D', 'E', 'J', 'K', 'L', 'M', 'O', 'P', 'T', 'U', 'V', 'W', 'Z', 'ue', 'b', 'd', 'f', 'm', 'n', 'p', 'r', 'r', 's', 't', 'z', 'th', 'I', 'p', 'U', 'b', 'd', 'f', 'g', 'k', 'l', 'm', 'n', 'p', 'r', 's', 'v', 'x', 'z', 'a', 'd', 'e', 'e', 'i', 'u', 'a', 's', 's', 'SS', 'LL', 'll', 'V', 'v', 'Y', 'y', '(C)', '(R)', 'CE', 'Cr', 'Fr.', 'L.', 'Pts', 'TL', 'Rs', 'x', 'Rx', 'm/s', 'rad/s', 'C/kg', 'pH', 'V/m', 'A/m', ' 1/4', ' 1/2', ' 3/4', ' 1/3', ' 2/3', ' 1/5', ' 2/5', ' 3/5', ' 4/5', ' 1/6', ' 5/6', ' 1/8', ' 3/8', ' 5/8', ' 7/8', ' 1/', '0', '\'', '\'', ',', '\'', '"', '"', ',,', '"', '\'', '"', '"', '"', '<<', '>>', '<', '>', '-', '-', '-', '-', '-', '-', '-', '-', '-', '||', '/', '[', ']', '*', ',', '.', '<', '>', '<<', '>>', '[', ']', '[', ']', '[', ']', ',', '.', '[', ']', '<<', '>>', '<', '>', ',', '[', ']', '((', '))', '.', ',', '*', '/', '-', '/', '\\', '|', '||', '<<', '>>', '((', '))'];
-    private static $transliterators = [];
+    private static array $transliterators = [];
     private static $tableZero;
     private static $tableWide;
     /**
@@ -79,10 +79,10 @@ abstract class AbstractUnicodeString extends AbstractString
         }
         $rules[] = 'nfkd';
         $rules[] = '[:nonspacing mark:] remove';
-        while (\strlen($s) - 1 > ($i = \strspn($s, self::ASCII))) {
+        while (\strlen((string) $s) - 1 > ($i = \strspn((string) $s, self::ASCII))) {
             if (0 < --$i) {
-                $str->string .= \substr($s, 0, $i);
-                $s = \substr($s, $i);
+                $str->string .= \substr((string) $s, 0, $i);
+                $s = \substr((string) $s, $i);
             }
             if (!($rule = \array_shift($rules))) {
                 $rules = [];
@@ -94,21 +94,21 @@ abstract class AbstractUnicodeString extends AbstractString
                 $s = $rule($s);
             } elseif ($rule) {
                 if ('nfd' === ($rule = \strtolower($rule))) {
-                    \normalizer_is_normalized($s, self::NFD) ?: ($s = \normalizer_normalize($s, self::NFD));
+                    \normalizer_is_normalized((string) $s, self::NFD) ?: ($s = \normalizer_normalize((string) $s, self::NFD));
                 } elseif ('nfkd' === $rule) {
-                    \normalizer_is_normalized($s, self::NFKD) ?: ($s = \normalizer_normalize($s, self::NFKD));
+                    \normalizer_is_normalized((string) $s, self::NFKD) ?: ($s = \normalizer_normalize((string) $s, self::NFKD));
                 } elseif ('[:nonspacing mark:] remove' === $rule) {
-                    $s = \preg_replace('/\\p{Mn}++/u', '', $s);
+                    $s = \preg_replace('/\\p{Mn}++/u', '', (string) $s);
                 } elseif ('latin-ascii' === $rule) {
-                    $s = \str_replace(self::TRANSLIT_FROM, self::TRANSLIT_TO, $s);
+                    $s = \str_replace(self::TRANSLIT_FROM, self::TRANSLIT_TO, (string) $s);
                 } elseif ('de-ascii' === $rule) {
-                    $s = \preg_replace("/([AUO])̈(?=\\p{Ll})/u", '$1e', $s);
+                    $s = \preg_replace("/([AUO])̈(?=\\p{Ll})/u", '$1e', (string) $s);
                     $s = \str_replace(["ä", "ö", "ü", "Ä", "Ö", "Ü"], ['ae', 'oe', 'ue', 'AE', 'OE', 'UE'], $s);
                 } elseif (\function_exists('transliterator_transliterate')) {
-                    if (null === ($transliterator = self::$transliterators[$rule] = self::$transliterators[$rule] ?? \Transliterator::create($rule))) {
+                    if (null === ($transliterator = self::$transliterators[$rule] ??= \Transliterator::create($rule))) {
                         if ('any-latin/bgn' === $rule) {
                             $rule = 'any-latin';
-                            $transliterator = self::$transliterators[$rule] = self::$transliterators[$rule] ?? \Transliterator::create($rule);
+                            $transliterator = self::$transliterators[$rule] ??= \Transliterator::create($rule);
                         }
                         if (null === $transliterator) {
                             throw new InvalidArgumentException(\sprintf('Unknown transliteration rule "%s".', $rule));
@@ -118,7 +118,7 @@ abstract class AbstractUnicodeString extends AbstractString
                     $s = $transliterator->transliterate($s);
                 }
             } elseif (!\function_exists('iconv')) {
-                $s = \preg_replace('/[^\\x00-\\x7F]/u', '?', $s);
+                $s = \preg_replace('/[^\\x00-\\x7F]/u', '?', (string) $s);
             } else {
                 $s = @\preg_replace_callback('/[^\\x00-\\x7F]/u', static function ($c) {
                     $c = (string) \iconv('UTF-8', 'ASCII//TRANSLIT', $c[0]);
@@ -126,7 +126,7 @@ abstract class AbstractUnicodeString extends AbstractString
                         throw new \LogicException(\sprintf('"%s" requires a translit-able iconv implementation, try installing "gnu-libiconv" if you\'re using Alpine Linux.', static::class));
                     }
                     return 1 < \strlen($c) ? \ltrim($c, '\'`"^~') : ('' !== $c ? $c : '?');
-                }, $s);
+                }, (string) $s);
             }
         }
         $str->string .= $s;
@@ -141,7 +141,7 @@ abstract class AbstractUnicodeString extends AbstractString
         $str->string = \str_replace(' ', '', \preg_replace_callback('/\\b.(?![A-Z]{2,})/u', static function ($m) {
             static $i = 0;
             return 1 === ++$i ? 'İ' === $m[0] ? 'i̇' : \mb_strtolower($m[0], 'UTF-8') : \mb_convert_case($m[0], \MB_CASE_TITLE, 'UTF-8');
-        }, \preg_replace('/[^\\pL0-9]++/u', ' ', $this->string)));
+        }, \preg_replace('/[^\\pL0-9]++/u', ' ', (string) $this->string)));
         return $str;
     }
     /**
@@ -154,7 +154,7 @@ abstract class AbstractUnicodeString extends AbstractString
             return [];
         }
         $codePoints = [];
-        foreach (\preg_split('//u', $str->string, -1, \PREG_SPLIT_NO_EMPTY) as $c) {
+        foreach (\preg_split('//u', (string) $str->string, -1, \PREG_SPLIT_NO_EMPTY) as $c) {
             $codePoints[] = \mb_ord($c, 'UTF-8');
         }
         return $codePoints;
@@ -166,10 +166,10 @@ abstract class AbstractUnicodeString extends AbstractString
     {
         $str = clone $this;
         if (!$compat || !\defined('Normalizer::NFKC_CF')) {
-            $str->string = \normalizer_normalize($str->string, $compat ? \Normalizer::NFKC : \Normalizer::NFC);
-            $str->string = \mb_strtolower(\str_replace(self::FOLD_FROM, self::FOLD_TO, $this->string), 'UTF-8');
+            $str->string = \normalizer_normalize((string) $str->string, $compat ? \Normalizer::NFKC : \Normalizer::NFC);
+            $str->string = \mb_strtolower(\str_replace(self::FOLD_FROM, self::FOLD_TO, (string) $this->string), 'UTF-8');
         } else {
-            $str->string = \normalizer_normalize($str->string, \Normalizer::NFKC_CF);
+            $str->string = \normalizer_normalize((string) $str->string, \Normalizer::NFKC_CF);
         }
         return $str;
     }
@@ -192,7 +192,7 @@ abstract class AbstractUnicodeString extends AbstractString
     public function lower()
     {
         $str = clone $this;
-        $str->string = \mb_strtolower(\str_replace('İ', 'i̇', $str->string), 'UTF-8');
+        $str->string = \mb_strtolower(\str_replace('İ', 'i̇', (string) $str->string), 'UTF-8');
         return $str;
     }
     public function match(string $regexp, int $flags = 0, int $offset = 0) : array
@@ -201,7 +201,7 @@ abstract class AbstractUnicodeString extends AbstractString
         if ($this->ignoreCase) {
             $regexp .= 'i';
         }
-        \set_error_handler(static function ($t, $m) {
+        \set_error_handler(static function ($t, $m): never {
             throw new InvalidArgumentException($m);
         });
         try {
@@ -222,7 +222,7 @@ abstract class AbstractUnicodeString extends AbstractString
             throw new InvalidArgumentException('Unsupported normalization form.');
         }
         $str = clone $this;
-        \normalizer_is_normalized($str->string, $form) ?: ($str->string = \normalizer_normalize($str->string, $form));
+        \normalizer_is_normalized((string) $str->string, $form) ?: ($str->string = \normalizer_normalize((string) $str->string, $form));
         return $str;
     }
     /**
@@ -284,14 +284,14 @@ abstract class AbstractUnicodeString extends AbstractString
         } else {
             $replace = 'preg_replace';
         }
-        \set_error_handler(static function ($t, $m) {
+        \set_error_handler(static function ($t, $m): never {
             throw new InvalidArgumentException($m);
         });
         try {
             if (null === ($string = $replace($fromRegexp . 'u', $to, $this->string))) {
                 $lastError = \preg_last_error();
                 foreach (\get_defined_constants(\true)['pcre'] as $k => $v) {
-                    if ($lastError === $v && \substr_compare($k, '_ERROR', -\strlen('_ERROR')) === 0) {
+                    if ($lastError === $v && str_ends_with((string) $k, '_ERROR')) {
                         throw new RuntimeException('Matching failed with ' . $k . '.');
                     }
                 }
@@ -310,7 +310,7 @@ abstract class AbstractUnicodeString extends AbstractString
     public function reverse()
     {
         $str = clone $this;
-        $str->string = \implode('', \array_reverse(\preg_split('/(\\X)/u', $str->string, -1, \PREG_SPLIT_DELIM_CAPTURE | \PREG_SPLIT_NO_EMPTY)));
+        $str->string = \implode('', \array_reverse(\preg_split('/(\\X)/u', (string) $str->string, -1, \PREG_SPLIT_DELIM_CAPTURE | \PREG_SPLIT_NO_EMPTY)));
         return $str;
     }
     /**
@@ -319,7 +319,7 @@ abstract class AbstractUnicodeString extends AbstractString
     public function snake()
     {
         $str = $this->camel();
-        $str->string = \mb_strtolower(\preg_replace(['/(\\p{Lu}+)(\\p{Lu}\\p{Ll})/u', '/([\\p{Ll}0-9])(\\p{Lu})/u'], '\1_\2', $str->string), 'UTF-8');
+        $str->string = \mb_strtolower(\preg_replace(['/(\\p{Lu}+)(\\p{Lu}\\p{Ll})/u', '/([\\p{Ll}0-9])(\\p{Lu})/u'], '\1_\2', (string) $str->string), 'UTF-8');
         return $str;
     }
     /**
@@ -329,9 +329,7 @@ abstract class AbstractUnicodeString extends AbstractString
     {
         $str = clone $this;
         $limit = $allWords ? -1 : 1;
-        $str->string = \preg_replace_callback('/\\b./u', static function (array $m) : string {
-            return \mb_convert_case($m[0], \MB_CASE_TITLE, 'UTF-8');
-        }, $str->string, $limit);
+        $str->string = \preg_replace_callback('/\\b./u', static fn(array $m): string => \mb_convert_case((string) $m[0], \MB_CASE_TITLE, 'UTF-8'), (string) $str->string, $limit);
         return $str;
     }
     /**
@@ -344,7 +342,7 @@ abstract class AbstractUnicodeString extends AbstractString
         }
         $chars = \preg_quote($chars);
         $str = clone $this;
-        $str->string = \preg_replace("{^[{$chars}]++|[{$chars}]++\$}uD", '', $str->string);
+        $str->string = \preg_replace("{^[{$chars}]++|[{$chars}]++\$}uD", '', (string) $str->string);
         return $str;
     }
     /**
@@ -357,7 +355,7 @@ abstract class AbstractUnicodeString extends AbstractString
         }
         $chars = \preg_quote($chars);
         $str = clone $this;
-        $str->string = \preg_replace("{[{$chars}]++\$}uD", '', $str->string);
+        $str->string = \preg_replace("{[{$chars}]++\$}uD", '', (string) $str->string);
         return $str;
     }
     /**
@@ -375,7 +373,7 @@ abstract class AbstractUnicodeString extends AbstractString
             $prefix = $prefix->string;
         }
         $prefix = \implode('|', \array_map('preg_quote', (array) $prefix));
-        $str->string = \preg_replace("{^(?:{$prefix})}iuD", '', $this->string);
+        $str->string = \preg_replace("{^(?:{$prefix})}iuD", '', (string) $this->string);
         return $str;
     }
     /**
@@ -388,7 +386,7 @@ abstract class AbstractUnicodeString extends AbstractString
         }
         $chars = \preg_quote($chars);
         $str = clone $this;
-        $str->string = \preg_replace("{^[{$chars}]++}uD", '', $str->string);
+        $str->string = \preg_replace("{^[{$chars}]++}uD", '', (string) $str->string);
         return $str;
     }
     /**
@@ -406,7 +404,7 @@ abstract class AbstractUnicodeString extends AbstractString
             $suffix = $suffix->string;
         }
         $suffix = \implode('|', \array_map('preg_quote', (array) $suffix));
-        $str->string = \preg_replace("{(?:{$suffix})\$}iuD", '', $this->string);
+        $str->string = \preg_replace("{(?:{$suffix})\$}iuD", '', (string) $this->string);
         return $str;
     }
     /**
@@ -415,14 +413,14 @@ abstract class AbstractUnicodeString extends AbstractString
     public function upper()
     {
         $str = clone $this;
-        $str->string = \mb_strtoupper($str->string, 'UTF-8');
+        $str->string = \mb_strtoupper((string) $str->string, 'UTF-8');
         return $str;
     }
     public function width(bool $ignoreAnsiDecoration = \true) : int
     {
         $width = 0;
-        $s = \str_replace(["\x00", "\x05", "\x07"], '', $this->string);
-        if (\strpos($s, "\r") !== \false) {
+        $s = \str_replace(["\x00", "\x05", "\x07"], '', (string) $this->string);
+        if (str_contains($s, "\r")) {
             $s = \str_replace(["\r\n", "\r"], "\n", $s);
         }
         if (!$ignoreAnsiDecoration) {
@@ -457,17 +455,17 @@ abstract class AbstractUnicodeString extends AbstractString
         $len = $freeLen % $padLen;
         switch ($type) {
             case \STR_PAD_RIGHT:
-                return $this->append(\str_repeat($pad->string, \intdiv($freeLen, $padLen)) . ($len ? $pad->slice(0, $len) : ''));
+                return $this->append(\str_repeat((string) $pad->string, \intdiv($freeLen, $padLen)) . ($len ? $pad->slice(0, $len) : ''));
             case \STR_PAD_LEFT:
-                return $this->prepend(\str_repeat($pad->string, \intdiv($freeLen, $padLen)) . ($len ? $pad->slice(0, $len) : ''));
+                return $this->prepend(\str_repeat((string) $pad->string, \intdiv($freeLen, $padLen)) . ($len ? $pad->slice(0, $len) : ''));
             case \STR_PAD_BOTH:
                 $freeLen /= 2;
                 $rightLen = \ceil($freeLen);
                 $len = $rightLen % $padLen;
-                $str = $this->append(\str_repeat($pad->string, \intdiv($rightLen, $padLen)) . ($len ? $pad->slice(0, $len) : ''));
+                $str = $this->append(\str_repeat((string) $pad->string, \intdiv($rightLen, $padLen)) . ($len ? $pad->slice(0, $len) : ''));
                 $leftLen = \floor($freeLen);
                 $len = $leftLen % $padLen;
-                return $str->prepend(\str_repeat($pad->string, \intdiv($leftLen, $padLen)) . ($len ? $pad->slice(0, $len) : ''));
+                return $str->prepend(\str_repeat((string) $pad->string, \intdiv($leftLen, $padLen)) . ($len ? $pad->slice(0, $len) : ''));
             default:
                 throw new InvalidArgumentException('Invalid padding type.');
         }
@@ -487,8 +485,8 @@ abstract class AbstractUnicodeString extends AbstractString
             if (32 > $codePoint || 0x7f <= $codePoint && 0xa0 > $codePoint) {
                 return -1;
             }
-            self::$tableZero = self::$tableZero ?? (require __DIR__ . '/Resources/data/wcswidth_table_zero.php');
-            if ($codePoint >= self::$tableZero[0][0] && $codePoint <= self::$tableZero[$ubound = \count(self::$tableZero) - 1][1]) {
+            self::$tableZero ??= (require __DIR__ . '/Resources/data/wcswidth_table_zero.php');
+            if ($codePoint >= self::$tableZero[0][0] && $codePoint <= self::$tableZero[$ubound = (is_countable(self::$tableZero) ? \count(self::$tableZero) : 0) - 1][1]) {
                 $lbound = 0;
                 while ($ubound >= $lbound) {
                     $mid = \floor(($lbound + $ubound) / 2);
@@ -501,8 +499,8 @@ abstract class AbstractUnicodeString extends AbstractString
                     }
                 }
             }
-            self::$tableWide = self::$tableWide ?? (require __DIR__ . '/Resources/data/wcswidth_table_wide.php');
-            if ($codePoint >= self::$tableWide[0][0] && $codePoint <= self::$tableWide[$ubound = \count(self::$tableWide) - 1][1]) {
+            self::$tableWide ??= (require __DIR__ . '/Resources/data/wcswidth_table_wide.php');
+            if ($codePoint >= self::$tableWide[0][0] && $codePoint <= self::$tableWide[$ubound = (is_countable(self::$tableWide) ? \count(self::$tableWide) : 0) - 1][1]) {
                 $lbound = 0;
                 while ($ubound >= $lbound) {
                     $mid = \floor(($lbound + $ubound) / 2);

@@ -6,7 +6,7 @@ namespace PHPStan\PhpDocParser\Ast\PhpDoc;
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 use function trim;
-class AssertTagPropertyValueNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode
+class AssertTagPropertyValueNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode, \Stringable
 {
     use NodeAttributes;
     /** @var TypeNode */

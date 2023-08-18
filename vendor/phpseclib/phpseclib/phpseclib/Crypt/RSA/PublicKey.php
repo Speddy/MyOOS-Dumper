@@ -35,7 +35,6 @@ final class PublicKey extends RSA implements Common\PublicKey
     /**
      * Exponentiate
      *
-     * @param \phpseclib3\Math\BigInteger $x
      * @return \phpseclib3\Math\BigInteger
      */
     private function exponentiate(BigInteger $x)
@@ -105,9 +104,9 @@ final class PublicKey extends RSA implements Common\PublicKey
         try {
             $em3 = $this->emsa_pkcs1_v1_5_encode_without_null($m, $this->k);
             $r2 = hash_equals($em, $em3);
-        } catch (\LengthException $e) {
+        } catch (\LengthException) {
             $exception = true;
-        } catch (UnsupportedAlgorithmException $e) {
+        } catch (UnsupportedAlgorithmException) {
             $r2 = false;
         }
 
@@ -160,13 +159,13 @@ final class PublicKey extends RSA implements Common\PublicKey
             return false;
         }
 
-        $em = ltrim($em, "\xFF");
+        $em = ltrim((string) $em, "\xFF");
         if (Strings::shift($em) != "\0") {
             return false;
         }
 
         $decoded = ASN1::decodeBER($em);
-        if (!is_array($decoded) || empty($decoded[0]) || strlen($em) > $decoded[0]['length']) {
+        if (!is_array($decoded) || empty($decoded[0]) || strlen((string) $em) > $decoded[0]['length']) {
             return false;
         }
 
@@ -202,8 +201,8 @@ final class PublicKey extends RSA implements Common\PublicKey
         }
 
         $hash = $decoded['digestAlgorithm']['algorithm'];
-        $hash = substr($hash, 0, 3) == 'id-' ?
-            substr($hash, 3) :
+        $hash = str_starts_with((string) $hash, 'id-') ?
+            substr((string) $hash, 3) :
             $hash;
         $hash = new Hash($hash);
         $em = $hash->hash($m);
@@ -228,7 +227,7 @@ final class PublicKey extends RSA implements Common\PublicKey
         // be output.
 
         $emLen = ($emBits + 7) >> 3; // ie. ceil($emBits / 8);
-        $sLen = $this->sLen !== null ? $this->sLen : $this->hLen;
+        $sLen = $this->sLen ?? $this->hLen;
 
         $mHash = $this->hash->hash($m);
         if ($emLen < $this->hLen + $sLen + 2) {
@@ -301,15 +300,11 @@ final class PublicKey extends RSA implements Common\PublicKey
      */
     public function verify($message, $signature)
     {
-        switch ($this->signaturePadding) {
-            case self::SIGNATURE_RELAXED_PKCS1:
-                return $this->rsassa_pkcs1_v1_5_relaxed_verify($message, $signature);
-            case self::SIGNATURE_PKCS1:
-                return $this->rsassa_pkcs1_v1_5_verify($message, $signature);
-            //case self::SIGNATURE_PSS:
-            default:
-                return $this->rsassa_pss_verify($message, $signature);
-        }
+        return match ($this->signaturePadding) {
+            self::SIGNATURE_RELAXED_PKCS1 => $this->rsassa_pkcs1_v1_5_relaxed_verify($message, $signature),
+            self::SIGNATURE_PKCS1 => $this->rsassa_pkcs1_v1_5_verify($message, $signature),
+            default => $this->rsassa_pss_verify($message, $signature),
+        };
     }
 
     /**
@@ -450,15 +445,11 @@ final class PublicKey extends RSA implements Common\PublicKey
      */
     public function encrypt($plaintext)
     {
-        switch ($this->encryptionPadding) {
-            case self::ENCRYPTION_NONE:
-                return $this->raw_encrypt($plaintext);
-            case self::ENCRYPTION_PKCS1:
-                return $this->rsaes_pkcs1_v1_5_encrypt($plaintext);
-            //case self::ENCRYPTION_OAEP:
-            default:
-                return $this->rsaes_oaep_encrypt($plaintext);
-        }
+        return match ($this->encryptionPadding) {
+            self::ENCRYPTION_NONE => $this->raw_encrypt($plaintext),
+            self::ENCRYPTION_PKCS1 => $this->rsaes_pkcs1_v1_5_encrypt($plaintext),
+            default => $this->rsaes_oaep_encrypt($plaintext),
+        };
     }
 
     /**

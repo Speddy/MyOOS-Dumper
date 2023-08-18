@@ -18,46 +18,35 @@ use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\PostRector\ValueObject\PropertyMetadata;
 use Rector\Transform\NodeFactory\PropertyFetchFactory;
 use Rector\Transform\NodeTypeAnalyzer\TypeProvidingExprFromClassResolver;
-final class FuncCallStaticCallToMethodCallAnalyzer
+final readonly class FuncCallStaticCallToMethodCallAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\Transform\NodeTypeAnalyzer\TypeProvidingExprFromClassResolver
-     */
-    private $typeProvidingExprFromClassResolver;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\PropertyNaming
-     */
-    private $propertyNaming;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    /**
-     * @readonly
-     * @var \Rector\Transform\NodeFactory\PropertyFetchFactory
-     */
-    private $propertyFetchFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\ClassDependencyManipulator
-     */
-    private $classDependencyManipulator;
-    public function __construct(TypeProvidingExprFromClassResolver $typeProvidingExprFromClassResolver, PropertyNaming $propertyNaming, NodeNameResolver $nodeNameResolver, NodeFactory $nodeFactory, PropertyFetchFactory $propertyFetchFactory, ClassDependencyManipulator $classDependencyManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private TypeProvidingExprFromClassResolver $typeProvidingExprFromClassResolver,
+        /**
+         * @readonly
+         */
+        private PropertyNaming $propertyNaming,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory,
+        /**
+         * @readonly
+         */
+        private PropertyFetchFactory $propertyFetchFactory,
+        /**
+         * @readonly
+         */
+        private ClassDependencyManipulator $classDependencyManipulator
+    )
     {
-        $this->typeProvidingExprFromClassResolver = $typeProvidingExprFromClassResolver;
-        $this->propertyNaming = $propertyNaming;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->nodeFactory = $nodeFactory;
-        $this->propertyFetchFactory = $propertyFetchFactory;
-        $this->classDependencyManipulator = $classDependencyManipulator;
     }
     /**
      * @return \PhpParser\Node\Expr\MethodCall|\PhpParser\Node\Expr\PropertyFetch|\PhpParser\Node\Expr\Variable

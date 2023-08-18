@@ -13,48 +13,33 @@ use Rector\Core\ValueObject\Reporting\FileDiff;
  */
 final class File
 {
+    private bool $hasChanged = \false;
     /**
      * @readonly
-     * @var string
      */
-    private $filePath;
-    /**
-     * @var string
-     */
-    private $fileContent;
-    /**
-     * @var bool
-     */
-    private $hasChanged = \false;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $originalFileContent;
-    /**
-     * @var \Rector\Core\ValueObject\Reporting\FileDiff|null
-     */
-    private $fileDiff;
+    private readonly string $originalFileContent;
+    private ?\Rector\Core\ValueObject\Reporting\FileDiff $fileDiff = null;
     /**
      * @var Node[]
      */
-    private $oldStmts = [];
+    private array $oldStmts = [];
     /**
      * @var Node[]
      */
-    private $newStmts = [];
+    private array $newStmts = [];
     /**
      * @var mixed[]
      */
-    private $oldTokens = [];
+    private array $oldTokens = [];
     /**
      * @var RectorWithLineChange[]
      */
-    private $rectorWithLineChanges = [];
-    public function __construct(string $filePath, string $fileContent)
+    private array $rectorWithLineChanges = [];
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly string $filePath, private string $fileContent)
     {
-        $this->filePath = $filePath;
-        $this->fileContent = $fileContent;
         $this->originalFileContent = $fileContent;
     }
     public function getFilePath() : string

@@ -28,26 +28,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ParamTypeByMethodCallTypeRector extends AbstractScopeAwareRector
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\NodeAnalyzer\CallerParamMatcher
-     */
-    private $callerParamMatcher;
-    /**
-     * @readonly
-     * @var \Rector\VendorLocker\ParentClassMethodTypeOverrideGuard
-     */
-    private $parentClassMethodTypeOverrideGuard;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\Guard\ParamTypeAddGuard
-     */
-    private $paramTypeAddGuard;
-    public function __construct(CallerParamMatcher $callerParamMatcher, ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard, ParamTypeAddGuard $paramTypeAddGuard)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly CallerParamMatcher $callerParamMatcher,
+        /**
+         * @readonly
+         */
+        private readonly ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard,
+        /**
+         * @readonly
+         */
+        private readonly ParamTypeAddGuard $paramTypeAddGuard
+    )
     {
-        $this->callerParamMatcher = $callerParamMatcher;
-        $this->parentClassMethodTypeOverrideGuard = $parentClassMethodTypeOverrideGuard;
-        $this->paramTypeAddGuard = $paramTypeAddGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {

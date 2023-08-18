@@ -204,9 +204,8 @@ class RC2 extends BlockCipher
      * Inverse key expansion randomization table.
      *
      * @see self::setKey()
-     * @var array
      */
-    private static $invpitable = [
+    private static array $invpitable = [
         0xD1, 0xDA, 0xB9, 0x6F, 0x9C, 0xC8, 0x78, 0x66,
         0x80, 0x2C, 0xF8, 0x37, 0xEA, 0xE0, 0x62, 0xA4,
         0xCB, 0x71, 0x50, 0x27, 0x4B, 0x95, 0xD9, 0x20,
@@ -433,7 +432,7 @@ class RC2 extends BlockCipher
      */
     protected function encryptBlock($in)
     {
-        list($r0, $r1, $r2, $r3) = array_values(unpack('v*', $in));
+        [$r0, $r1, $r2, $r3] = array_values(unpack('v*', $in));
         $keys = $this->keys;
         $limit = 20;
         $actions = [$limit => 44, 44 => 64];
@@ -477,7 +476,7 @@ class RC2 extends BlockCipher
      */
     protected function decryptBlock($in)
     {
-        list($r0, $r1, $r2, $r3) = array_values(unpack('v*', $in));
+        [$r0, $r1, $r2, $r3] = array_values(unpack('v*', $in));
         $keys = $this->keys;
         $limit = 44;
         $actions = [$limit => 20, 20 => 0];

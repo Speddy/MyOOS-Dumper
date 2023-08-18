@@ -3,22 +3,19 @@
 declare (strict_types=1);
 namespace Rector\Naming\ValueObject;
 
-final class ExpectedName
+final readonly class ExpectedName
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $name;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $singularized;
-    public function __construct(string $name, string $singularized)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $name,
+        /**
+         * @readonly
+         */
+        private string $singularized
+    )
     {
-        $this->name = $name;
-        $this->singularized = $singularized;
     }
     public function getName() : string
     {

@@ -29,29 +29,24 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class StringableForToStringRector extends AbstractRector implements MinPhpVersionInterface
 {
     /**
-     * @readonly
-     * @var \Rector\FamilyTree\Reflection\FamilyRelationsAnalyzer
-     */
-    private $familyRelationsAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeInferer\ReturnTypeInferer
-     */
-    private $returnTypeInferer;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ClassAnalyzer
-     */
-    private $classAnalyzer;
-    /**
      * @var string
      */
     private const STRINGABLE = 'Stringable';
-    public function __construct(FamilyRelationsAnalyzer $familyRelationsAnalyzer, ReturnTypeInferer $returnTypeInferer, ClassAnalyzer $classAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly FamilyRelationsAnalyzer $familyRelationsAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ReturnTypeInferer $returnTypeInferer,
+        /**
+         * @readonly
+         */
+        private readonly ClassAnalyzer $classAnalyzer
+    )
     {
-        $this->familyRelationsAnalyzer = $familyRelationsAnalyzer;
-        $this->returnTypeInferer = $returnTypeInferer;
-        $this->classAnalyzer = $classAnalyzer;
     }
     public function provideMinPhpVersion() : int
     {

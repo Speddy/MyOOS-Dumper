@@ -15,14 +15,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradePreviouslyImplementedInterfaceRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\FamilyTree\Reflection\FamilyRelationsAnalyzer
-     */
-    private $familyRelationsAnalyzer;
-    public function __construct(FamilyRelationsAnalyzer $familyRelationsAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly FamilyRelationsAnalyzer $familyRelationsAnalyzer
+    )
     {
-        $this->familyRelationsAnalyzer = $familyRelationsAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

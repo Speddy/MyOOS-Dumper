@@ -11,14 +11,13 @@ use Rector\BetterPhpDocParser\ValueObject\Type\BracketsAwareIntersectionTypeNode
 use Rector\PhpDocParser\PhpDocParser\PhpDocNodeVisitor\AbstractPhpDocNodeVisitor;
 final class IntersectionTypeNodePhpDocNodeVisitor extends AbstractPhpDocNodeVisitor implements BasePhpDocNodeVisitorInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\Attributes\AttributeMirrorer
-     */
-    private $attributeMirrorer;
-    public function __construct(AttributeMirrorer $attributeMirrorer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly AttributeMirrorer $attributeMirrorer
+    )
     {
-        $this->attributeMirrorer = $attributeMirrorer;
     }
     public function enterNode(Node $node) : ?Node
     {

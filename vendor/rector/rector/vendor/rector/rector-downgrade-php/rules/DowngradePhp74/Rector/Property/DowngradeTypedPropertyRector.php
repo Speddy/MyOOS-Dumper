@@ -16,14 +16,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeTypedPropertyRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeManipulator\PropertyDecorator
-     */
-    private $propertyDecorator;
-    public function __construct(PropertyDecorator $propertyDecorator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PropertyDecorator $propertyDecorator
+    )
     {
-        $this->propertyDecorator = $propertyDecorator;
     }
     /**
      * @return array<class-string<Node>>

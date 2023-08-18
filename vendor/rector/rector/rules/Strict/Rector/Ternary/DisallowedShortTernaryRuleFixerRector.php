@@ -20,18 +20,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DisallowedShortTernaryRuleFixerRector extends AbstractFalsyScalarRuleFixerRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Strict\NodeFactory\ExactCompareFactory
-     */
-    private $exactCompareFactory;
-    /**
-     * @var bool
-     */
-    private $hasChanged = \false;
-    public function __construct(ExactCompareFactory $exactCompareFactory)
+    private bool $hasChanged = \false;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ExactCompareFactory $exactCompareFactory
+    )
     {
-        $this->exactCompareFactory = $exactCompareFactory;
     }
     public function getRuleDefinition() : RuleDefinition
     {

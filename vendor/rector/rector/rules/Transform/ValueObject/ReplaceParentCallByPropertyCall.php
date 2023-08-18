@@ -5,28 +5,19 @@ namespace Rector\Transform\ValueObject;
 
 use PHPStan\Type\ObjectType;
 use Rector\Core\Validation\RectorAssert;
-final class ReplaceParentCallByPropertyCall
+final readonly class ReplaceParentCallByPropertyCall
 {
-    /**
+    public function __construct(/**
      * @readonly
-     * @var string
      */
-    private $class;
-    /**
+    private string $class, /**
      * @readonly
-     * @var string
      */
-    private $method;
-    /**
+    private string $method, /**
      * @readonly
-     * @var string
      */
-    private $property;
-    public function __construct(string $class, string $method, string $property)
+    private string $property)
     {
-        $this->class = $class;
-        $this->method = $method;
-        $this->property = $property;
         RectorAssert::className($class);
         RectorAssert::methodName($method);
         RectorAssert::propertyName($property);

@@ -11,34 +11,27 @@ use Rector\NodeTypeResolver\Reflection\BetterReflection\SourceLocatorProvider\Dy
  * @see https://phpstan.org/blog/zero-config-analysis-with-static-reflection
  * @see https://github.com/rectorphp/rector/issues/3490
  */
-final class DynamicSourceLocatorDecorator
+final readonly class DynamicSourceLocatorDecorator
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\Reflection\BetterReflection\SourceLocatorProvider\DynamicSourceLocatorProvider
-     */
-    private $dynamicSourceLocatorProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\FileSystem\PhpFilesFinder
-     */
-    private $phpFilesFinder;
-    /**
-     * @readonly
-     * @var \Rector\Core\FileSystem\FileAndDirectoryFilter
-     */
-    private $fileAndDirectoryFilter;
-    /**
-     * @readonly
-     * @var \Rector\Core\FileSystem\FilesystemTweaker
-     */
-    private $filesystemTweaker;
-    public function __construct(DynamicSourceLocatorProvider $dynamicSourceLocatorProvider, PhpFilesFinder $phpFilesFinder, FileAndDirectoryFilter $fileAndDirectoryFilter, FilesystemTweaker $filesystemTweaker)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private DynamicSourceLocatorProvider $dynamicSourceLocatorProvider,
+        /**
+         * @readonly
+         */
+        private PhpFilesFinder $phpFilesFinder,
+        /**
+         * @readonly
+         */
+        private FileAndDirectoryFilter $fileAndDirectoryFilter,
+        /**
+         * @readonly
+         */
+        private FilesystemTweaker $filesystemTweaker
+    )
     {
-        $this->dynamicSourceLocatorProvider = $dynamicSourceLocatorProvider;
-        $this->phpFilesFinder = $phpFilesFinder;
-        $this->fileAndDirectoryFilter = $fileAndDirectoryFilter;
-        $this->filesystemTweaker = $filesystemTweaker;
     }
     /**
      * @param string[] $paths

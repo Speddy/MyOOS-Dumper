@@ -25,42 +25,30 @@ use Rector\StaticTypeMapper\PhpDocParser\IdentifierTypeMapper;
 use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
 final class NameImportingPhpDocNodeVisitor extends AbstractPhpDocNodeVisitor
 {
-    /**
-     * @readonly
-     * @var \Rector\CodingStyle\ClassNameImport\ClassNameImportSkipper
-     */
-    private $classNameImportSkipper;
-    /**
-     * @readonly
-     * @var \Rector\PostRector\Collector\UseNodesToAddCollector
-     */
-    private $useNodesToAddCollector;
-    /**
-     * @readonly
-     * @var \Rector\Core\Provider\CurrentFileProvider
-     */
-    private $currentFileProvider;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\PhpDocParser\IdentifierTypeMapper
-     */
-    private $identifierTypeMapper;
-    /**
-     * @var PhpParserNode|null
-     */
-    private $currentPhpParserNode;
-    public function __construct(ClassNameImportSkipper $classNameImportSkipper, UseNodesToAddCollector $useNodesToAddCollector, CurrentFileProvider $currentFileProvider, ReflectionProvider $reflectionProvider, IdentifierTypeMapper $identifierTypeMapper)
+    private ?\PhpParser\Node $currentPhpParserNode = null;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ClassNameImportSkipper $classNameImportSkipper,
+        /**
+         * @readonly
+         */
+        private readonly UseNodesToAddCollector $useNodesToAddCollector,
+        /**
+         * @readonly
+         */
+        private readonly CurrentFileProvider $currentFileProvider,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private readonly IdentifierTypeMapper $identifierTypeMapper
+    )
     {
-        $this->classNameImportSkipper = $classNameImportSkipper;
-        $this->useNodesToAddCollector = $useNodesToAddCollector;
-        $this->currentFileProvider = $currentFileProvider;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->identifierTypeMapper = $identifierTypeMapper;
     }
     public function beforeTraverse(Node $node) : void
     {
@@ -108,7 +96,7 @@ final class NameImportingPhpDocNodeVisitor extends AbstractPhpDocNodeVisitor
             // might break
             return null;
         }
-        if (\strncmp($fullyQualifiedObjectType->getClassName(), '@', \strlen('@')) === 0) {
+        if (str_starts_with($fullyQualifiedObjectType->getClassName(), '@')) {
             $fullyQualifiedObjectType = new FullyQualifiedObjectType(\ltrim($fullyQualifiedObjectType->getClassName(), '@'));
         }
         if ($this->classNameImportSkipper->shouldSkipNameForFullyQualifiedObjectType($file, $phpParserNode, $fullyQualifiedObjectType)) {
@@ -130,7 +118,7 @@ final class NameImportingPhpDocNodeVisitor extends AbstractPhpDocNodeVisitor
         if ($newNode->name === $identifierTypeNode->name) {
             return \false;
         }
-        if (\strncmp($identifierTypeNode->name, '\\', \strlen('\\')) === 0) {
+        if (str_starts_with($identifierTypeNode->name, '\\')) {
             return \true;
         }
         $className = $fullyQualifiedObjectType->getClassName();
@@ -186,7 +174,7 @@ final class NameImportingPhpDocNodeVisitor extends AbstractPhpDocNodeVisitor
             return null;
         }
         // special case for doctrine annotation
-        if (\strncmp($spacelessPhpDocTagNode->name, '@', \strlen('@')) !== 0) {
+        if (!str_starts_with($spacelessPhpDocTagNode->name, '@')) {
             return null;
         }
         $attributeClass = \ltrim($spacelessPhpDocTagNode->name, '@\\');

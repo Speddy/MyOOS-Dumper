@@ -14,16 +14,15 @@ use Rector\PHPStanStaticTypeMapper\Contract\TypeMapperInterface;
 /**
  * @implements TypeMapperInterface<AccessoryLiteralStringType>
  */
-final class AccessoryLiteralStringTypeMapper implements TypeMapperInterface
+final readonly class AccessoryLiteralStringTypeMapper implements TypeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    public function __construct(PhpVersionProvider $phpVersionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PhpVersionProvider $phpVersionProvider
+    )
     {
-        $this->phpVersionProvider = $phpVersionProvider;
     }
     /**
      * @return class-string<Type>

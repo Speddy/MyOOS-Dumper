@@ -19,8 +19,8 @@ class FallbackMimeTypeDetector implements MimeTypeDetector
     ];
 
     public function __construct(
-        private MimeTypeDetector $detector,
-        private array $inconclusiveMimetypes = self::INCONCLUSIVE_MIME_TYPES
+        private readonly MimeTypeDetector $detector,
+        private readonly array $inconclusiveMimetypes = self::INCONCLUSIVE_MIME_TYPES
     ) {}
 
     public function detectMimeType(string $path, $contents): ?string

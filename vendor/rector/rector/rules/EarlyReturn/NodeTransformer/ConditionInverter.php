@@ -8,16 +8,15 @@ use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\BinaryOp\BooleanAnd;
 use PhpParser\Node\Expr\BooleanNot;
 use Rector\Core\NodeManipulator\BinaryOpManipulator;
-final class ConditionInverter
+final readonly class ConditionInverter
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\BinaryOpManipulator
-     */
-    private $binaryOpManipulator;
-    public function __construct(BinaryOpManipulator $binaryOpManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private BinaryOpManipulator $binaryOpManipulator
+    )
     {
-        $this->binaryOpManipulator = $binaryOpManipulator;
     }
     public function createInvertedCondition(Expr $expr) : Expr
     {

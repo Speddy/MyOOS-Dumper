@@ -5,16 +5,15 @@ namespace Rector\CodingStyle\Reflection;
 
 use PHPStan\Reflection\MethodReflection;
 use Rector\Core\FileSystem\FilePathHelper;
-final class VendorLocationDetector
+final readonly class VendorLocationDetector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\FileSystem\FilePathHelper
-     */
-    private $filePathHelper;
-    public function __construct(FilePathHelper $filePathHelper)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private FilePathHelper $filePathHelper
+    )
     {
-        $this->filePathHelper = $filePathHelper;
     }
     public function detectMethodReflection(MethodReflection $methodReflection) : bool
     {
@@ -25,6 +24,6 @@ final class VendorLocationDetector
             return \false;
         }
         $normalizedFileName = $this->filePathHelper->normalizePathAndSchema($fileName);
-        return \strpos($normalizedFileName, '/vendor/') !== \false;
+        return str_contains($normalizedFileName, '/vendor/');
     }
 }

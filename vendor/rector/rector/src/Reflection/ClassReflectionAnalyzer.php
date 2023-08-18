@@ -7,16 +7,15 @@ use PHPStan\BetterReflection\Reflection\ReflectionClass;
 use PHPStan\Reflection\ClassReflection;
 use Rector\Core\Util\Reflection\PrivatesAccessor;
 use ReflectionEnum;
-final class ClassReflectionAnalyzer
+final readonly class ClassReflectionAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Util\Reflection\PrivatesAccessor
-     */
-    private $privatesAccessor;
-    public function __construct(PrivatesAccessor $privatesAccessor)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PrivatesAccessor $privatesAccessor
+    )
     {
-        $this->privatesAccessor = $privatesAccessor;
     }
     public function resolveParentClassName(ClassReflection $classReflection) : ?string
     {

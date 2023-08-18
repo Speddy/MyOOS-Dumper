@@ -44,46 +44,6 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class ClassPropertyAssignToConstructorPromotionRector extends AbstractRector implements MinPhpVersionInterface, ConfigurableRectorInterface
 {
     /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\PromotedPropertyCandidateResolver
-     */
-    private $promotedPropertyCandidateResolver;
-    /**
-     * @readonly
-     * @var \Rector\Naming\VariableRenamer
-     */
-    private $variableRenamer;
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\PhpDoc\TagRemover\VarTagRemover
-     */
-    private $varTagRemover;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ParamAnalyzer
-     */
-    private $paramAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
-     */
-    private $phpDocTypeChanger;
-    /**
-     * @readonly
-     * @var \Rector\Php80\Guard\MakePropertyPromotionGuard
-     */
-    private $makePropertyPromotionGuard;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\TypeComparator\TypeComparator
-     */
-    private $typeComparator;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
      * @api
      * @var string
      */
@@ -98,16 +58,41 @@ final class ClassPropertyAssignToConstructorPromotionRector extends AbstractRect
      * @var bool
      */
     private $inlinePublic = \false;
-    public function __construct(PromotedPropertyCandidateResolver $promotedPropertyCandidateResolver, VariableRenamer $variableRenamer, VarTagRemover $varTagRemover, ParamAnalyzer $paramAnalyzer, PhpDocTypeChanger $phpDocTypeChanger, MakePropertyPromotionGuard $makePropertyPromotionGuard, TypeComparator $typeComparator, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PromotedPropertyCandidateResolver $promotedPropertyCandidateResolver,
+        /**
+         * @readonly
+         */
+        private readonly VariableRenamer $variableRenamer,
+        /**
+         * @readonly
+         */
+        private readonly VarTagRemover $varTagRemover,
+        /**
+         * @readonly
+         */
+        private readonly ParamAnalyzer $paramAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTypeChanger $phpDocTypeChanger,
+        /**
+         * @readonly
+         */
+        private readonly MakePropertyPromotionGuard $makePropertyPromotionGuard,
+        /**
+         * @readonly
+         */
+        private readonly TypeComparator $typeComparator,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver
+    )
     {
-        $this->promotedPropertyCandidateResolver = $promotedPropertyCandidateResolver;
-        $this->variableRenamer = $variableRenamer;
-        $this->varTagRemover = $varTagRemover;
-        $this->paramAnalyzer = $paramAnalyzer;
-        $this->phpDocTypeChanger = $phpDocTypeChanger;
-        $this->makePropertyPromotionGuard = $makePropertyPromotionGuard;
-        $this->typeComparator = $typeComparator;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -20,11 +20,6 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class ServiceTagsToDefaultsAutoconfigureRector extends AbstractRector
 {
     /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\SymfonyPhpClosureDetector
-     */
-    private $symfonyPhpClosureDetector;
-    /**
      * @var string[]
      */
     private const AUTOCONFIGUREABLE_TAGS = [
@@ -35,9 +30,13 @@ final class ServiceTagsToDefaultsAutoconfigureRector extends AbstractRector
         'monolog.logger',
         'security.voter',
     ];
-    public function __construct(SymfonyPhpClosureDetector $symfonyPhpClosureDetector)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly SymfonyPhpClosureDetector $symfonyPhpClosureDetector
+    )
     {
-        $this->symfonyPhpClosureDetector = $symfonyPhpClosureDetector;
     }
     public function getRuleDefinition() : RuleDefinition
     {

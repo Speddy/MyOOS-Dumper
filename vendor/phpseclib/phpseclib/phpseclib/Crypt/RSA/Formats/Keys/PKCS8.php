@@ -41,14 +41,14 @@ abstract class PKCS8 extends Progenitor
      *
      * @var string
      */
-    const OID_NAME = 'rsaEncryption';
+    final public const OID_NAME = 'rsaEncryption';
 
     /**
      * OID Value
      *
      * @var string
      */
-    const OID_VALUE = '1.2.840.113549.1.1.1';
+    final public const OID_VALUE = '1.2.840.113549.1.1.1';
 
     /**
      * Child OIDs loaded
@@ -88,12 +88,6 @@ abstract class PKCS8 extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
-     * @param \phpseclib3\Math\BigInteger $d
-     * @param array $primes
-     * @param array $exponents
-     * @param array $coefficients
      * @param string $password optional
      * @param array $options optional
      * @return string
@@ -108,8 +102,6 @@ abstract class PKCS8 extends Progenitor
     /**
      * Convert a public key to the appropriate format
      *
-     * @param \phpseclib3\Math\BigInteger $n
-     * @param \phpseclib3\Math\BigInteger $e
      * @param array $options optional
      * @return string
      */

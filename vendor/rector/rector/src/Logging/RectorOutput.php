@@ -15,22 +15,16 @@ final class RectorOutput
      */
     private $symfonyStyle;
     /**
-     * @readonly
-     * @var \Rector\Core\FileSystem\FilePathHelper
-     */
-    private $filePathHelper;
-    /**
      * @var float|null
      */
-    private $startTime;
-    /**
-     * @var int|null
+    private string|float|null $startTime = null;
+    private ?int $previousMemory = null;
+    public function __construct(SymfonyStyle $symfonyStyle, /**
+     * @readonly
      */
-    private $previousMemory;
-    public function __construct(SymfonyStyle $symfonyStyle, FilePathHelper $filePathHelper)
+    private readonly FilePathHelper $filePathHelper)
     {
         $this->symfonyStyle = $symfonyStyle;
-        $this->filePathHelper = $filePathHelper;
     }
     public function isDebug() : bool
     {

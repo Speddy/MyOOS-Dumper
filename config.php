@@ -171,4 +171,4 @@ $config['multi_dump'] = 0;
 $config['logcompression'] = 1;
 $config['log_maxsize1'] = 1;
 $config['log_maxsize2'] = 2;
-$config['log_maxsize'] = 1048576;
+$config['log_maxsize'] = 1_048_576;

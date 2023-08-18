@@ -18,20 +18,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class IsCountableRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Php71\IsArrayAndDualCheckToAble
-     */
-    private $isArrayAndDualCheckToAble;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    public function __construct(IsArrayAndDualCheckToAble $isArrayAndDualCheckToAble, ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly IsArrayAndDualCheckToAble $isArrayAndDualCheckToAble,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider
+    )
     {
-        $this->isArrayAndDualCheckToAble = $isArrayAndDualCheckToAble;
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

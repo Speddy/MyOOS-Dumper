@@ -6,16 +6,15 @@ namespace Rector\Doctrine\TypeAnalyzer;
 use PhpParser\Node\Stmt\Property;
 use PHPStan\PhpDocParser\Ast\PhpDoc\VarTagValueNode;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
-final class CollectionVarTagValueNodeResolver
+final readonly class CollectionVarTagValueNodeResolver
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    public function __construct(PhpDocInfoFactory $phpDocInfoFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PhpDocInfoFactory $phpDocInfoFactory
+    )
     {
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
     public function resolve(Property $property) : ?VarTagValueNode
     {

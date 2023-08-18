@@ -7,18 +7,13 @@ use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
 use Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\AbstractValuesAwareNode;
 use Rector\BetterPhpDocParser\ValueObject\PhpDocAttributeKey;
 use Stringable;
-final class DoctrineAnnotationTagValueNode extends AbstractValuesAwareNode
+final class DoctrineAnnotationTagValueNode extends AbstractValuesAwareNode implements \Stringable
 {
-    /**
-     * @var \PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode
-     */
-    public $identifierTypeNode;
     /**
      * @param ArrayItemNode[] $values
      */
-    public function __construct(IdentifierTypeNode $identifierTypeNode, ?string $originalContent = null, array $values = [], ?string $silentKey = null)
+    public function __construct(public IdentifierTypeNode $identifierTypeNode, ?string $originalContent = null, array $values = [], ?string $silentKey = null)
     {
-        $this->identifierTypeNode = $identifierTypeNode;
         $this->hasChanged = \true;
         parent::__construct($values, $originalContent, $silentKey);
     }

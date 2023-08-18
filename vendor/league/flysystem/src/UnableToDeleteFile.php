@@ -9,10 +9,7 @@ use Throwable;
 
 final class UnableToDeleteFile extends RuntimeException implements FilesystemOperationFailed
 {
-    /**
-     * @var string
-     */
-    private $location = '';
+    private string $location = '';
 
     /**
      * @var string

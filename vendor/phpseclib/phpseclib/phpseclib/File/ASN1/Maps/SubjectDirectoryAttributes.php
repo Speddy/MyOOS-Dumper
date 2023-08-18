@@ -22,7 +22,7 @@ use phpseclib3\File\ASN1;
  */
 abstract class SubjectDirectoryAttributes
 {
-    const MAP = [
+    final public const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'min' => 1,
         'max' => -1,

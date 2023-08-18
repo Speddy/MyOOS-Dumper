@@ -41,18 +41,13 @@ namespace RectorPrefix202308\Symfony\Component\Console\Helper;
  *
  * @see https://stackoverflow.com/a/20434776/1476819
  */
-final class OutputWrapper
+final readonly class OutputWrapper
 {
-    /**
-     * @var bool
-     */
-    private $allowCutUrls = \false;
     private const TAG_OPEN_REGEX_SEGMENT = '[a-z](?:[^\\\\<>]*+ | \\\\.)*';
     private const TAG_CLOSE_REGEX_SEGMENT = '[a-z][^<>]*+';
     private const URL_PATTERN = 'https?://\\S+';
-    public function __construct(bool $allowCutUrls = \false)
+    public function __construct(private bool $allowCutUrls = \false)
     {
-        $this->allowCutUrls = $allowCutUrls;
     }
     public function wrap(string $text, int $width, string $break = "\n") : string
     {

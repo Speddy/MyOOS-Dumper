@@ -9,22 +9,19 @@ use PhpParser\Node\Scalar\String_;
 use PHPStan\Reflection\ReflectionProvider;
 use Rector\Core\Exception\NotImplementedYetException;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class TargetEntityResolver
+final readonly class TargetEntityResolver
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    public function __construct(NodeNameResolver $nodeNameResolver, ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function resolveFromExpr(Expr $targetEntityExpr) : ?string
     {
@@ -42,7 +39,7 @@ final class TargetEntityResolver
             }
             return $targetEntity;
         }
-        $errorMessage = \sprintf('Add support for "%s" targetEntity in "%s"', \get_class($targetEntityExpr), self::class);
+        $errorMessage = \sprintf('Add support for "%s" targetEntity in "%s"', $targetEntityExpr::class, self::class);
         throw new NotImplementedYetException($errorMessage);
     }
 }

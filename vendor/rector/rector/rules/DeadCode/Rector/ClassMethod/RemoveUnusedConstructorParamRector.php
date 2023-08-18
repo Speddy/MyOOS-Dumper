@@ -17,20 +17,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveUnusedConstructorParamRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ParamAnalyzer
-     */
-    private $paramAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Removing\NodeManipulator\ComplexNodeRemover
-     */
-    private $complexNodeRemover;
-    public function __construct(ParamAnalyzer $paramAnalyzer, ComplexNodeRemover $complexNodeRemover)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ParamAnalyzer $paramAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ComplexNodeRemover $complexNodeRemover
+    )
     {
-        $this->paramAnalyzer = $paramAnalyzer;
-        $this->complexNodeRemover = $complexNodeRemover;
     }
     public function getRuleDefinition() : RuleDefinition
     {

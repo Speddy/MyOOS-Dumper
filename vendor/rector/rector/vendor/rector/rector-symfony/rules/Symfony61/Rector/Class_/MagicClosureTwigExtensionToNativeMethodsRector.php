@@ -25,14 +25,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class MagicClosureTwigExtensionToNativeMethodsRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeCollector\NodeAnalyzer\ArrayCallableMethodMatcher
-     */
-    private $arrayCallableMethodMatcher;
-    public function __construct(ArrayCallableMethodMatcher $arrayCallableMethodMatcher)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ArrayCallableMethodMatcher $arrayCallableMethodMatcher
+    )
     {
-        $this->arrayCallableMethodMatcher = $arrayCallableMethodMatcher;
     }
     public function getRuleDefinition() : RuleDefinition
     {

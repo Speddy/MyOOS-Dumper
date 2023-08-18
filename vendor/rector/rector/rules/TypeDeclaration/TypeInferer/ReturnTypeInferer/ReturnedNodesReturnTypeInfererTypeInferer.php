@@ -28,58 +28,43 @@ use Rector\TypeDeclaration\TypeInferer\SplArrayFixedTypeNarrower;
 /**
  * @internal
  */
-final class ReturnedNodesReturnTypeInfererTypeInferer
+final readonly class ReturnedNodesReturnTypeInfererTypeInferer
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeInferer\SilentVoidResolver
-     */
-    private $silentVoidResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
-     */
-    private $simpleCallableNodeTraverser;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
-     */
-    private $typeFactory;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeInferer\SplArrayFixedTypeNarrower
-     */
-    private $splArrayFixedTypeNarrower;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $reflectionAstResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Printer\BetterStandardPrinter
-     */
-    private $betterStandardPrinter;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(SilentVoidResolver $silentVoidResolver, NodeTypeResolver $nodeTypeResolver, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, TypeFactory $typeFactory, SplArrayFixedTypeNarrower $splArrayFixedTypeNarrower, AstResolver $reflectionAstResolver, BetterStandardPrinter $betterStandardPrinter, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private SilentVoidResolver $silentVoidResolver,
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver,
+        /**
+         * @readonly
+         */
+        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
+        /**
+         * @readonly
+         */
+        private TypeFactory $typeFactory,
+        /**
+         * @readonly
+         */
+        private SplArrayFixedTypeNarrower $splArrayFixedTypeNarrower,
+        /**
+         * @readonly
+         */
+        private AstResolver $reflectionAstResolver,
+        /**
+         * @readonly
+         */
+        private BetterStandardPrinter $betterStandardPrinter,
+        /**
+         * @readonly
+         */
+        private ReflectionResolver $reflectionResolver
+    )
     {
-        $this->silentVoidResolver = $silentVoidResolver;
-        $this->nodeTypeResolver = $nodeTypeResolver;
-        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
-        $this->typeFactory = $typeFactory;
-        $this->splArrayFixedTypeNarrower = $splArrayFixedTypeNarrower;
-        $this->reflectionAstResolver = $reflectionAstResolver;
-        $this->betterStandardPrinter = $betterStandardPrinter;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function inferFunctionLike(FunctionLike $functionLike) : Type
     {

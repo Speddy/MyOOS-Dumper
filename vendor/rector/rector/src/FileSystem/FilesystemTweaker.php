@@ -16,7 +16,7 @@ final class FilesystemTweaker
     {
         $absolutePathsFound = [];
         foreach ($paths as $path) {
-            if (\strpos($path, '*') !== \false) {
+            if (str_contains($path, '*')) {
                 $foundPaths = $this->foundInGlob($path);
                 $absolutePathsFound = \array_merge($absolutePathsFound, $foundPaths);
             } else {
@@ -32,8 +32,6 @@ final class FilesystemTweaker
     {
         /** @var string[] $paths */
         $paths = (array) \glob($path);
-        return \array_filter($paths, static function (string $path) : bool {
-            return \file_exists($path);
-        });
+        return \array_filter($paths, static fn(string $path): bool => \file_exists($path));
     }
 }

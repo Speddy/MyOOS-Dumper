@@ -15,27 +15,24 @@ use Rector\StaticTypeMapper\Naming\NameScopeFactory;
  * Decorate node with fully qualified class name for const epxr,
  * e.g. Direction::*
  */
-final class ConstExprClassNameDecorator implements PhpDocNodeDecoratorInterface
+final readonly class ConstExprClassNameDecorator implements PhpDocNodeDecoratorInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\Naming\NameScopeFactory
-     */
-    private $nameScopeFactory;
-    /**
-     * @readonly
-     * @var \Rector\PhpDocParser\PhpDocParser\PhpDocNodeTraverser
-     */
-    private $phpDocNodeTraverser;
-    public function __construct(NameScopeFactory $nameScopeFactory, PhpDocNodeTraverser $phpDocNodeTraverser)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NameScopeFactory $nameScopeFactory,
+        /**
+         * @readonly
+         */
+        private PhpDocNodeTraverser $phpDocNodeTraverser
+    )
     {
-        $this->nameScopeFactory = $nameScopeFactory;
-        $this->phpDocNodeTraverser = $phpDocNodeTraverser;
     }
     public function decorate(PhpDocNode $phpDocNode, PhpNode $phpNode) : void
     {
         // iterating all phpdocs has big overhead. peek into the phpdoc to exit early
-        if (\strpos($phpDocNode->__toString(), '::') === \false) {
+        if (!str_contains($phpDocNode->__toString(), '::')) {
             return;
         }
         $this->phpDocNodeTraverser->traverseWithCallable($phpDocNode, '', function (Node $node) use($phpNode) : ?\PHPStan\PhpDocParser\Ast\Node {

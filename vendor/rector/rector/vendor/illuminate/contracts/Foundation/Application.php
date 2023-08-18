@@ -156,7 +156,6 @@ interface Application extends Container
     /**
      * Run the given array of bootstrap classes.
      *
-     * @param  array  $bootstrappers
      * @return void
      */
     public function bootstrapWith(array $bootstrappers);

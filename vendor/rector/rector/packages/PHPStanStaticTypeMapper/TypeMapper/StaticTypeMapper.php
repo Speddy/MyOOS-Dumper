@@ -19,16 +19,15 @@ use Rector\StaticTypeMapper\ValueObject\Type\SimpleStaticType;
  *
  * @implements TypeMapperInterface<StaticType>
  */
-final class StaticTypeMapper implements TypeMapperInterface
+final readonly class StaticTypeMapper implements TypeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    public function __construct(PhpVersionProvider $phpVersionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PhpVersionProvider $phpVersionProvider
+    )
     {
-        $this->phpVersionProvider = $phpVersionProvider;
     }
     /**
      * @return class-string<Type>

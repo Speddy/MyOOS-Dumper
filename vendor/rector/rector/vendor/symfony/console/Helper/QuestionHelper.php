@@ -35,14 +35,8 @@ class QuestionHelper extends Helper
      * @var resource|null
      */
     private $inputStream;
-    /**
-     * @var bool
-     */
-    private static $stty = \true;
-    /**
-     * @var bool
-     */
-    private static $stdinIsInteractive;
+    private static bool $stty = \true;
+    private static ?bool $stdinIsInteractive = null;
     /**
      * Asks a question to the user.
      *
@@ -65,9 +59,7 @@ class QuestionHelper extends Helper
             if (!$question->getValidator()) {
                 return $this->doAsk($output, $question);
             }
-            $interviewer = function () use($output, $question) {
-                return $this->doAsk($output, $question);
-            };
+            $interviewer = fn() => $this->doAsk($output, $question);
             return $this->validateAttempts($interviewer, $output, $question);
         } catch (MissingInputException $exception) {
             $input->setInteractive(\false);
@@ -188,7 +180,7 @@ class QuestionHelper extends Helper
     protected function formatChoiceQuestionChoices(ChoiceQuestion $question, string $tag) : array
     {
         $messages = [];
-        $maxWidth = \max(\array_map([__CLASS__, 'width'], \array_keys($choices = $question->getChoices())));
+        $maxWidth = \max(\array_map(self::width(...), \array_keys($choices = $question->getChoices())));
         foreach ($choices as $key => $value) {
             $padding = \str_repeat(' ', $maxWidth - self::width($key));
             $messages[] = \sprintf("  [<{$tag}>%s{$padding}</{$tag}>] %s", $key, $value);
@@ -222,7 +214,7 @@ class QuestionHelper extends Helper
         $i = 0;
         $ofs = -1;
         $matches = $autocomplete($ret);
-        $numMatches = \count($matches);
+        $numMatches = is_countable($matches) ? \count($matches) : 0;
         $sttyMode = \shell_exec('stty -g');
         $isStdin = 'php://stdin' === (\stream_get_meta_data($inputStream)['uri'] ?? null);
         $r = [$inputStream];
@@ -252,7 +244,7 @@ class QuestionHelper extends Helper
                 if (0 === $i) {
                     $ofs = -1;
                     $matches = $autocomplete($ret);
-                    $numMatches = \count($matches);
+                    $numMatches = is_countable($matches) ? \count($matches) : 0;
                 } else {
                     $numMatches = 0;
                 }
@@ -281,10 +273,8 @@ class QuestionHelper extends Helper
                         $output->write($remainingCharacters);
                         $fullChoice .= $remainingCharacters;
                         $i = \false === ($encoding = \mb_detect_encoding($fullChoice, null, \true)) ? \strlen($fullChoice) : \mb_strlen($fullChoice, $encoding);
-                        $matches = \array_filter($autocomplete($ret), function ($match) use($ret) {
-                            return '' === $ret || \strncmp($match, $ret, \strlen($ret)) === 0;
-                        });
-                        $numMatches = \count($matches);
+                        $matches = \array_filter($autocomplete($ret), fn($match) => '' === $ret || str_starts_with((string) $match, $ret));
+                        $numMatches = \count((array) $matches);
                         $ofs = -1;
                     }
                     if ("\n" === $c) {
@@ -310,7 +300,7 @@ class QuestionHelper extends Helper
                 $ofs = 0;
                 foreach ($autocomplete($ret) as $value) {
                     // If typed characters match the beginning chunk of value (e.g. [AcmeDe]moBundle)
-                    if (\strncmp($value, $tempRet, \strlen($tempRet)) === 0) {
+                    if (str_starts_with((string) $value, $tempRet)) {
                         $matches[$numMatches++] = $value;
                     }
                 }
@@ -320,7 +310,7 @@ class QuestionHelper extends Helper
                 $cursor->savePosition();
                 // Write highlighted text, complete the partially entered response
                 $charactersEntered = \strlen(\trim($this->mostRecentlyEnteredValue($fullChoice)));
-                $output->write('<hl>' . OutputFormatter::escapeTrailingBackslash(\substr($matches[$ofs], $charactersEntered)) . '</hl>');
+                $output->write('<hl>' . OutputFormatter::escapeTrailingBackslash(\substr((string) $matches[$ofs], $charactersEntered)) . '</hl>');
                 $cursor->restorePosition();
             }
         }
@@ -331,7 +321,7 @@ class QuestionHelper extends Helper
     private function mostRecentlyEnteredValue(string $entered) : string
     {
         // Determine the most recent value that the user entered
-        if (\strpos($entered, ',') === \false) {
+        if (!str_contains($entered, ',')) {
             return $entered;
         }
         $choices = \explode(',', $entered);
@@ -353,7 +343,7 @@ class QuestionHelper extends Helper
         if ('\\' === \DIRECTORY_SEPARATOR) {
             $exe = __DIR__ . '/../Resources/bin/hiddeninput.exe';
             // handle code running from a phar
-            if (\strncmp(__FILE__, 'phar:', \strlen('phar:')) === 0) {
+            if (str_starts_with(__FILE__, 'phar:')) {
                 $tmpExe = \sys_get_temp_dir() . '/hiddeninput.exe';
                 \copy($exe, $tmpExe);
                 $exe = $tmpExe;
@@ -409,7 +399,7 @@ class QuestionHelper extends Helper
                 return $question->getValidator()($interviewer());
             } catch (RuntimeException $e) {
                 throw $e;
-            } catch (\Exception $error) {
+            } catch (\Exception) {
             }
         }
         throw $error;

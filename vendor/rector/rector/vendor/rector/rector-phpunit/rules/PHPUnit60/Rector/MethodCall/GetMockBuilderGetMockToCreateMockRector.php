@@ -76,7 +76,7 @@ CODE_SAMPLE
             return null;
         }
         // must be be test case class
-        if (!$this->isObjectType($currentMethodCall->var, new ObjectType('PHPUnit\\Framework\\TestCase'))) {
+        if (!$this->isObjectType($currentMethodCall->var, new ObjectType(\PHPUnit\Framework\TestCase::class))) {
             return null;
         }
         if (!$this->isName($currentMethodCall->name, 'getMockBuilder')) {

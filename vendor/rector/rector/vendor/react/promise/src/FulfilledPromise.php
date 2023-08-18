@@ -22,9 +22,7 @@ class FulfilledPromise implements ExtendedPromiseInterface, CancellablePromiseIn
         }
         try {
             return resolve($onFulfilled($this->value));
-        } catch (\Throwable $exception) {
-            return new RejectedPromise($exception);
-        } catch (\Exception $exception) {
+        } catch (\Throwable|\Exception $exception) {
             return new RejectedPromise($exception);
         }
     }
@@ -44,11 +42,7 @@ class FulfilledPromise implements ExtendedPromiseInterface, CancellablePromiseIn
     }
     public function always(callable $onFulfilledOrRejected)
     {
-        return $this->then(function ($value) use($onFulfilledOrRejected) {
-            return resolve($onFulfilledOrRejected())->then(function () use($value) {
-                return $value;
-            });
-        });
+        return $this->then(fn($value) => resolve($onFulfilledOrRejected())->then(fn() => $value));
     }
     public function progress(callable $onProgress)
     {

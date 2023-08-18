@@ -11,15 +11,10 @@ use Rector\Core\Contract\PhpParser\Node\StmtsAwareInterface;
 final class FileWithoutNamespace extends Stmt implements StmtsAwareInterface
 {
     /**
-     * @var Stmt[]
-     */
-    public $stmts;
-    /**
      * @param Stmt[] $stmts
      */
-    public function __construct(array $stmts)
+    public function __construct(public array $stmts)
     {
-        $this->stmts = $stmts;
         parent::__construct();
     }
     public function getType() : string

@@ -20,34 +20,27 @@ use Rector\PHPStanStaticTypeMapper\Enum\TypeKind;
 use Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeCommonTypeNarrower;
 use Rector\StaticTypeMapper\StaticTypeMapper;
 use Rector\VendorLocker\NodeVendorLocker\ClassMethodParamVendorLockResolver;
-final class ClassMethodParamTypeCompleter
+final readonly class ClassMethodParamTypeCompleter
 {
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\StaticTypeMapper
-     */
-    private $staticTypeMapper;
-    /**
-     * @readonly
-     * @var \Rector\VendorLocker\NodeVendorLocker\ClassMethodParamVendorLockResolver
-     */
-    private $classMethodParamVendorLockResolver;
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeCommonTypeNarrower
-     */
-    private $unionTypeCommonTypeNarrower;
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    public function __construct(StaticTypeMapper $staticTypeMapper, ClassMethodParamVendorLockResolver $classMethodParamVendorLockResolver, UnionTypeCommonTypeNarrower $unionTypeCommonTypeNarrower, PhpVersionProvider $phpVersionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private StaticTypeMapper $staticTypeMapper,
+        /**
+         * @readonly
+         */
+        private ClassMethodParamVendorLockResolver $classMethodParamVendorLockResolver,
+        /**
+         * @readonly
+         */
+        private UnionTypeCommonTypeNarrower $unionTypeCommonTypeNarrower,
+        /**
+         * @readonly
+         */
+        private PhpVersionProvider $phpVersionProvider
+    )
     {
-        $this->staticTypeMapper = $staticTypeMapper;
-        $this->classMethodParamVendorLockResolver = $classMethodParamVendorLockResolver;
-        $this->unionTypeCommonTypeNarrower = $unionTypeCommonTypeNarrower;
-        $this->phpVersionProvider = $phpVersionProvider;
     }
     /**
      * @param array<int, Type> $classParameterTypes

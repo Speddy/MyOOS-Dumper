@@ -61,8 +61,7 @@ CODE_SAMPLE
         if ($stmts === []) {
             return \false;
         }
-        \end($stmts);
-        $lastKey = \key($stmts);
+        $lastKey = array_key_last($stmts);
         $lastStmt = $stmts[$lastKey];
         return $this->isRemovable($lastStmt);
     }

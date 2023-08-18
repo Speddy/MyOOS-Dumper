@@ -19,18 +19,14 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
  */
 final class ArrayAnnotationToAttributeMapper implements AnnotationToAttributeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
-     */
-    private $valueResolver;
-    /**
-     * @var \Rector\PhpAttribute\AnnotationToAttributeMapper
-     */
-    private $annotationToAttributeMapper;
-    public function __construct(ValueResolver $valueResolver)
+    private ?\Rector\PhpAttribute\AnnotationToAttributeMapper $annotationToAttributeMapper = null;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ValueResolver $valueResolver
+    )
     {
-        $this->valueResolver = $valueResolver;
     }
     public function autowire(AnnotationToAttributeMapper $annotationToAttributeMapper) : void
     {
@@ -75,16 +71,13 @@ final class ArrayAnnotationToAttributeMapper implements AnnotationToAttributeMap
     }
     private function resolveValueExprWithSingleQuoteHandling(ArrayItem $arrayItem) : ArrayItem
     {
-        if (!$arrayItem->key instanceof Expr && $arrayItem->value instanceof ClassConstFetch && $arrayItem->value->class instanceof Name && \strpos((string) $arrayItem->value->class, "'") !== \false) {
+        if (!$arrayItem->key instanceof Expr && $arrayItem->value instanceof ClassConstFetch && $arrayItem->value->class instanceof Name && str_contains((string) $arrayItem->value->class, "'")) {
             $arrayItem->value = new String_($this->valueResolver->getValue($arrayItem->value));
             return $arrayItem;
         }
         return $arrayItem;
     }
-    /**
-     * @param mixed $value
-     */
-    private function isRemoveArrayPlaceholder($value) : bool
+    private function isRemoveArrayPlaceholder(mixed $value) : bool
     {
         if (!\is_array($value)) {
             return \false;

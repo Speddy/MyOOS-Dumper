@@ -15,16 +15,13 @@ interface Broadcaster
      * Return the valid authentication response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  mixed  $result
      * @return mixed
      */
-    public function validAuthenticationResponse($request, $result);
+    public function validAuthenticationResponse($request, mixed $result);
     /**
      * Broadcast the given event.
      *
-     * @param  array  $channels
      * @param  string  $event
-     * @param  array  $payload
      * @return void
      *
      * @throws \Illuminate\Broadcasting\BroadcastException

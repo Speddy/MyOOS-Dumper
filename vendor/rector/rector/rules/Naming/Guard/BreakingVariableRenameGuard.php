@@ -26,51 +26,40 @@ use Rector\PHPStanStaticTypeMapper\Utils\TypeUnwrapper;
 /**
  * This class check if a variable name change breaks existing code in class method
  */
-final class BreakingVariableRenameGuard
+final readonly class BreakingVariableRenameGuard
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    private $betterNodeFinder;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\ConflictingNameResolver
-     */
-    private $conflictingNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\OverridenExistingNamesResolver
-     */
-    private $overridenExistingNamesResolver;
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\Utils\TypeUnwrapper
-     */
-    private $typeUnwrapper;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
     /**
      * @var string
      * @see https://regex101.com/r/1pKLgf/1
      */
     public const AT_NAMING_REGEX = '#[\\w+]At$#';
-    public function __construct(BetterNodeFinder $betterNodeFinder, ConflictingNameResolver $conflictingNameResolver, NodeTypeResolver $nodeTypeResolver, OverridenExistingNamesResolver $overridenExistingNamesResolver, TypeUnwrapper $typeUnwrapper, NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private BetterNodeFinder $betterNodeFinder,
+        /**
+         * @readonly
+         */
+        private ConflictingNameResolver $conflictingNameResolver,
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver,
+        /**
+         * @readonly
+         */
+        private OverridenExistingNamesResolver $overridenExistingNamesResolver,
+        /**
+         * @readonly
+         */
+        private TypeUnwrapper $typeUnwrapper,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->betterNodeFinder = $betterNodeFinder;
-        $this->conflictingNameResolver = $conflictingNameResolver;
-        $this->nodeTypeResolver = $nodeTypeResolver;
-        $this->overridenExistingNamesResolver = $overridenExistingNamesResolver;
-        $this->typeUnwrapper = $typeUnwrapper;
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Stmt\Function_|\PhpParser\Node\Expr\Closure $functionLike
@@ -79,7 +68,7 @@ final class BreakingVariableRenameGuard
     {
         // is the suffix? → also accepted
         $expectedNameCamelCase = \ucfirst($expectedName);
-        if (\substr_compare($currentName, $expectedNameCamelCase, -\strlen($expectedNameCamelCase)) === 0) {
+        if (str_ends_with($currentName, $expectedNameCamelCase)) {
             return \true;
         }
         if ($this->conflictingNameResolver->hasNameIsInFunctionLike($expectedName, $functionLike)) {
@@ -103,7 +92,7 @@ final class BreakingVariableRenameGuard
     {
         // is the suffix? → also accepted
         $expectedNameCamelCase = \ucfirst($expectedName);
-        if (\substr_compare($currentName, $expectedNameCamelCase, -\strlen($expectedNameCamelCase)) === 0) {
+        if (str_ends_with($currentName, $expectedNameCamelCase)) {
             return \true;
         }
         $conflictingNames = $this->conflictingNameResolver->resolveConflictingVariableNamesForParam($classMethod);

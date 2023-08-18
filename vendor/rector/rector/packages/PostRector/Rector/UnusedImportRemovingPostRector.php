@@ -22,20 +22,17 @@ use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class UnusedImportRemovingPostRector extends \Rector\PostRector\Rector\AbstractPostRector
 {
-    /**
-     * @readonly
-     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
-     */
-    private $simpleCallableNodeTraverser;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    public function __construct(SimpleCallableNodeTraverser $simpleCallableNodeTraverser, PhpDocInfoFactory $phpDocInfoFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocInfoFactory $phpDocInfoFactory
+    )
     {
-        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
     public function enterNode(Node $node) : ?Node
     {
@@ -166,10 +163,10 @@ CODE_SAMPLE
         $alias = $this->resolveAliasName($useUse);
         // match partial import
         foreach ($names as $name) {
-            if (\substr_compare($comparedName, $name, -\strlen($name)) === 0) {
+            if (str_ends_with($comparedName, $name)) {
                 return \true;
             }
-            if (\strncmp($name, $namespacedPrefix, \strlen($namespacedPrefix)) === 0) {
+            if (str_starts_with($name, $namespacedPrefix)) {
                 return \true;
             }
             if (!\is_string($alias)) {
@@ -178,7 +175,7 @@ CODE_SAMPLE
             if ($alias === $name) {
                 return \true;
             }
-            if (\strpos($name, '\\') === \false) {
+            if (!str_contains($name, '\\')) {
                 continue;
             }
             $namePrefix = Strings::before($name, '\\', 1);

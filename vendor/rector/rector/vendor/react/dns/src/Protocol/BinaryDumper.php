@@ -8,7 +8,6 @@ use RectorPrefix202308\React\Dns\Query\Query;
 final class BinaryDumper
 {
     /**
-     * @param Message $message
      * @return string
      */
     public function toBinary(Message $message)
@@ -22,7 +21,6 @@ final class BinaryDumper
         return $data;
     }
     /**
-     * @param Message $message
      * @return string
      */
     private function headerToBinary(Message $message)

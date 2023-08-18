@@ -9,7 +9,7 @@ use League\Flysystem\PathPrefixer;
 
 class PrefixPublicUrlGenerator implements PublicUrlGenerator
 {
-    private PathPrefixer $prefixer;
+    private readonly PathPrefixer $prefixer;
 
     public function __construct(string $urlPrefix)
     {

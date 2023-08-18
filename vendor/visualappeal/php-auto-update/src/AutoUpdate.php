@@ -22,93 +22,82 @@ class AutoUpdate {
     /**
      * The latest version.
      *
-     * @var string
      */
-    private $latestVersion = '0.0.0';
+    private string|int $latestVersion = '0.0.0';
 
     /**
      * Updates not yet installed.
      *
-     * @var array
      */
-    private $updates;
+    private ?array $updates = null;
 
     /**
      * Cache for update requests.
      *
-     * @var CacheInterface
      */
-    private $cache;
+    private \Desarrolla2\Cache\NotCache|\Desarrolla2\Cache\CacheInterface $cache;
 
     /**
      * Logger instance.
      *
-     * @var LoggerInterface
      */
-    private $log;
+    private \Monolog\Logger|\Psr\Log\LoggerInterface $log;
 
     /**
      * Result of simulated installation.
      *
-     * @var array
      */
-    private $simulationResults = array();
+    private array $simulationResults = [];
 
     /**
      * Temporary download directory.
      *
-     * @var string
      */
-    private $tempDir = '';
+    private string $tempDir = '';
 
     /**
      * Install directory.
      *
-     * @var string
      */
-    private $installDir = '';
+    private string $installDir = '';
 
     /**
      * Update branch.
      *
-     * @var string
      */
-    private $branch = '';
+    private string $branch = '';
 
     /**
      * Username authentication
      *
-     * @var string
      */
-    private $username = '';
+    private string $username = '';
 
     /**
      * Password authentication
      *
-     * @var string
      */
-    private $password = '';
+    private string $password = '';
 
     /*
      * Callbacks to be called when each update is finished
      *
      * @var array
      */
-    private $onEachUpdateFinishCallbacks = [];
+    private array $onEachUpdateFinishCallbacks = [];
 
     /*
      * Callbacks to be called when all updates are finished
      *
      * @var array
      */
-    private $onAllUpdateFinishCallbacks = [];
+    private array $onAllUpdateFinishCallbacks = [];
 
     /**
      * If curl should verify the host certificate.
      *
-     * @var bool
      */
-    private $sslVerifyHost = true;
+    private bool $sslVerifyHost = true;
 
     /**
      * Url to the update folder on the server.
@@ -155,44 +144,43 @@ class AutoUpdate {
     /**
      * No update available.
      */
-    public const NO_UPDATE_AVAILABLE = 0;
+    final public const NO_UPDATE_AVAILABLE = 0;
 
     /**
      * Could not check for last version.
      */
-    public const ERROR_VERSION_CHECK = 20;
+    final public const ERROR_VERSION_CHECK = 20;
 
     /**
      * Temp directory does not exist or is not writable.
      */
-    public const ERROR_TEMP_DIR = 30;
+    final public const ERROR_TEMP_DIR = 30;
 
     /**
      * Install directory does not exist or is not writable.
      */
-    public const ERROR_INSTALL_DIR = 35;
+    final public const ERROR_INSTALL_DIR = 35;
 
     /**
      * Could not download update.
      */
-    public const ERROR_DOWNLOAD_UPDATE = 40;
+    final public const ERROR_DOWNLOAD_UPDATE = 40;
 
     /**
      * Could not delete zip update file.
      */
-    public const ERROR_DELETE_TEMP_UPDATE = 50;
+    final public const ERROR_DELETE_TEMP_UPDATE = 50;
 
     /**
      * Error in simulated installation.
      */
-    public const ERROR_SIMULATE = 70;
+    final public const ERROR_SIMULATE = 70;
 
     /**
      * Create new instance
      *
      * @param string|null $tempDir
      * @param string|null $installDir
-     * @param int $maxExecutionTime
      */
     public function __construct(?string $tempDir = null, ?string $installDir = null, int $maxExecutionTime = 60)
     {
@@ -211,7 +199,6 @@ class AutoUpdate {
     /**
      * Set the temporary download directory.
      *
-     * @param string $dir
      * @return bool
      */
     public function setTempDir(string $dir): bool
@@ -236,7 +223,6 @@ class AutoUpdate {
     /**
      * Set the installation directory.
      *
-     * @param string $dir
      * @return bool
      */
     public function setInstallDir(string $dir): bool
@@ -261,7 +247,6 @@ class AutoUpdate {
     /**
      * Set the update filename.
      *
-     * @param string $updateFile
      * @return AutoUpdate
      */
     public function setUpdateFile(string $updateFile): AutoUpdate
@@ -274,7 +259,6 @@ class AutoUpdate {
     /**
      * Set the update filename.
      *
-     * @param string $updateUrl
      * @return AutoUpdate
      */
     public function setUpdateUrl(string $updateUrl): AutoUpdate
@@ -301,7 +285,6 @@ class AutoUpdate {
      * Set the cache component.
      *
      * @param CacheInterface $adapter See https://github.com/desarrolla2/Cache
-     * @param int $ttl
      * @return AutoUpdate
      */
     public function setCache(CacheInterface $adapter, int $ttl): AutoUpdate
@@ -315,7 +298,6 @@ class AutoUpdate {
     /**
      * Set the version of the current installed software.
      *
-     * @param string $currentVersion
      * @return AutoUpdate
      */
     public function setCurrentVersion(string $currentVersion): AutoUpdate
@@ -328,8 +310,6 @@ class AutoUpdate {
     /**
      * Set username and password for basic authentication.
      *
-     * @param string $username
-     * @param string $password
      * @return AutoUpdate
      */
     public function setBasicAuth(string $username, string $password): AutoUpdate
@@ -348,11 +328,7 @@ class AutoUpdate {
     private function useBasicAuth()
     {
         if ($this->username && $this->password) {
-            return stream_context_create(array(
-                'http' => array(
-                    'header' => "Authorization: Basic " . base64_encode("$this->username:$this->password")
-                )
-            ));
+            return stream_context_create(['http' => ['header' => "Authorization: Basic " . base64_encode("$this->username:$this->password")]]);
         }
 
         return null;
@@ -361,7 +337,6 @@ class AutoUpdate {
     /**
      * Replace the logger internally used by the given logger instance.
      *
-     * @param LoggerInterface $logger
      * @return AutoUpdate
      */
     public function setLogger(LoggerInterface $logger): AutoUpdate
@@ -388,10 +363,8 @@ class AutoUpdate {
      */
     public function getVersionsToUpdate(): array
     {
-        if (count($this->updates) > 0) {
-            return array_map(static function ($update) {
-                return $update['version'];
-            }, $this->updates);
+        if (count((array) $this->updates) > 0) {
+            return array_map(static fn($update) => $update['version'], $this->updates);
         }
 
         return [];
@@ -416,7 +389,6 @@ class AutoUpdate {
     }
 
     /**
-     * @param bool $sslVerifyHost
      * @return AutoUpdate
      */
     public function setSslVerifyHost(bool $sslVerifyHost): AutoUpdate
@@ -489,13 +461,11 @@ class AutoUpdate {
                         throw new ParserException(sprintf('Could not parse update ini file %s!', $this->updateFile));
                     }
 
-                    $versions = array_map(static function ($block) {
-                        return $block['url'] ?? false;
-                    }, $versions);
+                    $versions = array_map(static fn($block) => $block['url'] ?? false, $versions);
 
                     break;
                 case 'json':
-                    $versions = (array) json_decode($update, false);
+                    $versions = (array) json_decode($update, false, 512, JSON_THROW_ON_ERROR);
                     if (!is_array($versions)) {
                         $this->log->error('Unable to parse json update file!');
 
@@ -567,7 +537,6 @@ class AutoUpdate {
     /**
      * Check if url is valid.
      *
-     * @param string $url
      * @return bool
      */
     protected function isValidUrl(string $url): bool
@@ -579,7 +548,6 @@ class AutoUpdate {
      * Download file via curl.
      *
      * @param string $url URL to file
-     * @param int $timeout
      * @return string|false
      */
     protected function downloadCurl(string $url, int $timeout = 10)
@@ -658,7 +626,6 @@ class AutoUpdate {
     /**
      * Simulate update process.
      *
-     * @param string $updateFile
      * @return bool
      */
     protected function simulateInstall(string $updateFile): bool
@@ -681,7 +648,7 @@ class AutoUpdate {
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $fileStats        = $zip->statIndex($i);
             $filename         = $fileStats['name'];
-            $foldername       = $this->installDir . dirname($filename);
+            $foldername       = $this->installDir . dirname((string) $filename);
             $absoluteFilename = $this->installDir . $filename;
 
             $files[$i] = [
@@ -712,7 +679,7 @@ class AutoUpdate {
             }
 
             // Skip if entry is a directory
-            if ($filename[strlen($filename) - 1] === DIRECTORY_SEPARATOR) {
+            if ($filename[strlen((string) $filename) - 1] === DIRECTORY_SEPARATOR) {
                 continue;
             }
 
@@ -765,7 +732,6 @@ class AutoUpdate {
      *
      * @param string $updateFile Path to the update file
      * @param bool $simulateInstall Check for directory and file permissions instead of installing the update
-     * @param string $version
      * @return bool
      */
     protected function install(string $updateFile, bool $simulateInstall, string $version): bool
@@ -801,10 +767,10 @@ class AutoUpdate {
         // Read every file from archive
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $fileStats        = $zip->statIndex($i);
-            $filename         = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $fileStats['name']);
-            $foldername       = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR,
+            $filename         = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, (string) $fileStats['name']);
+            $foldername       = str_replace(['/', '\\'], DIRECTORY_SEPARATOR,
                 $this->installDir . dirname($filename));
-            $absoluteFilename = str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $this->installDir . $filename);
+            $absoluteFilename = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $this->installDir . $filename);
             $this->log->debug(sprintf('Updating file "%s"', $filename));
 
             if (!is_dir($foldername) && !mkdir($foldername, $this->dirPermissions, true) && !is_dir($foldername)) {
@@ -858,11 +824,11 @@ class AutoUpdate {
         $this->log->info('Trying to perform update');
 
         // Check for latest version
-        if ($this->latestVersion === null || count($this->updates) === 0) {
+        if ($this->latestVersion === null || count((array) $this->updates) === 0) {
             $this->checkUpdate();
         }
 
-        if ($this->latestVersion === null || count($this->updates) === 0) {
+        if ($this->latestVersion === null || count((array) $this->updates) === 0) {
             $this->log->error('Could not get latest version from server!');
 
             return self::ERROR_VERSION_CHECK;
@@ -949,7 +915,6 @@ class AutoUpdate {
     /**
      * Add slash at the end of the path.
      *
-     * @param string $dir
      * @return string
      */
     public function addTrailingSlash(string $dir): string
@@ -964,7 +929,6 @@ class AutoUpdate {
     /**
      * Add callback which is executed after each update finished.
      *
-     * @param callable $callback
      * @return $this
      */
     public function onEachUpdateFinish(callable $callback): self
@@ -977,7 +941,6 @@ class AutoUpdate {
     /**
      * Add callback which is executed after all updates finished.
      *
-     * @param callable $callback
      * @return $this
      */
     public function setOnAllUpdateFinishCallbacks(callable $callback): self
@@ -990,8 +953,6 @@ class AutoUpdate {
     /**
      * Run callbacks after each update finished.
      *
-     * @param string $updateVersion
-     * @param bool $simulate
      * @return void
      */
     private function runOnEachUpdateFinishCallbacks(string $updateVersion, bool $simulate): void
@@ -1004,7 +965,6 @@ class AutoUpdate {
     /**
      * Run callbacks after all updates finished.
      *
-     * @param array $updatedVersions
      * @return void
      */
     private function runOnAllUpdateFinishCallbacks(array $updatedVersions): void

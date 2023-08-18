@@ -33,11 +33,11 @@ abstract class PHP extends Engine
     /**
      * $result[self::VALUE] contains the value.
      */
-    const VALUE = 0;
+    public const VALUE = 0;
     /**
      * $result[self::SIGN] contains the sign.
      */
-    const SIGN = 1;
+    public const SIGN = 1;
     /**#@-*/
 
     /**
@@ -46,7 +46,7 @@ abstract class PHP extends Engine
      * At what point do we switch between Karatsuba multiplication and schoolbook long multiplication?
      *
      */
-    const KARATSUBA_CUTOFF = 25;
+    public const KARATSUBA_CUTOFF = 25;
 
     /**
      * Can Bitwise operations be done fast?
@@ -54,14 +54,14 @@ abstract class PHP extends Engine
      * @see parent::bitwise_leftRotate()
      * @see parent::bitwise_rightRotate()
      */
-    const FAST_BITWISE = true;
+    public const FAST_BITWISE = true;
 
     /**
      * Engine Directory
      *
      * @see parent::setModExpEngine
      */
-    const ENGINE_DIR = 'PHP';
+    public const ENGINE_DIR = 'PHP';
 
     /**
      * Default constructor
@@ -119,7 +119,7 @@ abstract class PHP extends Engine
                 );
                 while (strlen($x)) {
                     $temp = $temp->multiply($multiplier);
-                    $temp = $temp->add(new static($this->int2bytes(substr($x, 0, static::MAX10LEN)), 256));
+                    $temp = $temp->add(new static(self::int2bytes(substr($x, 0, static::MAX10LEN)), 256));
                     $x = substr($x, static::MAX10LEN);
                 }
 
@@ -149,7 +149,7 @@ abstract class PHP extends Engine
      */
     public function toString()
     {
-        if (!count($this->value)) {
+        if (!(is_countable($this->value) ? count($this->value) : 0)) {
             return '0';
         }
 
@@ -160,10 +160,10 @@ abstract class PHP extends Engine
         $divisor = new static();
         $divisor->value = [static::MAX10];
         $result = '';
-        while (count($temp->value)) {
-            list($temp, $mod) = $temp->divide($divisor);
+        while (is_countable($temp->value) ? count($temp->value) : 0) {
+            [$temp, $mod] = $temp->divide($divisor);
             $result = str_pad(
-                isset($mod->value[0]) ? $mod->value[0] : '',
+                $mod->value[0] ?? '',
                 static::MAX10LEN,
                 '0',
                 STR_PAD_LEFT
@@ -193,7 +193,7 @@ abstract class PHP extends Engine
             return $this->toBytesHelper();
         }
 
-        if (!count($this->value)) {
+        if (!(is_countable($this->value) ? count($this->value) : 0)) {
             return $this->precision > 0 ? str_repeat(chr(0), ($this->precision + 1) >> 3) : '';
         }
 
@@ -213,9 +213,7 @@ abstract class PHP extends Engine
     /**
      * Performs addition.
      *
-     * @param array $x_value
      * @param bool $x_negative
-     * @param array $y_value
      * @param bool $y_negative
      * @return array
      */
@@ -298,9 +296,7 @@ abstract class PHP extends Engine
     /**
      * Performs subtraction.
      *
-     * @param array $x_value
      * @param bool $x_negative
-     * @param array $y_value
      * @param bool $y_negative
      * @return array
      */
@@ -388,9 +384,7 @@ abstract class PHP extends Engine
     /**
      * Performs multiplication.
      *
-     * @param array $x_value
      * @param bool $x_negative
-     * @param array $y_value
      * @param bool $y_negative
      * @return array
      */
@@ -427,8 +421,6 @@ abstract class PHP extends Engine
      * See {@link http://en.wikipedia.org/wiki/Karatsuba_algorithm Karatsuba algorithm} and
      * {@link http://math.libtomcrypt.com/files/tommath.pdf#page=120 MPM 5.2.3}.
      *
-     * @param array $x_value
-     * @param array $y_value
      * @return array
      */
     private static function karatsuba(array $x_value, array $y_value)
@@ -467,8 +459,6 @@ abstract class PHP extends Engine
      *
      * Modeled after 'multiply' in MutableBigInteger.java.
      *
-     * @param array $x_value
-     * @param array $y_value
      * @return array
      */
     protected static function regularMultiply(array $x_value, array $y_value)
@@ -528,8 +518,8 @@ abstract class PHP extends Engine
      */
     protected function divideHelper(PHP $y)
     {
-        if (count($y->value) == 1) {
-            list($q, $r) = $this->divide_digit($this->value, $y->value[0]);
+        if ((is_countable($y->value) ? count($y->value) : 0) == 1) {
+            [$q, $r] = self::divide_digit($this->value, $y->value[0]);
             $quotient = new static();
             $remainder = new static();
             $quotient->value = $q;
@@ -564,7 +554,7 @@ abstract class PHP extends Engine
         }
 
         // normalize $x and $y as described in HAC 14.23 / 14.24
-        $msb = $y->value[count($y->value) - 1];
+        $msb = $y->value[(is_countable($y->value) ? count($y->value) : 0) - 1];
         for ($shift = 0; !($msb & static::MSB); ++$shift) {
             $msb <<= 1;
         }
@@ -572,8 +562,8 @@ abstract class PHP extends Engine
         $y->lshift($shift);
         $y_value = &$y->value;
 
-        $x_max = count($x->value) - 1;
-        $y_max = count($y->value) - 1;
+        $x_max = (is_countable($x->value) ? count($x->value) : 0) - 1;
+        $y_max = (is_countable($y->value) ? count($y->value) : 0) - 1;
 
         $quotient = new static();
         $quotient_value = &$quotient->value;
@@ -585,7 +575,7 @@ abstract class PHP extends Engine
             $lhs = new static();
             $rhs = new static();
         }
-        if (static::class != get_class($temp)) {
+        if (static::class != $temp::class) {
             $temp = new static();
             $lhs = new static();
             $rhs = new static();
@@ -600,15 +590,15 @@ abstract class PHP extends Engine
             // calculate the "common residue"
             ++$quotient_value[$x_max - $y_max];
             $x = $x->subtract($temp);
-            $x_max = count($x->value) - 1;
+            $x_max = (is_countable($x->value) ? count($x->value) : 0) - 1;
         }
 
         for ($i = $x_max; $i >= $y_max + 1; --$i) {
             $x_value = &$x->value;
             $x_window = [
-                isset($x_value[$i]) ? $x_value[$i] : 0,
-                isset($x_value[$i - 1]) ? $x_value[$i - 1] : 0,
-                isset($x_value[$i - 2]) ? $x_value[$i - 2] : 0
+                $x_value[$i] ?? 0,
+                $x_value[$i - 1] ?? 0,
+                $x_value[$i - 2] ?? 0
             ];
             $y_window = [
                 $y_value[$y_max],
@@ -643,7 +633,7 @@ abstract class PHP extends Engine
             $temp_value = [$quotient_value[$q_index]];
             $temp = $temp->multiply($y);
             $temp_value = &$temp->value;
-            if (count($temp_value)) {
+            if (is_countable($temp_value) ? count($temp_value) : 0) {
                 $temp_value = array_merge($adjust, $temp_value);
             }
 
@@ -656,7 +646,7 @@ abstract class PHP extends Engine
                 --$quotient_value[$q_index];
             }
 
-            $x_max = count($x_value) - 1;
+            $x_max = (is_countable($x_value) ? count($x_value) : 0) - 1;
         }
 
         // unnormalize the remainder
@@ -678,7 +668,6 @@ abstract class PHP extends Engine
      *
      * abc / x = a00 / x + b0 / x + c / x
      *
-     * @param array $dividend
      * @param int $divisor
      * @return array
      */
@@ -722,7 +711,6 @@ abstract class PHP extends Engine
     /**
      * Convert an array / boolean to a PHP BigInteger object
      *
-     * @param array $arr
      * @return static
      */
     protected function convertToObj(array $arr)
@@ -739,7 +727,6 @@ abstract class PHP extends Engine
      *
      * Removes leading zeros and truncates (if necessary) to maintain the appropriate precision
      *
-     * @param PHP $result
      * @return static
      */
     protected function normalize(PHP $result)
@@ -749,7 +736,7 @@ abstract class PHP extends Engine
 
         $value = &$result->value;
 
-        if (!count($value)) {
+        if (!(is_countable($value) ? count($value) : 0)) {
             $result->is_negative = false;
             return $result;
         }
@@ -757,7 +744,7 @@ abstract class PHP extends Engine
         $value = static::trim($value);
 
         if (!empty($result->bitmask->value)) {
-            $length = min(count($value), count($result->bitmask->value));
+            $length = min(count($value), is_countable($result->bitmask->value) ? count($result->bitmask->value) : 0);
             $value = array_slice($value, 0, $length);
 
             for ($i = 0; $i < $length; ++$i) {
@@ -773,9 +760,7 @@ abstract class PHP extends Engine
     /**
      * Compares two numbers.
      *
-     * @param array $x_value
      * @param bool $x_negative
-     * @param array $y_value
      * @param bool $y_negative
      * @return int
      * @see static::compare()
@@ -919,14 +904,14 @@ abstract class PHP extends Engine
 
         $carry = 0;
 
-        for ($i = 0; $i < count($this->value); ++$i) {
+        for ($i = 0; $i < (is_countable($this->value) ? count($this->value) : 0); ++$i) {
             $temp = $this->value[$i] * $shift + $carry;
             $carry = static::BASE === 26 ? intval($temp / 0x4000000) : ($temp >> 31);
             $this->value[$i] = (int)($temp - $carry * static::BASE_FULL);
         }
 
         if ($carry) {
-            $this->value[count($this->value)] = $carry;
+            $this->value[is_countable($this->value) ? count($this->value) : 0] = $carry;
         }
 
         while ($num_digits--) {
@@ -958,7 +943,7 @@ abstract class PHP extends Engine
 
         $carry = 0;
 
-        for ($i = count($this->value) - 1; $i >= 0; --$i) {
+        for ($i = (is_countable($this->value) ? count($this->value) : 0) - 1; $i >= 0; --$i) {
             $temp = $this->value[$i] >> $shift | $carry;
             $carry = ($this->value[$i] & $carry_mask) << $carry_shift;
             $this->value[$i] = $temp;
@@ -970,8 +955,6 @@ abstract class PHP extends Engine
     /**
      * Performs modular exponentiation.
      *
-     * @param PHP $e
-     * @param PHP $n
      * @return PHP
      */
     protected function powModInner(PHP $e, PHP $n)
@@ -979,7 +962,7 @@ abstract class PHP extends Engine
         try {
             $class = static::$modexpEngine[static::class];
             return $class::powModHelper($this, $e, $n, static::class);
-        } catch (\Exception $err) {
+        } catch (\Exception) {
             return PHP\DefaultEngine::powModHelper($this, $e, $n, static::class);
         }
     }
@@ -1004,7 +987,6 @@ abstract class PHP extends Engine
      * {@link http://www.cacr.math.uwaterloo.ca/hac/about/chap14.pdf#page=7 HAC 14.2.4} /
      * {@link http://math.libtomcrypt.com/files/tommath.pdf#page=141 MPM 5.3} for more information.
      *
-     * @param array $value
      * @return array
      */
     protected static function baseSquare(array $value)
@@ -1042,7 +1024,6 @@ abstract class PHP extends Engine
      * See {@link http://en.wikipedia.org/wiki/Karatsuba_algorithm Karatsuba algorithm} and
      * {@link http://math.libtomcrypt.com/files/tommath.pdf#page=151 MPM 5.3.4}.
      *
-     * @param array $value
      * @return array
      */
     protected static function karatsubaSquare(array $value)
@@ -1104,9 +1085,9 @@ abstract class PHP extends Engine
 
         $value = $this->value;
         foreach (static::PRIMES as $prime) {
-            list(, $r) = self::divide_digit($value, $prime);
+            [, $r] = self::divide_digit($value, $prime);
             if (!$r) {
-                return count($value) == 1 && $value[0] == $prime;
+                return (is_countable($value) ? count($value) : 0) == 1 && $value[0] == $prime;
             }
         }
 
@@ -1118,14 +1099,13 @@ abstract class PHP extends Engine
      *
      * ie. $s = gmp_scan1($n, 0) and $r = gmp_div_q($n, gmp_pow(gmp_init('2'), $s));
      *
-     * @param PHP $r
      * @return int
      * @see self::isPrime()
      */
     public static function scan1divide(PHP $r)
     {
         $r_value = &$r->value;
-        for ($i = 0, $r_length = count($r_value); $i < $r_length; ++$i) {
+        for ($i = 0, $r_length = is_countable($r_value) ? count($r_value) : 0; $i < $r_length; ++$i) {
             $temp = ~$r_value[$i] & static::MAX_DIGIT;
             for ($j = 1; ($temp >> $j) & 1; ++$j) {
             }
@@ -1141,7 +1121,6 @@ abstract class PHP extends Engine
     /**
      * Performs exponentiation.
      *
-     * @param PHP $n
      * @return PHP
      */
     protected function powHelper(PHP $n)
@@ -1239,7 +1218,7 @@ abstract class PHP extends Engine
         $val = $this->value;
 
         $i = $overflow = 0;
-        $len = count($val);
+        $len = is_countable($val) ? count($val) : 0;
         while ($i < $len) {
             $digit = [];
             if (!$overflow) {
@@ -1248,7 +1227,7 @@ abstract class PHP extends Engine
                 $overflow = $split % static::BASE;
                 if ($overflow) {
                     $mask = (1 << $overflow) - 1;
-                    $temp = isset($val[$i]) ? $val[$i] : 0;
+                    $temp = $val[$i] ?? 0;
                     $digit[] = $temp & $mask;
                 }
             } else {
@@ -1260,7 +1239,7 @@ abstract class PHP extends Engine
                 $tempoverflow = $tempsplit % static::BASE;
                 if ($tempoverflow) {
                     $tempmask = (1 << $tempoverflow) - 1;
-                    $temp = isset($val[$i]) ? $val[$i] : 0;
+                    $temp = $val[$i] ?? 0;
                     $digit[] = $temp & $tempmask;
                 }
                 $newbits = 0;
@@ -1294,7 +1273,7 @@ abstract class PHP extends Engine
         $mask = (1 << $split) - 1;
 
         $i = $overflow = 0;
-        $len = count($val);
+        $len = is_countable($val) ? count($val) : 0;
         $val[] = 0;
         $remaining = static::BASE;
         while ($i != $len) {

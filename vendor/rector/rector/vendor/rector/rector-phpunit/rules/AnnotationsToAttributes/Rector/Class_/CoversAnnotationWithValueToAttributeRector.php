@@ -23,26 +23,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class CoversAnnotationWithValueToAttributeRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
-     */
-    private $phpDocTagRemover;
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\NodeFactory\PhpAttributeGroupFactory
-     */
-    private $phpAttributeGroupFactory;
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
-     */
-    private $testsNodeAnalyzer;
-    public function __construct(PhpDocTagRemover $phpDocTagRemover, PhpAttributeGroupFactory $phpAttributeGroupFactory, TestsNodeAnalyzer $testsNodeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTagRemover $phpDocTagRemover,
+        /**
+         * @readonly
+         */
+        private readonly PhpAttributeGroupFactory $phpAttributeGroupFactory,
+        /**
+         * @readonly
+         */
+        private readonly TestsNodeAnalyzer $testsNodeAnalyzer
+    )
     {
-        $this->phpDocTagRemover = $phpDocTagRemover;
-        $this->phpAttributeGroupFactory = $phpAttributeGroupFactory;
-        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -106,7 +101,7 @@ CODE_SAMPLE
     }
     private function createAttributeGroup(string $annotationValue) : AttributeGroup
     {
-        if (\strncmp($annotationValue, '::', \strlen('::')) === 0) {
+        if (str_starts_with($annotationValue, '::')) {
             $attributeClass = 'PHPUnit\\Framework\\Attributes\\CoversFunction';
             $attributeValue = \trim($annotationValue, ':()');
         } else {

@@ -26,35 +26,28 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class OptionalParametersAfterRequiredRector extends AbstractScopeAwareRector
 {
     /**
-     * @readonly
-     * @var \Rector\Php80\NodeResolver\RequireOptionalParamResolver
-     */
-    private $requireOptionalParamResolver;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeResolver\ArgumentSorter
-     */
-    private $argumentSorter;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\CodingStyle\Reflection\VendorLocationDetector
-     */
-    private $vendorLocationDetector;
-    /**
      * @var string
      */
     private const HAS_SWAPPED_PARAMS = 'has_swapped_params';
-    public function __construct(RequireOptionalParamResolver $requireOptionalParamResolver, ArgumentSorter $argumentSorter, ReflectionResolver $reflectionResolver, VendorLocationDetector $vendorLocationDetector)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly RequireOptionalParamResolver $requireOptionalParamResolver,
+        /**
+         * @readonly
+         */
+        private readonly ArgumentSorter $argumentSorter,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private readonly VendorLocationDetector $vendorLocationDetector
+    )
     {
-        $this->requireOptionalParamResolver = $requireOptionalParamResolver;
-        $this->argumentSorter = $argumentSorter;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->vendorLocationDetector = $vendorLocationDetector;
     }
     public function getRuleDefinition() : RuleDefinition
     {

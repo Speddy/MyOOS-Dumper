@@ -17,14 +17,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class PreferPHPUnitSelfCallRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
-     */
-    private $testsNodeAnalyzer;
-    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly TestsNodeAnalyzer $testsNodeAnalyzer
+    )
     {
-        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -79,7 +78,7 @@ CODE_SAMPLE
             if (!$this->isName($node->var, 'this')) {
                 return null;
             }
-            if (!$this->isObjectType($node->var, new ObjectType('PHPUnit\\Framework\\TestCase'))) {
+            if (!$this->isObjectType($node->var, new ObjectType(\PHPUnit\Framework\TestCase::class))) {
                 return null;
             }
             if (!$this->isName($node->name, 'assert*')) {

@@ -21,26 +21,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class FinalizePublicClassConstantRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\FamilyTree\Reflection\FamilyRelationsAnalyzer
-     */
-    private $familyRelationsAnalyzer;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
-     */
-    private $visibilityManipulator;
-    public function __construct(FamilyRelationsAnalyzer $familyRelationsAnalyzer, ReflectionProvider $reflectionProvider, VisibilityManipulator $visibilityManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly FamilyRelationsAnalyzer $familyRelationsAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private readonly VisibilityManipulator $visibilityManipulator
+    )
     {
-        $this->familyRelationsAnalyzer = $familyRelationsAnalyzer;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->visibilityManipulator = $visibilityManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {

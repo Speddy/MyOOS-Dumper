@@ -16,22 +16,19 @@ use Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\CurlyListNod
  * Better version of doctrine/annotation - with phpdoc-parser and  static reflection
  * @see \Rector\Tests\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\StaticDoctrineAnnotationParserTest
  */
-final class StaticDoctrineAnnotationParser
+final readonly class StaticDoctrineAnnotationParser
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\PlainValueParser
-     */
-    private $plainValueParser;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\ArrayParser
-     */
-    private $arrayParser;
-    public function __construct(PlainValueParser $plainValueParser, ArrayParser $arrayParser)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PlainValueParser $plainValueParser,
+        /**
+         * @readonly
+         */
+        private ArrayParser $arrayParser
+    )
     {
-        $this->plainValueParser = $plainValueParser;
-        $this->arrayParser = $arrayParser;
     }
     /**
      * mimics: https://github.com/doctrine/annotations/blob/c66f06b7c83e9a2a7523351a9d5a4b55f885e574/lib/Doctrine/Common/Annotations/DocParser.php#L1024-L1041

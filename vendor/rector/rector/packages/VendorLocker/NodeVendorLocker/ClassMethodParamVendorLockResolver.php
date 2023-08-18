@@ -9,34 +9,27 @@ use Rector\Core\FileSystem\FilePathHelper;
 use Rector\Core\Reflection\ReflectionResolver;
 use Rector\FamilyTree\Reflection\FamilyRelationsAnalyzer;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class ClassMethodParamVendorLockResolver
+final readonly class ClassMethodParamVendorLockResolver
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\FamilyTree\Reflection\FamilyRelationsAnalyzer
-     */
-    private $familyRelationsAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\FileSystem\FilePathHelper
-     */
-    private $filePathHelper;
-    public function __construct(NodeNameResolver $nodeNameResolver, FamilyRelationsAnalyzer $familyRelationsAnalyzer, ReflectionResolver $reflectionResolver, FilePathHelper $filePathHelper)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private FamilyRelationsAnalyzer $familyRelationsAnalyzer,
+        /**
+         * @readonly
+         */
+        private ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private FilePathHelper $filePathHelper
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->familyRelationsAnalyzer = $familyRelationsAnalyzer;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->filePathHelper = $filePathHelper;
     }
     public function isVendorLocked(ClassMethod $classMethod) : bool
     {
@@ -106,7 +99,7 @@ final class ClassMethodParamVendorLockResolver
                 return \true;
             }
             $normalizedFileName = $this->filePathHelper->normalizePathAndSchema($fileName);
-            if (\strpos($normalizedFileName, $filePathPartName) !== \false) {
+            if (str_contains($normalizedFileName, $filePathPartName)) {
                 return \true;
             }
         }

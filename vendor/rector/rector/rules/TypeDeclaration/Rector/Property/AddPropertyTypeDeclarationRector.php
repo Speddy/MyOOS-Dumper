@@ -24,7 +24,7 @@ final class AddPropertyTypeDeclarationRector extends AbstractScopeAwareRector im
     /**
      * @var AddPropertyTypeDeclaration[]
      */
-    private $addPropertyTypeDeclarations = [];
+    private array $addPropertyTypeDeclarations = [];
     public function getRuleDefinition() : RuleDefinition
     {
         $configuration = [new AddPropertyTypeDeclaration('ParentClass', 'name', new StringType())];

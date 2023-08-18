@@ -21,22 +21,7 @@ use Monolog\Formatter\LogmaticFormatter;
 class LogmaticHandler extends SocketHandler
 {
     /**
-     * @var string
-     */
-    private $logToken;
-
-    /**
-     * @var string
-     */
-    private $hostname;
-
-    /**
-     * @var string
-     */
-    private $appname;
-
-    /**
-     * @param string     $token    Log token supplied by Logmatic.
+     * @param string $logToken Log token supplied by Logmatic.
      * @param string     $hostname Host name supplied by Logmatic.
      * @param string     $appname  Application name supplied by Logmatic.
      * @param bool       $useSSL   Whether or not SSL encryption should be used.
@@ -44,9 +29,9 @@ class LogmaticHandler extends SocketHandler
      * @throws MissingExtensionException If SSL encryption is set to true and OpenSSL is missing
      */
     public function __construct(
-        string $token,
-        string $hostname = '',
-        string $appname = '',
+        private readonly string $logToken,
+        private readonly string $hostname = '',
+        private readonly string $appname = '',
         bool $useSSL = true,
         $level = Logger::DEBUG,
         bool $bubble = true,
@@ -73,10 +58,6 @@ class LogmaticHandler extends SocketHandler
             $connectionTimeout,
             $chunkSize
         );
-
-        $this->logToken = $token;
-        $this->hostname = $hostname;
-        $this->appname  = $appname;
     }
 
     /**

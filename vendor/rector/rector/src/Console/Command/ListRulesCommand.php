@@ -22,23 +22,17 @@ final class ListRulesCommand extends Command
      */
     private $symfonyStyle;
     /**
-     * @readonly
-     * @var \Rector\Skipper\SkipCriteriaResolver\SkippedClassResolver
-     */
-    private $skippedClassResolver;
-    /**
-     * @var RectorInterface[]
-     * @readonly
-     */
-    private $rectors;
-    /**
      * @param RectorInterface[] $rectors
      */
-    public function __construct(SymfonyStyle $symfonyStyle, SkippedClassResolver $skippedClassResolver, array $rectors)
+    public function __construct(SymfonyStyle $symfonyStyle, /**
+     * @readonly
+     */
+    private readonly SkippedClassResolver $skippedClassResolver, /**
+     * @readonly
+     */
+    private readonly array $rectors)
     {
         $this->symfonyStyle = $symfonyStyle;
-        $this->skippedClassResolver = $skippedClassResolver;
-        $this->rectors = $rectors;
         parent::__construct();
     }
     protected function configure() : void
@@ -70,12 +64,8 @@ final class ListRulesCommand extends Command
      */
     private function resolveRectorClasses() : array
     {
-        $customRectors = \array_filter($this->rectors, static function (RectorInterface $rector) : bool {
-            return !$rector instanceof PostRectorInterface;
-        });
-        $rectorClasses = \array_map(static function (RectorInterface $rector) : string {
-            return \get_class($rector);
-        }, $customRectors);
+        $customRectors = \array_filter($this->rectors, static fn(RectorInterface $rector): bool => !$rector instanceof PostRectorInterface);
+        $rectorClasses = \array_map(static fn(RectorInterface $rector): string => $rector::class, $customRectors);
         \sort($rectorClasses);
         return $rectorClasses;
     }

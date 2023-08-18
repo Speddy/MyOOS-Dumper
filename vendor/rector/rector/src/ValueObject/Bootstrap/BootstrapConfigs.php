@@ -6,22 +6,19 @@ namespace Rector\Core\ValueObject\Bootstrap;
 final class BootstrapConfigs
 {
     /**
-     * @readonly
-     * @var string|null
-     */
-    private $mainConfigFile;
-    /**
-     * @var string[]
-     * @readonly
-     */
-    private $setConfigFiles;
-    /**
      * @param string[] $setConfigFiles
      */
-    public function __construct(?string $mainConfigFile, array $setConfigFiles)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ?string $mainConfigFile,
+        /**
+         * @readonly
+         */
+        private readonly array $setConfigFiles
+    )
     {
-        $this->mainConfigFile = $mainConfigFile;
-        $this->setConfigFiles = $setConfigFiles;
     }
     public function getMainConfigFile() : ?string
     {

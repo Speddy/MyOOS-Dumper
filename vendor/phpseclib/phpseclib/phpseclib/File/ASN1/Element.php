@@ -24,20 +24,12 @@ namespace phpseclib3\File\ASN1;
 class Element
 {
     /**
-     * Raw element value
-     *
-     * @var string
-     */
-    public $element;
-
-    /**
      * Constructor
      *
-     * @param string $encoded
+     * @param string $element
      * @return \phpseclib3\File\ASN1\Element
      */
-    public function __construct($encoded)
+    public function __construct(public $element)
     {
-        $this->element = $encoded;
     }
 }

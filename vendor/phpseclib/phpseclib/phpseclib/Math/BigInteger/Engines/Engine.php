@@ -23,9 +23,9 @@ use phpseclib3\Math\BigInteger;
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-abstract class Engine implements \JsonSerializable
+abstract class Engine implements \JsonSerializable, \Stringable
 {
-    /* final protected */ const PRIMES = [
+    /* final protected */ public const PRIMES = [
         3,   5,   7,   11,  13,  17,  19,  23,  29,  31,  37,  41,  43,  47,  53,  59,
         61,  67,  71,  73,  79,  83,  89,  97,  101, 103, 107, 109, 113, 127, 131, 137,
         139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199, 211, 223, 227,
@@ -250,7 +250,7 @@ abstract class Engine implements \JsonSerializable
         $temp = $comparison < 0 ? $this->add(new static(1)) : $this;
         $bytes = $temp->toBytes();
 
-        if (!strlen($bytes)) { // eg. if the number we're trying to convert is -1
+        if (!strlen((string) $bytes)) { // eg. if the number we're trying to convert is -1
             $bytes = chr(0);
         }
 
@@ -302,7 +302,6 @@ abstract class Engine implements \JsonSerializable
      *
      * {@internal See {@link http://www.cacr.math.uwaterloo.ca/hac/about/chap14.pdf#page=21 HAC 14.64} for more information.}
      *
-     * @param Engine $n
      * @return static|false
      */
     protected function modInverseHelper(Engine $n)
@@ -388,9 +387,9 @@ abstract class Engine implements \JsonSerializable
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
-        return $this->toString();
+        return (string) $this->toString();
     }
 
     /**
@@ -488,7 +487,7 @@ abstract class Engine implements \JsonSerializable
 
         self::base256_lshift($leading_ones, $current_bits);
 
-        $temp = str_pad($temp, strlen($leading_ones), chr(0), STR_PAD_LEFT);
+        $temp = str_pad($temp, strlen((string) $leading_ones), chr(0), STR_PAD_LEFT);
 
         return $this->normalize(new static($leading_ones | $temp, 256));
     }
@@ -545,7 +544,7 @@ abstract class Engine implements \JsonSerializable
             $temp = ord($bits[0]);
             for ($i = 0; $temp >> $i; ++$i) {
             }
-            $precision = 8 * strlen($bits) - 8 + $i;
+            $precision = 8 * strlen((string) $bits) - 8 + $i;
             $mask = chr((1 << ($precision & 0x7)) - 1) . str_repeat(chr(0xFF), $precision >> 3);
         }
 
@@ -619,14 +618,12 @@ abstract class Engine implements \JsonSerializable
      */
     public function getLengthInBytes()
     {
-        return strlen($this->toBytes());
+        return strlen((string) $this->toBytes());
     }
 
     /**
      * Performs some pre-processing for powMod
      *
-     * @param Engine $e
-     * @param Engine $n
      * @return static|false
      */
     protected function powModOuter(Engine $e, Engine $n)
@@ -645,7 +642,7 @@ abstract class Engine implements \JsonSerializable
         }
 
         if ($this->compare($n) > 0) {
-            list(, $temp) = $this->divide($n);
+            [, $temp] = $this->divide($n);
             return $temp->powModInner($e, $n);
         }
 
@@ -661,9 +658,6 @@ abstract class Engine implements \JsonSerializable
      * As such, this function has the same preconditions that the reductions being used do.
      *
      * @template T of Engine
-     * @param Engine $x
-     * @param Engine $e
-     * @param Engine $n
      * @param class-string<T> $class
      * @return T
      */
@@ -769,8 +763,6 @@ abstract class Engine implements \JsonSerializable
     /**
      * Performs some pre-processing for randomRangePrime
      *
-     * @param Engine $min
-     * @param Engine $max
      * @return static|false
      */
     protected static function randomRangePrimeOuter(Engine $min, Engine $max)
@@ -800,8 +792,6 @@ abstract class Engine implements \JsonSerializable
      * BigInteger::randomRange($min, $max)
      * BigInteger::randomRange($max, $min)
      *
-     * @param Engine $min
-     * @param Engine $max
      * @return Engine
      */
     protected static function randomRangeHelper(Engine $min, Engine $max)
@@ -823,7 +813,7 @@ abstract class Engine implements \JsonSerializable
 
         $max = $max->subtract($min->subtract(static::$one[static::class]));
 
-        $size = strlen(ltrim($max->toBytes(), chr(0)));
+        $size = strlen(ltrim((string) $max->toBytes(), chr(0)));
 
         /*
             doing $random % $max doesn't work because some numbers will be more likely to occur than others.
@@ -843,7 +833,7 @@ abstract class Engine implements \JsonSerializable
         $random_max = new static(chr(1) . str_repeat("\0", $size), 256);
         $random = new static(Random::string($size), 256);
 
-        list($max_multiple) = $random_max->divide($max);
+        [$max_multiple] = $random_max->divide($max);
         $max_multiple = $max_multiple->multiply($max);
 
         while ($random->compare($max_multiple) >= 0) {
@@ -852,10 +842,10 @@ abstract class Engine implements \JsonSerializable
             $random = $random->bitwise_leftShift(8);
             $random = $random->add(new static(Random::string(1), 256));
             $random_max = $random_max->bitwise_leftShift(8);
-            list($max_multiple) = $random_max->divide($max);
+            [$max_multiple] = $random_max->divide($max);
             $max_multiple = $max_multiple->multiply($max);
         }
-        list(, $random) = $random->divide($max);
+        [, $random] = $random->divide($max);
 
         return $random->add($min);
     }
@@ -863,9 +853,6 @@ abstract class Engine implements \JsonSerializable
     /**
      * Performs some post-processing for randomRangePrime
      *
-     * @param Engine $x
-     * @param Engine $min
-     * @param Engine $max
      * @return static|false
      */
     protected static function randomRangePrimeInner(Engine $x, Engine $min, Engine $max)
@@ -1093,7 +1080,6 @@ abstract class Engine implements \JsonSerializable
     /**
      * Return the minimum BigInteger between an arbitrary number of BigIntegers.
      *
-     * @param array $nums
      * @return Engine
      */
     protected static function minHelper(array $nums)
@@ -1111,7 +1097,6 @@ abstract class Engine implements \JsonSerializable
     /**
      * Return the minimum BigInteger between an arbitrary number of BigIntegers.
      *
-     * @param array $nums
      * @return Engine
      */
     protected static function maxHelper(array $nums)
@@ -1160,7 +1145,6 @@ abstract class Engine implements \JsonSerializable
     /**
      * Calculates the greatest common divisor and Bezout's identity.
      *
-     * @param Engine $n
      * @return array{gcd: Engine, x: Engine, y: Engine}
      */
     protected function extendedGCDHelper(Engine $n)
@@ -1177,7 +1161,7 @@ abstract class Engine implements \JsonSerializable
         $d = clone $one;
 
         while (!$v->equals($zero)) {
-            list($q) = $u->divide($v);
+            [$q] = $u->divide($v);
 
             $temp = $u;
             $u = $v;
@@ -1229,7 +1213,6 @@ abstract class Engine implements \JsonSerializable
     /**
      * Logical And
      *
-     * @param Engine $x
      * @return Engine
      */
     protected function bitwiseAndHelper(Engine $x)
@@ -1237,10 +1220,10 @@ abstract class Engine implements \JsonSerializable
         $left = $this->toBytes(true);
         $right = $x->toBytes(true);
 
-        $length = max(strlen($left), strlen($right));
+        $length = max(strlen((string) $left), strlen((string) $right));
 
-        $left = str_pad($left, $length, chr(0), STR_PAD_LEFT);
-        $right = str_pad($right, $length, chr(0), STR_PAD_LEFT);
+        $left = str_pad((string) $left, $length, chr(0), STR_PAD_LEFT);
+        $right = str_pad((string) $right, $length, chr(0), STR_PAD_LEFT);
 
         return $this->normalize(new static($left & $right, -256));
     }
@@ -1248,7 +1231,6 @@ abstract class Engine implements \JsonSerializable
     /**
      * Logical Or
      *
-     * @param Engine $x
      * @return Engine
      */
     protected function bitwiseOrHelper(Engine $x)
@@ -1256,10 +1238,10 @@ abstract class Engine implements \JsonSerializable
         $left = $this->toBytes(true);
         $right = $x->toBytes(true);
 
-        $length = max(strlen($left), strlen($right));
+        $length = max(strlen((string) $left), strlen((string) $right));
 
-        $left = str_pad($left, $length, chr(0), STR_PAD_LEFT);
-        $right = str_pad($right, $length, chr(0), STR_PAD_LEFT);
+        $left = str_pad((string) $left, $length, chr(0), STR_PAD_LEFT);
+        $right = str_pad((string) $right, $length, chr(0), STR_PAD_LEFT);
 
         return $this->normalize(new static($left | $right, -256));
     }
@@ -1267,7 +1249,6 @@ abstract class Engine implements \JsonSerializable
     /**
      * Logical Exclusive Or
      *
-     * @param Engine $x
      * @return Engine
      */
     protected function bitwiseXorHelper(Engine $x)
@@ -1275,11 +1256,11 @@ abstract class Engine implements \JsonSerializable
         $left = $this->toBytes(true);
         $right = $x->toBytes(true);
 
-        $length = max(strlen($left), strlen($right));
+        $length = max(strlen((string) $left), strlen((string) $right));
 
 
-        $left = str_pad($left, $length, chr(0), STR_PAD_LEFT);
-        $right = str_pad($right, $length, chr(0), STR_PAD_LEFT);
+        $left = str_pad((string) $left, $length, chr(0), STR_PAD_LEFT);
+        $right = str_pad((string) $right, $length, chr(0), STR_PAD_LEFT);
         return $this->normalize(new static($left ^ $right, -256));
     }
 }

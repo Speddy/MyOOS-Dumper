@@ -4,49 +4,38 @@ declare (strict_types=1);
 namespace Rector\Symfony\ValueObject;
 
 use Rector\Symfony\Contract\Tag\TagInterface;
-final class ServiceDefinition
+final readonly class ServiceDefinition
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $id;
-    /**
-     * @readonly
-     * @var string|null
-     */
-    private $class;
-    /**
-     * @readonly
-     * @var bool
-     */
-    private $isPublic;
-    /**
-     * @readonly
-     * @var bool
-     */
-    private $isSynthetic;
-    /**
-     * @readonly
-     * @var string|null
-     */
-    private $alias;
-    /**
-     * @var TagInterface[]
-     * @readonly
-     */
-    private $tags;
     /**
      * @param TagInterface[] $tags
      */
-    public function __construct(string $id, ?string $class, bool $isPublic, bool $isSynthetic, ?string $alias, array $tags)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $id,
+        /**
+         * @readonly
+         */
+        private ?string $class,
+        /**
+         * @readonly
+         */
+        private bool $isPublic,
+        /**
+         * @readonly
+         */
+        private bool $isSynthetic,
+        /**
+         * @readonly
+         */
+        private ?string $alias,
+        /**
+         * @readonly
+         */
+        private array $tags
+    )
     {
-        $this->id = $id;
-        $this->class = $class;
-        $this->isPublic = $isPublic;
-        $this->isSynthetic = $isSynthetic;
-        $this->alias = $alias;
-        $this->tags = $tags;
     }
     public function getId() : string
     {

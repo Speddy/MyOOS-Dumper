@@ -180,8 +180,8 @@ class Montgomery extends Base
             throw new \RuntimeException('Affine coordinates need to be manually converted to XZ coordinates');
         }
 
-        list($x2, $z2) = $p;
-        list($x3, $z3) = $q;
+        [$x2, $z2] = $p;
+        [$x3, $z3] = $q;
 
         $a = $x2->add($z2);
         $aa = $a->multiply($a);
@@ -228,9 +228,9 @@ class Montgomery extends Base
         for ($i = 0; $i < strlen($b); $i++) {
             $b_i = (int) $b[$i];
             if ($b_i) {
-                list($p2, $p1) = $this->doubleAndAddPoint($p2, $p1, $x);
+                [$p2, $p1] = $this->doubleAndAddPoint($p2, $p1, $x);
             } else {
-                list($p1, $p2) = $this->doubleAndAddPoint($p1, $p2, $x);
+                [$p1, $p2] = $this->doubleAndAddPoint($p1, $p2, $x);
             }
         }
 
@@ -273,7 +273,7 @@ class Montgomery extends Base
         if (!isset($p[1])) {
             return $p;
         }
-        list($x, $z) = $p;
+        [$x, $z] = $p;
         return [$x->divide($z)];
     }
 }

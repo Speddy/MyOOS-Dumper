@@ -11,22 +11,19 @@ use PhpParser\Node\Stmt\Return_;
 use Rector\EarlyReturn\NodeTransformer\ConditionInverter;
 use Rector\NodeNestingScope\ContextAnalyzer;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final class InvertedIfFactory
+final readonly class InvertedIfFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\EarlyReturn\NodeTransformer\ConditionInverter
-     */
-    private $conditionInverter;
-    /**
-     * @readonly
-     * @var \Rector\NodeNestingScope\ContextAnalyzer
-     */
-    private $contextAnalyzer;
-    public function __construct(ConditionInverter $conditionInverter, ContextAnalyzer $contextAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ConditionInverter $conditionInverter,
+        /**
+         * @readonly
+         */
+        private ContextAnalyzer $contextAnalyzer
+    )
     {
-        $this->conditionInverter = $conditionInverter;
-        $this->contextAnalyzer = $contextAnalyzer;
     }
     /**
      * @param Expr[] $conditions

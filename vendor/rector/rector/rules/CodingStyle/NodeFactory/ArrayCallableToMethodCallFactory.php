@@ -11,16 +11,15 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Scalar\String_;
 use PHPStan\Type\TypeWithClassName;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final class ArrayCallableToMethodCallFactory
+final readonly class ArrayCallableToMethodCallFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\NodeTypeResolver
-     */
-    private $nodeTypeResolver;
-    public function __construct(NodeTypeResolver $nodeTypeResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeTypeResolver $nodeTypeResolver
+    )
     {
-        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     public function create(Array_ $array) : ?MethodCall
     {

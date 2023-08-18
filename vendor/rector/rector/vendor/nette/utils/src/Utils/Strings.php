@@ -16,7 +16,7 @@ use function is_array, is_object, strlen;
 class Strings
 {
     use Nette\StaticClass;
-    public const TRIM_CHARACTERS = " \t\n\r\x00\v ";
+    final public const TRIM_CHARACTERS = " \t\n\r\x00\v ";
     /**
      * Checks if the string is valid in UTF-8 encoding.
      */
@@ -50,21 +50,21 @@ class Strings
      */
     public static function startsWith(string $haystack, string $needle) : bool
     {
-        return \strncmp($haystack, $needle, strlen($needle)) === 0;
+        return str_starts_with($haystack, $needle);
     }
     /**
      * Ends the $haystack string with the suffix $needle?
      */
     public static function endsWith(string $haystack, string $needle) : bool
     {
-        return $needle === '' || \substr($haystack, -strlen($needle)) === $needle;
+        return $needle === '' || str_ends_with($haystack, $needle);
     }
     /**
      * Does $haystack contain $needle?
      */
     public static function contains(string $haystack, string $needle) : bool
     {
-        return \strpos($haystack, $needle) !== \false;
+        return str_contains($haystack, $needle);
     }
     /**
      * Returns a part of UTF-8 string specified by starting position and length. If start is negative,
@@ -101,7 +101,7 @@ class Strings
         // right trim
         $s = self::pcre('preg_replace', ['#[\\t ]+$#m', '', $s]);
         // leading and trailing blank lines
-        $s = \trim($s, "\n");
+        $s = \trim((string) $s, "\n");
         return $s;
     }
     /**
@@ -145,7 +145,7 @@ class Strings
                 $s = \str_replace(['?', "\x01"], ['', '?'], $s);
                 // remove garbage and restore ? characters
             } elseif ($iconv === 'libiconv') {
-                $s = \iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $s);
+                $s = \iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', (string) $s);
             } else {
                 // null or 'unknown' (#216)
                 $s = self::pcre('preg_replace', ['#[^\\x00-\\x7F]++#', '', $s]);
@@ -163,7 +163,7 @@ class Strings
                 $s = \iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $s);
             }
             // remove garbage that iconv creates during transliteration (eg Ý -> Y')
-            $s = \str_replace(['`', "'", '"', '^', '~', '?'], '', $s);
+            $s = \str_replace(['`', "'", '"', '^', '~', '?'], '', (string) $s);
             // restore temporarily hidden characters
             $s = \strtr($s, "\x01\x02\x03\x04\x05\x06", '`\'"^~?');
         } else {
@@ -183,7 +183,7 @@ class Strings
             $s = \strtolower($s);
         }
         $s = self::pcre('preg_replace', ['#[^a-z0-9' . ($charlist !== null ? \preg_quote($charlist, '#') : '') . ']+#i', '-', $s]);
-        $s = \trim($s, '-');
+        $s = \trim((string) $s, '-');
         return $s;
     }
     /**
@@ -297,7 +297,7 @@ class Strings
      */
     public static function length(string $s) : int
     {
-        return \function_exists('mb_strlen') ? \mb_strlen($s, 'UTF-8') : strlen(\utf8_decode($s));
+        return \function_exists('mb_strlen') ? \mb_strlen($s, 'UTF-8') : strlen(mb_convert_encoding($s, 'ISO-8859-1'));
     }
     /**
      * Removes all left and right side spaces (or the characters passed as second argument) from a UTF-8 encoded string.
@@ -476,7 +476,7 @@ class Strings
     /** @internal */
     public static function pcre(string $func, array $args)
     {
-        $res = Callback::invokeSafe($func, $args, function (string $message) use($args) : void {
+        $res = Callback::invokeSafe($func, $args, function (string $message) use($args) : never {
             // compile-time error, not detectable by preg_last_error
             throw new RegexpException($message . ' in pattern: ' . \implode(' or ', (array) $args[0]));
         });

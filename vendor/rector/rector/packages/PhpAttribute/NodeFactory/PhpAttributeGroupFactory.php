@@ -19,40 +19,31 @@ use Rector\PhpAttribute\NodeAnalyzer\ExprParameterReflectionTypeCorrector;
 /**
  * @see \Rector\Tests\PhpAttribute\Printer\PhpAttributeGroupFactoryTest
  */
-final class PhpAttributeGroupFactory
+final readonly class PhpAttributeGroupFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\AnnotationToAttributeMapper
-     */
-    private $annotationToAttributeMapper;
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\NodeFactory\AttributeNameFactory
-     */
-    private $attributeNameFactory;
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\NodeFactory\NamedArgsFactory
-     */
-    private $namedArgsFactory;
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\NodeAnalyzer\ExprParameterReflectionTypeCorrector
-     */
-    private $exprParameterReflectionTypeCorrector;
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\AttributeArrayNameInliner
-     */
-    private $attributeArrayNameInliner;
-    public function __construct(AnnotationToAttributeMapper $annotationToAttributeMapper, \Rector\PhpAttribute\NodeFactory\AttributeNameFactory $attributeNameFactory, \Rector\PhpAttribute\NodeFactory\NamedArgsFactory $namedArgsFactory, ExprParameterReflectionTypeCorrector $exprParameterReflectionTypeCorrector, AttributeArrayNameInliner $attributeArrayNameInliner)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private AnnotationToAttributeMapper $annotationToAttributeMapper,
+        /**
+         * @readonly
+         */
+        private \Rector\PhpAttribute\NodeFactory\AttributeNameFactory $attributeNameFactory,
+        /**
+         * @readonly
+         */
+        private \Rector\PhpAttribute\NodeFactory\NamedArgsFactory $namedArgsFactory,
+        /**
+         * @readonly
+         */
+        private ExprParameterReflectionTypeCorrector $exprParameterReflectionTypeCorrector,
+        /**
+         * @readonly
+         */
+        private AttributeArrayNameInliner $attributeArrayNameInliner
+    )
     {
-        $this->annotationToAttributeMapper = $annotationToAttributeMapper;
-        $this->attributeNameFactory = $attributeNameFactory;
-        $this->namedArgsFactory = $namedArgsFactory;
-        $this->exprParameterReflectionTypeCorrector = $exprParameterReflectionTypeCorrector;
-        $this->attributeArrayNameInliner = $attributeArrayNameInliner;
     }
     public function createFromSimpleTag(AnnotationToAttribute $annotationToAttribute) : AttributeGroup
     {

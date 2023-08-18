@@ -29,56 +29,41 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class TypedPropertyFromStrictConstructorRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeInferer\PropertyTypeInferer\TrustedClassMethodPropertyTypeInferer
-     */
-    private $trustedClassMethodPropertyTypeInferer;
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\PhpDoc\TagRemover\VarTagRemover
-     */
-    private $varTagRemover;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
-     */
-    private $phpDocTypeChanger;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\AlreadyAssignDetector\ConstructorAssignDetector
-     */
-    private $constructorAssignDetector;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\Guard\PropertyTypeOverrideGuard
-     */
-    private $propertyTypeOverrideGuard;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\DoctrineTypeAnalyzer
-     */
-    private $doctrineTypeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeAnalyzer\PropertyTypeDefaultValueAnalyzer
-     */
-    private $propertyTypeDefaultValueAnalyzer;
-    public function __construct(TrustedClassMethodPropertyTypeInferer $trustedClassMethodPropertyTypeInferer, VarTagRemover $varTagRemover, PhpDocTypeChanger $phpDocTypeChanger, ConstructorAssignDetector $constructorAssignDetector, PropertyTypeOverrideGuard $propertyTypeOverrideGuard, ReflectionResolver $reflectionResolver, DoctrineTypeAnalyzer $doctrineTypeAnalyzer, PropertyTypeDefaultValueAnalyzer $propertyTypeDefaultValueAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly TrustedClassMethodPropertyTypeInferer $trustedClassMethodPropertyTypeInferer,
+        /**
+         * @readonly
+         */
+        private readonly VarTagRemover $varTagRemover,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTypeChanger $phpDocTypeChanger,
+        /**
+         * @readonly
+         */
+        private readonly ConstructorAssignDetector $constructorAssignDetector,
+        /**
+         * @readonly
+         */
+        private readonly PropertyTypeOverrideGuard $propertyTypeOverrideGuard,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private readonly DoctrineTypeAnalyzer $doctrineTypeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly PropertyTypeDefaultValueAnalyzer $propertyTypeDefaultValueAnalyzer
+    )
     {
-        $this->trustedClassMethodPropertyTypeInferer = $trustedClassMethodPropertyTypeInferer;
-        $this->varTagRemover = $varTagRemover;
-        $this->phpDocTypeChanger = $phpDocTypeChanger;
-        $this->constructorAssignDetector = $constructorAssignDetector;
-        $this->propertyTypeOverrideGuard = $propertyTypeOverrideGuard;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->doctrineTypeAnalyzer = $doctrineTypeAnalyzer;
-        $this->propertyTypeDefaultValueAnalyzer = $propertyTypeDefaultValueAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

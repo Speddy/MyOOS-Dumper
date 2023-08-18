@@ -32,34 +32,27 @@ use Rector\TypeDeclaration\PHPStan\ObjectTypeSpecifier;
 /**
  * @implements PhpDocTypeMapperInterface<IdentifierTypeNode>
  */
-final class IdentifierTypeMapper implements PhpDocTypeMapperInterface
+final readonly class IdentifierTypeMapper implements PhpDocTypeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\PHPStan\ObjectTypeSpecifier
-     */
-    private $objectTypeSpecifier;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\Mapper\ScalarStringToTypeMapper
-     */
-    private $scalarStringToTypeMapper;
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    public function __construct(ObjectTypeSpecifier $objectTypeSpecifier, ScalarStringToTypeMapper $scalarStringToTypeMapper, ReflectionProvider $reflectionProvider, ReflectionResolver $reflectionResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ObjectTypeSpecifier $objectTypeSpecifier,
+        /**
+         * @readonly
+         */
+        private ScalarStringToTypeMapper $scalarStringToTypeMapper,
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider,
+        /**
+         * @readonly
+         */
+        private ReflectionResolver $reflectionResolver
+    )
     {
-        $this->objectTypeSpecifier = $objectTypeSpecifier;
-        $this->scalarStringToTypeMapper = $scalarStringToTypeMapper;
-        $this->reflectionProvider = $reflectionProvider;
-        $this->reflectionResolver = $reflectionResolver;
     }
     public function getNodeType() : string
     {
@@ -94,7 +87,7 @@ final class IdentifierTypeMapper implements PhpDocTypeMapperInterface
         if ($loweredName === 'iterable') {
             return new IterableType(new MixedType(), new MixedType());
         }
-        if (\strncmp($identifierTypeNode->name, '\\', \strlen('\\')) === 0) {
+        if (str_starts_with($identifierTypeNode->name, '\\')) {
             $typeWithoutPreslash = Strings::substring($identifierTypeNode->name, 1);
             $objectType = new FullyQualifiedObjectType($typeWithoutPreslash);
         } else {

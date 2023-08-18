@@ -32,7 +32,7 @@ abstract class Integer implements \JsonSerializable
     #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
-        return ['hex' => $this->toHex(true)];
+        return ['hex' => $this->toHex()];
     }
 
     /**

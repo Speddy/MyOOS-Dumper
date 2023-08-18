@@ -15,26 +15,23 @@ interface Queue
      * Push a new job onto the queue.
      *
      * @param  string|object  $job
-     * @param  mixed  $data
      * @param  string|null  $queue
      * @return mixed
      */
-    public function push($job, $data = '', $queue = null);
+    public function push($job, mixed $data = '', $queue = null);
     /**
      * Push a new job onto the queue.
      *
      * @param  string  $queue
      * @param  string|object  $job
-     * @param  mixed  $data
      * @return mixed
      */
-    public function pushOn($queue, $job, $data = '');
+    public function pushOn($queue, $job, mixed $data = '');
     /**
      * Push a raw payload onto the queue.
      *
      * @param  string  $payload
      * @param  string|null  $queue
-     * @param  array  $options
      * @return mixed
      */
     public function pushRaw($payload, $queue = null, array $options = []);
@@ -43,30 +40,27 @@ interface Queue
      *
      * @param  \DateTimeInterface|\DateInterval|int  $delay
      * @param  string|object  $job
-     * @param  mixed  $data
      * @param  string|null  $queue
      * @return mixed
      */
-    public function later($delay, $job, $data = '', $queue = null);
+    public function later($delay, $job, mixed $data = '', $queue = null);
     /**
      * Push a new job onto a specific queue after (n) seconds.
      *
      * @param  string  $queue
      * @param  \DateTimeInterface|\DateInterval|int  $delay
      * @param  string|object  $job
-     * @param  mixed  $data
      * @return mixed
      */
-    public function laterOn($queue, $delay, $job, $data = '');
+    public function laterOn($queue, $delay, $job, mixed $data = '');
     /**
      * Push an array of jobs onto the queue.
      *
      * @param  array  $jobs
-     * @param  mixed  $data
      * @param  string|null  $queue
      * @return mixed
      */
-    public function bulk($jobs, $data = '', $queue = null);
+    public function bulk($jobs, mixed $data = '', $queue = null);
     /**
      * Pop the next job off of the queue.
      *

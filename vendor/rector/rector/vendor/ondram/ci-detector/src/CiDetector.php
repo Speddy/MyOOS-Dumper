@@ -10,25 +10,24 @@ use RectorPrefix202308\OndraM\CiDetector\Exception\CiNotDetectedException;
  */
 class CiDetector implements CiDetectorInterface
 {
-    public const CI_APPVEYOR = 'AppVeyor';
-    public const CI_AWS_CODEBUILD = 'AWS CodeBuild';
-    public const CI_AZURE_PIPELINES = 'Azure Pipelines';
-    public const CI_BAMBOO = 'Bamboo';
-    public const CI_BITBUCKET_PIPELINES = 'Bitbucket Pipelines';
-    public const CI_BUDDY = 'Buddy';
-    public const CI_CIRCLE = 'CircleCI';
-    public const CI_CODESHIP = 'Codeship';
-    public const CI_CONTINUOUSPHP = 'continuousphp';
-    public const CI_DRONE = 'drone';
-    public const CI_GITHUB_ACTIONS = 'GitHub Actions';
-    public const CI_GITLAB = 'GitLab';
-    public const CI_JENKINS = 'Jenkins';
-    public const CI_SOURCEHUT = 'SourceHut';
-    public const CI_TEAMCITY = 'TeamCity';
-    public const CI_TRAVIS = 'Travis CI';
-    public const CI_WERCKER = 'Wercker';
-    /** @var Env */
-    private $environment;
+    final public const CI_APPVEYOR = 'AppVeyor';
+    final public const CI_AWS_CODEBUILD = 'AWS CodeBuild';
+    final public const CI_AZURE_PIPELINES = 'Azure Pipelines';
+    final public const CI_BAMBOO = 'Bamboo';
+    final public const CI_BITBUCKET_PIPELINES = 'Bitbucket Pipelines';
+    final public const CI_BUDDY = 'Buddy';
+    final public const CI_CIRCLE = 'CircleCI';
+    final public const CI_CODESHIP = 'Codeship';
+    final public const CI_CONTINUOUSPHP = 'continuousphp';
+    final public const CI_DRONE = 'drone';
+    final public const CI_GITHUB_ACTIONS = 'GitHub Actions';
+    final public const CI_GITLAB = 'GitLab';
+    final public const CI_JENKINS = 'Jenkins';
+    final public const CI_SOURCEHUT = 'SourceHut';
+    final public const CI_TEAMCITY = 'TeamCity';
+    final public const CI_TRAVIS = 'Travis CI';
+    final public const CI_WERCKER = 'Wercker';
+    private \RectorPrefix202308\OndraM\CiDetector\Env $environment;
     public final function __construct()
     {
         $this->environment = new Env();

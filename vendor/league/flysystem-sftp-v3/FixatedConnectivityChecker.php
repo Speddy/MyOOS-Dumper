@@ -8,19 +8,10 @@ use phpseclib3\Net\SFTP;
 
 class FixatedConnectivityChecker implements ConnectivityChecker
 {
-    /**
-     * @var int
-     */
-    private $succeedAfter;
+    private int $numberOfTimesChecked = 0;
 
-    /**
-     * @var int
-     */
-    private $numberOfTimesChecked = 0;
-
-    public function __construct(int $succeedAfter = 0)
+    public function __construct(private readonly int $succeedAfter = 0)
     {
-        $this->succeedAfter = $succeedAfter;
     }
 
     public function isConnected(SFTP $connection): bool

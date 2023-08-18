@@ -11,7 +11,7 @@ class GeneratedExtensionToMimeTypeMap implements ExtensionToMimeTypeMap, Extensi
      *
      * @internal
      */
-    public const MIME_TYPES_FOR_EXTENSIONS = [
+    final public const MIME_TYPES_FOR_EXTENSIONS = [
         '1km' => 'application/vnd.1000minds.decision-model+xml',
         '3dml' => 'text/vnd.in3d.3dml',
         '3ds' => 'image/x-3ds',
@@ -1247,7 +1247,7 @@ class GeneratedExtensionToMimeTypeMap implements ExtensionToMimeTypeMap, Extensi
      *
      * @internal
      */
-    public const EXTENSIONS_FOR_MIME_TIMES = [
+    final public const EXTENSIONS_FOR_MIME_TIMES = [
         'application/andrew-inset' => ['ez'],
         'application/appinstaller' => ['appinstaller'],
         'application/applixware' => ['aw'],

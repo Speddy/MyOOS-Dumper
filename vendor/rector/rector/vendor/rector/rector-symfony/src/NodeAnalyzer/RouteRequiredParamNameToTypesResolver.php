@@ -18,22 +18,19 @@ use Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\CurlyListNod
 use Rector\Doctrine\NodeAnalyzer\AttrinationFinder;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\Symfony\Enum\SymfonyAnnotation;
-final class RouteRequiredParamNameToTypesResolver
+final readonly class RouteRequiredParamNameToTypesResolver
 {
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\NodeAnalyzer\AttrinationFinder
-     */
-    private $attrinationFinder;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    public function __construct(AttrinationFinder $attrinationFinder, NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private AttrinationFinder $attrinationFinder,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->attrinationFinder = $attrinationFinder;
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @return array<string, Type>

@@ -9,16 +9,15 @@ use Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode;
 use Rector\BetterPhpDocParser\ValueObject\Type\ShortenedIdentifierTypeNode;
 use Rector\Core\Exception\ShouldNotHappenException;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final class DoctrineAnnotationFromNewFactory
+final readonly class DoctrineAnnotationFromNewFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeFactory\Annotations\DoctrineAnnotationKeyToValuesResolver
-     */
-    private $doctrineAnnotationKeyToValuesResolver;
-    public function __construct(\Rector\Symfony\NodeFactory\Annotations\DoctrineAnnotationKeyToValuesResolver $doctrineAnnotationKeyToValuesResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private \Rector\Symfony\NodeFactory\Annotations\DoctrineAnnotationKeyToValuesResolver $doctrineAnnotationKeyToValuesResolver
+    )
     {
-        $this->doctrineAnnotationKeyToValuesResolver = $doctrineAnnotationKeyToValuesResolver;
     }
     public function create(New_ $new) : DoctrineAnnotationTagValueNode
     {

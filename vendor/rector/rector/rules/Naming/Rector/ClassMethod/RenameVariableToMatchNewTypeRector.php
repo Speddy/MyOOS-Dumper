@@ -19,26 +19,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RenameVariableToMatchNewTypeRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Naming\Guard\BreakingVariableRenameGuard
-     */
-    private $breakingVariableRenameGuard;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\ExpectedNameResolver
-     */
-    private $expectedNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Naming\VariableRenamer
-     */
-    private $variableRenamer;
-    public function __construct(BreakingVariableRenameGuard $breakingVariableRenameGuard, ExpectedNameResolver $expectedNameResolver, VariableRenamer $variableRenamer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly BreakingVariableRenameGuard $breakingVariableRenameGuard,
+        /**
+         * @readonly
+         */
+        private readonly ExpectedNameResolver $expectedNameResolver,
+        /**
+         * @readonly
+         */
+        private readonly VariableRenamer $variableRenamer
+    )
     {
-        $this->breakingVariableRenameGuard = $breakingVariableRenameGuard;
-        $this->expectedNameResolver = $expectedNameResolver;
-        $this->variableRenamer = $variableRenamer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -113,8 +108,6 @@ CODE_SAMPLE
     {
         /** @var Assign[] $assigns */
         $assigns = $this->betterNodeFinder->findInstanceOf((array) $classMethod->stmts, Assign::class);
-        return \array_filter($assigns, static function (Assign $assign) : bool {
-            return $assign->expr instanceof New_;
-        });
+        return \array_filter($assigns, static fn(Assign $assign): bool => $assign->expr instanceof New_);
     }
 }

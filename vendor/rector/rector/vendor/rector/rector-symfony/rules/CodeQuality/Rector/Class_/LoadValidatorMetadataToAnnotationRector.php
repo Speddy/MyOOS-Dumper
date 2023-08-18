@@ -25,26 +25,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class LoadValidatorMetadataToAnnotationRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\Annotations\MethodCallAnnotationAssertResolver
-     */
-    private $methodCallAnnotationAssertResolver;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\Annotations\PropertyAnnotationAssertResolver
-     */
-    private $propertyAnnotationAssertResolver;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\Annotations\ClassAnnotationAssertResolver
-     */
-    private $classAnnotationAssertResolver;
-    public function __construct(MethodCallAnnotationAssertResolver $methodCallAnnotationAssertResolver, PropertyAnnotationAssertResolver $propertyAnnotationAssertResolver, ClassAnnotationAssertResolver $classAnnotationAssertResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly MethodCallAnnotationAssertResolver $methodCallAnnotationAssertResolver,
+        /**
+         * @readonly
+         */
+        private readonly PropertyAnnotationAssertResolver $propertyAnnotationAssertResolver,
+        /**
+         * @readonly
+         */
+        private readonly ClassAnnotationAssertResolver $classAnnotationAssertResolver
+    )
     {
-        $this->methodCallAnnotationAssertResolver = $methodCallAnnotationAssertResolver;
-        $this->propertyAnnotationAssertResolver = $propertyAnnotationAssertResolver;
-        $this->classAnnotationAssertResolver = $classAnnotationAssertResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

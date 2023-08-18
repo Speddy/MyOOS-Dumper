@@ -7,26 +7,23 @@ use PHPStan\PhpDocParser\Lexer\Lexer;
 use PHPStan\PhpDocParser\Parser\TokenIterator;
 use Rector\BetterPhpDocParser\ValueObject\Parser\BetterTokenIterator;
 use Rector\Core\Util\Reflection\PrivatesAccessor;
-final class TokenIteratorFactory
+final readonly class TokenIteratorFactory
 {
-    /**
-     * @readonly
-     * @var \PHPStan\PhpDocParser\Lexer\Lexer
-     */
-    private $lexer;
-    /**
-     * @readonly
-     * @var \Rector\Core\Util\Reflection\PrivatesAccessor
-     */
-    private $privatesAccessor;
     /**
      * @var string
      */
     private const INDEX = 'index';
-    public function __construct(Lexer $lexer, PrivatesAccessor $privatesAccessor)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private Lexer $lexer,
+        /**
+         * @readonly
+         */
+        private PrivatesAccessor $privatesAccessor
+    )
     {
-        $this->lexer = $lexer;
-        $this->privatesAccessor = $privatesAccessor;
     }
     public function create(string $content) : BetterTokenIterator
     {

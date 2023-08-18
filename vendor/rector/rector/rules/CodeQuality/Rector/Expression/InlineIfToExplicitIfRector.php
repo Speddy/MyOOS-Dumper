@@ -22,14 +22,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class InlineIfToExplicitIfRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\BinaryOpManipulator
-     */
-    private $binaryOpManipulator;
-    public function __construct(BinaryOpManipulator $binaryOpManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly BinaryOpManipulator $binaryOpManipulator
+    )
     {
-        $this->binaryOpManipulator = $binaryOpManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {

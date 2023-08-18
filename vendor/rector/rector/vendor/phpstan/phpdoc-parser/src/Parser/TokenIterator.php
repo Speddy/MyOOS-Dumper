@@ -13,23 +13,16 @@ use function strlen;
 use function substr;
 class TokenIterator
 {
-    /** @var list<array{string, int, int}> */
-    private $tokens;
-    /** @var int */
-    private $index;
     /** @var int[] */
-    private $savePoints = [];
+    private array $savePoints = [];
     /** @var list<int> */
-    private $skippedTokenTypes = [Lexer::TOKEN_HORIZONTAL_WS];
-    /** @var string|null */
-    private $newline = null;
+    private array $skippedTokenTypes = [Lexer::TOKEN_HORIZONTAL_WS];
+    private ?string $newline = null;
     /**
      * @param list<array{string, int, int}> $tokens
      */
-    public function __construct(array $tokens, int $index = 0)
+    public function __construct(private array $tokens, private int $index = 0)
     {
-        $this->tokens = $tokens;
-        $this->index = $index;
         $this->skipIrrelevantTokens();
     }
     /**
@@ -157,9 +150,9 @@ class TokenIterator
     private function detectNewline() : void
     {
         $value = $this->currentTokenValue();
-        if (substr($value, 0, 2) === "\r\n") {
+        if (str_starts_with($value, "\r\n")) {
             $this->newline = "\r\n";
-        } elseif (substr($value, 0, 1) === "\n") {
+        } elseif (str_starts_with($value, "\n")) {
             $this->newline = "\n";
         }
     }
@@ -227,7 +220,7 @@ class TokenIterator
     /**
      * @throws ParserException
      */
-    private function throwError(int $expectedTokenType, ?string $expectedTokenValue = null) : void
+    private function throwError(int $expectedTokenType, ?string $expectedTokenValue = null) : never
     {
         throw new \PHPStan\PhpDocParser\Parser\ParserException($this->currentTokenValue(), $this->currentTokenType(), $this->currentTokenOffset(), $expectedTokenType, $expectedTokenValue, $this->currentTokenLine());
     }

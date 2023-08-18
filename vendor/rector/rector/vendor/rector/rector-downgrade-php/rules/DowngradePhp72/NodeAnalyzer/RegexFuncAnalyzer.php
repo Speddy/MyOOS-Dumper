@@ -8,20 +8,19 @@ use PhpParser\Node\Expr\Variable;
 use PHPStan\Analyser\Scope;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final class RegexFuncAnalyzer
+final readonly class RegexFuncAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
     /**
      * @var string[]
      */
     private const REGEX_FUNCTION_NAMES = ['preg_match', 'preg_match_all'];
-    public function __construct(NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function matchRegexFuncCall(FuncCall $funcCall) : ?FuncCall
     {

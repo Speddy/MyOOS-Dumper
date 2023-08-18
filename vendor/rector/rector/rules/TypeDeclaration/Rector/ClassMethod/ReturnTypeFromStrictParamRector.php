@@ -33,20 +33,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReturnTypeFromStrictParamRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\VendorLocker\ParentClassMethodTypeOverrideGuard
-     */
-    private $parentClassMethodTypeOverrideGuard;
-    /**
-     * @readonly
-     * @var \Rector\TypeDeclaration\TypeInferer\ReturnTypeInferer
-     */
-    private $returnTypeInferer;
-    public function __construct(ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard, ReturnTypeInferer $returnTypeInferer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard,
+        /**
+         * @readonly
+         */
+        private readonly ReturnTypeInferer $returnTypeInferer
+    )
     {
-        $this->parentClassMethodTypeOverrideGuard = $parentClassMethodTypeOverrideGuard;
-        $this->returnTypeInferer = $returnTypeInferer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

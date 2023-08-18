@@ -26,7 +26,7 @@ use Monolog\Utils;
 class StreamHandler extends AbstractProcessingHandler
 {
     /** @const int */
-    protected const MAX_CHUNK_SIZE = 2147483647;
+    protected const MAX_CHUNK_SIZE = 2_147_483_647;
     /** @const int 10MB */
     protected const DEFAULT_CHUNK_SIZE = 10 * 1024 * 1024;
     /** @var int */
@@ -36,13 +36,12 @@ class StreamHandler extends AbstractProcessingHandler
     /** @var ?string */
     protected $url = null;
     /** @var ?string */
-    private $errorMessage = null;
+    private null|string|array $errorMessage = null;
     /** @var ?int */
     protected $filePermission;
     /** @var bool */
     protected $useLocking;
-    /** @var true|null */
-    private $dirCreated = null;
+    private ?bool $dirCreated = null;
 
     /**
      * @param resource|string $stream         If a missing path can't be created, an UnexpectedValueException will be thrown on first write
@@ -134,7 +133,7 @@ class StreamHandler extends AbstractProcessingHandler
             }
             $this->createDir($url);
             $this->errorMessage = null;
-            set_error_handler([$this, 'customErrorHandler']);
+            set_error_handler($this->customErrorHandler(...));
             $stream = fopen($url, 'a');
             if ($this->filePermission !== null) {
                 @chmod($url, $this->filePermission);
@@ -169,7 +168,6 @@ class StreamHandler extends AbstractProcessingHandler
     /**
      * Write to stream
      * @param resource $stream
-     * @param array    $record
      *
      * @phpstan-param FormattedRecord $record
      */
@@ -192,7 +190,7 @@ class StreamHandler extends AbstractProcessingHandler
             return dirname($stream);
         }
 
-        if ('file://' === substr($stream, 0, 7)) {
+        if (str_starts_with($stream, 'file://')) {
             return dirname(substr($stream, 7));
         }
 
@@ -209,10 +207,10 @@ class StreamHandler extends AbstractProcessingHandler
         $dir = $this->getDirFromStream($url);
         if (null !== $dir && !is_dir($dir)) {
             $this->errorMessage = null;
-            set_error_handler([$this, 'customErrorHandler']);
+            set_error_handler($this->customErrorHandler(...));
             $status = mkdir($dir, 0777, true);
             restore_error_handler();
-            if (false === $status && !is_dir($dir) && strpos((string) $this->errorMessage, 'File exists') === false) {
+            if (false === $status && !is_dir($dir) && !str_contains((string) $this->errorMessage, 'File exists')) {
                 throw new \UnexpectedValueException(sprintf('There is no existing directory at "%s" and it could not be created: '.$this->errorMessage, $dir));
             }
         }

@@ -96,9 +96,8 @@ class Arrays
     }
     /**
      * Tests an array for the presence of value.
-     * @param  mixed  $value
      */
-    public static function contains(array $array, $value) : bool
+    public static function contains(array $array, mixed $value) : bool
     {
         return \in_array($value, $array, \true);
     }
@@ -194,9 +193,8 @@ class Arrays
     }
     /**
      * Checks if the array is indexed in ascending order of numeric keys from zero, a.k.a list.
-     * @param  mixed  $value
      */
-    public static function isList($value) : bool
+    public static function isList(mixed $value) : bool
     {
         $arrayIsListFunction = function (array $array) : bool {
             if (\function_exists('array_is_list')) {
@@ -261,9 +259,8 @@ class Arrays
     }
     /**
      * Normalizes array to associative array. Replace numeric keys with their values, the new value will be $filling.
-     * @param  mixed  $filling
      */
-    public static function normalize(array $array, $filling = null) : array
+    public static function normalize(array $array, mixed $filling = null) : array
     {
         $res = [];
         foreach ($array as $k => $v) {
@@ -370,10 +367,9 @@ class Arrays
     }
     /**
      * Converts value to array key.
-     * @param  mixed  $value
      * @return array-key
      */
-    public static function toKey($value)
+    public static function toKey(mixed $value)
     {
         return \key([$value => null]);
     }

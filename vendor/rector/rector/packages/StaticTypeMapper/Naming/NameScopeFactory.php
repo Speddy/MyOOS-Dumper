@@ -24,34 +24,23 @@ use Rector\StaticTypeMapper\StaticTypeMapper;
  */
 final class NameScopeFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\UseImportsResolver
-     */
-    private $useImportsResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @var \Rector\StaticTypeMapper\StaticTypeMapper
-     */
-    private $staticTypeMapper;
-    /**
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    public function __construct(UseImportsResolver $useImportsResolver, AstResolver $astResolver, ReflectionResolver $reflectionResolver)
+    private ?\Rector\StaticTypeMapper\StaticTypeMapper $staticTypeMapper = null;
+    private ?\Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory $phpDocInfoFactory = null;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly UseImportsResolver $useImportsResolver,
+        /**
+         * @readonly
+         */
+        private readonly AstResolver $astResolver,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver
+    )
     {
-        $this->useImportsResolver = $useImportsResolver;
-        $this->astResolver = $astResolver;
-        $this->reflectionResolver = $reflectionResolver;
     }
     // This is needed to avoid circular references
     public function autowire(PhpDocInfoFactory $phpDocInfoFactory, StaticTypeMapper $staticTypeMapper) : void

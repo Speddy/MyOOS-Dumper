@@ -16,20 +16,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReplaceTestAnnotationWithPrefixedFunctionRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
-     */
-    private $testsNodeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
-     */
-    private $phpDocTagRemover;
-    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer, PhpDocTagRemover $phpDocTagRemover)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTagRemover $phpDocTagRemover
+    )
     {
-        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
-        $this->phpDocTagRemover = $phpDocTagRemover;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -78,7 +75,7 @@ CODE_SAMPLE
         if (!$docComment instanceof Doc) {
             return null;
         }
-        if (\strpos($docComment->getText(), '@test') === \false) {
+        if (!str_contains($docComment->getText(), '@test')) {
             return null;
         }
         $phpDocInfo = $this->phpDocInfoFactory->createFromNodeOrEmpty($node);

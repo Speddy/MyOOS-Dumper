@@ -18,24 +18,18 @@ use Rector\PhpAttribute\Contract\AnnotationToAttributeMapperInterface;
  */
 final class DoctrineAnnotationAnnotationToAttributeMapper implements AnnotationToAttributeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    /**
-     * @readonly
-     * @var \Rector\PhpAttribute\AttributeArrayNameInliner
-     */
-    private $attributeArrayNameInliner;
-    /**
-     * @var \Rector\PhpAttribute\AnnotationToAttributeMapper
-     */
-    private $annotationToAttributeMapper;
-    public function __construct(PhpVersionProvider $phpVersionProvider, AttributeArrayNameInliner $attributeArrayNameInliner)
+    private ?\Rector\PhpAttribute\AnnotationToAttributeMapper $annotationToAttributeMapper = null;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PhpVersionProvider $phpVersionProvider,
+        /**
+         * @readonly
+         */
+        private readonly AttributeArrayNameInliner $attributeArrayNameInliner
+    )
     {
-        $this->phpVersionProvider = $phpVersionProvider;
-        $this->attributeArrayNameInliner = $attributeArrayNameInliner;
     }
     /**
      * Avoid circular reference

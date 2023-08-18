@@ -11,16 +11,15 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Scalar\String_;
 use Rector\Core\Exception\ShouldNotHappenException;
 use Rector\Core\PhpParser\Node\Value\ValueResolver;
-final class CompactConverter
+final readonly class CompactConverter
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
-     */
-    private $valueResolver;
-    public function __construct(ValueResolver $valueResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ValueResolver $valueResolver
+    )
     {
-        $this->valueResolver = $valueResolver;
     }
     public function hasAllArgumentsNamed(FuncCall $funcCall) : bool
     {

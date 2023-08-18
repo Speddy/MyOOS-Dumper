@@ -20,16 +20,15 @@ use PHPStan\Type\TypeCombinator;
 use PHPStan\Type\TypeWithClassName;
 use PHPStan\Type\UnionType;
 use Rector\Core\PhpParser\Node\NodeFactory;
-final class ExactCompareFactory
+final readonly class ExactCompareFactory
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\NodeFactory
-     */
-    private $nodeFactory;
-    public function __construct(NodeFactory $nodeFactory)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeFactory $nodeFactory
+    )
     {
-        $this->nodeFactory = $nodeFactory;
     }
     /**
      * @return \PhpParser\Node\Expr\BinaryOp\Identical|\PhpParser\Node\Expr\BinaryOp\BooleanOr|\PhpParser\Node\Expr\BinaryOp\NotIdentical|\PhpParser\Node\Expr\BooleanNot|\PhpParser\Node\Expr\Instanceof_|\PhpParser\Node\Expr\BinaryOp\BooleanAnd|null

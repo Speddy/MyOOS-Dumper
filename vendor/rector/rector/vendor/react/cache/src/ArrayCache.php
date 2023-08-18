@@ -6,10 +6,9 @@ use RectorPrefix202308\React\Promise;
 use RectorPrefix202308\React\Promise\PromiseInterface;
 class ArrayCache implements CacheInterface
 {
-    private $limit;
-    private $data = array();
-    private $expires = array();
-    private $supportsHighResolution;
+    private array $data = [];
+    private array $expires = [];
+    private readonly bool $supportsHighResolution;
     /**
      * The `ArrayCache` provides an in-memory implementation of the [`CacheInterface`](#cacheinterface).
      *
@@ -47,9 +46,8 @@ class ArrayCache implements CacheInterface
      *
      * @param int|null $limit maximum number of entries to store in the LRU cache
      */
-    public function __construct($limit = null)
+    public function __construct(private $limit = null)
     {
-        $this->limit = $limit;
         // prefer high-resolution timer, available as of PHP 7.3+
         $this->supportsHighResolution = \function_exists('hrtime');
     }
@@ -81,15 +79,11 @@ class ArrayCache implements CacheInterface
         }
         // ensure size limit is not exceeded or remove first entry from array
         if ($this->limit !== null && \count($this->data) > $this->limit) {
-            // first try to check if there's any expired entry
-            // expiration times are sorted, so we can simply look at the first one
-            \reset($this->expires);
-            $key = \key($this->expires);
+            $key = array_key_first($this->expires);
             // check to see if the first in the list of expiring keys is already expired
             // if the first key is not expired, we have to overwrite by using LRU info
             if ($key === null || $this->now() - $this->expires[$key] < 0) {
-                \reset($this->data);
-                $key = \key($this->data);
+                $key = array_key_first($this->data);
             }
             unset($this->data[$key], $this->expires[$key]);
         }
@@ -102,7 +96,7 @@ class ArrayCache implements CacheInterface
     }
     public function getMultiple(array $keys, $default = null)
     {
-        $values = array();
+        $values = [];
         foreach ($keys as $key) {
             $values[$key] = $this->get($key, $default);
         }
@@ -124,8 +118,8 @@ class ArrayCache implements CacheInterface
     }
     public function clear()
     {
-        $this->data = array();
-        $this->expires = array();
+        $this->data = [];
+        $this->expires = [];
         return Promise\resolve(\true);
     }
     public function has($key)

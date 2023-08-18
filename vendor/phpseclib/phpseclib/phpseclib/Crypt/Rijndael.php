@@ -106,9 +106,8 @@ class Rijndael extends BlockCipher
      *    of that, we'll just precompute it once.}
      *
      * @see self::setBlockLength()
-     * @var int
      */
-    private $Nb = 4;
+    private int $Nb = 4;
 
     /**
      * The Key Length (in bytes)
@@ -127,33 +126,29 @@ class Rijndael extends BlockCipher
      * The Key Length divided by 32
      *
      * @see self::setKeyLength()
-     * @var int
      * @internal The max value is 256 / 32 = 8, the min value is 128 / 32 = 4
      */
-    private $Nk = 4;
+    private int $Nk = 4;
 
     /**
      * The Number of Rounds
      *
      * {@internal The max value is 14, the min value is 10.}
      *
-     * @var int
      */
-    private $Nr;
+    private int|float|null $Nr = null;
 
     /**
      * Shift offsets
      *
-     * @var array
      */
-    private $c;
+    private ?array $c = null;
 
     /**
      * Holds the last used key- and block_size information
      *
-     * @var array
      */
-    private $kl;
+    private ?array $kl = null;
 
     /**
      * Default Constructor.
@@ -191,17 +186,10 @@ class Rijndael extends BlockCipher
      */
     public function setKeyLength($length)
     {
-        switch ($length) {
-            case 128:
-            case 160:
-            case 192:
-            case 224:
-            case 256:
-                $this->key_length = $length >> 3;
-                break;
-            default:
-                throw new \LengthException('Key size of ' . $length . ' bits is not supported by this algorithm. Only keys of sizes 128, 160, 192, 224 or 256 bits are supported');
-        }
+        $this->key_length = match ($length) {
+            128, 160, 192, 224, 256 => $length >> 3,
+            default => throw new \LengthException('Key size of ' . $length . ' bits is not supported by this algorithm. Only keys of sizes 128, 160, 192, 224 or 256 bits are supported'),
+        };
 
         parent::setKeyLength($length);
     }
@@ -583,7 +571,7 @@ class Rijndael extends BlockCipher
         //        1. Apply the Key Expansion.
         //        2. Apply InvMixColumn to all Round Keys except the first and the last one."
         // also, see fips-197.pdf#page=27, "5.3.5 Equivalent Inverse Cipher"
-        list($dt0, $dt1, $dt2, $dt3) = $this->getInvTables();
+        [$dt0, $dt1, $dt2, $dt3] = $this->getInvTables();
         $temp = $this->w = $this->dw = [];
         for ($i = $row = $col = 0; $i < $length; $i++, $col++) {
             if ($col == $this->Nb) {
@@ -635,7 +623,7 @@ class Rijndael extends BlockCipher
     {
         static $sbox;
         if (empty($sbox)) {
-            list(, , , , $sbox) = self::getTables();
+            [, , , , $sbox] = self::getTables();
         }
 
         return  $sbox[$word       & 0x000000FF]        |
@@ -856,7 +844,7 @@ class Rijndael extends BlockCipher
 
         // Mainrounds: shiftRows + subWord + mixColumns + addRoundKey
         for ($round = 1; $round < $Nr; ++$round) {
-            list($s, $e) = [$e, $s];
+            [$s, $e] = [$e, $s];
             for ($i = 0; $i < $Nb; ++$i) {
                 $encrypt_block .=
                     '$' . $e . $i . ' =
@@ -913,7 +901,7 @@ class Rijndael extends BlockCipher
 
         // Mainrounds: shiftRows + subWord + mixColumns + addRoundKey
         for ($round = 1; $round < $Nr; ++$round) {
-            list($s, $e) = [$e, $s];
+            [$s, $e] = [$e, $s];
             for ($i = 0; $i < $Nb; ++$i) {
                 $decrypt_block .=
                     '$' . $e . $i . ' =

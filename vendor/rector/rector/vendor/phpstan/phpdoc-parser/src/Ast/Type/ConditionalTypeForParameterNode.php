@@ -5,7 +5,7 @@ namespace PHPStan\PhpDocParser\Ast\Type;
 
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use function sprintf;
-class ConditionalTypeForParameterNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode
+class ConditionalTypeForParameterNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode, \Stringable
 {
     use NodeAttributes;
     /** @var string */

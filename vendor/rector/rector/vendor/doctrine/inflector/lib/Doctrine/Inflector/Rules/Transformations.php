@@ -7,7 +7,7 @@ use RectorPrefix202308\Doctrine\Inflector\WordInflector;
 class Transformations implements WordInflector
 {
     /** @var Transformation[] */
-    private $transformations;
+    private readonly array $transformations;
     public function __construct(Transformation ...$transformations)
     {
         $this->transformations = $transformations;

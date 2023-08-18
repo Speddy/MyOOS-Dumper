@@ -22,7 +22,7 @@ use phpseclib3\File\ASN1;
  */
 abstract class Extensions
 {
-    const MAP = [
+    final public const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'min' => 1,
         // technically, it's MAX, but we'll assume anything < 0 is MAX

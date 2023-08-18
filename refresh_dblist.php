@@ -28,7 +28,7 @@ $configurationfiles = [
 
 define('OOS_VALID_MOD', true);
 
-define('APPLICATION_PATH', '/' == dirname(__FILE__) ? '' : dirname(__FILE__));
+define('APPLICATION_PATH', '/' == __DIR__ ? '' : __DIR__);
 include_once APPLICATION_PATH.'/inc/functions.php';
 
 $config['language'] = 'en';

@@ -16,10 +16,7 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
  */
 final class CurlyListNodeAnnotationToAttributeMapper implements AnnotationToAttributeMapperInterface
 {
-    /**
-     * @var \Rector\PhpAttribute\AnnotationToAttributeMapper
-     */
-    private $annotationToAttributeMapper;
+    private ?\Rector\PhpAttribute\AnnotationToAttributeMapper $annotationToAttributeMapper = null;
     /**
      * Avoid circular reference
      */

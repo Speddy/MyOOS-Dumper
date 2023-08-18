@@ -24,7 +24,7 @@ use phpseclib3\File\ASN1;
  */
 abstract class OneAsymmetricKey
 {
-    const MAP = [
+    final public const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'version' => [

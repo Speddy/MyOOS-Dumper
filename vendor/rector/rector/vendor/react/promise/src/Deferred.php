@@ -4,7 +4,7 @@ namespace RectorPrefix202308\React\Promise;
 
 class Deferred implements PromisorInterface
 {
-    private $promise;
+    private ?\RectorPrefix202308\React\Promise\Promise $promise = null;
     private $resolveCallback;
     private $rejectCallback;
     private $notifyCallback;
@@ -37,9 +37,8 @@ class Deferred implements PromisorInterface
     }
     /**
      * @deprecated 2.6.0 Progress support is deprecated and should not be used anymore.
-     * @param mixed $update
      */
-    public function notify($update = null)
+    public function notify(mixed $update = null)
     {
         $this->promise();
         \call_user_func($this->notifyCallback, $update);

@@ -12,7 +12,7 @@ final class AttributeEmulator extends \PhpParser\Lexer\TokenEmulator\TokenEmulat
     }
     public function isEmulationNeeded(string $code) : bool
     {
-        return \strpos($code, '#[') !== \false;
+        return str_contains($code, '#[');
     }
     public function emulate(string $code, array $tokens) : array
     {
@@ -26,7 +26,7 @@ final class AttributeEmulator extends \PhpParser\Lexer\TokenEmulator\TokenEmulat
                 continue;
             }
             if (\is_array($tokens[$i])) {
-                $line += \substr_count($tokens[$i][1], "\n");
+                $line += \substr_count((string) $tokens[$i][1], "\n");
             }
         }
         return $tokens;

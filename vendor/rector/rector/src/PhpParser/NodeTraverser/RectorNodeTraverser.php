@@ -9,26 +9,15 @@ use Rector\Core\Contract\Rector\PhpRectorInterface;
 use Rector\VersionBonding\PhpVersionedFilter;
 final class RectorNodeTraverser extends NodeTraverser
 {
-    /**
-     * @var PhpRectorInterface[]
-     */
-    private $phpRectors;
-    /**
-     * @readonly
-     * @var \Rector\VersionBonding\PhpVersionedFilter
-     */
-    private $phpVersionedFilter;
-    /**
-     * @var bool
-     */
-    private $areNodeVisitorsPrepared = \false;
+    private bool $areNodeVisitorsPrepared = \false;
     /**
      * @param PhpRectorInterface[] $phpRectors
      */
-    public function __construct(array $phpRectors, PhpVersionedFilter $phpVersionedFilter)
+    public function __construct(private array $phpRectors, /**
+     * @readonly
+     */
+    private readonly PhpVersionedFilter $phpVersionedFilter)
     {
-        $this->phpRectors = $phpRectors;
-        $this->phpVersionedFilter = $phpVersionedFilter;
         parent::__construct();
     }
     /**

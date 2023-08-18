@@ -6,10 +6,10 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
 {
     private $canceller;
     private $result;
-    private $handlers = [];
-    private $progressHandlers = [];
-    private $requiredCancelRequests = 0;
-    private $cancelRequests = 0;
+    private array $handlers = [];
+    private array $progressHandlers = [];
+    private int $requiredCancelRequests = 0;
+    private int $cancelRequests = 0;
     public function __construct(callable $resolver, callable $canceller = null)
     {
         $this->canceller = $canceller;
@@ -65,15 +65,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
     }
     public function always(callable $onFulfilledOrRejected)
     {
-        return $this->then(static function ($value) use($onFulfilledOrRejected) {
-            return resolve($onFulfilledOrRejected())->then(function () use($value) {
-                return $value;
-            });
-        }, static function ($reason) use($onFulfilledOrRejected) {
-            return resolve($onFulfilledOrRejected())->then(function () use($reason) {
-                return new RejectedPromise($reason);
-            });
-        });
+        return $this->then(static fn($value) => resolve($onFulfilledOrRejected())->then(fn() => $value), static fn($reason) => resolve($onFulfilledOrRejected())->then(fn() => new RejectedPromise($reason)));
     }
     public function progress(callable $onProgress)
     {
@@ -95,9 +87,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
                 $progressHandler = static function ($update) use($notify, $onProgress) {
                     try {
                         $notify($onProgress($update));
-                    } catch (\Throwable $e) {
-                        $notify($e);
-                    } catch (\Exception $e) {
+                    } catch (\Throwable|\Exception $e) {
                         $notify($e);
                     }
                 };
@@ -195,10 +185,7 @@ class Promise implements ExtendedPromiseInterface, CancellablePromiseInterface
                     }
                 });
             }
-        } catch (\Throwable $e) {
-            $target = null;
-            $this->reject($e);
-        } catch (\Exception $e) {
+        } catch (\Throwable|\Exception $e) {
             $target = null;
             $this->reject($e);
         }

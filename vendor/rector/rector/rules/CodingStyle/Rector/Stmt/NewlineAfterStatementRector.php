@@ -87,8 +87,7 @@ CODE_SAMPLE
         if ($node->stmts === null) {
             return null;
         }
-        \end($node->stmts);
-        $totalKeys = \key($node->stmts);
+        $totalKeys = array_key_last($node->stmts);
         for ($key = $jumpToKey; $key < $totalKeys; ++$key) {
             if (!isset($node->stmts[$key], $node->stmts[$key + 1])) {
                 break;
@@ -151,6 +150,6 @@ CODE_SAMPLE
     }
     private function shouldSkip(Stmt $stmt) : bool
     {
-        return !\in_array(\get_class($stmt), self::STMTS_TO_HAVE_NEXT_NEWLINE, \true);
+        return !\in_array($stmt::class, self::STMTS_TO_HAVE_NEXT_NEWLINE, \true);
     }
 }

@@ -14,34 +14,27 @@ use Rector\StaticTypeMapper\Contract\PhpParser\PhpParserNodeMapperInterface;
 /**
  * @implements PhpParserNodeMapperInterface<NullableType>
  */
-final class NullableTypeNodeMapper implements PhpParserNodeMapperInterface
+final readonly class NullableTypeNodeMapper implements PhpParserNodeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
-     */
-    private $typeFactory;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\PhpParser\FullyQualifiedNodeMapper
-     */
-    private $fullyQualifiedNodeMapper;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\PhpParser\NameNodeMapper
-     */
-    private $nameNodeMapper;
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\PhpParser\IdentifierNodeMapper
-     */
-    private $identifierNodeMapper;
-    public function __construct(TypeFactory $typeFactory, \Rector\StaticTypeMapper\PhpParser\FullyQualifiedNodeMapper $fullyQualifiedNodeMapper, \Rector\StaticTypeMapper\PhpParser\NameNodeMapper $nameNodeMapper, \Rector\StaticTypeMapper\PhpParser\IdentifierNodeMapper $identifierNodeMapper)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private TypeFactory $typeFactory,
+        /**
+         * @readonly
+         */
+        private \Rector\StaticTypeMapper\PhpParser\FullyQualifiedNodeMapper $fullyQualifiedNodeMapper,
+        /**
+         * @readonly
+         */
+        private \Rector\StaticTypeMapper\PhpParser\NameNodeMapper $nameNodeMapper,
+        /**
+         * @readonly
+         */
+        private \Rector\StaticTypeMapper\PhpParser\IdentifierNodeMapper $identifierNodeMapper
+    )
     {
-        $this->typeFactory = $typeFactory;
-        $this->fullyQualifiedNodeMapper = $fullyQualifiedNodeMapper;
-        $this->nameNodeMapper = $nameNodeMapper;
-        $this->identifierNodeMapper = $identifierNodeMapper;
     }
     public function getNodeType() : string
     {

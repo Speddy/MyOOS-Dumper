@@ -6,12 +6,8 @@ use RectorPrefix202308\React\Promise\Deferred;
 use RectorPrefix202308\React\Promise\PromiseInterface;
 final class RetryExecutor implements ExecutorInterface
 {
-    private $executor;
-    private $retries;
-    public function __construct(ExecutorInterface $executor, $retries = 2)
+    public function __construct(private ExecutorInterface $executor, private $retries = 2)
     {
-        $this->executor = $executor;
-        $this->retries = $retries;
     }
     public function query(Query $query)
     {
@@ -47,7 +43,7 @@ final class RetryExecutor implements ExecutorInterface
                     if (isset($one['args'])) {
                         foreach ($one['args'] as $ai => $arg) {
                             if ($arg instanceof \Closure) {
-                                $trace[$ti]['args'][$ai] = 'Object(' . \get_class($arg) . ')';
+                                $trace[$ti]['args'][$ai] = 'Object(' . $arg::class . ')';
                             }
                         }
                     }

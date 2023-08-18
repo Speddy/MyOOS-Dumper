@@ -8,11 +8,11 @@ namespace PhpParser\Lexer\TokenEmulator;
  */
 final class ReverseEmulator extends \PhpParser\Lexer\TokenEmulator\TokenEmulator
 {
-    /** @var TokenEmulator Inner emulator */
-    private $emulator;
-    public function __construct(\PhpParser\Lexer\TokenEmulator\TokenEmulator $emulator)
+    public function __construct(
+        /** @var TokenEmulator Inner emulator */
+        private readonly \PhpParser\Lexer\TokenEmulator\TokenEmulator $emulator
+    )
     {
-        $this->emulator = $emulator;
     }
     public function getPhpVersion() : string
     {

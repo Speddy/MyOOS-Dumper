@@ -51,59 +51,38 @@ class Command
     /**
      * @var \Symfony\Component\Console\Application|null
      */
-    private $application;
-    /**
-     * @var string|null
-     */
-    private $name;
-    /**
-     * @var string|null
-     */
-    private $processTitle;
+    private ?\RectorPrefix202308\Symfony\Component\Console\Application $application = null;
+    private ?string $name = null;
+    private ?string $processTitle = null;
     /**
      * @var mixed[]
      */
-    private $aliases = [];
+    private array $aliases = [];
     /**
      * @var \Symfony\Component\Console\Input\InputDefinition
      */
     private $definition;
-    /**
-     * @var bool
-     */
-    private $hidden = \false;
-    /**
-     * @var string
-     */
-    private $help = '';
-    /**
-     * @var string
-     */
-    private $description = '';
+    private bool $hidden = \false;
+    private string $help = '';
+    private string $description = '';
     /**
      * @var \Symfony\Component\Console\Input\InputDefinition|null
      */
-    private $fullDefinition;
-    /**
-     * @var bool
-     */
-    private $ignoreValidationErrors = \false;
-    /**
-     * @var \Closure|null
-     */
-    private $code;
+    private ?\RectorPrefix202308\Symfony\Component\Console\Input\InputDefinition $fullDefinition = null;
+    private bool $ignoreValidationErrors = \false;
+    private ?\Closure $code = null;
     /**
      * @var mixed[]
      */
-    private $synopsis = [];
+    private array $synopsis = [];
     /**
      * @var mixed[]
      */
-    private $usages = [];
+    private array $usages = [];
     /**
      * @var \Symfony\Component\Console\Helper\HelperSet|null
      */
-    private $helperSet;
+    private ?\RectorPrefix202308\Symfony\Component\Console\Helper\HelperSet $helperSet = null;
     public static function getDefaultName() : ?string
     {
         $class = static::class;
@@ -633,7 +612,7 @@ class Command
      */
     public function addUsage(string $usage)
     {
-        if (\strncmp($usage, $this->name, \strlen($this->name)) !== 0) {
+        if (!str_starts_with($usage, $this->name)) {
             $usage = \sprintf('%s %s', $this->name, $usage);
         }
         $this->usages[] = $usage;

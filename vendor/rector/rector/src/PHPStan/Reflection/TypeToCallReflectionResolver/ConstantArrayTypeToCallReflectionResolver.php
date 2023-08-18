@@ -19,16 +19,15 @@ use Rector\Core\Contract\PHPStan\Reflection\TypeToCallReflectionResolver\TypeToC
  *
  * @implements TypeToCallReflectionResolverInterface<ConstantArrayType>
  */
-final class ConstantArrayTypeToCallReflectionResolver implements TypeToCallReflectionResolverInterface
+final readonly class ConstantArrayTypeToCallReflectionResolver implements TypeToCallReflectionResolverInterface
 {
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    public function __construct(ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function supports(Type $type) : bool
     {

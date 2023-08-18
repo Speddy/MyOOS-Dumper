@@ -6,7 +6,7 @@ namespace PhpParser;
 class JsonDecoder
 {
     /** @var \ReflectionClass[] Node type to reflection class map */
-    private $reflectionClassCache;
+    private ?array $reflectionClassCache = null;
     public function decode(string $json)
     {
         $value = \json_decode($json, \true);

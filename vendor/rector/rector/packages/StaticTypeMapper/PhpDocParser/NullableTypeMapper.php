@@ -16,22 +16,19 @@ use Rector\StaticTypeMapper\Contract\PhpDocParser\PhpDocTypeMapperInterface;
 /**
  * @implements PhpDocTypeMapperInterface<NullableTypeNode>
  */
-final class NullableTypeMapper implements PhpDocTypeMapperInterface
+final readonly class NullableTypeMapper implements PhpDocTypeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\StaticTypeMapper\PhpDocParser\IdentifierTypeMapper
-     */
-    private $identifierTypeMapper;
-    /**
-     * @readonly
-     * @var \PHPStan\PhpDoc\TypeNodeResolver
-     */
-    private $typeNodeResolver;
-    public function __construct(\Rector\StaticTypeMapper\PhpDocParser\IdentifierTypeMapper $identifierTypeMapper, TypeNodeResolver $typeNodeResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private \Rector\StaticTypeMapper\PhpDocParser\IdentifierTypeMapper $identifierTypeMapper,
+        /**
+         * @readonly
+         */
+        private TypeNodeResolver $typeNodeResolver
+    )
     {
-        $this->identifierTypeMapper = $identifierTypeMapper;
-        $this->typeNodeResolver = $typeNodeResolver;
     }
     public function getNodeType() : string
     {

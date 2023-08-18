@@ -4,8 +4,8 @@ namespace RectorPrefix202308\React\Promise;
 
 class CancellationQueue
 {
-    private $started = \false;
-    private $queue = [];
+    private bool $started = \false;
+    private array $queue = [];
     public function __invoke()
     {
         if ($this->started) {
@@ -31,8 +31,7 @@ class CancellationQueue
             $exception = null;
             try {
                 $cancellable->cancel();
-            } catch (\Throwable $exception) {
-            } catch (\Exception $exception) {
+            } catch (\Throwable|\Exception $exception) {
             }
             unset($this->queue[$i]);
             if ($exception) {

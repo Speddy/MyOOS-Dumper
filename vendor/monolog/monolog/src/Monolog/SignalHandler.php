@@ -25,25 +25,19 @@ use ReflectionExtension;
  */
 class SignalHandler
 {
-    /** @var LoggerInterface */
-    private $logger;
-
     /** @var array<int, callable|string|int> SIG_DFL, SIG_IGN or previous callable */
-    private $previousSignalHandler = [];
+    private array $previousSignalHandler = [];
     /** @var array<int, int> */
-    private $signalLevelMap = [];
+    private array $signalLevelMap = [];
     /** @var array<int, bool> */
-    private $signalRestartSyscalls = [];
+    private array $signalRestartSyscalls = [];
 
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private readonly LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     /**
      * @param  int|string $level           Level or level name
-     * @param  bool       $callPrevious
-     * @param  bool       $restartSyscalls
      * @param  bool|null  $async
      * @return $this
      *
@@ -70,15 +64,12 @@ class SignalHandler
             pcntl_async_signals($async);
         }
 
-        pcntl_signal($signo, [$this, 'handleSignal'], $restartSyscalls);
+        pcntl_signal($signo, $this->handleSignal(...), $restartSyscalls);
 
         return $this;
     }
 
-    /**
-     * @param mixed $siginfo
-     */
-    public function handleSignal(int $signo, $siginfo = null): void
+    public function handleSignal(int $signo, mixed $siginfo = null): void
     {
         static $signals = [];
 
@@ -86,7 +77,7 @@ class SignalHandler
             $pcntl = new ReflectionExtension('pcntl');
             // HHVM 3.24.2 returns an empty array.
             foreach ($pcntl->getConstants() ?: get_defined_constants(true)['Core'] as $name => $value) {
-                if (substr($name, 0, 3) === 'SIG' && $name[3] !== '_' && is_int($value)) {
+                if (str_starts_with((string) $name, 'SIG') && $name[3] !== '_' && is_int($value)) {
                     $signals[$value] = $name;
                 }
             }
@@ -111,7 +102,7 @@ class SignalHandler
                 posix_kill(posix_getpid(), $signo);
                 pcntl_signal_dispatch();
                 pcntl_sigprocmask(SIG_SETMASK, $oldset);
-                pcntl_signal($signo, [$this, 'handleSignal'], $restartSyscalls);
+                pcntl_signal($signo, $this->handleSignal(...), $restartSyscalls);
             }
         } elseif (is_callable($this->previousSignalHandler[$signo])) {
             $this->previousSignalHandler[$signo]($signo, $siginfo);

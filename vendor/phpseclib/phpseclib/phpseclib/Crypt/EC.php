@@ -51,14 +51,14 @@ use phpseclib3\Math\BigInteger;
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-abstract class EC extends AsymmetricKey
+abstract class EC extends AsymmetricKey implements \Stringable
 {
     /**
      * Algorithm Name
      *
      * @var string
      */
-    const ALGORITHM = 'EC';
+    public const ALGORITHM = 'EC';
 
     /**
      * Public Key QA
@@ -167,7 +167,7 @@ abstract class EC extends AsymmetricKey
         $curveName = $curve;
         if (preg_match('#(?:^curve|^ed)\d+$#', $curveName)) {
             $curveName = ucfirst($curveName);
-        } elseif (substr($curveName, 0, 10) == 'brainpoolp') {
+        } elseif (str_starts_with($curveName, 'brainpoolp')) {
             $curveName = 'brainpoolP' . substr($curveName, 10);
         }
         $curve = '\phpseclib3\Crypt\EC\Curves\\' . $curveName;
@@ -350,7 +350,7 @@ abstract class EC extends AsymmetricKey
     public function getEncodedCoordinates()
     {
         if ($this->curve instanceof MontgomeryCurve) {
-            return strrev($this->QA[0]->toBytes(true));
+            return strrev((string) $this->QA[0]->toBytes(true));
         }
         if ($this->curve instanceof TwistedEdwardsCurve) {
             return $this->curve->encodePoint($this->QA);
@@ -468,7 +468,7 @@ abstract class EC extends AsymmetricKey
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->curve instanceof MontgomeryCurve) {
             return '';

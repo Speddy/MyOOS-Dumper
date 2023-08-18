@@ -20,38 +20,29 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class FinalizeClassesWithoutChildrenRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ClassAnalyzer
-     */
-    private $classAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\FamilyTree\Reflection\FamilyRelationsAnalyzer
-     */
-    private $familyRelationsAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
-     */
-    private $visibilityManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\DoctrineEntityAnalyzer
-     */
-    private $doctrineEntityAnalyzer;
-    public function __construct(ClassAnalyzer $classAnalyzer, FamilyRelationsAnalyzer $familyRelationsAnalyzer, VisibilityManipulator $visibilityManipulator, ReflectionResolver $reflectionResolver, DoctrineEntityAnalyzer $doctrineEntityAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ClassAnalyzer $classAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly FamilyRelationsAnalyzer $familyRelationsAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly VisibilityManipulator $visibilityManipulator,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private readonly DoctrineEntityAnalyzer $doctrineEntityAnalyzer
+    )
     {
-        $this->classAnalyzer = $classAnalyzer;
-        $this->familyRelationsAnalyzer = $familyRelationsAnalyzer;
-        $this->visibilityManipulator = $visibilityManipulator;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->doctrineEntityAnalyzer = $doctrineEntityAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

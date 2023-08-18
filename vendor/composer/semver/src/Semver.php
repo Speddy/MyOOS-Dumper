@@ -15,11 +15,10 @@ use Composer\Semver\Constraint\Constraint;
 
 class Semver
 {
-    const SORT_ASC = 1;
-    const SORT_DESC = -1;
+    final public const SORT_ASC = 1;
+    final public const SORT_DESC = -1;
 
-    /** @var VersionParser */
-    private static $versionParser;
+    private static ?\Composer\Semver\VersionParser $versionParser = null;
 
     /**
      * Determine if given version satisfies given constraints.
@@ -52,9 +51,7 @@ class Semver
      */
     public static function satisfiedBy(array $versions, $constraints)
     {
-        $versions = array_filter($versions, function ($version) use ($constraints) {
-            return Semver::satisfies($version, $constraints);
-        });
+        $versions = array_filter($versions, fn($version) => Semver::satisfies($version, $constraints));
 
         return array_values($versions);
     }
@@ -96,14 +93,14 @@ class Semver
         }
 
         $versionParser = self::$versionParser;
-        $normalized = array();
+        $normalized = [];
 
         // Normalize outside of usort() scope for minor performance increase.
         // Creates an array of arrays: [[normalized, key], ...]
         foreach ($versions as $key => $version) {
             $normalizedVersion = $versionParser->normalize($version);
             $normalizedVersion = $versionParser->normalizeDefaultBranch($normalizedVersion);
-            $normalized[] = array($normalizedVersion, $key);
+            $normalized[] = [$normalizedVersion, $key];
         }
 
         usort($normalized, function (array $left, array $right) use ($direction) {
@@ -119,7 +116,7 @@ class Semver
         });
 
         // Recreate input array, using the original indexes which are now in sorted order.
-        $sorted = array();
+        $sorted = [];
         foreach ($normalized as $item) {
             $sorted[] = $versions[$item[1]];
         }

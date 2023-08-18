@@ -58,7 +58,7 @@ CODE_SAMPLE
         // the doc label is not in the string → ok
         /** @var string $docLabel */
         $docLabel = $node->getAttribute(AttributeKey::DOC_LABEL);
-        if (\strpos($node->value, $docLabel) === \false) {
+        if (!str_contains($node->value, $docLabel)) {
             return null;
         }
         $node->setAttribute(AttributeKey::DOC_LABEL, $this->uniquateDocLabel($node->value, $docLabel));
@@ -71,7 +71,7 @@ CODE_SAMPLE
         $docLabel .= self::WRAP_SUFFIX;
         $docLabelCounterTemplate = $docLabel . '_%d';
         $i = 0;
-        while (\strpos($value, $docLabel) !== \false) {
+        while (str_contains($value, $docLabel)) {
             $docLabel = \sprintf($docLabelCounterTemplate, ++$i);
         }
         return $docLabel;

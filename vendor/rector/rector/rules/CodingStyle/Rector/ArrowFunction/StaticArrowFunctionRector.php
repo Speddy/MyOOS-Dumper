@@ -14,14 +14,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class StaticArrowFunctionRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\CodingStyle\Guard\StaticGuard
-     */
-    private $staticGuard;
-    public function __construct(StaticGuard $staticGuard)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly StaticGuard $staticGuard
+    )
     {
-        $this->staticGuard = $staticGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {

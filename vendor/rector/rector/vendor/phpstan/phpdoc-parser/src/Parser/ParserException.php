@@ -13,26 +13,8 @@ use const JSON_UNESCAPED_SLASHES;
 use const JSON_UNESCAPED_UNICODE;
 class ParserException extends Exception
 {
-    /** @var string */
-    private $currentTokenValue;
-    /** @var int */
-    private $currentTokenType;
-    /** @var int */
-    private $currentOffset;
-    /** @var int */
-    private $expectedTokenType;
-    /** @var string|null */
-    private $expectedTokenValue;
-    /** @var int|null */
-    private $currentTokenLine;
-    public function __construct(string $currentTokenValue, int $currentTokenType, int $currentOffset, int $expectedTokenType, ?string $expectedTokenValue = null, ?int $currentTokenLine = null)
+    public function __construct(private readonly string $currentTokenValue, private readonly int $currentTokenType, private readonly int $currentOffset, private readonly int $expectedTokenType, private readonly ?string $expectedTokenValue = null, private readonly ?int $currentTokenLine = null)
     {
-        $this->currentTokenValue = $currentTokenValue;
-        $this->currentTokenType = $currentTokenType;
-        $this->currentOffset = $currentOffset;
-        $this->expectedTokenType = $expectedTokenType;
-        $this->expectedTokenValue = $expectedTokenValue;
-        $this->currentTokenLine = $currentTokenLine;
         parent::__construct(sprintf('Unexpected token %s, expected %s%s at offset %d%s', $this->formatValue($currentTokenValue), Lexer::TOKEN_LABELS[$expectedTokenType], $expectedTokenValue !== null ? sprintf(' (%s)', $this->formatValue($expectedTokenValue)) : '', $currentOffset, $currentTokenLine === null ? '' : sprintf(' on line %d', $currentTokenLine)));
     }
     public function getCurrentTokenValue() : string

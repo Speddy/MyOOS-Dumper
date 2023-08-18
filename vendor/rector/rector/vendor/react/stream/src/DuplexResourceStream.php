@@ -25,14 +25,13 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
      * (i.e. underlying buffer drained), note that this does not neccessarily
      * mean it reached EOF.
      *
-     * @var int
      */
-    private $bufferSize;
-    private $buffer;
-    private $readable = \true;
-    private $writable = \true;
-    private $closing = \false;
-    private $listening = \false;
+    private readonly int $bufferSize;
+    private readonly \RectorPrefix202308\React\Stream\WritableStreamInterface $buffer;
+    private bool $readable = \true;
+    private bool $writable = \true;
+    private bool $closing = \false;
+    private bool $listening = \false;
     public function __construct($stream, LoopInterface $loop = null, $readChunkSize = null, WritableStreamInterface $buffer = null)
     {
         if (!\is_resource($stream) || \get_resource_type($stream) !== "stream") {
@@ -40,7 +39,7 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
         }
         // ensure resource is opened for reading and wrting (fopen mode must contain "+")
         $meta = \stream_get_meta_data($stream);
-        if (isset($meta['mode']) && $meta['mode'] !== '' && \strpos($meta['mode'], '+') === \false) {
+        if (isset($meta['mode']) && $meta['mode'] !== '' && !str_contains($meta['mode'], '+')) {
             throw new InvalidArgumentException('Given stream resource is not opened in read and write mode');
         }
         // this class relies on non-blocking I/O in order to not interrupt the event loop
@@ -68,9 +67,9 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
         $this->buffer = $buffer;
         $that = $this;
         $this->buffer->on('error', function ($error) use($that) {
-            $that->emit('error', array($error));
+            $that->emit('error', [$error]);
         });
-        $this->buffer->on('close', array($this, 'close'));
+        $this->buffer->on('close', $this->close(...));
         $this->buffer->on('drain', function () use($that) {
             $that->emit('drain');
         });
@@ -94,7 +93,7 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
     public function resume()
     {
         if (!$this->listening && $this->readable) {
-            $this->loop->addReadStream($this->stream, array($this, 'handleData'));
+            $this->loop->addReadStream($this->stream, $this->handleData(...));
             $this->listening = \true;
         }
     }
@@ -132,7 +131,7 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
         $this->pause();
         $this->buffer->end($data);
     }
-    public function pipe(WritableStreamInterface $dest, array $options = array())
+    public function pipe(WritableStreamInterface $dest, array $options = [])
     {
         return Util::pipe($this, $dest, $options);
     }
@@ -146,12 +145,12 @@ final class DuplexResourceStream extends EventEmitter implements DuplexStreamInt
         $data = \stream_get_contents($stream, $this->bufferSize);
         \restore_error_handler();
         if ($error !== null) {
-            $this->emit('error', array(new \RuntimeException('Unable to read from stream: ' . $error->getMessage(), 0, $error)));
+            $this->emit('error', [new \RuntimeException('Unable to read from stream: ' . $error->getMessage(), 0, $error)]);
             $this->close();
             return;
         }
         if ($data !== '') {
-            $this->emit('data', array($data));
+            $this->emit('data', [$data]);
         } elseif (\feof($this->stream)) {
             // no data read => we reached the end and close the stream
             $this->emit('end');

@@ -66,14 +66,12 @@ interface Registrar
      *
      * @param  string  $name
      * @param  string  $controller
-     * @param  array  $options
      * @return \Illuminate\Routing\PendingResourceRegistration
      */
     public function resource($name, $controller, array $options = []);
     /**
      * Create a route group with shared attributes.
      *
-     * @param  array  $attributes
      * @param  \Closure|string  $routes
      * @return void
      */

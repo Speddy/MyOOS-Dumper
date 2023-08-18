@@ -79,7 +79,7 @@ CODE_SAMPLE
                 continue;
             }
             $shortClassName = $this->nodeNameResolver->getShortName($className);
-            if (\substr_compare($shortClassName, 'Type', -\strlen('Type')) === 0) {
+            if (str_ends_with($shortClassName, 'Type')) {
                 $shortClassName = (string) Strings::before($shortClassName, 'Type');
             }
             $shortClassNameUnicodeString = new UnicodeString($shortClassName);

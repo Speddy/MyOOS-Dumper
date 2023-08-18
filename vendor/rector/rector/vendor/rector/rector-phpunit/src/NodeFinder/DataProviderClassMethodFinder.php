@@ -16,34 +16,27 @@ use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\Core\PhpParser\AstResolver;
 use Rector\Core\Reflection\ReflectionResolver;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class DataProviderClassMethodFinder
+final readonly class DataProviderClassMethodFinder
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    private $phpDocInfoFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    public function __construct(PhpDocInfoFactory $phpDocInfoFactory, ReflectionResolver $reflectionResolver, AstResolver $astResolver, NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PhpDocInfoFactory $phpDocInfoFactory,
+        /**
+         * @readonly
+         */
+        private ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private AstResolver $astResolver,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->astResolver = $astResolver;
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @return ClassMethod[]
@@ -141,7 +134,7 @@ final class DataProviderClassMethodFinder
         $parentClasses = [];
         foreach ($classReflection->getParents() as $parentClassReflection) {
             // is the top parent class? stop
-            if ($parentClassReflection->getName() === 'PHPUnit\\Framework\\TestCase') {
+            if ($parentClassReflection->getName() === \PHPUnit\Framework\TestCase::class) {
                 break;
             }
             /** @var Class_ $parentClass */

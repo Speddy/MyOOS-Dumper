@@ -22,22 +22,17 @@ use RectorPrefix202308\SebastianBergmann\Diff\Differ;
  * Builds a diff string representation in a loose unified diff format
  * listing only changes lines. Does not include line numbers.
  */
-final class DiffOnlyOutputBuilder implements DiffOutputBuilderInterface
+final readonly class DiffOnlyOutputBuilder implements DiffOutputBuilderInterface
 {
-    /**
-     * @var string
-     */
-    private $header;
-    public function __construct(string $header = "--- Original\n+++ New\n")
+    public function __construct(private string $header = "--- Original\n+++ New\n")
     {
-        $this->header = $header;
     }
     public function getDiff(array $diff) : string
     {
         $buffer = fopen('php://memory', 'r+b');
         if ('' !== $this->header) {
             fwrite($buffer, $this->header);
-            if (\substr_compare($this->header, "\n", -\strlen("\n")) !== 0) {
+            if (!str_ends_with($this->header, "\n")) {
                 fwrite($buffer, "\n");
             }
         }
@@ -55,7 +50,7 @@ final class DiffOnlyOutputBuilder implements DiffOutputBuilderInterface
                 continue;
                 // we didn't write the not-changed line, so do not add a line break either
             }
-            $lc = substr($diffEntry[0], -1);
+            $lc = substr((string) $diffEntry[0], -1);
             if ($lc !== "\n" && $lc !== "\r") {
                 fwrite($buffer, "\n");
                 // \No newline at end of file

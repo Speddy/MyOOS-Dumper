@@ -23,14 +23,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ConsecutiveNullCompareReturnsToNullCoalesceQueueRector extends AbstractRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\IfManipulator
-     */
-    private $ifManipulator;
-    public function __construct(IfManipulator $ifManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly IfManipulator $ifManipulator
+    )
     {
-        $this->ifManipulator = $ifManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {

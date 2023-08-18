@@ -7,8 +7,6 @@ use PhpParser\Node;
 use Rector\Core\Contract\PhpParser\Node\StmtsAwareInterface;
 class Case_ extends Node\Stmt implements StmtsAwareInterface
 {
-    /** @var null|Node\Expr Condition (null for default) */
-    public $cond;
     /** @var Node\Stmt[] Statements */
     public $stmts;
     /**
@@ -18,10 +16,9 @@ class Case_ extends Node\Stmt implements StmtsAwareInterface
      * @param Node\Stmt[]    $stmts      Statements
      * @param array          $attributes Additional attributes
      */
-    public function __construct($cond, array $stmts = [], array $attributes = [])
+    public function __construct(public $cond, array $stmts = [], array $attributes = [])
     {
         $this->attributes = $attributes;
-        $this->cond = $cond;
         $this->stmts = $stmts;
     }
     public function getSubNodeNames() : array

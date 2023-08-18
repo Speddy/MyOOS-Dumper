@@ -19,28 +19,23 @@ use Rector\PHPStanStaticTypeMapper\Contract\TypeMapperInterface;
 /**
  * @implements TypeMapperInterface<IntersectionType>
  */
-final class IntersectionTypeMapper implements TypeMapperInterface
+final readonly class IntersectionTypeMapper implements TypeMapperInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\Php\PhpVersionProvider
-     */
-    private $phpVersionProvider;
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\TypeMapper\ObjectWithoutClassTypeMapper
-     */
-    private $objectWithoutClassTypeMapper;
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\TypeMapper\ObjectTypeMapper
-     */
-    private $objectTypeMapper;
-    public function __construct(PhpVersionProvider $phpVersionProvider, \Rector\PHPStanStaticTypeMapper\TypeMapper\ObjectWithoutClassTypeMapper $objectWithoutClassTypeMapper, \Rector\PHPStanStaticTypeMapper\TypeMapper\ObjectTypeMapper $objectTypeMapper)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PhpVersionProvider $phpVersionProvider,
+        /**
+         * @readonly
+         */
+        private \Rector\PHPStanStaticTypeMapper\TypeMapper\ObjectWithoutClassTypeMapper $objectWithoutClassTypeMapper,
+        /**
+         * @readonly
+         */
+        private \Rector\PHPStanStaticTypeMapper\TypeMapper\ObjectTypeMapper $objectTypeMapper
+    )
     {
-        $this->phpVersionProvider = $phpVersionProvider;
-        $this->objectWithoutClassTypeMapper = $objectWithoutClassTypeMapper;
-        $this->objectTypeMapper = $objectTypeMapper;
     }
     /**
      * @return class-string<Type>

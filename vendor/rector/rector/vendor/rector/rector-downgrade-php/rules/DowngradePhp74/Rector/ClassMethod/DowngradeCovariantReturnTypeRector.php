@@ -35,38 +35,29 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeCovariantReturnTypeRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
-     */
-    private $phpDocTypeChanger;
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\PhpDoc\TagRemover\ReturnTagRemover
-     */
-    private $returnTagRemover;
-    /**
-     * @readonly
-     * @var \Rector\Core\Reflection\ReflectionResolver
-     */
-    private $reflectionResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\Util\Reflection\PrivatesAccessor
-     */
-    private $privatesAccessor;
-    /**
-     * @readonly
-     * @var \Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeAnalyzer
-     */
-    private $unionTypeAnalyzer;
-    public function __construct(PhpDocTypeChanger $phpDocTypeChanger, ReturnTagRemover $returnTagRemover, ReflectionResolver $reflectionResolver, PrivatesAccessor $privatesAccessor, UnionTypeAnalyzer $unionTypeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTypeChanger $phpDocTypeChanger,
+        /**
+         * @readonly
+         */
+        private readonly ReturnTagRemover $returnTagRemover,
+        /**
+         * @readonly
+         */
+        private readonly ReflectionResolver $reflectionResolver,
+        /**
+         * @readonly
+         */
+        private readonly PrivatesAccessor $privatesAccessor,
+        /**
+         * @readonly
+         */
+        private readonly UnionTypeAnalyzer $unionTypeAnalyzer
+    )
     {
-        $this->phpDocTypeChanger = $phpDocTypeChanger;
-        $this->returnTagRemover = $returnTagRemover;
-        $this->reflectionResolver = $reflectionResolver;
-        $this->privatesAccessor = $privatesAccessor;
-        $this->unionTypeAnalyzer = $unionTypeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

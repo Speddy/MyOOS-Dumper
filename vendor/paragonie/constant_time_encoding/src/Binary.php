@@ -42,7 +42,6 @@ abstract class Binary
      *
      * @ref mbstring.func_overload
      *
-     * @param string $str
      * @return int
      */
     public static function safeStrlen(string $str): int
@@ -62,8 +61,6 @@ abstract class Binary
      * @ref mbstring.func_overload
      *
      * @staticvar boolean $exists
-     * @param string $str
-     * @param int $start
      * @param ?int $length
      * @return string
      *

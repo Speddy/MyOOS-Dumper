@@ -5,12 +5,8 @@ namespace RectorPrefix202308\React\Dns\Query;
 use RectorPrefix202308\React\Promise\Promise;
 final class FallbackExecutor implements ExecutorInterface
 {
-    private $executor;
-    private $fallback;
-    public function __construct(ExecutorInterface $executor, ExecutorInterface $fallback)
+    public function __construct(private readonly ExecutorInterface $executor, private ExecutorInterface $fallback)
     {
-        $this->executor = $executor;
-        $this->fallback = $fallback;
     }
     public function query(Query $query)
     {

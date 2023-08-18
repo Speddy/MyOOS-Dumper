@@ -18,14 +18,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeNonCapturingCatchesRector extends AbstractScopeAwareRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\VariableNaming
-     */
-    private $variableNaming;
-    public function __construct(VariableNaming $variableNaming)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly VariableNaming $variableNaming
+    )
     {
-        $this->variableNaming = $variableNaming;
     }
     public function getRuleDefinition() : RuleDefinition
     {

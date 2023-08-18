@@ -16,14 +16,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ActionSuffixRemoverRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Symfony\Bridge\NodeAnalyzer\ControllerMethodAnalyzer
-     */
-    private $controllerMethodAnalyzer;
-    public function __construct(ControllerMethodAnalyzer $controllerMethodAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ControllerMethodAnalyzer $controllerMethodAnalyzer
+    )
     {
-        $this->controllerMethodAnalyzer = $controllerMethodAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

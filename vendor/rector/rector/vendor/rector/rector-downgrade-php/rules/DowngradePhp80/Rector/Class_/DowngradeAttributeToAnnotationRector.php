@@ -28,25 +28,21 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class DowngradeAttributeToAnnotationRector extends AbstractRector implements ConfigurableRectorInterface
 {
     /**
-     * @readonly
-     * @var \Rector\NodeFactory\DoctrineAnnotationFactory
-     */
-    private $doctrineAnnotationFactory;
-    /**
      * @var string[]
      */
     private const SKIPPED_ATTRIBUTES = ['Attribute', 'ReturnTypeWillChange'];
     /**
      * @var DowngradeAttributeToAnnotation[]
      */
-    private $attributesToAnnotations = [];
-    /**
-     * @var bool
-     */
-    private $isDowngraded = \false;
-    public function __construct(DoctrineAnnotationFactory $doctrineAnnotationFactory)
+    private array $attributesToAnnotations = [];
+    private bool $isDowngraded = \false;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly DoctrineAnnotationFactory $doctrineAnnotationFactory
+    )
     {
-        $this->doctrineAnnotationFactory = $doctrineAnnotationFactory;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -102,7 +98,7 @@ CODE_SAMPLE
                     continue;
                 }
                 unset($attrGroup->attrs[$key]);
-                if (\strpos($attributeToAnnotation->getTag(), '\\') === \false) {
+                if (!str_contains($attributeToAnnotation->getTag(), '\\')) {
                     $phpDocInfo->addPhpDocTagNode(new PhpDocTagNode('@' . $attributeToAnnotation->getTag(), new GenericTagValueNode('')));
                 } else {
                     $doctrineAnnotation = $this->doctrineAnnotationFactory->createFromAttribute($attribute, $attributeToAnnotation->getTag());

@@ -39,9 +39,9 @@ final class ObjectTypeMapper implements TypeMapperInterface
             if (!$type instanceof ObjectType) {
                 return $traverse($type);
             }
-            $typeClass = \get_class($type);
+            $typeClass = $type::class;
             // early native ObjectType check
-            if ($typeClass === 'PHPStan\\Type\\ObjectType') {
+            if ($typeClass === \PHPStan\Type\ObjectType::class) {
                 return new ObjectType('\\' . $type->getClassName());
             }
             if ($type instanceof FullyQualifiedObjectType) {
@@ -70,7 +70,7 @@ final class ObjectTypeMapper implements TypeMapperInterface
         }
         if ($type instanceof FullyQualifiedObjectType) {
             $className = $type->getClassName();
-            if (\strncmp($className, '\\', \strlen('\\')) === 0) {
+            if (str_starts_with($className, '\\')) {
                 // skip leading \
                 return new FullyQualified(Strings::substring($className, 1));
             }

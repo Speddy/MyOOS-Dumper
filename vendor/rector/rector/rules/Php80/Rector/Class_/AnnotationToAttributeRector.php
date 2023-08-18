@@ -45,47 +45,36 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class AnnotationToAttributeRector extends AbstractRector implements ConfigurableRectorInterface, MinPhpVersionInterface
 {
     /**
-     * @readonly
-     * @var \Rector\PhpAttribute\NodeFactory\PhpAttributeGroupFactory
-     */
-    private $phpAttributeGroupFactory;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeFactory\AttrGroupsFactory
-     */
-    private $attrGroupsFactory;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
-     */
-    private $phpDocTagRemover;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeManipulator\AttributeGroupNamedArgumentManipulator
-     */
-    private $attributeGroupNamedArgumentManipulator;
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\UseImportsResolver
-     */
-    private $useImportsResolver;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
-     */
-    private $phpAttributeAnalyzer;
-    /**
      * @var AnnotationToAttribute[]
      */
-    private $annotationsToAttributes = [];
-    public function __construct(PhpAttributeGroupFactory $phpAttributeGroupFactory, AttrGroupsFactory $attrGroupsFactory, PhpDocTagRemover $phpDocTagRemover, AttributeGroupNamedArgumentManipulator $attributeGroupNamedArgumentManipulator, UseImportsResolver $useImportsResolver, PhpAttributeAnalyzer $phpAttributeAnalyzer)
+    private array $annotationsToAttributes = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PhpAttributeGroupFactory $phpAttributeGroupFactory,
+        /**
+         * @readonly
+         */
+        private readonly AttrGroupsFactory $attrGroupsFactory,
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTagRemover $phpDocTagRemover,
+        /**
+         * @readonly
+         */
+        private readonly AttributeGroupNamedArgumentManipulator $attributeGroupNamedArgumentManipulator,
+        /**
+         * @readonly
+         */
+        private readonly UseImportsResolver $useImportsResolver,
+        /**
+         * @readonly
+         */
+        private readonly PhpAttributeAnalyzer $phpAttributeAnalyzer
+    )
     {
-        $this->phpAttributeGroupFactory = $phpAttributeGroupFactory;
-        $this->attrGroupsFactory = $attrGroupsFactory;
-        $this->phpDocTagRemover = $phpDocTagRemover;
-        $this->attributeGroupNamedArgumentManipulator = $attributeGroupNamedArgumentManipulator;
-        $this->useImportsResolver = $useImportsResolver;
-        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -172,7 +161,7 @@ CODE_SAMPLE
             }
             $tag = \trim($docNode->name, '@');
             // not a basic one
-            if (\strpos($tag, '\\') !== \false) {
+            if (str_contains($tag, '\\')) {
                 return null;
             }
             foreach ($this->annotationsToAttributes as $annotationToAttribute) {

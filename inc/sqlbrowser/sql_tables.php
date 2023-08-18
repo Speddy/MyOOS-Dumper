@@ -153,7 +153,7 @@ if (isset($_POST['t_edit_submit'])) {
     $sql_alter = 'ALTER TABLE `'.$databases['Name'][$dbid].'`.`'.$_POST['table_edit_name'].'` ';
     if ('' == $_POST['t_edit_name']) {
         echo '<p class="error">'.$lang['L_SQL_TBLNAMEEMPTY'].'</p>';
-    } elseif (MOD_NEW_VERSION && '' != $_POST['t_edit_collate'] && substr($_POST['t_edit_collate'], 0, strlen($_POST['t_edit_charset'] ?? '')) != $_POST['t_edit_charset']) {
+    } elseif (MOD_NEW_VERSION && '' != $_POST['t_edit_collate'] && substr((string) $_POST['t_edit_collate'], 0, strlen($_POST['t_edit_charset'] ?? '')) != $_POST['t_edit_charset']) {
         echo '<p class="error">'.$lang['L_SQL_COLLATENOTMATCH'].'</p>';
     } else {
         if ($_POST['table_edit_name'] != $_POST['t_edit_name']) {
@@ -183,7 +183,7 @@ if (isset($_POST['t_edit_submit'])) {
     }
 } else {
     if (!isset($table_edit_name) || '' == $table_edit_name) {
-        $table_edit_name = (isset($_GET['tablename'])) ? $_GET['tablename'] : '';
+        $table_edit_name = $_GET['tablename'] ?? '';
         if (isset($_POST['tableselect'])) {
             $table_edit_name = $_POST['tableselect'];
         }
@@ -214,17 +214,17 @@ if (isset($_POST['newfield_posted'])) {
         $sql_stamm = 'ALTER TABLE `'.$databases['Name'][$dbid]."`.`$table_edit_name` ";
         $sql_alter = $sql_stamm.((isset($_POST['editfield'])) ? 'CHANGE COLUMN `'.$_POST['fieldname'].'` `'.$_POST['f_name'].'` ' : 'ADD COLUMN `'.$_POST['f_name'].'` ');
         $sql_alter .= $_POST['f_type'];
-        $wl = stripslashes($_POST['f_size']);
-        if ('' != $wl && !preg_match('@^(DATE|DATETIME|TIME|TINYBLOB|TINYTEXT|BLOB|TEXT|MEDIUMBLOB|MEDIUMTEXT|LONGBLOB|LONGTEXT)$@i', $_POST['f_type'])) {
+        $wl = stripslashes((string) $_POST['f_size']);
+        if ('' != $wl && !preg_match('@^(DATE|DATETIME|TIME|TINYBLOB|TINYTEXT|BLOB|TEXT|MEDIUMBLOB|MEDIUMTEXT|LONGBLOB|LONGTEXT)$@i', (string) $_POST['f_type'])) {
             $sql_alter .= "($wl) ";
-        } elseif ('' == $_POST['f_size'] && preg_match('@^(VARCHAR)$@i', $_POST['f_type'])) {
+        } elseif ('' == $_POST['f_size'] && preg_match('@^(VARCHAR)$@i', (string) $_POST['f_type'])) {
             $sql_alter .= '('.'255'.') ';
         } else {
             $sql_alter .= ' ';
         }
         $sql_alter .= $_POST['f_attribut'].' ';
         $sql_alter .= $_POST['f_null'].' ';
-        $sql_alter .= ('' != $_POST['f_default']) ? "DEFAULT '".addslashes($_POST['f_default'])."' " : '';
+        $sql_alter .= ('' != $_POST['f_default']) ? "DEFAULT '".addslashes((string) $_POST['f_default'])."' " : '';
 
         if (MOD_NEW_VERSION && '' != $_POST['f_collate']) {
             $sql_alter .= 'COLLATE '.$_POST['f_collate'].' ';
@@ -293,15 +293,15 @@ if ('' != $table_edit_name) {
     $fields_infos = getFieldinfos($databases['Name'][$dbid], $table_edit_name);
 
     if (MOD_NEW_VERSION) {
-        $t_engine = (isset($fields_infos['_tableinfo_']['ENGINE'])) ? $fields_infos['_tableinfo_']['ENGINE'] : 'MyISAM';
+        $t_engine = $fields_infos['_tableinfo_']['ENGINE'] ?? 'MyISAM';
     } else {
-        $t_engine = (isset($fields_infos['_tableinfo_']['TYPE'])) ? $fields_infos['_tableinfo_']['TYPE'] : 'MyISAM';
+        $t_engine = $fields_infos['_tableinfo_']['TYPE'] ?? 'MyISAM';
     }
 
-    $t_charset = (isset($fields_infos['_tableinfo_']['DEFAULT CHARSET'])) ? $fields_infos['_tableinfo_']['DEFAULT CHARSET'] : '';
-    $t_collation = isset($row['Collation']) ? $row['Collation'] : ''; //(isset($fields_infos['_tableinfo_']['COLLATE'])) ? $fields_infos['_tableinfo_']['COLLATE'] : '';
-    $t_comment = (isset($fields_infos['_tableinfo_']['COMMENT'])) ? substr($fields_infos['_tableinfo_']['COMMENT'], 1, strlen($fields_infos['_tableinfo_']['COMMENT'] ?? '') - 2) : '';
-    $t_rowformat = (isset($fields_infos['_tableinfo_']['ROW_FORMAT'])) ? $fields_infos['_tableinfo_']['ROW_FORMAT'] : '';
+    $t_charset = $fields_infos['_tableinfo_']['DEFAULT CHARSET'] ?? '';
+    $t_collation = $row['Collation'] ?? ''; //(isset($fields_infos['_tableinfo_']['COLLATE'])) ? $fields_infos['_tableinfo_']['COLLATE'] : '';
+    $t_comment = (isset($fields_infos['_tableinfo_']['COMMENT'])) ? substr((string) $fields_infos['_tableinfo_']['COMMENT'], 1, strlen($fields_infos['_tableinfo_']['COMMENT'] ?? '') - 2) : '';
+    $t_rowformat = $fields_infos['_tableinfo_']['ROW_FORMAT'] ?? '';
     echo '<h6>'.$lang['L_TABLE']." `$table_edit_name`</h6>";
     $td = '<td valign="top" nowrap="nowrap" class="small">';
 
@@ -339,7 +339,7 @@ if ('' != $table_edit_name) {
             if ('NULL' == $fields_infos[$id]['default']) {
                 $d_default = 'NULL';
             } else {
-                $d_default = substr($fields_infos[$id]['default'], 1, strlen($fields_infos[$id]['default'] ?? '') - 2);
+                $d_default = substr((string) $fields_infos[$id]['default'], 1, strlen($fields_infos[$id]['default'] ?? '') - 2);
             }
         }
         $d_extra = (isset($_GET['editfield'])) ? $fields_infos[$id]['extra'] : '';
@@ -439,7 +439,7 @@ if ('' != $table_edit_name) {
         echo '</td><td>'.$fields_infos[$i]['attributes'].'</td>';
         echo '<td>'.$fields_infos[$i]['default'].'</td>'.$td.$fields_infos[$i]['extra'].'</td>';
         echo '<td>'.((MOD_NEW_VERSION) ? $fields_infos[$i]['collate'] : '&nbsp;').'</td>';
-        echo '<td>'.((isset($fields_infos[$i]['comment'])) ? $fields_infos[$i]['comment'] : '&nbsp;').'</td>';
+        echo '<td>'.($fields_infos[$i]['comment'] ?? '&nbsp;').'</td>';
         echo '</tr>';
     }
     echo '</table><br>';
@@ -565,7 +565,7 @@ if ('' != $table_edit_name) {
                 echo '<select id="setNewKey'.$i.'" name="setNewKey'.$i.'" onchange="toggleIndexLength('.$i.');">';
                 echo $options."\n".'</select></td>';
                 echo '<td>';
-                $type = explode('(', $selectedFeldTyp);
+                $type = explode('(', (string) $selectedFeldTyp);
                 echo '<input type="text" id="indexSize'.$i.'" name="indexSize'.$i.'" value="" size="10" class="text"';
                 if (!isset($type[0]) || !in_array($type[0], $mysql_string_types)) {
                     echo ' disabled="disabled"';

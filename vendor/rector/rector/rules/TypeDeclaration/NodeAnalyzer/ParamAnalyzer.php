@@ -6,16 +6,15 @@ namespace Rector\TypeDeclaration\NodeAnalyzer;
 use PhpParser\Node\FunctionLike;
 use PhpParser\Node\Param;
 use Rector\NodeNameResolver\NodeNameResolver;
-final class ParamAnalyzer
+final readonly class ParamAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    public function __construct(NodeNameResolver $nodeNameResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function getParamByName(string $desiredParamName, FunctionLike $functionLike) : ?Param
     {

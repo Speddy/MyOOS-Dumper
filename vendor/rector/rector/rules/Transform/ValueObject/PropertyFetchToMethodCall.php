@@ -5,43 +5,28 @@ namespace Rector\Transform\ValueObject;
 
 use PHPStan\Type\ObjectType;
 use Rector\Core\Validation\RectorAssert;
-final class PropertyFetchToMethodCall
+final readonly class PropertyFetchToMethodCall
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $oldType;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $oldProperty;
-    /**
-     * @readonly
-     * @var string
-     */
-    private $newGetMethod;
-    /**
-     * @readonly
-     * @var string|null
-     */
-    private $newSetMethod;
-    /**
-     * @var mixed[]
-     * @readonly
-     */
-    private $newGetArguments = [];
     /**
      * @param mixed[] $newGetArguments
      */
-    public function __construct(string $oldType, string $oldProperty, string $newGetMethod, ?string $newSetMethod = null, array $newGetArguments = [])
+    public function __construct(/**
+     * @readonly
+     */
+    private string $oldType, /**
+     * @readonly
+     */
+    private string $oldProperty, /**
+     * @readonly
+     */
+    private string $newGetMethod, /**
+     * @readonly
+     */
+    private ?string $newSetMethod = null, /**
+     * @readonly
+     */
+    private array $newGetArguments = [])
     {
-        $this->oldType = $oldType;
-        $this->oldProperty = $oldProperty;
-        $this->newGetMethod = $newGetMethod;
-        $this->newSetMethod = $newSetMethod;
-        $this->newGetArguments = $newGetArguments;
         RectorAssert::className($oldType);
         RectorAssert::propertyName($oldProperty);
         RectorAssert::methodName($newGetMethod);

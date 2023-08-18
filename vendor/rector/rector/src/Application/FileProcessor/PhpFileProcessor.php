@@ -25,59 +25,38 @@ final class PhpFileProcessor
 {
     /**
      * @readonly
-     * @var \Rector\Core\PhpParser\Printer\FormatPerservingPrinter
-     */
-    private $formatPerservingPrinter;
-    /**
-     * @readonly
-     * @var \Rector\Core\Application\FileProcessor
-     */
-    private $fileProcessor;
-    /**
-     * @readonly
      * @var \Symfony\Component\Console\Style\SymfonyStyle
      */
     private $symfonyStyle;
-    /**
-     * @readonly
-     * @var \Rector\ChangesReporting\ValueObjectFactory\FileDiffFactory
-     */
-    private $fileDiffFactory;
-    /**
-     * @readonly
-     * @var \Rector\Caching\Detector\ChangedFilesDetector
-     */
-    private $changedFilesDetector;
-    /**
-     * @readonly
-     * @var \Rector\PostRector\Application\PostFileProcessor
-     */
-    private $postFileProcessor;
-    /**
-     * @readonly
-     * @var \Rector\ChangesReporting\ValueObjectFactory\ErrorFactory
-     */
-    private $errorFactory;
-    /**
-     * @readonly
-     * @var \Rector\Core\FileSystem\FilePathHelper
-     */
-    private $filePathHelper;
     /**
      * @var string
      * @see https://regex101.com/r/xP2MGa/1
      */
     private const OPEN_TAG_SPACED_REGEX = '#^(?<open_tag_spaced>[^\\S\\r\\n]+\\<\\?php)#m';
-    public function __construct(FormatPerservingPrinter $formatPerservingPrinter, FileProcessor $fileProcessor, SymfonyStyle $symfonyStyle, FileDiffFactory $fileDiffFactory, ChangedFilesDetector $changedFilesDetector, PostFileProcessor $postFileProcessor, ErrorFactory $errorFactory, FilePathHelper $filePathHelper)
+    public function __construct(/**
+     * @readonly
+     */
+    private readonly FormatPerservingPrinter $formatPerservingPrinter, /**
+     * @readonly
+     */
+    private readonly FileProcessor $fileProcessor, SymfonyStyle $symfonyStyle, /**
+     * @readonly
+     */
+    private readonly FileDiffFactory $fileDiffFactory, /**
+     * @readonly
+     */
+    private readonly ChangedFilesDetector $changedFilesDetector, /**
+     * @readonly
+     */
+    private readonly PostFileProcessor $postFileProcessor, /**
+     * @readonly
+     */
+    private readonly ErrorFactory $errorFactory, /**
+     * @readonly
+     */
+    private readonly FilePathHelper $filePathHelper)
     {
-        $this->formatPerservingPrinter = $formatPerservingPrinter;
-        $this->fileProcessor = $fileProcessor;
         $this->symfonyStyle = $symfonyStyle;
-        $this->fileDiffFactory = $fileDiffFactory;
-        $this->changedFilesDetector = $changedFilesDetector;
-        $this->postFileProcessor = $postFileProcessor;
-        $this->errorFactory = $errorFactory;
-        $this->filePathHelper = $filePathHelper;
     }
     /**
      * @return array{system_errors: SystemError[], file_diffs: FileDiff[]}

@@ -47,10 +47,10 @@ final class NamedArgsFactory
             return;
         }
         // avoid escaping quotes + preserve newlines
-        if (\strpos($expr->value, "'") === \false) {
+        if (!str_contains($expr->value, "'")) {
             return;
         }
-        if (\strpos($expr->value, "\n") !== \false) {
+        if (str_contains($expr->value, "\n")) {
             return;
         }
         $expr->setAttribute(AttributeKey::KIND, String_::KIND_DOUBLE_QUOTED);

@@ -13,17 +13,16 @@ use Rector\Testing\PHPUnit\StaticPHPUnitEnvironment;
 final class SkippedPathsResolver
 {
     /**
-     * @readonly
-     * @var \Rector\Core\FileSystem\FilePathHelper
-     */
-    private $filePathHelper;
-    /**
      * @var string[]
      */
-    private $skippedPaths = [];
-    public function __construct(FilePathHelper $filePathHelper)
+    private array $skippedPaths = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly FilePathHelper $filePathHelper
+    )
     {
-        $this->filePathHelper = $filePathHelper;
     }
     /**
      * @return string[]
@@ -43,7 +42,7 @@ final class SkippedPathsResolver
             if (!\is_int($key)) {
                 continue;
             }
-            if (\strpos((string) $value, '*') !== \false) {
+            if (str_contains((string) $value, '*')) {
                 $this->skippedPaths[] = $this->filePathHelper->normalizePathAndSchema($value);
                 continue;
             }

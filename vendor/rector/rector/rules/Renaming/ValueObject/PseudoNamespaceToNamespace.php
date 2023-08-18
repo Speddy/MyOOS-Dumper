@@ -6,25 +6,22 @@ namespace Rector\Renaming\ValueObject;
 /**
  * @api deprecated, soon to be removed
  */
-final class PseudoNamespaceToNamespace
+final readonly class PseudoNamespaceToNamespace
 {
-    /**
-     * @readonly
-     * @var string
-     */
-    private $namespacePrefix;
-    /**
-     * @var string[]
-     * @readonly
-     */
-    private $excludedClasses = [];
     /**
      * @param string[] $excludedClasses
      */
-    public function __construct(string $namespacePrefix, array $excludedClasses = [])
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private string $namespacePrefix,
+        /**
+         * @readonly
+         */
+        private array $excludedClasses = []
+    )
     {
-        $this->namespacePrefix = $namespacePrefix;
-        $this->excludedClasses = $excludedClasses;
     }
     public function getNamespacePrefix() : string
     {

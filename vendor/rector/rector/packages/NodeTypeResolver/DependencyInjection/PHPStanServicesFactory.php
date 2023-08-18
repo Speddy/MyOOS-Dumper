@@ -26,9 +26,8 @@ final class PHPStanServicesFactory
 {
     /**
      * @readonly
-     * @var \PHPStan\DependencyInjection\Container
      */
-    private $container;
+    private readonly \PHPStan\DependencyInjection\Container $container;
     public function __construct(\Rector\NodeTypeResolver\DependencyInjection\BleedingEdgeIncludePurifier $bleedingEdgeIncludePurifier)
     {
         $additionalConfigFiles = $this->resolveAdditionalConfigFiles();

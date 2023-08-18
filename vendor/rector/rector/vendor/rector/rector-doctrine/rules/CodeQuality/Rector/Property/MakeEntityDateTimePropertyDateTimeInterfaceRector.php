@@ -20,14 +20,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class MakeEntityDateTimePropertyDateTimeInterfaceRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Doctrine\NodeManipulator\PropertyTypeManipulator
-     */
-    private $propertyTypeManipulator;
-    public function __construct(PropertyTypeManipulator $propertyTypeManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PropertyTypeManipulator $propertyTypeManipulator
+    )
     {
-        $this->propertyTypeManipulator = $propertyTypeManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -25,7 +25,7 @@ final class BinaryOpConditionsCollector
      */
     public function findConditions(Expr $expr, string $binaryOpClass) : array
     {
-        if (\get_class($expr) !== $binaryOpClass) {
+        if ($expr::class !== $binaryOpClass) {
             // Different binary operators, as well as non-BinaryOp expressions
             // are considered trivial case of a single operand (no operators).
             return [$expr];
@@ -35,7 +35,7 @@ final class BinaryOpConditionsCollector
         while ($expr instanceof BinaryOp) {
             $conditions[] = $expr->right;
             $expr = $expr->left;
-            if ($binaryOpClass !== \get_class($expr)) {
+            if ($binaryOpClass !== $expr::class) {
                 $conditions[] = $expr;
                 break;
             }

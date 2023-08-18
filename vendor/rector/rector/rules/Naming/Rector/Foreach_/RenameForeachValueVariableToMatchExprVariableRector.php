@@ -18,26 +18,21 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RenameForeachValueVariableToMatchExprVariableRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Naming\ExpectedNameResolver\InflectorSingularResolver
-     */
-    private $inflectorSingularResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
-     */
-    private $propertyFetchAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\StmtsManipulator
-     */
-    private $stmtsManipulator;
-    public function __construct(InflectorSingularResolver $inflectorSingularResolver, PropertyFetchAnalyzer $propertyFetchAnalyzer, StmtsManipulator $stmtsManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly InflectorSingularResolver $inflectorSingularResolver,
+        /**
+         * @readonly
+         */
+        private readonly PropertyFetchAnalyzer $propertyFetchAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly StmtsManipulator $stmtsManipulator
+    )
     {
-        $this->inflectorSingularResolver = $inflectorSingularResolver;
-        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
-        $this->stmtsManipulator = $stmtsManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {

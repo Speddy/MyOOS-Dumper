@@ -21,14 +21,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class MakeDispatchFirstArgumentEventRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\TypeAnalyzer\StringTypeAnalyzer
-     */
-    private $stringTypeAnalyzer;
-    public function __construct(StringTypeAnalyzer $stringTypeAnalyzer)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly StringTypeAnalyzer $stringTypeAnalyzer
+    )
     {
-        $this->stringTypeAnalyzer = $stringTypeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

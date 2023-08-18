@@ -40,7 +40,7 @@ abstract class JWK
         if (PHP_VERSION_ID >= 73000) {
             $key = json_decode($key, null, 512, JSON_THROW_ON_ERROR);
         } else {
-            $key = json_decode($key);
+            $key = json_decode($key, null, 512, JSON_THROW_ON_ERROR);
             if (!$key) {
                 throw new \RuntimeException('Unable to decode JSON');
             }
@@ -50,7 +50,7 @@ abstract class JWK
             return $key;
         }
 
-        if (count($key->keys) != 1) {
+        if ((is_countable($key->keys) ? count($key->keys) : 0) != 1) {
             throw new \RuntimeException('Although the JWK key format supports multiple keys phpseclib does not');
         }
 

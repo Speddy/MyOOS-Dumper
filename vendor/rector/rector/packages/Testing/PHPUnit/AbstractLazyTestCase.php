@@ -12,10 +12,7 @@ use Rector\Core\Rector\AbstractRector;
 use Rector\Core\Util\Reflection\PrivatesAccessor;
 abstract class AbstractLazyTestCase extends TestCase
 {
-    /**
-     * @var \Rector\Config\RectorConfig|null
-     */
-    private static $rectorConfig;
+    private static ?\Rector\Config\RectorConfig $rectorConfig = null;
     /**
      * @api
      * @param string[] $configFiles
@@ -50,7 +47,7 @@ abstract class AbstractLazyTestCase extends TestCase
         // 1. forget instance first, then remove tags
         $rectors = $rectorConfig->tagged(RectorInterface::class);
         foreach ($rectors as $rector) {
-            $rectorConfig->offsetUnset(\get_class($rector));
+            $rectorConfig->offsetUnset($rector::class);
         }
         // 2. remove all tagged rules
         $privatesAccessor = new PrivatesAccessor();

@@ -16,40 +16,31 @@ use Rector\DeadCode\TypeNodeAnalyzer\GenericTypeNodeAnalyzer;
 use Rector\DeadCode\TypeNodeAnalyzer\MixedArrayTypeNodeAnalyzer;
 use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\NodeTypeResolver\TypeComparator\TypeComparator;
-final class DeadReturnTagValueNodeAnalyzer
+final readonly class DeadReturnTagValueNodeAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeTypeResolver\TypeComparator\TypeComparator
-     */
-    private $typeComparator;
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\TypeNodeAnalyzer\GenericTypeNodeAnalyzer
-     */
-    private $genericTypeNodeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\TypeNodeAnalyzer\MixedArrayTypeNodeAnalyzer
-     */
-    private $mixedArrayTypeNodeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\DeadCode\PhpDoc\Guard\StandaloneTypeRemovalGuard
-     */
-    private $standaloneTypeRemovalGuard;
-    /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
-     */
-    private $phpDocTypeChanger;
-    public function __construct(TypeComparator $typeComparator, GenericTypeNodeAnalyzer $genericTypeNodeAnalyzer, MixedArrayTypeNodeAnalyzer $mixedArrayTypeNodeAnalyzer, StandaloneTypeRemovalGuard $standaloneTypeRemovalGuard, PhpDocTypeChanger $phpDocTypeChanger)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private TypeComparator $typeComparator,
+        /**
+         * @readonly
+         */
+        private GenericTypeNodeAnalyzer $genericTypeNodeAnalyzer,
+        /**
+         * @readonly
+         */
+        private MixedArrayTypeNodeAnalyzer $mixedArrayTypeNodeAnalyzer,
+        /**
+         * @readonly
+         */
+        private StandaloneTypeRemovalGuard $standaloneTypeRemovalGuard,
+        /**
+         * @readonly
+         */
+        private PhpDocTypeChanger $phpDocTypeChanger
+    )
     {
-        $this->typeComparator = $typeComparator;
-        $this->genericTypeNodeAnalyzer = $genericTypeNodeAnalyzer;
-        $this->mixedArrayTypeNodeAnalyzer = $mixedArrayTypeNodeAnalyzer;
-        $this->standaloneTypeRemovalGuard = $standaloneTypeRemovalGuard;
-        $this->phpDocTypeChanger = $phpDocTypeChanger;
     }
     public function isDead(ReturnTagValueNode $returnTagValueNode, ClassMethod $classMethod) : bool
     {

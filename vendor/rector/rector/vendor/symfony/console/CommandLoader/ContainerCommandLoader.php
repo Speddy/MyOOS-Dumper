@@ -25,16 +25,11 @@ class ContainerCommandLoader implements CommandLoaderInterface
      */
     private $container;
     /**
-     * @var mixed[]
-     */
-    private $commandMap;
-    /**
      * @param array $commandMap An array with command names as keys and service ids as values
      */
-    public function __construct(ContainerInterface $container, array $commandMap)
+    public function __construct(ContainerInterface $container, private array $commandMap)
     {
         $this->container = $container;
-        $this->commandMap = $commandMap;
     }
     public function get(string $name) : Command
     {

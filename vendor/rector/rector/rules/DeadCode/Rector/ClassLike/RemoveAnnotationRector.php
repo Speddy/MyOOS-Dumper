@@ -21,17 +21,16 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class RemoveAnnotationRector extends AbstractRector implements ConfigurableRectorInterface
 {
     /**
-     * @readonly
-     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
-     */
-    private $phpDocTagRemover;
-    /**
      * @var string[]
      */
-    private $annotationsToRemove = [];
-    public function __construct(PhpDocTagRemover $phpDocTagRemover)
+    private array $annotationsToRemove = [];
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly PhpDocTagRemover $phpDocTagRemover
+    )
     {
-        $this->phpDocTagRemover = $phpDocTagRemover;
     }
     public function getRuleDefinition() : RuleDefinition
     {

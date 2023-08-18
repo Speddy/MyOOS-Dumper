@@ -41,81 +41,74 @@ use phpseclib3\Math\PrimeField;
  * @author  Jim Wigginton <terrafrost@php.net>
  * @author  Andreas Fischer <bantu@phpbb.com>
  */
-class Hash
+class Hash implements \Stringable
 {
     /**
      * Padding Types
      *
      */
-    const PADDING_KECCAK = 1;
+    final public const PADDING_KECCAK = 1;
 
     /**
      * Padding Types
      *
      */
-    const PADDING_SHA3 = 2;
+    final public const PADDING_SHA3 = 2;
 
     /**
      * Padding Types
      *
      */
-    const PADDING_SHAKE = 3;
+    final public const PADDING_SHAKE = 3;
 
     /**
      * Padding Type
      *
      * Only used by SHA3
      *
-     * @var int
      */
-    private $paddingType = 0;
+    private int $paddingType = 0;
 
     /**
      * Hash Parameter
      *
      * @see self::setHash()
-     * @var int
      */
-    private $hashParam;
+    private string $hashParam;
 
     /**
      * Byte-length of hash output (Internal HMAC)
      *
      * @see self::setHash()
-     * @var int
      */
-    private $length;
+    private ?int $length = null;
 
     /**
      * Hash Algorithm
      *
      * @see self::setHash()
-     * @var string
      */
-    private $algo;
+    private string $algo;
 
     /**
      * Key
      *
      * @see self::setKey()
-     * @var string
      */
-    private $key = false;
+    private bool $key = false;
 
     /**
      * Nonce
      *
      * @see self::setNonce()
-     * @var string
      */
-    private $nonce = false;
+    private bool $nonce = false;
 
     /**
      * Hash Parameters
      *
-     * @var array
      */
-    private $parameters = [];
+    private array $parameters = [];
 
     /**
      * Computed Key
@@ -131,9 +124,8 @@ class Hash
      * Used only for sha512/*
      *
      * @see self::hash()
-     * @var string
      */
-    private $opad;
+    private ?string $opad = null;
 
     /**
      * Inner XOR (Internal HMAC)
@@ -141,9 +133,8 @@ class Hash
      * Used only for sha512/*
      *
      * @see self::hash()
-     * @var string
      */
-    private $ipad;
+    private ?string $ipad = null;
 
     /**
      * Recompute AES Key
@@ -151,17 +142,15 @@ class Hash
      * Used only for umac
      *
      * @see self::hash()
-     * @var boolean
      */
-    private $recomputeAESKey;
+    private ?bool $recomputeAESKey = null;
 
     /**
      * umac cipher object
      *
      * @see self::hash()
-     * @var \phpseclib3\Crypt\AES
      */
-    private $c;
+    private ?\phpseclib3\Crypt\AES $c = null;
 
     /**
      * umac pad
@@ -174,18 +163,17 @@ class Hash
     /**
      * Block Size
      *
-     * @var int
      */
-    private $blockSize;
+    private ?int $blockSize = null;
 
     /**#@+
      * UMAC variables
      *
      * @var PrimeField
      */
-    private static $factory36;
-    private static $factory64;
-    private static $factory128;
+    private static ?\phpseclib3\Math\PrimeField $factory36 = null;
+    private static ?\phpseclib3\Math\PrimeField $factory64 = null;
+    private static ?\phpseclib3\Math\PrimeField $factory128 = null;
     private static $offset64;
     private static $offset128;
     private static $marker64;
@@ -347,46 +335,21 @@ class Hash
                 }
         }
 
-        switch ($hash) {
-            case 'md2':
-            case 'md2-96':
-                $this->blockSize = 128;
-                break;
-            case 'md5-96':
-            case 'sha1-96':
-            case 'sha224-96':
-            case 'sha256-96':
-            case 'md5':
-            case 'sha1':
-            case 'sha224':
-            case 'sha256':
-                $this->blockSize = 512;
-                break;
-            case 'sha3-224':
-                $this->blockSize = 1152; // 1600 - 2*224
-                break;
-            case 'sha3-256':
-            case 'shake256':
-            case 'keccak256':
-                $this->blockSize = 1088; // 1600 - 2*256
-                break;
-            case 'sha3-384':
-                $this->blockSize = 832; // 1600 - 2*384
-                break;
-            case 'sha3-512':
-                $this->blockSize = 576; // 1600 - 2*512
-                break;
-            case 'shake128':
-                $this->blockSize = 1344; // 1600 - 2*128
-                break;
-            default:
-                $this->blockSize = 1024;
-        }
+        $this->blockSize = match ($hash) {
+            'md2', 'md2-96' => 128,
+            'md5-96', 'sha1-96', 'sha224-96', 'sha256-96', 'md5', 'sha1', 'sha224', 'sha256' => 512,
+            'sha3-224' => 1152,
+            'sha3-256', 'shake256', 'keccak256' => 1088,
+            'sha3-384' => 832,
+            'sha3-512' => 576,
+            'shake128' => 1344,
+            default => 1024,
+        };
 
         if (in_array(substr($hash, 0, 5), ['sha3-', 'shake', 'kecca'])) {
             // PHP 7.1.0 introduced support for "SHA3 fixed mode algorithms":
             // http://php.net/ChangeLog-7.php#7.1.0
-            if (version_compare(PHP_VERSION, '7.1.0') < 0 || substr($hash, 0, 5) != 'sha3-') {
+            if (version_compare(PHP_VERSION, '7.1.0') < 0 || !str_starts_with($hash, 'sha3-')) {
                 //preg_match('#(\d+)$#', $hash, $matches);
                 //$this->parameters['capacity'] = 2 * $matches[1]; // 1600 - $this->blockSize
                 //$this->parameters['rate'] = 1600 - $this->parameters['capacity']; // == $this->blockSize
@@ -578,7 +541,7 @@ class Hash
         $length = count($m) ? strlen($m[$i]) : 0;
         $pad = 32 - ($length % 32);
         $pad = max(32, $length + $pad % 32);
-        $m[$i] = str_pad(isset($m[$i]) ? $m[$i] : '', $pad, "\0"); // zeropad
+        $m[$i] = str_pad($m[$i] ?? '', $pad, "\0"); // zeropad
         $m[$i] = pack('N*', ...unpack('V*', $m[$i])); // ENDIAN-SWAP
 
         $y .= static::nh($k, $m[$i], new BigInteger($length * 8));
@@ -765,7 +728,7 @@ class Hash
             $k_i = $factory->newInteger(new BigInteger(substr($k1, 8 * $i, 8), 256));
             $y = $y->add($m_i->multiply($k_i));
         }
-        $y = str_pad(substr($y->toBytes(), -4), 4, "\0", STR_PAD_LEFT);
+        $y = str_pad(substr((string) $y->toBytes(), -4), 4, "\0", STR_PAD_LEFT);
         $y = $y ^ $k2;
 
         return $y;
@@ -834,7 +797,7 @@ class Hash
 
         if (is_array($algo)) {
             if (empty($this->key) || !is_string($this->key)) {
-                return substr($algo($text, ...array_values($this->parameters)), 0, $this->length);
+                return substr((string) $algo($text, ...array_values($this->parameters)), 0, $this->length);
             }
 
             // SHA3 HMACs are discussed at https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.202.pdf#page=30
@@ -842,12 +805,12 @@ class Hash
             $key    = str_pad($this->computedKey, $b, chr(0));
             $temp   = $this->ipad ^ $key;
             $temp  .= $text;
-            $temp   = substr($algo($temp, ...array_values($this->parameters)), 0, $this->length);
+            $temp   = substr((string) $algo($temp, ...array_values($this->parameters)), 0, $this->length);
             $output = $this->opad ^ $key;
             $output .= $temp;
             $output = $algo($output, ...array_values($this->parameters));
 
-            return substr($output, 0, $this->length);
+            return substr((string) $output, 0, $this->length);
         }
 
         $output = !empty($this->key) || is_string($this->key) ?
@@ -1022,28 +985,28 @@ class Hash
         static $roundConstants = [
             [0, 1],
             [0, 32898],
-            [-2147483648, 32906],
-            [-2147483648, -2147450880],
+            [-2_147_483_648, 32906],
+            [-2_147_483_648, -2_147_450_880],
             [0, 32907],
-            [0, -2147483647],
-            [-2147483648, -2147450751],
-            [-2147483648, 32777],
+            [0, -2_147_483_647],
+            [-2_147_483_648, -2_147_450_751],
+            [-2_147_483_648, 32777],
             [0, 138],
             [0, 136],
-            [0, -2147450871],
-            [0, -2147483638],
-            [0, -2147450741],
-            [-2147483648, 139],
-            [-2147483648, 32905],
-            [-2147483648, 32771],
-            [-2147483648, 32770],
-            [-2147483648, 128],
+            [0, -2_147_450_871],
+            [0, -2_147_483_638],
+            [0, -2_147_450_741],
+            [-2_147_483_648, 139],
+            [-2_147_483_648, 32905],
+            [-2_147_483_648, 32771],
+            [-2_147_483_648, 32770],
+            [-2_147_483_648, 128],
             [0, 32778],
-            [-2147483648, -2147483638],
-            [-2147483648, -2147450751],
-            [-2147483648, 32896],
-            [0, -2147483647],
-            [-2147483648, -2147450872]
+            [-2_147_483_648, -2_147_483_638],
+            [-2_147_483_648, -2_147_450_751],
+            [-2_147_483_648, 32896],
+            [0, -2_147_483_647],
+            [-2_147_483_648, -2_147_450_872]
         ];
 
         for ($round = 0; $round < 24; $round++) {
@@ -1119,10 +1082,10 @@ class Hash
     private static function rotateLeft32($x, $shift)
     {
         if ($shift < 32) {
-            list($hi, $lo) = $x;
+            [$hi, $lo] = $x;
         } else {
             $shift -= 32;
-            list($lo, $hi) = $x;
+            [$lo, $hi] = $x;
         }
 
         return [
@@ -1208,28 +1171,28 @@ class Hash
         static $roundConstants = [
             1,
             32898,
-            -9223372036854742902,
-            -9223372034707259392,
+            -9_223_372_036_854_742_902,
+            -9_223_372_034_707_259_392,
             32907,
-            2147483649,
-            -9223372034707259263,
-            -9223372036854743031,
+            2_147_483_649,
+            -9_223_372_034_707_259_263,
+            -9_223_372_036_854_743_031,
             138,
             136,
-            2147516425,
-            2147483658,
-            2147516555,
-            -9223372036854775669,
-            -9223372036854742903,
-            -9223372036854743037,
-            -9223372036854743038,
-            -9223372036854775680,
+            2_147_516_425,
+            2_147_483_658,
+            2_147_516_555,
+            -9_223_372_036_854_775_669,
+            -9_223_372_036_854_742_903,
+            -9_223_372_036_854_743_037,
+            -9_223_372_036_854_743_038,
+            -9_223_372_036_854_775_680,
             32778,
-            -9223372034707292150,
-            -9223372034707259263,
-            -9223372036854742912,
-            2147483649,
-            -9223372034707259384
+            -9_223_372_034_707_292_150,
+            -9_223_372_034_707_259_263,
+            -9_223_372_036_854_742_912,
+            2_147_483_649,
+            -9_223_372_034_707_259_384
         ];
 
         for ($round = 0; $round < 24; $round++) {
@@ -1448,7 +1411,7 @@ class Hash
     /**
      *  __toString() magic method
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getHash();
     }

@@ -36,21 +36,20 @@ use Throwable;
 final class ParallelFileProcessor
 {
     /**
-     * @readonly
-     * @var \Rector\Parallel\Command\WorkerCommandLineFactory
-     */
-    private $workerCommandLineFactory;
-    /**
      * @var int
      */
     private const SYSTEM_ERROR_LIMIT = 50;
     /**
      * @var \Symplify\EasyParallel\ValueObject\ProcessPool|null
      */
-    private $processPool = null;
-    public function __construct(WorkerCommandLineFactory $workerCommandLineFactory)
+    private ?\RectorPrefix202308\Symplify\EasyParallel\ValueObject\ProcessPool $processPool = null;
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly WorkerCommandLineFactory $workerCommandLineFactory
+    )
     {
-        $this->workerCommandLineFactory = $workerCommandLineFactory;
     }
     /**
      * @param callable(int $stepCount): void $postFileCallback Used for progress bar jump

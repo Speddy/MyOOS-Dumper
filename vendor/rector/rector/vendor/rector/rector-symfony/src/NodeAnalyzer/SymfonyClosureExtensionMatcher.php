@@ -10,22 +10,19 @@ use PhpParser\Node\Stmt\Expression;
 use Rector\Core\PhpParser\Node\Value\ValueResolver;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\Symfony\ValueObject\ExtensionKeyAndConfiguration;
-final class SymfonyClosureExtensionMatcher
+final readonly class SymfonyClosureExtensionMatcher
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
-     */
-    private $valueResolver;
-    public function __construct(NodeNameResolver $nodeNameResolver, ValueResolver $valueResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private ValueResolver $valueResolver
+    )
     {
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->valueResolver = $valueResolver;
     }
     public function match(Closure $closure) : ?ExtensionKeyAndConfiguration
     {

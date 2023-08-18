@@ -10,20 +10,19 @@ use Rector\Core\ValueObject\Configuration;
 use Rector\Core\ValueObject\Error\SystemError;
 use Rector\Core\ValueObject\ProcessResult;
 use Rector\Parallel\ValueObject\Bridge;
-final class JsonOutputFormatter implements OutputFormatterInterface
+final readonly class JsonOutputFormatter implements OutputFormatterInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\ChangesReporting\Annotation\RectorsChangelogResolver
-     */
-    private $rectorsChangelogResolver;
     /**
      * @var string
      */
     public const NAME = 'json';
-    public function __construct(RectorsChangelogResolver $rectorsChangelogResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private RectorsChangelogResolver $rectorsChangelogResolver
+    )
     {
-        $this->rectorsChangelogResolver = $rectorsChangelogResolver;
     }
     public function getName() : string
     {

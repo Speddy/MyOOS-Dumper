@@ -4,7 +4,7 @@ declare (strict_types=1);
 namespace PHPStan\PhpDocParser\Ast\Type;
 
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
-class ThisTypeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode
+class ThisTypeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode, \Stringable
 {
     use NodeAttributes;
     public function __toString() : string

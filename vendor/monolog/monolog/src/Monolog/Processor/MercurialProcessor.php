@@ -25,9 +25,9 @@ use Psr\Log\LogLevel;
 class MercurialProcessor implements ProcessorInterface
 {
     /** @var Level */
-    private $level;
+    private readonly int $level;
     /** @var array{branch: string, revision: string}|array<never>|null */
-    private static $cache = null;
+    private static ?array $cache = null;
 
     /**
      * @param int|string $level The minimum logging level at which this Processor will be triggered
@@ -63,7 +63,7 @@ class MercurialProcessor implements ProcessorInterface
             return self::$cache;
         }
 
-        $result = explode(' ', trim(`hg id -nb`));
+        $result = explode(' ', trim((string) `hg id -nb`));
 
         if (count($result) >= 3) {
             return self::$cache = [

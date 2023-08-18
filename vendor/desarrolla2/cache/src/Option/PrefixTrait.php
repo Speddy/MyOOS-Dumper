@@ -29,7 +29,6 @@ trait PrefixTrait
     /**
      * Set the key prefix
      *
-     * @param string $prefix
      * @return void
      */
     protected function setPrefixOption(string $prefix): void

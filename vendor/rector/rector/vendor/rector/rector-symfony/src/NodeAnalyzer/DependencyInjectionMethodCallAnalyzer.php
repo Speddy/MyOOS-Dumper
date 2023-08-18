@@ -12,40 +12,31 @@ use Rector\Naming\Naming\PropertyNaming;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\Php80\NodeAnalyzer\PromotedPropertyResolver;
 use Rector\PostRector\ValueObject\PropertyMetadata;
-final class DependencyInjectionMethodCallAnalyzer
+final readonly class DependencyInjectionMethodCallAnalyzer
 {
-    /**
-     * @readonly
-     * @var \Rector\Naming\Naming\PropertyNaming
-     */
-    private $propertyNaming;
-    /**
-     * @readonly
-     * @var \Rector\Symfony\NodeAnalyzer\ServiceTypeMethodCallResolver
-     */
-    private $serviceTypeMethodCallResolver;
-    /**
-     * @readonly
-     * @var \Rector\Php80\NodeAnalyzer\PromotedPropertyResolver
-     */
-    private $promotedPropertyResolver;
-    /**
-     * @readonly
-     * @var \Rector\NodeNameResolver\NodeNameResolver
-     */
-    private $nodeNameResolver;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\PropertyManipulator
-     */
-    private $propertyManipulator;
-    public function __construct(PropertyNaming $propertyNaming, \Rector\Symfony\NodeAnalyzer\ServiceTypeMethodCallResolver $serviceTypeMethodCallResolver, PromotedPropertyResolver $promotedPropertyResolver, NodeNameResolver $nodeNameResolver, PropertyManipulator $propertyManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private PropertyNaming $propertyNaming,
+        /**
+         * @readonly
+         */
+        private \Rector\Symfony\NodeAnalyzer\ServiceTypeMethodCallResolver $serviceTypeMethodCallResolver,
+        /**
+         * @readonly
+         */
+        private PromotedPropertyResolver $promotedPropertyResolver,
+        /**
+         * @readonly
+         */
+        private NodeNameResolver $nodeNameResolver,
+        /**
+         * @readonly
+         */
+        private PropertyManipulator $propertyManipulator
+    )
     {
-        $this->propertyNaming = $propertyNaming;
-        $this->serviceTypeMethodCallResolver = $serviceTypeMethodCallResolver;
-        $this->promotedPropertyResolver = $promotedPropertyResolver;
-        $this->nodeNameResolver = $nodeNameResolver;
-        $this->propertyManipulator = $propertyManipulator;
     }
     public function replaceMethodCallWithPropertyFetchAndDependency(Class_ $class, MethodCall $methodCall) : ?PropertyMetadata
     {

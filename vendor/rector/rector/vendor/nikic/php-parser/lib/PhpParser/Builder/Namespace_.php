@@ -9,8 +9,8 @@ use PhpParser\Node;
 use PhpParser\Node\Stmt;
 class Namespace_ extends \PhpParser\Builder\Declaration
 {
-    private $name;
-    private $stmts = [];
+    private ?\PhpParser\Node\Name $name = null;
+    private array $stmts = [];
     /**
      * Creates a namespace builder.
      *

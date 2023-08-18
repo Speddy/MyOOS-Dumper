@@ -6,19 +6,16 @@ namespace Rector\BetterPhpDocParser\ValueObject\Type;
 use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 use PHPStan\PhpDocParser\Ast\Type\UnionTypeNode;
 use Stringable;
-final class BracketsAwareUnionTypeNode extends UnionTypeNode
+final class BracketsAwareUnionTypeNode extends UnionTypeNode implements \Stringable
 {
-    /**
-     * @readonly
-     * @var bool
-     */
-    private $isWrappedInBrackets = \false;
     /**
      * @param TypeNode[] $types
      */
-    public function __construct(array $types, bool $isWrappedInBrackets = \false)
+    public function __construct(array $types, /**
+     * @readonly
+     */
+    private readonly bool $isWrappedInBrackets = \false)
     {
-        $this->isWrappedInBrackets = $isWrappedInBrackets;
         parent::__construct($types);
     }
     /**

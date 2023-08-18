@@ -22,7 +22,6 @@ interface Kernel
      * Run an Artisan console command by name.
      *
      * @param  string  $command
-     * @param  array  $parameters
      * @param  \Symfony\Component\Console\Output\OutputInterface|null  $outputBuffer
      * @return int
      */
@@ -31,7 +30,6 @@ interface Kernel
      * Queue an Artisan console command by name.
      *
      * @param  string  $command
-     * @param  array  $parameters
      * @return \Illuminate\Foundation\Bus\PendingDispatch
      */
     public function queue($command, array $parameters = []);

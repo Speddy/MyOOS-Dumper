@@ -13,7 +13,7 @@ final class ContainerServiceProvider
     /**
      * @var object|null
      */
-    private $container;
+    private ?\Symfony\Component\DependencyInjection\Container $container = null;
     public function provideByName(string $serviceName) : object
     {
         /** @var Container $symfonyContainer */

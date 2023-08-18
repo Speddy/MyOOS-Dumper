@@ -19,11 +19,8 @@ final class NodeConnectingVisitor extends NodeVisitorAbstract
     /**
      * @var Node[]
      */
-    private $stack = [];
-    /**
-     * @var ?Node
-     */
-    private $previous;
+    private array $stack = [];
+    private ?\PhpParser\Node $previous = null;
     public function beforeTraverse(array $nodes)
     {
         $this->stack = [];

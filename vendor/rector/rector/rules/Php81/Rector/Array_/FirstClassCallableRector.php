@@ -31,20 +31,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class FirstClassCallableRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\NodeCollector\NodeAnalyzer\ArrayCallableMethodMatcher
-     */
-    private $arrayCallableMethodMatcher;
-    /**
-     * @readonly
-     * @var \Rector\Core\PhpParser\AstResolver
-     */
-    private $astResolver;
-    public function __construct(ArrayCallableMethodMatcher $arrayCallableMethodMatcher, AstResolver $astResolver)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly ArrayCallableMethodMatcher $arrayCallableMethodMatcher,
+        /**
+         * @readonly
+         */
+        private readonly AstResolver $astResolver
+    )
     {
-        $this->arrayCallableMethodMatcher = $arrayCallableMethodMatcher;
-        $this->astResolver = $astResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -22,14 +22,13 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class PreparedValueToEarlyReturnRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeManipulator\IfManipulator
-     */
-    private $ifManipulator;
-    public function __construct(IfManipulator $ifManipulator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly IfManipulator $ifManipulator
+    )
     {
-        $this->ifManipulator = $ifManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -134,9 +133,7 @@ CODE_SAMPLE
         }
         foreach ($bareSingleAssignIfs as $bareSingleAssignIf) {
             $assign = $bareSingleAssignIf->getAssign();
-            $isVariableUsed = (bool) $this->betterNodeFinder->findFirst([$bareSingleAssignIf->getIfCondExpr(), $assign->expr], function (Node $node) use($returnedExpr) : bool {
-                return $this->nodeComparator->areNodesEqual($node, $returnedExpr);
-            });
+            $isVariableUsed = (bool) $this->betterNodeFinder->findFirst([$bareSingleAssignIf->getIfCondExpr(), $assign->expr], fn(Node $node): bool => $this->nodeComparator->areNodesEqual($node, $returnedExpr));
             if ($isVariableUsed) {
                 return \false;
             }

@@ -15,16 +15,15 @@ use Rector\Core\ValueObject\MethodName;
  *
  * @implements TypeToCallReflectionResolverInterface<ObjectType>
  */
-final class ObjectTypeToCallReflectionResolver implements TypeToCallReflectionResolverInterface
+final readonly class ObjectTypeToCallReflectionResolver implements TypeToCallReflectionResolverInterface
 {
-    /**
-     * @readonly
-     * @var \PHPStan\Reflection\ReflectionProvider
-     */
-    private $reflectionProvider;
-    public function __construct(ReflectionProvider $reflectionProvider)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private ReflectionProvider $reflectionProvider
+    )
     {
-        $this->reflectionProvider = $reflectionProvider;
     }
     public function supports(Type $type) : bool
     {

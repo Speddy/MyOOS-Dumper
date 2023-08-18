@@ -18,21 +18,18 @@ use RectorPrefix202308\Composer\Semver\Constraint\ConstraintInterface;
 class CompilingMatcher
 {
     /**
-     * @var array
      * @phpstan-var array<string, callable>
      */
-    private static $compiledCheckerCache = array();
+    private static array $compiledCheckerCache = [];
     /**
-     * @var array
      * @phpstan-var array<string, bool>
      */
-    private static $resultCache = array();
-    /** @var bool */
-    private static $enabled;
+    private static array $resultCache = [];
+    private static ?bool $enabled = null;
     /**
      * @phpstan-var array<Constraint::OP_*, Constraint::STR_OP_*>
      */
-    private static $transOpInt = array(Constraint::OP_EQ => Constraint::STR_OP_EQ, Constraint::OP_LT => Constraint::STR_OP_LT, Constraint::OP_LE => Constraint::STR_OP_LE, Constraint::OP_GT => Constraint::STR_OP_GT, Constraint::OP_GE => Constraint::STR_OP_GE, Constraint::OP_NE => Constraint::STR_OP_NE);
+    private static array $transOpInt = [Constraint::OP_EQ => Constraint::STR_OP_EQ, Constraint::OP_LT => Constraint::STR_OP_LT, Constraint::OP_LE => Constraint::STR_OP_LE, Constraint::OP_GT => Constraint::STR_OP_GT, Constraint::OP_GE => Constraint::STR_OP_GE, Constraint::OP_NE => Constraint::STR_OP_NE];
     /**
      * Clears the memoization cache once you are done
      *
@@ -40,13 +37,12 @@ class CompilingMatcher
      */
     public static function clear()
     {
-        self::$resultCache = array();
-        self::$compiledCheckerCache = array();
+        self::$resultCache = [];
+        self::$compiledCheckerCache = [];
     }
     /**
      * Evaluates the expression: $constraint match $operator $version
      *
-     * @param ConstraintInterface $constraint
      * @param int                 $operator
      * @phpstan-param Constraint::OP_*  $operator
      * @param string              $version
@@ -72,6 +68,6 @@ class CompilingMatcher
         } else {
             $function = self::$compiledCheckerCache[$cacheKey];
         }
-        return self::$resultCache[$resultCacheKey] = $function($version, \strpos($version, 'dev-') === 0);
+        return self::$resultCache[$resultCacheKey] = $function($version, str_starts_with($version, 'dev-'));
     }
 }

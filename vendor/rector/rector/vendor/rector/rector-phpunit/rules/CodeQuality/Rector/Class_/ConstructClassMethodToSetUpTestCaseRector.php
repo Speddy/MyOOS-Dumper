@@ -27,32 +27,25 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ConstructClassMethodToSetUpTestCaseRector extends AbstractRector
 {
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
-     */
-    private $testsNodeAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Core\NodeAnalyzer\ClassAnalyzer
-     */
-    private $classAnalyzer;
-    /**
-     * @readonly
-     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
-     */
-    private $visibilityManipulator;
-    /**
-     * @readonly
-     * @var \Rector\PHPUnit\NodeAnalyzer\SetUpMethodDecorator
-     */
-    private $setUpMethodDecorator;
-    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer, ClassAnalyzer $classAnalyzer, VisibilityManipulator $visibilityManipulator, SetUpMethodDecorator $setUpMethodDecorator)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly ClassAnalyzer $classAnalyzer,
+        /**
+         * @readonly
+         */
+        private readonly VisibilityManipulator $visibilityManipulator,
+        /**
+         * @readonly
+         */
+        private readonly SetUpMethodDecorator $setUpMethodDecorator
+    )
     {
-        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
-        $this->classAnalyzer = $classAnalyzer;
-        $this->visibilityManipulator = $visibilityManipulator;
-        $this->setUpMethodDecorator = $setUpMethodDecorator;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -24,7 +24,7 @@ final class UnixServer extends EventEmitter implements ServerInterface
 {
     private $master;
     private $loop;
-    private $listening = \false;
+    private bool $listening = \false;
     /**
      * Creates a plaintext socket server and starts listening on the given unix socket
      *
@@ -44,16 +44,15 @@ final class UnixServer extends EventEmitter implements ServerInterface
      *
      * @param string         $path
      * @param ?LoopInterface $loop
-     * @param array          $context
      * @throws InvalidArgumentException if the listening address is invalid
      * @throws RuntimeException if listening on this address fails (already in use etc.)
      */
-    public function __construct($path, LoopInterface $loop = null, array $context = array())
+    public function __construct($path, LoopInterface $loop = null, array $context = [])
     {
         $this->loop = $loop ?: Loop::get();
-        if (\strpos($path, '://') === \false) {
+        if (!str_contains($path, '://')) {
             $path = 'unix://' . $path;
-        } elseif (\substr($path, 0, 7) !== 'unix://') {
+        } elseif (!str_starts_with($path, 'unix://')) {
             throw new \InvalidArgumentException('Given URI "' . $path . '" is invalid (EINVAL)', \defined('SOCKET_EINVAL') ? \SOCKET_EINVAL : (\defined('PCNTL_EINVAL') ? \PCNTL_EINVAL : 22));
         }
         $errno = 0;
@@ -67,7 +66,7 @@ final class UnixServer extends EventEmitter implements ServerInterface
                 $errno = isset($match[2]) ? (int) $match[2] : 0;
             }
         });
-        $this->master = \stream_socket_server($path, $errno, $errstr, \STREAM_SERVER_BIND | \STREAM_SERVER_LISTEN, \stream_context_create(array('socket' => $context)));
+        $this->master = \stream_socket_server($path, $errno, $errstr, \STREAM_SERVER_BIND | \STREAM_SERVER_LISTEN, \stream_context_create(['socket' => $context]));
         \restore_error_handler();
         if (\false === $this->master) {
             throw new \RuntimeException('Failed to listen on Unix domain socket "' . $path . '": ' . $errstr . SocketServer::errconst($errno), $errno);
@@ -100,7 +99,7 @@ final class UnixServer extends EventEmitter implements ServerInterface
             try {
                 $newSocket = SocketServer::accept($master);
             } catch (\RuntimeException $e) {
-                $that->emit('error', array($e));
+                $that->emit('error', [$e]);
                 return;
             }
             $that->handleConnection($newSocket);
@@ -121,6 +120,6 @@ final class UnixServer extends EventEmitter implements ServerInterface
     {
         $connection = new Connection($socket, $this->loop);
         $connection->unix = \true;
-        $this->emit('connection', array($connection));
+        $this->emit('connection', [$connection]);
     }
 }

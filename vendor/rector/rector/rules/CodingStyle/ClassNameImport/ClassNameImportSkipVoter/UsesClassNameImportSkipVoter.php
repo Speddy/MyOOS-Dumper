@@ -16,22 +16,19 @@ use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
  * if there is already:
  * - use App\Another\Product
  */
-final class UsesClassNameImportSkipVoter implements ClassNameImportSkipVoterInterface
+final readonly class UsesClassNameImportSkipVoter implements ClassNameImportSkipVoterInterface
 {
-    /**
-     * @readonly
-     * @var \Rector\PostRector\Collector\UseNodesToAddCollector
-     */
-    private $useNodesToAddCollector;
-    /**
-     * @readonly
-     * @var \Rector\Core\Configuration\RenamedClassesDataCollector
-     */
-    private $renamedClassesDataCollector;
-    public function __construct(UseNodesToAddCollector $useNodesToAddCollector, RenamedClassesDataCollector $renamedClassesDataCollector)
+    public function __construct(
+        /**
+         * @readonly
+         */
+        private UseNodesToAddCollector $useNodesToAddCollector,
+        /**
+         * @readonly
+         */
+        private RenamedClassesDataCollector $renamedClassesDataCollector
+    )
     {
-        $this->useNodesToAddCollector = $useNodesToAddCollector;
-        $this->renamedClassesDataCollector = $renamedClassesDataCollector;
     }
     public function shouldSkip(File $file, FullyQualifiedObjectType $fullyQualifiedObjectType, Node $node) : bool
     {
