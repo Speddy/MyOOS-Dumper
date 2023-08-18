@@ -24,7 +24,7 @@ class AutoUpdate {
      *
      * @var string
      */
-    private $latestVersion;
+    private $latestVersion = '0.0.0';
 
     /**
      * Updates not yet installed.
@@ -129,7 +129,7 @@ class AutoUpdate {
      *
      * @var string
      */
-    protected $currentVersion;
+    protected $currentVersion = '0.0.0';
 
     /**
      * Create new folders with these privileges.
@@ -201,9 +201,6 @@ class AutoUpdate {
 
         $this->setTempDir($tempDir ?? (__DIR__ . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR));
         $this->setInstallDir($installDir ?? (__DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR));
-
-        $this->latestVersion  = '0.0.0';
-        $this->currentVersion = '0.0.0';
 
         // Init cache
         $this->cache = new NotCache();

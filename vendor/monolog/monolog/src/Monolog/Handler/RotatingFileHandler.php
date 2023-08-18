@@ -39,7 +39,7 @@ class RotatingFileHandler extends StreamHandler
     /** @var \DateTimeImmutable */
     protected $nextRotation;
     /** @var string */
-    protected $filenameFormat;
+    protected $filenameFormat = '{filename}-{date}';
     /** @var string */
     protected $dateFormat;
 
@@ -54,7 +54,6 @@ class RotatingFileHandler extends StreamHandler
         $this->filename = Utils::canonicalizePath($filename);
         $this->maxFiles = $maxFiles;
         $this->nextRotation = new \DateTimeImmutable('tomorrow');
-        $this->filenameFormat = '{filename}-{date}';
         $this->dateFormat = static::FILE_PER_DAY;
 
         parent::__construct($this->getTimedFilename(), $level, $bubble, $filePermission, $useLocking);
