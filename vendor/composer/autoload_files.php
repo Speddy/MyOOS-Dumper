@@ -8,4 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     '5255c38a0faeba867671b61dfda6d864' => $vendorDir . '/paragonie/random_compat/lib/random.php',
     'decc78cc4436b1292c6c0d151b19445c' => $vendorDir . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
+    '9b38cf48e83f5d8f60375221cd213eee' => $vendorDir . '/phpstan/phpstan/bootstrap.php',
+    '38143a9afc50997d55e4815db8489d1c' => $vendorDir . '/rector/rector/bootstrap.php',
 );
