@@ -79,6 +79,7 @@ $lang['L_FILE_MANAGE'] = 'Administração de arquivos';
 $lang['L_LOG'] = 'Log';
 $lang['L_CHOOSE_DB'] = 'Escolher banco de dados';
 $lang['L_CREDITS'] = 'Créditos / Ajuda';
+$lang['L_LOGOUT'] = 'Logout';
 $lang['L_MULTI_PART'] = 'Backup multi-parte';
 $lang['L_LOGFILENOTWRITABLE'] = 'Não pude criar o arquivo de log !';
 $lang['L_SQL_ERROR1'] = 'Erro na consulta:';

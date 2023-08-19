@@ -79,6 +79,7 @@ $lang['L_FILE_MANAGE'] = 'Yönetim';
 $lang['L_LOG'] = 'Rapor';
 $lang['L_CHOOSE_DB'] = 'Veritabanı seçimi';
 $lang['L_CREDITS'] = 'Künye/Yardım';
+$lang['L_LOGOUT'] = 'Logout';
 $lang['L_MULTI_PART'] = 'Parçalı yedekleme';
 $lang['L_LOGFILENOTWRITABLE'] = 'Rapor Dosyasına yazılamıyor!';
 $lang['L_SQL_ERROR1'] = 'Sorguda hata oluştu:';

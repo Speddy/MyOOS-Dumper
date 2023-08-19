@@ -79,6 +79,7 @@ $lang['L_FILE_MANAGE'] = 'Διαχείριση αρχείων';
 $lang['L_LOG'] = 'Καταγραφές';
 $lang['L_CHOOSE_DB'] = 'Επιλογή Β.Δεδομένων';
 $lang['L_CREDITS'] = 'Επαινοι / Βοήθεια';
+$lang['L_LOGOUT'] = 'Logout';
 $lang['L_MULTI_PART'] = 'Multipart Αντίγραφα ασφαλείας';
 $lang['L_LOGFILENOTWRITABLE'] = 'Αδυναμία εγγραφής Καταγραφών !';
 $lang['L_SQL_ERROR1'] = 'Σφάλμα στο ερώτημα:';

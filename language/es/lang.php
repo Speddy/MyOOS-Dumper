@@ -79,6 +79,7 @@ $lang['L_FILE_MANAGE'] = 'Archivos';
 $lang['L_LOG'] = 'Log';
 $lang['L_CHOOSE_DB'] = 'elegir base de datos';
 $lang['L_CREDITS'] = 'Créditos / Ayuda';
+$lang['L_LOGOUT'] = 'Logout';
 $lang['L_MULTI_PART'] = 'Copia de seguridad en múltiples archivos';
 $lang['L_LOGFILENOTWRITABLE'] = 'No se puede escribir en el fichero de historial (log)!';
 $lang['L_SQL_ERROR1'] = 'Error de ejecución:';

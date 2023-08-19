@@ -16,6 +16,7 @@
 		onclick="setMenuActive('m7')">{L_LOG}</a></li>
 	<!-- END MAINTENANCE -->
 	<li id="m8" class=""><a href="help.php" target="MyOOS_Dumper_content" onclick="setMenuActive('m8')">{L_CREDITS}</a></li>
+	<li id="m9" class=""><a href="logout.php" target="_top">{L_LOGOUT}</a></li>
 </ul>
 </div>
 

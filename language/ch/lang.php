@@ -79,6 +79,7 @@ $lang['L_FILE_MANAGE'] = 'Verwaltig';
 $lang['L_LOG'] = 'Log';
 $lang['L_CHOOSE_DB'] = 'Datebank uswähle';
 $lang['L_CREDITS'] = 'Kredits und Hilf';
+$lang['L_LOGOUT'] = 'Logout';
 $lang['L_MULTI_PART'] = 'Multipart-Backup';
 $lang['L_LOGFILENOTWRITABLE'] = "s'Logfile cha nöd gschribe wärde";
 $lang['L_SQL_ERROR1'] = 'Fähler bi de Aafrag:';

@@ -79,6 +79,7 @@ $lang['L_FILE_MANAGE'] = 'File Administration';
 $lang['L_LOG'] = 'Log';
 $lang['L_CHOOSE_DB'] = 'Select Database';
 $lang['L_CREDITS'] = 'Credits / Help';
+$lang['L_LOGOUT'] = 'Logout';
 $lang['L_MULTI_PART'] = 'Multipart Backup';
 $lang['L_LOGFILENOTWRITABLE'] = "Can't write logfile !";
 $lang['L_SQL_ERROR1'] = 'Error in Query:';

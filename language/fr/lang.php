@@ -79,6 +79,7 @@ $lang['L_FILE_MANAGE'] = 'Administration';
 $lang['L_LOG'] = 'Journal';
 $lang['L_CHOOSE_DB'] = 'Choisir la base de données';
 $lang['L_CREDITS'] = 'Crédits / Aide';
+$lang['L_LOGOUT'] = 'Logout';
 $lang['L_MULTI_PART'] = 'Sauvegarde en plusieurs parties';
 $lang['L_LOGFILENOTWRITABLE'] = 'Écriture du fichier journal impossible!';
 $lang['L_SQL_ERROR1'] = 'Erreur de demande:';

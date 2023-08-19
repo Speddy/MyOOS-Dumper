@@ -79,6 +79,7 @@ $lang['L_FILE_MANAGE'] = 'Administrering';
 $lang['L_LOG'] = 'Logg';
 $lang['L_CHOOSE_DB'] = 'Välj databas';
 $lang['L_CREDITS'] = 'Credits / Hjälp';
+$lang['L_LOGOUT'] = 'Logout';
 $lang['L_MULTI_PART'] = 'Backup uppdelad i flera filer';
 $lang['L_LOGFILENOTWRITABLE'] = 'Loggfil kan ej skrivas!';
 $lang['L_SQL_ERROR1'] = 'Fel i förfrågningen:';

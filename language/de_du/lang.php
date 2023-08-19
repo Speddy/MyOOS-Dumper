@@ -79,6 +79,7 @@ $lang['L_FILE_MANAGE'] = 'Verwaltung';
 $lang['L_LOG'] = 'Log';
 $lang['L_CHOOSE_DB'] = 'Datenbank wählen';
 $lang['L_CREDITS'] = 'Credits / Hilfe';
+$lang['L_LOGOUT'] = 'Abmelden';
 $lang['L_MULTI_PART'] = 'Multipart-Backup';
 $lang['L_LOGFILENOTWRITABLE'] = 'Log-File kann nicht geschrieben werden!';
 $lang['L_SQL_ERROR1'] = 'Fehler bei der Anfrage:';

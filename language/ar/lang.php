@@ -79,6 +79,7 @@ $lang['L_FILE_MANAGE'] = 'مدير الملفات';
 $lang['L_LOG'] = 'السجل';
 $lang['L_CHOOSE_DB'] = 'اختر قاعدة البيانات';
 $lang['L_CREDITS'] = 'المعلومات / الدعم';
+$lang['L_LOGOUT'] = 'Logout';
 $lang['L_MULTI_PART'] = 'تعدد النسخ الاحتياطي';
 $lang['L_LOGFILENOTWRITABLE'] = 'لا يستطيع الكتابة الى ملف السجل !';
 $lang['L_SQL_ERROR1'] = 'خطأ في الاستعلام:';

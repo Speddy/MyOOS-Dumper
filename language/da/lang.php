@@ -79,6 +79,7 @@ $lang['L_FILE_MANAGE'] = 'Fil Administration';
 $lang['L_LOG'] = 'Log';
 $lang['L_CHOOSE_DB'] = 'Vælg Database';
 $lang['L_CREDITS'] = 'Bidragydere / Hjælp';
+$lang['L_LOGOUT'] = 'Logout';
 $lang['L_MULTI_PART'] = 'Multipart Backup';
 $lang['L_LOGFILENOTWRITABLE'] = 'Kan ikke skrive Logfil !';
 $lang['L_SQL_ERROR1'] = 'Fejl i forespørgsel:';

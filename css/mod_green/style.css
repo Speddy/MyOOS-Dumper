@@ -181,7 +181,7 @@ table.bdr,.bdr {
 	top: 222px;
 	left:0;
 	width:190px;
-	height:160px;
+	height:225px;
 	background-color: #738C88;
 	border-top: 1px solid #9AA2B1
 }
@@ -256,7 +256,7 @@ table.bdr,.bdr {
 #selectConfig 
 {
 	position:absolute;
-	top:380px;	
+	top:400px;	
 	left:0;
 	width:190px;
 	height: 196px;

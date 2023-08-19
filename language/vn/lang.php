@@ -79,6 +79,7 @@ $lang['L_FILE_MANAGE'] = 'File Admin';
 $lang['L_LOG'] = 'Log';
 $lang['L_CHOOSE_DB'] = 'Chọn CSDL';
 $lang['L_CREDITS'] = 'Yêu cầu / Trợ giúp';
+$lang['L_LOGOUT'] = 'Logout';
 $lang['L_MULTI_PART'] = 'Sao lưu Nhiều phần';
 $lang['L_LOGFILENOTWRITABLE'] = 'Không thể ghi Logfile!';
 $lang['L_SQL_ERROR1'] = 'Lỗi trong Lệnh truy xuất (Query):';
