@@ -73,7 +73,7 @@ if (isset($_POST['username'])) {
             'AuthName "'.$realm."\"\n".
             "AuthType Basic\n".
             'AuthUserFile "'.$config['paths']['root'].".htpasswd\"\n".
-            'Require valid-user';
+            "Require valid-user\n";
         switch ($type) {
             // CRYPT
             case 0:
