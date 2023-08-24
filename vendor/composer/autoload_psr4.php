@@ -5,4 +5,17 @@
 $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
-return ['phpseclib3\\' => [$vendorDir . '/phpseclib/phpseclib/phpseclib'], 'VisualAppeal\\' => [$vendorDir . '/visualappeal/php-auto-update/src'], 'Psr\\SimpleCache\\' => [$vendorDir . '/psr/simple-cache/src'], 'Psr\\Log\\' => [$vendorDir . '/psr/log/Psr/Log'], 'ParagonIE\\ConstantTime\\' => [$vendorDir . '/paragonie/constant_time_encoding/src'], 'Monolog\\' => [$vendorDir . '/monolog/monolog/src/Monolog'], 'League\\MimeTypeDetection\\' => [$vendorDir . '/league/mime-type-detection/src'], 'League\\Flysystem\\PhpseclibV3\\' => [$vendorDir . '/league/flysystem-sftp-v3'], 'League\\Flysystem\\Local\\' => [$vendorDir . '/league/flysystem-local'], 'League\\Flysystem\\' => [$vendorDir . '/league/flysystem/src'], 'Desarrolla2\\Cache\\' => [$vendorDir . '/desarrolla2/cache/src'], 'Composer\\Semver\\' => [$vendorDir . '/composer/semver/src']];
+return array(
+    'phpseclib3\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
+    'VisualAppeal\\' => array($vendorDir . '/visualappeal/php-auto-update/src'),
+    'Psr\\SimpleCache\\' => array($vendorDir . '/psr/simple-cache/src'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
+    'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
+    'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+    'League\\MimeTypeDetection\\' => array($vendorDir . '/league/mime-type-detection/src'),
+    'League\\Flysystem\\PhpseclibV3\\' => array($vendorDir . '/league/flysystem-sftp-v3'),
+    'League\\Flysystem\\Local\\' => array($vendorDir . '/league/flysystem-local'),
+    'League\\Flysystem\\' => array($vendorDir . '/league/flysystem/src'),
+    'Desarrolla2\\Cache\\' => array($vendorDir . '/desarrolla2/cache/src'),
+    'Composer\\Semver\\' => array($vendorDir . '/composer/semver/src'),
+);
