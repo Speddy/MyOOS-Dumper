@@ -9,15 +9,16 @@ use PhpParser\Node;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
 use Rector\BetterPhpDocParser\Printer\PhpDocInfoPrinter;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final readonly class DocBlockUpdater
+final class DocBlockUpdater
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpDocInfoPrinter $phpDocInfoPrinter
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\Printer\PhpDocInfoPrinter
+     */
+    private $phpDocInfoPrinter;
+    public function __construct(PhpDocInfoPrinter $phpDocInfoPrinter)
     {
+        $this->phpDocInfoPrinter = $phpDocInfoPrinter;
     }
     public function updateNodeWithPhpDocInfo(Node $node) : void
     {
@@ -51,7 +52,9 @@ final readonly class DocBlockUpdater
     }
     private function setCommentsAttribute(Node $node) : void
     {
-        $comments = \array_filter($node->getComments(), static fn(Comment $comment): bool => !$comment instanceof Doc);
+        $comments = \array_filter($node->getComments(), static function (Comment $comment) : bool {
+            return !$comment instanceof Doc;
+        });
         $node->setAttribute(AttributeKey::COMMENTS, $comments);
     }
     private function resolveChangedPhpDocInfo(Node $node) : ?PhpDocInfo

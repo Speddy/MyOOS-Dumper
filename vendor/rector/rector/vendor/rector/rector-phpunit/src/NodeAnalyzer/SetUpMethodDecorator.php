@@ -10,15 +10,16 @@ use Rector\Testing\PHPUnit\StaticPHPUnitEnvironment;
 /**
  * Decorate setUp() and tearDown() with "void" when local TestClass class uses them
  */
-final readonly class SetUpMethodDecorator
+final class SetUpMethodDecorator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private AstResolver $astResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\AstResolver
+     */
+    private $astResolver;
+    public function __construct(AstResolver $astResolver)
     {
+        $this->astResolver = $astResolver;
     }
     public function decorate(ClassMethod $classMethod) : void
     {
@@ -26,7 +27,7 @@ final readonly class SetUpMethodDecorator
         if (StaticPHPUnitEnvironment::isPHPUnitRun()) {
             return;
         }
-        $setUpClassMethod = $this->astResolver->resolveClassMethod(\PHPUnit\Framework\TestCase::class, MethodName::SET_UP);
+        $setUpClassMethod = $this->astResolver->resolveClassMethod('PHPUnit\\Framework\\TestCase', MethodName::SET_UP);
         if (!$setUpClassMethod instanceof ClassMethod) {
             return;
         }

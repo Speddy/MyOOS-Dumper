@@ -22,21 +22,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class LocallyCalledStaticMethodToNonStaticRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ClassMethodVisibilityGuard $classMethodVisibilityGuard,
-        /**
-         * @readonly
-         */
-        private readonly VisibilityManipulator $visibilityManipulator,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Privatization\VisibilityGuard\ClassMethodVisibilityGuard
+     */
+    private $classMethodVisibilityGuard;
+    /**
+     * @readonly
+     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
+     */
+    private $visibilityManipulator;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(ClassMethodVisibilityGuard $classMethodVisibilityGuard, VisibilityManipulator $visibilityManipulator, ReflectionResolver $reflectionResolver)
     {
+        $this->classMethodVisibilityGuard = $classMethodVisibilityGuard;
+        $this->visibilityManipulator = $visibilityManipulator;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

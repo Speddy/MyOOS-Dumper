@@ -14,11 +14,12 @@ final class SimpleParameterProvider
     /**
      * @var array<string, mixed>
      */
-    private static array $parameters = [];
+    private static $parameters = [];
     /**
      * @param Option::* $name
+     * @param mixed $value
      */
-    public static function addParameter(string $name, mixed $value) : void
+    public static function addParameter(string $name, $value) : void
     {
         if (\is_array($value)) {
             $mergedParameters = \array_merge(self::$parameters[$name] ?? [], $value);
@@ -29,8 +30,9 @@ final class SimpleParameterProvider
     }
     /**
      * @param Option::* $name
+     * @param mixed $value
      */
-    public static function setParameter(string $name, mixed $value) : void
+    public static function setParameter(string $name, $value) : void
     {
         self::$parameters[$name] = $value;
     }

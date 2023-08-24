@@ -28,21 +28,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeEnumToConstantListClassRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ClassFromEnumFactory $classFromEnumFactory,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private readonly EnumAnalyzer $enumAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeFactory\ClassFromEnumFactory
+     */
+    private $classFromEnumFactory;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\DowngradePhp80\NodeAnalyzer\EnumAnalyzer
+     */
+    private $enumAnalyzer;
+    public function __construct(ClassFromEnumFactory $classFromEnumFactory, ReflectionProvider $reflectionProvider, EnumAnalyzer $enumAnalyzer)
     {
+        $this->classFromEnumFactory = $classFromEnumFactory;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->enumAnalyzer = $enumAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -10,15 +10,16 @@ use PhpParser\Node\Expr\StaticPropertyFetch;
 use PhpParser\Node\Stmt\Class_;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final readonly class PropertyWriteonlyAnalyzer
+final class PropertyWriteonlyAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    public function __construct(BetterNodeFinder $betterNodeFinder)
     {
+        $this->betterNodeFinder = $betterNodeFinder;
     }
     public function hasClassDynamicPropertyNames(Class_ $class) : bool
     {

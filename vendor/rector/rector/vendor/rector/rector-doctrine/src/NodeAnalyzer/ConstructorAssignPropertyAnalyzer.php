@@ -12,23 +12,28 @@ use Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\Core\ValueObject\MethodName;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class ConstructorAssignPropertyAnalyzer
+final class ConstructorAssignPropertyAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private PropertyFetchAnalyzer $propertyFetchAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
+     */
+    private $propertyFetchAnalyzer;
+    public function __construct(BetterNodeFinder $betterNodeFinder, NodeNameResolver $nodeNameResolver, PropertyFetchAnalyzer $propertyFetchAnalyzer)
     {
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
     }
     public function resolveConstructorAssign(Class_ $class, Property $property) : ?Node
     {

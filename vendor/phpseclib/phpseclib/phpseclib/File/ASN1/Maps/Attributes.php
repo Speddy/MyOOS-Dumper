@@ -22,7 +22,7 @@ use phpseclib3\File\ASN1;
  */
 abstract class Attributes
 {
-    final public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SET,
         'min' => 1,
         'max' => -1,

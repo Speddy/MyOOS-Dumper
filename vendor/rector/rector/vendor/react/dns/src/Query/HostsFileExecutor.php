@@ -13,20 +13,24 @@ use RectorPrefix202308\React\Promise;
  * DNS executor. If the host is not found in the hosts file, it will be passed
  * to the DNS executor as a fallback.
  */
-final readonly class HostsFileExecutor implements ExecutorInterface
+final class HostsFileExecutor implements ExecutorInterface
 {
-    public function __construct(private HostsFile $hosts, private ExecutorInterface $fallback)
+    private $hosts;
+    private $fallback;
+    public function __construct(HostsFile $hosts, ExecutorInterface $fallback)
     {
+        $this->hosts = $hosts;
+        $this->fallback = $fallback;
     }
     public function query(Query $query)
     {
         if ($query->class === Message::CLASS_IN && ($query->type === Message::TYPE_A || $query->type === Message::TYPE_AAAA)) {
             // forward lookup for type A or AAAA
-            $records = [];
+            $records = array();
             $expectsColon = $query->type === Message::TYPE_AAAA;
             foreach ($this->hosts->getIpsForHost($query->name) as $ip) {
                 // ensure this is an IPv4/IPV6 address according to query type
-                if ((str_contains($ip, ':')) === $expectsColon) {
+                if ((\strpos($ip, ':') !== \false) === $expectsColon) {
                     $records[] = new Record($query->name, $query->type, $query->class, 0, $ip);
                 }
             }
@@ -37,7 +41,7 @@ final readonly class HostsFileExecutor implements ExecutorInterface
             // reverse lookup: extract IPv4 or IPv6 from special `.arpa` domain
             $ip = $this->getIpFromHost($query->name);
             if ($ip !== null) {
-                $records = [];
+                $records = array();
                 foreach ($this->hosts->getHostsForIp($ip) as $host) {
                     $records[] = new Record($query->name, $query->type, $query->class, 0, $host);
                 }
@@ -50,16 +54,16 @@ final readonly class HostsFileExecutor implements ExecutorInterface
     }
     private function getIpFromHost($host)
     {
-        if (str_ends_with((string) $host, '.in-addr.arpa')) {
+        if (\substr($host, -13) === '.in-addr.arpa') {
             // IPv4: read as IP and reverse bytes
-            $ip = @\inet_pton(\substr((string) $host, 0, -13));
+            $ip = @\inet_pton(\substr($host, 0, -13));
             if ($ip === \false || isset($ip[4])) {
                 return null;
             }
             return \inet_ntop(\strrev($ip));
-        } elseif (str_ends_with((string) $host, '.ip6.arpa')) {
+        } elseif (\substr($host, -9) === '.ip6.arpa') {
             // IPv6: replace dots, reverse nibbles and interpret as hexadecimal string
-            $ip = @\inet_ntop(\pack('H*', \strrev(\str_replace('.', '', \substr((string) $host, 0, -9)))));
+            $ip = @\inet_ntop(\pack('H*', \strrev(\str_replace('.', '', \substr($host, 0, -9)))));
             if ($ip === \false) {
                 return null;
             }

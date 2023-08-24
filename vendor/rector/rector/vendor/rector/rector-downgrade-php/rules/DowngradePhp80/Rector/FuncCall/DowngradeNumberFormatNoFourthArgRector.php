@@ -19,13 +19,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeNumberFormatNoFourthArgRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ArgsAnalyzer $argsAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ArgsAnalyzer
+     */
+    private $argsAnalyzer;
+    public function __construct(ArgsAnalyzer $argsAnalyzer)
     {
+        $this->argsAnalyzer = $argsAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

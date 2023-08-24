@@ -22,7 +22,10 @@ use const FILTER_VALIDATE_INT;
 use const PHP_EOL;
 abstract class ProcOpenBasedFinder implements CpuCoreFinder
 {
-    private readonly \RectorPrefix202308\Fidry\CpuCoreCounter\Executor\ProcessExecutor $executor;
+    /**
+     * @var ProcessExecutor
+     */
+    private $executor;
     public function __construct(?ProcessExecutor $executor = null)
     {
         $this->executor = $executor ?? new ProcOpenExecutor();

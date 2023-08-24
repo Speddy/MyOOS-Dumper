@@ -18,13 +18,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeMixedTypeDeclarationRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly PhpDocFromTypeDeclarationDecorator $phpDocFromTypeDeclarationDecorator
-    )
+    /**
+     * @readonly
+     * @var \Rector\PhpDocDecorator\PhpDocFromTypeDeclarationDecorator
+     */
+    private $phpDocFromTypeDeclarationDecorator;
+    public function __construct(PhpDocFromTypeDeclarationDecorator $phpDocFromTypeDeclarationDecorator)
     {
+        $this->phpDocFromTypeDeclarationDecorator = $phpDocFromTypeDeclarationDecorator;
     }
     /**
      * @return array<class-string<Node>>

@@ -15,35 +15,46 @@ use Rector\DeadCode\TypeNodeAnalyzer\MixedArrayTypeNodeAnalyzer;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\TypeComparator\TypeComparator;
 use Rector\TypeDeclaration\NodeAnalyzer\ParamAnalyzer;
-final readonly class DeadParamTagValueNodeAnalyzer
+final class DeadParamTagValueNodeAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private TypeComparator $typeComparator,
-        /**
-         * @readonly
-         */
-        private GenericTypeNodeAnalyzer $genericTypeNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private MixedArrayTypeNodeAnalyzer $mixedArrayTypeNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private ParamAnalyzer $paramAnalyzer,
-        /**
-         * @readonly
-         */
-        private PhpDocTypeChanger $phpDocTypeChanger
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\TypeComparator\TypeComparator
+     */
+    private $typeComparator;
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\TypeNodeAnalyzer\GenericTypeNodeAnalyzer
+     */
+    private $genericTypeNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\TypeNodeAnalyzer\MixedArrayTypeNodeAnalyzer
+     */
+    private $mixedArrayTypeNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\ParamAnalyzer
+     */
+    private $paramAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
+     */
+    private $phpDocTypeChanger;
+    public function __construct(NodeNameResolver $nodeNameResolver, TypeComparator $typeComparator, GenericTypeNodeAnalyzer $genericTypeNodeAnalyzer, MixedArrayTypeNodeAnalyzer $mixedArrayTypeNodeAnalyzer, ParamAnalyzer $paramAnalyzer, PhpDocTypeChanger $phpDocTypeChanger)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->typeComparator = $typeComparator;
+        $this->genericTypeNodeAnalyzer = $genericTypeNodeAnalyzer;
+        $this->mixedArrayTypeNodeAnalyzer = $mixedArrayTypeNodeAnalyzer;
+        $this->paramAnalyzer = $paramAnalyzer;
+        $this->phpDocTypeChanger = $phpDocTypeChanger;
     }
     public function isDead(ParamTagValueNode $paramTagValueNode, FunctionLike $functionLike) : bool
     {

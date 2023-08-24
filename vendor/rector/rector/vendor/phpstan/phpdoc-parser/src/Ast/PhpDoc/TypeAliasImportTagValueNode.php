@@ -6,7 +6,7 @@ namespace PHPStan\PhpDocParser\Ast\PhpDoc;
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
 use function trim;
-class TypeAliasImportTagValueNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode, \Stringable
+class TypeAliasImportTagValueNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode
 {
     use NodeAttributes;
     /** @var string */

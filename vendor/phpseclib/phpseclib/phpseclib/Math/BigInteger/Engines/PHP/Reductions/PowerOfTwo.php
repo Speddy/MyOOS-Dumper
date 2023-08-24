@@ -38,6 +38,8 @@ abstract class PowerOfTwo extends Base
     /**
      * Power Of Two Reduction
      *
+     * @param array $x
+     * @param array $n
      * @param string $class
      * @return array
      */

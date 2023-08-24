@@ -43,12 +43,12 @@ class ChannelLevelActivationStrategy implements ActivationStrategyInterface
     /**
      * @var Level
      */
-    private readonly int $defaultActionLevel;
+    private $defaultActionLevel;
 
     /**
      * @var array<string, Level>
      */
-    private array $channelToActionLevel;
+    private $channelToActionLevel;
 
     /**
      * @param int|string         $defaultActionLevel   The default action level to be used if the record's category doesn't match any

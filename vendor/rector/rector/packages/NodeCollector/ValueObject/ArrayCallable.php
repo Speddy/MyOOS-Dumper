@@ -5,19 +5,28 @@ namespace Rector\NodeCollector\ValueObject;
 
 use PhpParser\Node\Expr;
 use Rector\Core\Validation\RectorAssert;
-final readonly class ArrayCallable
+final class ArrayCallable
 {
-    public function __construct(/**
+    /**
      * @readonly
+     * @var \PhpParser\Node\Expr
      */
-    private Expr $callerExpr, /**
+    private $callerExpr;
+    /**
      * @readonly
+     * @var string
      */
-    private string $class, /**
+    private $class;
+    /**
      * @readonly
+     * @var string
      */
-    private string $method)
+    private $method;
+    public function __construct(Expr $callerExpr, string $class, string $method)
     {
+        $this->callerExpr = $callerExpr;
+        $this->class = $class;
+        $this->method = $method;
         RectorAssert::className($class);
     }
     public function getClass() : string

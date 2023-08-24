@@ -7,9 +7,9 @@ use PhpParser\Node\Expr;
 class Array_ extends Expr
 {
     // For use in "kind" attribute
-    final public const KIND_LONG = 1;
+    const KIND_LONG = 1;
     // array() syntax
-    final public const KIND_SHORT = 2;
+    const KIND_SHORT = 2;
     // [] syntax
     /** @var (ArrayItem|null)[] Items */
     public $items;

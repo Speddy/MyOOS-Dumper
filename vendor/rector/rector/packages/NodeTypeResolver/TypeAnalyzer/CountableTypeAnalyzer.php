@@ -9,17 +9,23 @@ use Rector\NodeTypeResolver\NodeTypeResolver;
 final class CountableTypeAnalyzer
 {
     /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\TypeAnalyzer\ArrayTypeAnalyzer
+     */
+    private $arrayTypeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
      * @var ObjectType[]
      */
-    private array $countableObjectTypes = [];
-    public function __construct(/**
-     * @readonly
-     */
-    private readonly \Rector\NodeTypeResolver\TypeAnalyzer\ArrayTypeAnalyzer $arrayTypeAnalyzer, /**
-     * @readonly
-     */
-    private readonly NodeTypeResolver $nodeTypeResolver)
+    private $countableObjectTypes = [];
+    public function __construct(\Rector\NodeTypeResolver\TypeAnalyzer\ArrayTypeAnalyzer $arrayTypeAnalyzer, NodeTypeResolver $nodeTypeResolver)
     {
+        $this->arrayTypeAnalyzer = $arrayTypeAnalyzer;
+        $this->nodeTypeResolver = $nodeTypeResolver;
         $this->countableObjectTypes = [new ObjectType('Countable'), new ObjectType('SimpleXMLElement'), new ObjectType('ResourceBundle')];
     }
     public function isCountableType(Expr $expr) : bool

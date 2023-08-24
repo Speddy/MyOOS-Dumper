@@ -12,18 +12,19 @@ use PHPStan\Type\Type;
 use Rector\Core\Exception\NotImplementedYetException;
 use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\StaticTypeMapper\Contract\PhpParser\PhpParserNodeMapperInterface;
-final readonly class PhpParserNodeMapper
+final class PhpParserNodeMapper
 {
+    /**
+     * @var PhpParserNodeMapperInterface[]
+     * @readonly
+     */
+    private $phpParserNodeMappers;
     /**
      * @param PhpParserNodeMapperInterface[] $phpParserNodeMappers
      */
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private iterable $phpParserNodeMappers
-    )
+    public function __construct(iterable $phpParserNodeMappers)
     {
+        $this->phpParserNodeMappers = $phpParserNodeMappers;
     }
     public function mapToPHPStanType(Node $node) : Type
     {
@@ -41,14 +42,14 @@ final readonly class PhpParserNodeMapper
                 return $phpParserNodeMapper->mapToPHPStan($nameOrExpr);
             }
         }
-        throw new NotImplementedYetException($nameOrExpr::class);
+        throw new NotImplementedYetException(\get_class($nameOrExpr));
     }
     /**
      * @return \PhpParser\Node|\PhpParser\Node\Name\FullyQualified
      */
     private function expandedNamespacedName(Node $node)
     {
-        if ($node::class === Name::class && $node->hasAttribute(AttributeKey::NAMESPACED_NAME)) {
+        if (\get_class($node) === Name::class && $node->hasAttribute(AttributeKey::NAMESPACED_NAME)) {
             return new FullyQualified($node->getAttribute(AttributeKey::NAMESPACED_NAME));
         }
         return $node;

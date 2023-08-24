@@ -14,19 +14,20 @@ use PhpParser\Node\Stmt;
 use PHPStan\Analyser\Scope;
 use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\NodeTypeResolver\PHPStan\Scope\ScopeFactory;
-final readonly class ScopeAnalyzer
+final class ScopeAnalyzer
 {
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Scope\ScopeFactory
+     */
+    private $scopeFactory;
     /**
      * @var array<class-string<Node>>
      */
     private const REFRESHABLE_NODES = [Name::class, Identifier::class, Param::class, Arg::class, Variable::class];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ScopeFactory $scopeFactory
-    )
+    public function __construct(ScopeFactory $scopeFactory)
     {
+        $this->scopeFactory = $scopeFactory;
     }
     public function isRefreshable(Node $node) : bool
     {

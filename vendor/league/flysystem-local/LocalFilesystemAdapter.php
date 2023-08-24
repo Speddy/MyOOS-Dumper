@@ -52,25 +52,28 @@ class LocalFilesystemAdapter implements FilesystemAdapter, ChecksumProvider
     /**
      * @var int
      */
-    final public const SKIP_LINKS = 0001;
+    public const SKIP_LINKS = 0001;
 
     /**
      * @var int
      */
-    final public const DISALLOW_LINKS = 0002;
+    public const DISALLOW_LINKS = 0002;
 
-    private readonly PathPrefixer $prefixer;
-    private readonly VisibilityConverter $visibility;
-    private readonly MimeTypeDetector $mimeTypeDetector;
-    private readonly string $rootLocation;
+    private PathPrefixer $prefixer;
+    private VisibilityConverter $visibility;
+    private MimeTypeDetector $mimeTypeDetector;
+    private string $rootLocation;
 
-    private bool $rootLocationIsSetup = false;
+    /**
+     * @var bool
+     */
+    private $rootLocationIsSetup = false;
 
     public function __construct(
         string $location,
         VisibilityConverter $visibility = null,
-        private readonly int $writeFlags = LOCK_EX,
-        private readonly int $linkHandling = self::DISALLOW_LINKS,
+        private int $writeFlags = LOCK_EX,
+        private int $linkHandling = self::DISALLOW_LINKS,
         MimeTypeDetector $mimeTypeDetector = null,
         bool $lazyRootCreation = false,
     ) {
@@ -181,11 +184,14 @@ class LocalFilesystemAdapter implements FilesystemAdapter, ChecksumProvider
 
     protected function deleteFileInfoObject(SplFileInfo $file): bool
     {
-        return match ($file->getType()) {
-            'dir' => @rmdir((string) $file->getRealPath()),
-            'link' => @unlink((string) $file->getPathname()),
-            default => @unlink((string) $file->getRealPath()),
-        };
+        switch ($file->getType()) {
+            case 'dir':
+                return @rmdir((string) $file->getRealPath());
+            case 'link':
+                return @unlink((string) $file->getPathname());
+            default:
+                return @unlink((string) $file->getRealPath());
+        }
     }
 
     public function listContents(string $path, bool $deep): iterable
@@ -302,7 +308,7 @@ class LocalFilesystemAdapter implements FilesystemAdapter, ChecksumProvider
         clearstatcache(true, $dirname);
 
         if ( ! is_dir($dirname)) {
-            $errorMessage = $mkdirError['message'] ?? '';
+            $errorMessage = isset($mkdirError['message']) ? $mkdirError['message'] : '';
 
             throw UnableToCreateDirectory::atLocation($dirname, $errorMessage);
         }

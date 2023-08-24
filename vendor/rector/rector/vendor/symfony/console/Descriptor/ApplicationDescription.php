@@ -20,26 +20,36 @@ use RectorPrefix202308\Symfony\Component\Console\Exception\CommandNotFoundExcept
  */
 class ApplicationDescription
 {
-    final public const GLOBAL_NAMESPACE = '_global';
+    public const GLOBAL_NAMESPACE = '_global';
     /**
      * @var \Symfony\Component\Console\Application
      */
     private $application;
     /**
+     * @var string|null
+     */
+    private $namespace;
+    /**
+     * @var bool
+     */
+    private $showHidden;
+    /**
      * @var mixed[]
      */
-    private ?array $namespaces = null;
+    private $namespaces;
     /**
      * @var array<string, Command>
      */
-    private ?array $commands = null;
+    private $commands;
     /**
      * @var array<string, Command>
      */
-    private array $aliases = [];
-    public function __construct(Application $application, private readonly ?string $namespace = null, private readonly bool $showHidden = \false)
+    private $aliases = [];
+    public function __construct(Application $application, string $namespace = null, bool $showHidden = \false)
     {
         $this->application = $application;
+        $this->namespace = $namespace;
+        $this->showHidden = $showHidden;
     }
     public function getNamespaces() : array
     {

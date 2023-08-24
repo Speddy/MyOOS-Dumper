@@ -17,7 +17,7 @@ class DirectoryListing implements IteratorAggregate
     /**
      * @param iterable<T> $listing
      */
-    public function __construct(private readonly iterable $listing)
+    public function __construct(private iterable $listing)
     {
     }
 
@@ -61,7 +61,9 @@ class DirectoryListing implements IteratorAggregate
     {
         $listing = $this->toArray();
 
-        usort($listing, fn(StorageAttributes $a, StorageAttributes $b) => $a->path() <=> $b->path());
+        usort($listing, function (StorageAttributes $a, StorageAttributes $b) {
+            return $a->path() <=> $b->path();
+        });
 
         return new DirectoryListing($listing);
     }

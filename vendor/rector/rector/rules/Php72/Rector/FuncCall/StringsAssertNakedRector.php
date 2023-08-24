@@ -21,13 +21,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class StringsAssertNakedRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly SimplePhpParser $simplePhpParser
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Parser\SimplePhpParser
+     */
+    private $simplePhpParser;
+    public function __construct(SimplePhpParser $simplePhpParser)
     {
+        $this->simplePhpParser = $simplePhpParser;
     }
     public function provideMinPhpVersion() : int
     {

@@ -5,23 +5,28 @@ namespace Rector\PostRector\ValueObject;
 
 use PhpParser\Node\Stmt\Class_;
 use PHPStan\Type\Type;
-final readonly class PropertyMetadata
+final class PropertyMetadata
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private string $name,
-        /**
-         * @readonly
-         */
-        private ?Type $type,
-        /**
-         * @readonly
-         */
-        private int $flags = Class_::MODIFIER_PRIVATE
-    )
+    /**
+     * @readonly
+     * @var string
+     */
+    private $name;
+    /**
+     * @readonly
+     * @var \PHPStan\Type\Type|null
+     */
+    private $type;
+    /**
+     * @readonly
+     * @var int
+     */
+    private $flags = Class_::MODIFIER_PRIVATE;
+    public function __construct(string $name, ?Type $type, int $flags = Class_::MODIFIER_PRIVATE)
     {
+        $this->name = $name;
+        $this->type = $type;
+        $this->flags = $flags;
     }
     public function getName() : string
     {

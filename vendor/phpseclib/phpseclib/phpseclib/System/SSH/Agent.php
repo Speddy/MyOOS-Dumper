@@ -53,27 +53,27 @@ class Agent
     // Message numbers
 
     // to request SSH1 keys you have to use SSH_AGENTC_REQUEST_RSA_IDENTITIES (1)
-    final public const SSH_AGENTC_REQUEST_IDENTITIES = 11;
+    const SSH_AGENTC_REQUEST_IDENTITIES = 11;
     // this is the SSH2 response; the SSH1 response is SSH_AGENT_RSA_IDENTITIES_ANSWER (2).
-    final public const SSH_AGENT_IDENTITIES_ANSWER = 12;
+    const SSH_AGENT_IDENTITIES_ANSWER = 12;
     // the SSH1 request is SSH_AGENTC_RSA_CHALLENGE (3)
-    final public const SSH_AGENTC_SIGN_REQUEST = 13;
+    const SSH_AGENTC_SIGN_REQUEST = 13;
     // the SSH1 response is SSH_AGENT_RSA_RESPONSE (4)
-    final public const SSH_AGENT_SIGN_RESPONSE = 14;
+    const SSH_AGENT_SIGN_RESPONSE = 14;
 
     // Agent forwarding status
 
     // no forwarding requested and not active
-    final public const FORWARD_NONE = 0;
+    const FORWARD_NONE = 0;
     // request agent forwarding when opportune
-    final public const FORWARD_REQUEST = 1;
+    const FORWARD_REQUEST = 1;
     // forwarding has been request and is active
-    final public const FORWARD_ACTIVE = 2;
+    const FORWARD_ACTIVE = 2;
 
     /**
      * Unused
      */
-    final public const SSH_AGENT_FAILURE = 5;
+    const SSH_AGENT_FAILURE = 5;
 
     /**
      * Socket Resource
@@ -85,24 +85,27 @@ class Agent
     /**
      * Agent forwarding status
      *
+     * @var int
      */
-    private int $forward_status = self::FORWARD_NONE;
+    private $forward_status = self::FORWARD_NONE;
 
     /**
      * Buffer for accumulating forwarded authentication
      * agent data arriving on SSH data channel destined
      * for agent unix socket
      *
+     * @var string
      */
-    private string $socket_buffer = '';
+    private $socket_buffer = '';
 
     /**
      * Tracking the number of bytes we are expecting
      * to arrive for the agent socket on the SSH data
      * channel
      *
+     * @var int
      */
-    private int|float $expected_bytes = 0;
+    private $expected_bytes = 0;
 
     /**
      * Default Constructor
@@ -114,11 +117,16 @@ class Agent
     public function __construct($address = null)
     {
         if (!$address) {
-            $address = match (true) {
-                isset($_SERVER['SSH_AUTH_SOCK']) => $_SERVER['SSH_AUTH_SOCK'],
-                isset($_ENV['SSH_AUTH_SOCK']) => $_ENV['SSH_AUTH_SOCK'],
-                default => throw new BadConfigurationException('SSH_AUTH_SOCK not found'),
-            };
+            switch (true) {
+                case isset($_SERVER['SSH_AUTH_SOCK']):
+                    $address = $_SERVER['SSH_AUTH_SOCK'];
+                    break;
+                case isset($_ENV['SSH_AUTH_SOCK']):
+                    $address = $_ENV['SSH_AUTH_SOCK'];
+                    break;
+                default:
+                    throw new BadConfigurationException('SSH_AUTH_SOCK not found');
+            }
         }
 
         if (in_array('unix', stream_get_transports())) {
@@ -127,7 +135,7 @@ class Agent
                 throw new \RuntimeException("Unable to connect to ssh-agent (Error $errno: $errstr)");
             }
         } else {
-            if (!str_starts_with((string) $address, '\\\\.\\pipe\\') || str_contains(substr((string) $address, 9), '\\')) {
+            if (substr($address, 0, 9) != '\\\\.\\pipe\\' || strpos(substr($address, 9), '\\') !== false) {
                 throw new \RuntimeException('Address is not formatted as a named pipe should be');
             }
 
@@ -158,19 +166,19 @@ class Agent
             throw new \RuntimeException('Connection closed while requesting identities');
         }
 
-        $length = current(unpack('N', (string) $this->readBytes(4)));
+        $length = current(unpack('N', $this->readBytes(4)));
         $packet = $this->readBytes($length);
 
-        [$type, $keyCount] = Strings::unpackSSH2('CN', $packet);
+        list($type, $keyCount) = Strings::unpackSSH2('CN', $packet);
         if ($type != self::SSH_AGENT_IDENTITIES_ANSWER) {
             throw new \RuntimeException('Unable to request identities');
         }
 
         $identities = [];
         for ($i = 0; $i < $keyCount; $i++) {
-            [$key_blob, $comment] = Strings::unpackSSH2('ss', $packet);
+            list($key_blob, $comment) = Strings::unpackSSH2('ss', $packet);
             $temp = $key_blob;
-            [$key_type] = Strings::unpackSSH2('s', $temp);
+            list($key_type) = Strings::unpackSSH2('s', $temp);
             switch ($key_type) {
                 case 'ssh-rsa':
                 case 'ssh-dss':
@@ -178,7 +186,7 @@ class Agent
                 case 'ecdsa-sha2-nistp256':
                 case 'ecdsa-sha2-nistp384':
                 case 'ecdsa-sha2-nistp521':
-                    $key = PublicKeyLoader::load($key_type . ' ' . base64_encode((string) $key_blob));
+                    $key = PublicKeyLoader::load($key_type . ' ' . base64_encode($key_blob));
             }
             // resources are passed by reference by default
             if (isset($key)) {
@@ -209,6 +217,7 @@ class Agent
     /**
      * Request agent forwarding of remote server
      *
+     * @param \phpseclib3\Net\SSH2 $ssh
      * @return bool
      */
     private function request_forwarding(SSH2 $ssh)
@@ -229,6 +238,7 @@ class Agent
      * open to give the SSH Agent an opportunity
      * to take further action. i.e. request agent forwarding
      *
+     * @param \phpseclib3\Net\SSH2 $ssh
      */
     public function registerChannelOpen(SSH2 $ssh)
     {
@@ -266,10 +276,10 @@ class Agent
         $this->socket_buffer = '';
         $this->expected_bytes = 0;
 
-        $agent_reply_bytes = current(unpack('N', (string) $this->readBytes(4)));
+        $agent_reply_bytes = current(unpack('N', $this->readBytes(4)));
 
         $agent_reply_data = $this->readBytes($agent_reply_bytes);
-        $agent_reply_data = current(unpack('a*', (string) $agent_reply_data));
+        $agent_reply_data = current(unpack('a*', $agent_reply_data));
 
         return pack('Na*', $agent_reply_bytes, $agent_reply_data);
     }

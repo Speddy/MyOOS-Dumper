@@ -66,7 +66,8 @@ CODE_SAMPLE
         if ($node->stmts === [] || $node->stmts === null) {
             return null;
         }
-        $lastStmtKey = array_key_last($node->stmts);
+        \end($node->stmts);
+        $lastStmtKey = \key($node->stmts);
         $lastStmt = $node->stmts[$lastStmtKey];
         if ($lastStmt instanceof If_) {
             if (!$this->isBareIfWithOnlyStmtEmptyReturn($lastStmt)) {

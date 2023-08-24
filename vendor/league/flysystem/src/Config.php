@@ -8,18 +8,19 @@ use function array_merge;
 
 class Config
 {
-    final public const OPTION_VISIBILITY = 'visibility';
-    final public const OPTION_DIRECTORY_VISIBILITY = 'directory_visibility';
+    public const OPTION_VISIBILITY = 'visibility';
+    public const OPTION_DIRECTORY_VISIBILITY = 'directory_visibility';
 
     public function __construct(private array $options = [])
     {
     }
 
     /**
+     * @param mixed $default
      *
      * @return mixed
      */
-    public function get(string $property, mixed $default = null)
+    public function get(string $property, $default = null)
     {
         return $this->options[$property] ?? $default;
     }

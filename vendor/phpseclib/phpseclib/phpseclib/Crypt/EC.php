@@ -51,14 +51,14 @@ use phpseclib3\Math\BigInteger;
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-abstract class EC extends AsymmetricKey implements \Stringable
+abstract class EC extends AsymmetricKey
 {
     /**
      * Algorithm Name
      *
      * @var string
      */
-    public const ALGORITHM = 'EC';
+    const ALGORITHM = 'EC';
 
     /**
      * Public Key QA
@@ -86,7 +86,7 @@ abstract class EC extends AsymmetricKey implements \Stringable
      *
      * @var string
      */
-    protected $shortFormat = 'ASN1';
+    protected $shortFormat;
 
     /**
      * Curve Name
@@ -167,7 +167,7 @@ abstract class EC extends AsymmetricKey implements \Stringable
         $curveName = $curve;
         if (preg_match('#(?:^curve|^ed)\d+$#', $curveName)) {
             $curveName = ucfirst($curveName);
-        } elseif (str_starts_with($curveName, 'brainpoolp')) {
+        } elseif (substr($curveName, 0, 10) == 'brainpoolp') {
             $curveName = 'brainpoolP' . substr($curveName, 10);
         }
         $curve = '\phpseclib3\Crypt\EC\Curves\\' . $curveName;
@@ -256,6 +256,7 @@ abstract class EC extends AsymmetricKey implements \Stringable
     protected function __construct()
     {
         $this->sigFormat = self::validatePlugin('Signature', 'ASN1');
+        $this->shortFormat = 'ASN1';
 
         parent::__construct();
     }
@@ -350,7 +351,7 @@ abstract class EC extends AsymmetricKey implements \Stringable
     public function getEncodedCoordinates()
     {
         if ($this->curve instanceof MontgomeryCurve) {
-            return strrev((string) $this->QA[0]->toBytes(true));
+            return strrev($this->QA[0]->toBytes(true));
         }
         if ($this->curve instanceof TwistedEdwardsCurve) {
             return $this->curve->encodePoint($this->QA);
@@ -468,7 +469,7 @@ abstract class EC extends AsymmetricKey implements \Stringable
      *
      * @return string
      */
-    public function __toString(): string
+    public function __toString()
     {
         if ($this->curve instanceof MontgomeryCurve) {
             return '';

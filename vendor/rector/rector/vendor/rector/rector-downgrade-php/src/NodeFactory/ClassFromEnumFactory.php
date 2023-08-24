@@ -12,15 +12,16 @@ use PhpParser\Node\Stmt\Enum_;
 use PhpParser\Node\Stmt\EnumCase;
 use Rector\Core\ValueObject\Visibility;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class ClassFromEnumFactory
+final class ClassFromEnumFactory
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @api downgrade

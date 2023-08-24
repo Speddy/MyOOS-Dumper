@@ -6,7 +6,10 @@ namespace Rector\Core\Configuration;
 use PhpParser\Node;
 final class CurrentNodeProvider
 {
-    private ?\PhpParser\Node $node = null;
+    /**
+     * @var \PhpParser\Node|null
+     */
+    private $node;
     public function setNode(Node $node) : void
     {
         $this->node = $node;

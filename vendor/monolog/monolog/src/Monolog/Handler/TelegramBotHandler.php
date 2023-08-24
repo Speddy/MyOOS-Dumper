@@ -50,32 +50,51 @@ class TelegramBotHandler extends AbstractProcessingHandler
     private const MAX_MESSAGE_LENGTH = 4096;
 
     /**
+     * Telegram bot access token provided by BotFather.
+     * Create telegram bot with https://telegram.me/BotFather and use access token from it.
+     * @var string
+     */
+    private $apiKey;
+
+    /**
+     * Telegram channel name.
+     * Since to start with '@' symbol as prefix.
+     * @var string
+     */
+    private $channel;
+
+    /**
      * The kind of formatting that is used for the message.
      * See available options at https://core.telegram.org/bots/api#formatting-options
      * or in AVAILABLE_PARSE_MODES
+     * @var ?string
      */
-    private ?string $parseMode = null;
+    private $parseMode;
 
     /**
      * Disables link previews for links in the message.
+     * @var ?bool
      */
-    private ?bool $disableWebPagePreview = null;
+    private $disableWebPagePreview;
 
     /**
      * Sends the message silently. Users will receive a notification with no sound.
+     * @var ?bool
      */
-    private ?bool $disableNotification = null;
+    private $disableNotification;
 
     /**
      * True - split a message longer than MAX_MESSAGE_LENGTH into parts and send in multiple messages.
      * False - truncates a message that is too long.
+     * @var bool
      */
-    private bool $splitLongMessages;
+    private $splitLongMessages;
 
     /**
      * Adds 1-second delay between sending a split message (according to Telegram API to avoid 429 Too Many Requests).
+     * @var bool
      */
-    private bool $delayBetweenMessages;
+    private $delayBetweenMessages;
 
     /**
      * @param string $apiKey Telegram bot access token provided by BotFather
@@ -85,8 +104,8 @@ class TelegramBotHandler extends AbstractProcessingHandler
      * @throws MissingExtensionException
      */
     public function __construct(
-        private readonly string $apiKey,
-        private readonly string $channel,
+        string $apiKey,
+        string $channel,
                $level = Logger::DEBUG,
         bool   $bubble = true,
         string $parseMode = null,
@@ -101,6 +120,9 @@ class TelegramBotHandler extends AbstractProcessingHandler
         }
 
         parent::__construct($level, $bubble);
+
+        $this->apiKey = $apiKey;
+        $this->channel = $channel;
         $this->setParseMode($parseMode);
         $this->disableWebPagePreview($disableWebPagePreview);
         $this->disableNotification($disableNotification);
@@ -136,6 +158,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
     /**
      * True - split a message longer than MAX_MESSAGE_LENGTH into parts and send in multiple messages.
      * False - truncates a message that is too long.
+     * @param bool $splitLongMessages
      * @return $this
      */
     public function splitLongMessages(bool $splitLongMessages = false): self
@@ -147,6 +170,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
     /**
      * Adds 1-second delay between sending a split message (according to Telegram API to avoid 429 Too Many Requests).
+     * @param bool $delayBetweenMessages
      * @return $this
      */
     public function delayBetweenMessages(bool $delayBetweenMessages = false): self
@@ -192,6 +216,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
     /**
      * Send request to @link https://api.telegram.org/bot on SendMessage action.
+     * @param string $message
      */
     protected function send(string $message): void
     {
@@ -225,7 +250,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
         if (!is_string($result)) {
             throw new RuntimeException('Telegram API error. Description: No response');
         }
-        $result = json_decode($result, true, 512, JSON_THROW_ON_ERROR);
+        $result = json_decode($result, true);
 
         if ($result['ok'] === false) {
             throw new RuntimeException('Telegram API error. Description: ' . $result['description']);
@@ -234,6 +259,7 @@ class TelegramBotHandler extends AbstractProcessingHandler
 
     /**
      * Handle a message that is too long: truncates or splits into several
+     * @param string $message
      * @return string[]
      */
     private function handleMessageLength(string $message): array

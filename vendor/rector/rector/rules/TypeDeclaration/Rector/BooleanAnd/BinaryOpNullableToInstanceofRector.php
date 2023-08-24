@@ -20,13 +20,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class BinaryOpNullableToInstanceofRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly NullableTypeAnalyzer $nullableTypeAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\TypeAnalyzer\NullableTypeAnalyzer
+     */
+    private $nullableTypeAnalyzer;
+    public function __construct(NullableTypeAnalyzer $nullableTypeAnalyzer)
     {
+        $this->nullableTypeAnalyzer = $nullableTypeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

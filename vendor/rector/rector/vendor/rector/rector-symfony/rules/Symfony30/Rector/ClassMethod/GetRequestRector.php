@@ -23,21 +23,27 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class GetRequestRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\Symfony\Bridge\NodeAnalyzer\ControllerMethodAnalyzer
+     */
+    private $controllerMethodAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\TypeAnalyzer\ControllerAnalyzer
+     */
+    private $controllerAnalyzer;
+    /**
      * @var string
      */
     private const REQUEST_CLASS = 'Symfony\\Component\\HttpFoundation\\Request';
-    private ?string $requestVariableAndParamName = null;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ControllerMethodAnalyzer $controllerMethodAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ControllerAnalyzer $controllerAnalyzer
-    )
+    /**
+     * @var string|null
+     */
+    private $requestVariableAndParamName;
+    public function __construct(ControllerMethodAnalyzer $controllerMethodAnalyzer, ControllerAnalyzer $controllerAnalyzer)
     {
+        $this->controllerMethodAnalyzer = $controllerMethodAnalyzer;
+        $this->controllerAnalyzer = $controllerAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -19,8 +19,8 @@ use phpseclib3\Math\BigInteger;
 
 class Ed448 extends TwistedEdwards
 {
-    final public const HASH = 'shake256-912';
-    final public const SIZE = 57;
+    const HASH = 'shake256-912';
+    const SIZE = 57;
 
     public function __construct()
     {
@@ -56,6 +56,7 @@ class Ed448 extends TwistedEdwards
      *
      * Used by EC\Keys\Common.php
      *
+     * @param BigInteger $y
      * @param boolean $sign
      * @return object[]
      */
@@ -137,7 +138,7 @@ class Ed448 extends TwistedEdwards
      */
     public function encodePoint($point)
     {
-        [$x, $y] = $point;
+        list($x, $y) = $point;
         $y = "\0" . $y->toBytes();
         if ($x->isOdd()) {
             $y[0] = $y[0] | chr(0x80);
@@ -203,7 +204,7 @@ class Ed448 extends TwistedEdwards
 
         // from https://tools.ietf.org/html/rfc8032#page-18
 
-        [$x1, $y1, $z1] = $p;
+        list($x1, $y1, $z1) = $p;
 
         $b = $x1->add($y1);
         $b = $b->multiply($b);
@@ -251,8 +252,8 @@ class Ed448 extends TwistedEdwards
 
         // from https://tools.ietf.org/html/rfc8032#page-17
 
-        [$x1, $y1, $z1] = $p;
-        [$x2, $y2, $z2] = $q;
+        list($x1, $y1, $z1) = $p;
+        list($x2, $y2, $z2) = $q;
 
         $a = $z1->multiply($z2);
         $b = $a->multiply($a);

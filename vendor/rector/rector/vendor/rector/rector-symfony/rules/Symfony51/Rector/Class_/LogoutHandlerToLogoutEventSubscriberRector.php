@@ -25,19 +25,29 @@ final class LogoutHandlerToLogoutEventSubscriberRector extends AbstractRector
 {
     /**
      * @readonly
+     * @var \Rector\Symfony\NodeFactory\OnLogoutClassMethodFactory
      */
-    private readonly \PHPStan\Type\ObjectType $logoutHandlerObjectType;
-    public function __construct(/**
+    private $onLogoutClassMethodFactory;
+    /**
      * @readonly
+     * @var \Rector\Symfony\NodeFactory\GetSubscribedEventsClassMethodFactory
      */
-    private readonly OnLogoutClassMethodFactory $onLogoutClassMethodFactory, /**
+    private $getSubscribedEventsClassMethodFactory;
+    /**
      * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\ClassAnalyzer
      */
-    private readonly GetSubscribedEventsClassMethodFactory $getSubscribedEventsClassMethodFactory, /**
+    private $classAnalyzer;
+    /**
      * @readonly
+     * @var \PHPStan\Type\ObjectType
      */
-    private readonly ClassAnalyzer $classAnalyzer)
+    private $logoutHandlerObjectType;
+    public function __construct(OnLogoutClassMethodFactory $onLogoutClassMethodFactory, GetSubscribedEventsClassMethodFactory $getSubscribedEventsClassMethodFactory, ClassAnalyzer $classAnalyzer)
     {
+        $this->onLogoutClassMethodFactory = $onLogoutClassMethodFactory;
+        $this->getSubscribedEventsClassMethodFactory = $getSubscribedEventsClassMethodFactory;
+        $this->classAnalyzer = $classAnalyzer;
         $this->logoutHandlerObjectType = new ObjectType('Symfony\\Component\\Security\\Http\\Logout\\LogoutHandlerInterface');
     }
     public function getRuleDefinition() : RuleDefinition

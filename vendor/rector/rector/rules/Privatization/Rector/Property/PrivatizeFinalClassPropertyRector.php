@@ -18,21 +18,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class PrivatizeFinalClassPropertyRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly VisibilityManipulator $visibilityManipulator,
-        /**
-         * @readonly
-         */
-        private readonly ParentPropertyLookupGuard $parentPropertyLookupGuard,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
+     */
+    private $visibilityManipulator;
+    /**
+     * @readonly
+     * @var \Rector\Privatization\Guard\ParentPropertyLookupGuard
+     */
+    private $parentPropertyLookupGuard;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(VisibilityManipulator $visibilityManipulator, ParentPropertyLookupGuard $parentPropertyLookupGuard, ReflectionResolver $reflectionResolver)
     {
+        $this->visibilityManipulator = $visibilityManipulator;
+        $this->parentPropertyLookupGuard = $parentPropertyLookupGuard;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

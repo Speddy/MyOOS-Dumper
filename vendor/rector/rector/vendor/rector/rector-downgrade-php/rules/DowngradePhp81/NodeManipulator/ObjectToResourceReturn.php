@@ -16,35 +16,44 @@ use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\Core\PhpParser\Node\NodeFactory;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
-final readonly class ObjectToResourceReturn
+final class ObjectToResourceReturn
 {
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\NodeFactory
+     */
+    private $nodeFactory;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
+     */
+    private $nodeComparator;
     /**
      * @var string
      */
     private const IS_INSTANCEOF_IN_BINARYOP = 'is_instanceof_in_binaryop';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private NodeFactory $nodeFactory,
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private NodeComparator $nodeComparator
-    )
+    public function __construct(NodeNameResolver $nodeNameResolver, NodeFactory $nodeFactory, BetterNodeFinder $betterNodeFinder, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, NodeComparator $nodeComparator)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->nodeFactory = $nodeFactory;
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->nodeComparator = $nodeComparator;
     }
     /**
      * @param string[] $collectionObjectToResource

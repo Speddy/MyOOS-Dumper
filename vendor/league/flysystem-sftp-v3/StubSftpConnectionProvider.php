@@ -14,10 +14,10 @@ class StubSftpConnectionProvider implements ConnectionProvider
     private $connection;
 
     public function __construct(
-        private readonly string $host,
-        private readonly string $username,
-        private readonly ?string $password = null,
-        private readonly int $port = 22
+        private string $host,
+        private string $username,
+        private ?string $password = null,
+        private int $port = 22
     ) {
     }
 

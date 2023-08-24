@@ -21,17 +21,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReturnTypeFromStrictBoolReturnExprRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly StrictBoolReturnTypeAnalyzer $strictBoolReturnTypeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ClassMethodReturnTypeOverrideGuard $classMethodReturnTypeOverrideGuard
-    )
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\ReturnTypeAnalyzer\StrictBoolReturnTypeAnalyzer
+     */
+    private $strictBoolReturnTypeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\VendorLocker\NodeVendorLocker\ClassMethodReturnTypeOverrideGuard
+     */
+    private $classMethodReturnTypeOverrideGuard;
+    public function __construct(StrictBoolReturnTypeAnalyzer $strictBoolReturnTypeAnalyzer, ClassMethodReturnTypeOverrideGuard $classMethodReturnTypeOverrideGuard)
     {
+        $this->strictBoolReturnTypeAnalyzer = $strictBoolReturnTypeAnalyzer;
+        $this->classMethodReturnTypeOverrideGuard = $classMethodReturnTypeOverrideGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {

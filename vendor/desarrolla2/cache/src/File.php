@@ -69,18 +69,23 @@ class File extends AbstractFile
     /**
      * Get the TTL using one of the strategies
      *
+     * @param string $cacheFile
      * @return int
      */
     protected function getTtl(string $cacheFile)
     {
-        return match ($this->ttlStrategy) {
-            'embed' => (int)$this->readLine($cacheFile),
-            'file' => file_exists("$cacheFile.ttl")
-                ? (int)file_get_contents("$cacheFile.ttl")
-                : PHP_INT_MAX,
-            'mtime' => $this->getTtl($cacheFile) > 0 ? filemtime($cacheFile) + $this->ttl : PHP_INT_MAX,
-            default => throw new \InvalidArgumentException("Invalid TTL strategy '{$this->ttlStrategy}'"),
-        };
+        switch ($this->ttlStrategy) {
+            case 'embed':
+                return (int)$this->readLine($cacheFile);
+            case 'file':
+                return file_exists("$cacheFile.ttl")
+                    ? (int)file_get_contents("$cacheFile.ttl")
+                    : PHP_INT_MAX;
+            case 'mtime':
+                return $this->getTtl($cacheFile) > 0 ? filemtime($cacheFile) + $this->ttl : PHP_INT_MAX;
+        }
+
+        throw new \InvalidArgumentException("Invalid TTL strategy '{$this->ttlStrategy}'");
     }
 
     /**

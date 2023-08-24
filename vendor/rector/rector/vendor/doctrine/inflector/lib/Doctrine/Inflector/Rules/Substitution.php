@@ -3,10 +3,16 @@
 declare (strict_types=1);
 namespace RectorPrefix202308\Doctrine\Inflector\Rules;
 
-final readonly class Substitution
+final class Substitution
 {
-    public function __construct(private Word $from, private Word $to)
+    /** @var Word */
+    private $from;
+    /** @var Word */
+    private $to;
+    public function __construct(Word $from, Word $to)
     {
+        $this->from = $from;
+        $this->to = $to;
     }
     public function getFrom() : Word
     {

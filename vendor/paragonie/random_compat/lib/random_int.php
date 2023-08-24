@@ -62,7 +62,7 @@ if (!is_callable('random_int')) {
         try {
             /** @var int $max */
             $max = RandomCompat_intval($max);
-        } catch (TypeError) {
+        } catch (TypeError $ex) {
             throw new TypeError(
                 'random_int(): $max must be an integer'
             );

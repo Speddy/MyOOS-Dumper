@@ -22,8 +22,11 @@ class ConsoleSectionOutput extends StreamOutput
     /**
      * @var mixed[]
      */
-    private array $content = [];
-    private int $lines = 0;
+    private $content = [];
+    /**
+     * @var int
+     */
+    private $lines = 0;
     /**
      * @var mixed[]
      */
@@ -32,7 +35,10 @@ class ConsoleSectionOutput extends StreamOutput
      * @var \Symfony\Component\Console\Terminal
      */
     private $terminal;
-    private int $maxHeight = 0;
+    /**
+     * @var int
+     */
+    private $maxHeight = 0;
     /**
      * @param resource               $stream
      * @param ConsoleSectionOutput[] $sections
@@ -115,7 +121,7 @@ class ConsoleSectionOutput extends StreamOutput
             // - every line that is not the last line
             // - if $newline is required, also add it to the last line
             // - if it's not new line, but input ending with `\PHP_EOL`
-            if ($i < $count || $newline || str_ends_with($input, \PHP_EOL)) {
+            if ($i < $count || $newline || \substr_compare($input, \PHP_EOL, -\strlen(\PHP_EOL)) === 0) {
                 $lineContent .= \PHP_EOL;
             }
             // skip line if there is no text (or newline for that matter)
@@ -124,7 +130,7 @@ class ConsoleSectionOutput extends StreamOutput
             }
             // For the first line, check if the previous line (last entry of `$this->content`)
             // needs to be continued (i.e. does not end with a line break).
-            if (0 === $i && \false !== ($lastLine = \end($this->content)) && !str_ends_with((string) $lastLine, \PHP_EOL)) {
+            if (0 === $i && \false !== ($lastLine = \end($this->content)) && \substr_compare($lastLine, \PHP_EOL, -\strlen(\PHP_EOL)) !== 0) {
                 // deduct the line count of the previous line
                 $this->lines -= (int) \ceil($this->getDisplayLength($lastLine) / $width) ?: 1;
                 // concatenate previous and new line
@@ -159,7 +165,7 @@ class ConsoleSectionOutput extends StreamOutput
         }
         // Check if the previous line (last entry of `$this->content`) needs to be continued
         // (i.e. does not end with a line break). In which case, it needs to be erased first.
-        $linesToClear = $deleteLastLine = ($lastLine = \end($this->content) ?: '') && !str_ends_with((string) $lastLine, \PHP_EOL) ? 1 : 0;
+        $linesToClear = $deleteLastLine = ($lastLine = \end($this->content) ?: '') && \substr_compare($lastLine, \PHP_EOL, -\strlen(\PHP_EOL)) !== 0 ? 1 : 0;
         $linesAdded = $this->addContent($message, $newline);
         if ($lineOverflow = $this->maxHeight > 0 && $this->lines > $this->maxHeight) {
             // on overflow, clear the whole section and redraw again (to remove the first lines)
@@ -190,7 +196,7 @@ class ConsoleSectionOutput extends StreamOutput
             }
             $numberOfLinesToClear += $section->lines;
             if ('' !== ($sectionContent = $section->getVisibleContent())) {
-                if (!str_ends_with((string) $sectionContent, \PHP_EOL)) {
+                if (\substr_compare($sectionContent, \PHP_EOL, -\strlen(\PHP_EOL)) !== 0) {
                     $sectionContent .= \PHP_EOL;
                 }
                 $erasedContent[] = $sectionContent;

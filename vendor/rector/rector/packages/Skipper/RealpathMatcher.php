@@ -25,7 +25,7 @@ final class RealpathMatcher
         if (\is_dir($normalizedMatchingPath)) {
             $normalizedMatchingPath = \rtrim($normalizedMatchingPath, '/') . '/';
         }
-        return str_starts_with($normalizedFilePath, $normalizedMatchingPath);
+        return \strncmp($normalizedFilePath, $normalizedMatchingPath, \strlen($normalizedMatchingPath)) === 0;
     }
     private function normalizePath(string $path) : string
     {

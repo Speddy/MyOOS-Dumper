@@ -73,18 +73,35 @@ class Application implements ResetInterface
     /**
      * @var mixed[]
      */
-    private array $commands = [];
-    private bool $wantHelps = \false;
+    private $commands = [];
+    /**
+     * @var bool
+     */
+    private $wantHelps = \false;
     /**
      * @var \Symfony\Component\Console\Command\Command|null
      */
     private $runningCommand;
     /**
+     * @var string
+     */
+    private $name;
+    /**
+     * @var string
+     */
+    private $version;
+    /**
      * @var \Symfony\Component\Console\CommandLoader\CommandLoaderInterface|null
      */
-    private ?\RectorPrefix202308\Symfony\Component\Console\CommandLoader\CommandLoaderInterface $commandLoader = null;
-    private bool $catchExceptions = \true;
-    private bool $autoExit = \true;
+    private $commandLoader;
+    /**
+     * @var bool
+     */
+    private $catchExceptions = \true;
+    /**
+     * @var bool
+     */
+    private $autoExit = \true;
     /**
      * @var \Symfony\Component\Console\Input\InputDefinition
      */
@@ -96,25 +113,37 @@ class Application implements ResetInterface
     /**
      * @var \Symfony\Contracts\EventDispatcher\EventDispatcherInterface|null
      */
-    private ?\RectorPrefix202308\Symfony\Contracts\EventDispatcher\EventDispatcherInterface $dispatcher = null;
+    private $dispatcher;
     /**
      * @var \Symfony\Component\Console\Terminal
      */
     private $terminal;
-    private string $defaultCommand = 'list';
-    private bool $singleCommand = \false;
-    private bool $initialized = \false;
+    /**
+     * @var string
+     */
+    private $defaultCommand;
+    /**
+     * @var bool
+     */
+    private $singleCommand = \false;
+    /**
+     * @var bool
+     */
+    private $initialized = \false;
     /**
      * @var \Symfony\Component\Console\SignalRegistry\SignalRegistry|null
      */
-    private ?\RectorPrefix202308\Symfony\Component\Console\SignalRegistry\SignalRegistry $signalRegistry = null;
+    private $signalRegistry;
     /**
      * @var mixed[]
      */
-    private array $signalsToDispatchEvent = [];
-    public function __construct(private string $name = 'UNKNOWN', private string $version = 'UNKNOWN')
+    private $signalsToDispatchEvent = [];
+    public function __construct(string $name = 'UNKNOWN', string $version = 'UNKNOWN')
     {
+        $this->name = $name;
+        $this->version = $version;
         $this->terminal = new Terminal();
+        $this->defaultCommand = 'list';
         if (\defined('SIGINT') && SignalRegistry::isSupported()) {
             $this->signalRegistry = new SignalRegistry();
             $this->signalsToDispatchEvent = [\SIGINT, \SIGTERM, \SIGUSR1, \SIGUSR2];
@@ -161,8 +190,8 @@ class Application implements ResetInterface
             @\putenv('LINES=' . $this->terminal->getHeight());
             @\putenv('COLUMNS=' . $this->terminal->getWidth());
         }
-        $input ??= new ArgvInput();
-        $output ??= new ConsoleOutput();
+        $input = $input ?? new ArgvInput();
+        $output = $output ?? new ConsoleOutput();
         $renderException = function (\Throwable $e) use($output) {
             if ($output instanceof ConsoleOutputInterface) {
                 $this->renderThrowable($e, $output->getErrorOutput());
@@ -232,7 +261,7 @@ class Application implements ResetInterface
         try {
             // Makes ArgvInput::getFirstArgument() able to distinguish an option from an argument.
             $input->bind($this->getDefinition());
-        } catch (ExceptionInterface) {
+        } catch (ExceptionInterface $exception) {
             // Errors must be ignored, full binding/validation happens later when the command is known.
         }
         $name = $this->getCommandName($input);
@@ -285,7 +314,7 @@ class Application implements ResetInterface
                         return isset($event) ? $event->getExitCode() : 1;
                     }
                     throw $e;
-                } catch (NamespaceNotFoundException) {
+                } catch (NamespaceNotFoundException $exception) {
                     throw $e;
                 }
             }
@@ -316,7 +345,7 @@ class Application implements ResetInterface
      */
     public function getHelperSet() : HelperSet
     {
-        return $this->helperSet ??= $this->getDefaultHelperSet();
+        return $this->helperSet = $this->helperSet ?? $this->getDefaultHelperSet();
     }
     /**
      * @return void
@@ -330,7 +359,7 @@ class Application implements ResetInterface
      */
     public function getDefinition() : InputDefinition
     {
-        $this->definition ??= $this->getDefaultInputDefinition();
+        $this->definition = $this->definition ?? $this->getDefaultInputDefinition();
         if ($this->singleCommand) {
             $inputDefinition = $this->definition;
             $inputDefinition->setArguments();
@@ -612,7 +641,7 @@ class Application implements ResetInterface
             $commands = \preg_grep('{^' . $expr . '}i', $allCommands);
         }
         // if no commands matched or we just matched namespaces
-        if (empty($commands) || (is_countable(\preg_grep('{^' . $expr . '$}i', $commands)) ? \count(\preg_grep('{^' . $expr . '$}i', $commands)) : 0) < 1) {
+        if (empty($commands) || \count(\preg_grep('{^' . $expr . '$}i', $commands)) < 1) {
             if (\false !== ($pos = \strrpos($name, ':'))) {
                 // check if a namespace exists and contains commands
                 $this->findNamespace(\substr($name, 0, $pos));
@@ -620,7 +649,9 @@ class Application implements ResetInterface
             $message = \sprintf('Command "%s" is not defined.', $name);
             if ($alternatives = $this->findAlternatives($name, $allCommands)) {
                 // remove hidden commands
-                $alternatives = \array_filter($alternatives, fn($name) => !$this->get($name)->isHidden());
+                $alternatives = \array_filter($alternatives, function ($name) {
+                    return !$this->get($name)->isHidden();
+                });
                 if (1 == \count($alternatives)) {
                     $message .= "\n\nDid you mean this?\n    ";
                 } else {
@@ -714,8 +745,8 @@ class Application implements ResetInterface
     {
         $abbrevs = [];
         foreach ($names as $name) {
-            for ($len = \strlen((string) $name); $len > 0; --$len) {
-                $abbrev = \substr((string) $name, 0, $len);
+            for ($len = \strlen($name); $len > 0; --$len) {
+                $abbrev = \substr($name, 0, $len);
                 $abbrevs[$abbrev][] = $name;
             }
         }
@@ -741,8 +772,10 @@ class Application implements ResetInterface
             } else {
                 $len = 0;
             }
-            if (str_contains($message, "@anonymous\x00")) {
-                $message = \preg_replace_callback('/[a-zA-Z_\\x7f-\\xff][\\\\a-zA-Z0-9_\\x7f-\\xff]*+@anonymous\\x00.*?\\.php(?:0x?|:[0-9]++\\$)[0-9a-fA-F]++/', fn($m) => \class_exists($m[0], \false) ? ((\get_parent_class($m[0]) ?: \key(\class_implements($m[0]))) ?: 'class') . '@anonymous' : $m[0], $message);
+            if (\strpos($message, "@anonymous\x00") !== \false) {
+                $message = \preg_replace_callback('/[a-zA-Z_\\x7f-\\xff][\\\\a-zA-Z0-9_\\x7f-\\xff]*+@anonymous\\x00.*?\\.php(?:0x?|:[0-9]++\\$)[0-9a-fA-F]++/', function ($m) {
+                    return \class_exists($m[0], \false) ? ((\get_parent_class($m[0]) ?: \key(\class_implements($m[0]))) ?: 'class') . '@anonymous' : $m[0];
+                }, $message);
             }
             $width = $this->terminal->getWidth() ? $this->terminal->getWidth() - 1 : \PHP_INT_MAX;
             $lines = [];
@@ -864,7 +897,9 @@ class Application implements ResetInterface
             if (Terminal::hasSttyAvailable()) {
                 $sttyMode = \shell_exec('stty -g');
                 foreach ([\SIGINT, \SIGTERM] as $signal) {
-                    $this->signalRegistry->register($signal, static fn() => \shell_exec('stty ' . $sttyMode));
+                    $this->signalRegistry->register($signal, static function () use($sttyMode) {
+                        return \shell_exec('stty ' . $sttyMode);
+                    });
                 }
             }
             if ($this->dispatcher) {
@@ -912,7 +947,7 @@ class Application implements ResetInterface
         try {
             $command->mergeApplicationDefinition();
             $input->bind($command->getDefinition());
-        } catch (ExceptionInterface) {
+        } catch (ExceptionInterface $exception) {
             // ignore invalid options/arguments for now, to allow the event listeners to customize the InputDefinition
         }
         $event = new ConsoleCommandEvent($command, $input, $output);
@@ -998,7 +1033,7 @@ class Application implements ResetInterface
         $alternatives = [];
         $collectionParts = [];
         foreach ($collection as $item) {
-            $collectionParts[$item] = \explode(':', (string) $item);
+            $collectionParts[$item] = \explode(':', $item);
         }
         foreach (\explode(':', $name) as $i => $subname) {
             foreach ($collectionParts as $collectionName => $parts) {
@@ -1010,7 +1045,7 @@ class Application implements ResetInterface
                     continue;
                 }
                 $lev = \levenshtein($subname, $parts[$i]);
-                if ($lev <= \strlen($subname) / 3 || '' !== $subname && str_contains($parts[$i], $subname)) {
+                if ($lev <= \strlen($subname) / 3 || '' !== $subname && \strpos($parts[$i], $subname) !== \false) {
                     $alternatives[$collectionName] = $exists ? $alternatives[$collectionName] + $lev : $lev;
                 } elseif ($exists) {
                     $alternatives[$collectionName] += $threshold;
@@ -1019,11 +1054,13 @@ class Application implements ResetInterface
         }
         foreach ($collection as $item) {
             $lev = \levenshtein($name, $item);
-            if ($lev <= \strlen($name) / 3 || str_contains((string) $item, $name)) {
+            if ($lev <= \strlen($name) / 3 || \strpos($item, $name) !== \false) {
                 $alternatives[$item] = isset($alternatives[$item]) ? $alternatives[$item] - $lev : $lev;
             }
         }
-        $alternatives = \array_filter($alternatives, fn($lev) => $lev < 2 * $threshold);
+        $alternatives = \array_filter($alternatives, function ($lev) use($threshold) {
+            return $lev < 2 * $threshold;
+        });
         \ksort($alternatives, \SORT_NATURAL | \SORT_FLAG_CASE);
         return \array_keys($alternatives);
     }

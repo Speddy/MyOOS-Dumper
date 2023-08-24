@@ -7,15 +7,16 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\ArrayDimFetch;
 use PhpParser\Node\Expr\Assign;
 use Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer;
-final readonly class PropertyAssignMatcher
+final class PropertyAssignMatcher
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PropertyFetchAnalyzer $propertyFetchAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
+     */
+    private $propertyFetchAnalyzer;
+    public function __construct(PropertyFetchAnalyzer $propertyFetchAnalyzer)
     {
+        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
     }
     /**
      * Covers:

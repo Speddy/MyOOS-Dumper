@@ -10,13 +10,15 @@ use RuntimeException;
 final class TcpConnector implements ConnectorInterface
 {
     private $loop;
-    public function __construct(LoopInterface $loop = null, private readonly array $context = [])
+    private $context;
+    public function __construct(LoopInterface $loop = null, array $context = array())
     {
         $this->loop = $loop ?: Loop::get();
+        $this->context = $context;
     }
     public function connect($uri)
     {
-        if (!str_contains($uri, '://')) {
+        if (\strpos($uri, '://') === \false) {
             $uri = 'tcp://' . $uri;
         }
         $parts = \parse_url($uri);
@@ -28,9 +30,9 @@ final class TcpConnector implements ConnectorInterface
             return Promise\reject(new \InvalidArgumentException('Given URI "' . $uri . '" does not contain a valid host IP (EINVAL)', \defined('SOCKET_EINVAL') ? \SOCKET_EINVAL : (\defined('PCNTL_EINVAL') ? \PCNTL_EINVAL : 22)));
         }
         // use context given in constructor
-        $context = ['socket' => $this->context];
+        $context = array('socket' => $this->context);
         // parse arguments from query component of URI
-        $args = [];
+        $args = array();
         if (isset($parts['query'])) {
             \parse_str($parts['query'], $args);
         }
@@ -40,13 +42,13 @@ final class TcpConnector implements ConnectorInterface
         // These context options are here in case TLS is enabled later on this stream.
         // If TLS is not enabled later, this doesn't hurt either.
         if (isset($args['hostname'])) {
-            $context['ssl'] = ['SNI_enabled' => \true, 'peer_name' => $args['hostname']];
+            $context['ssl'] = array('SNI_enabled' => \true, 'peer_name' => $args['hostname']);
             // Legacy PHP < 5.6 ignores peer_name and requires legacy context options instead.
             // The SNI_server_name context option has to be set here during construction,
             // as legacy PHP ignores any values set later.
             // @codeCoverageIgnoreStart
             if (\PHP_VERSION_ID < 50600) {
-                $context['ssl'] += ['SNI_server_name' => $args['hostname'], 'CN_match' => $args['hostname']];
+                $context['ssl'] += array('SNI_server_name' => $args['hostname'], 'CN_match' => $args['hostname']);
             }
             // @codeCoverageIgnoreEnd
         }
@@ -83,7 +85,7 @@ final class TcpConnector implements ConnectorInterface
                             // fwrite(): send of 1 bytes failed with errno=111 Connection refused
                             \preg_match('/errno=(\\d+) (.+)/', $error, $m);
                             $errno = isset($m[1]) ? (int) $m[1] : 0;
-                            $errstr = $m[2] ?? $error;
+                            $errstr = isset($m[2]) ? $m[2] : $error;
                         });
                         \fwrite($stream, \PHP_EOL);
                         \restore_error_handler();

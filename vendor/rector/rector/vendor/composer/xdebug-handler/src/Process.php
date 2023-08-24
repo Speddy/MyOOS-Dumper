@@ -72,6 +72,7 @@ class Process
     /**
      * Makes putenv environment changes available in $_SERVER and $_ENV
      *
+     * @param string $name
      * @param ?string $value A null value unsets the variable
      */
     public static function setEnv(string $name, ?string $value = null) : bool

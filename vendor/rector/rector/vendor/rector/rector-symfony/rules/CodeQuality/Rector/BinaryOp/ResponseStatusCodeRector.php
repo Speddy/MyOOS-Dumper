@@ -24,16 +24,23 @@ final class ResponseStatusCodeRector extends AbstractRector
 {
     /**
      * @readonly
+     * @var \Rector\Symfony\TypeAnalyzer\ControllerAnalyzer
      */
-    private readonly \PHPStan\Type\ObjectType $responseObjectType;
-    public function __construct(/**
+    private $controllerAnalyzer;
+    /**
      * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\LiteralCallLikeConstFetchReplacer
      */
-    private readonly ControllerAnalyzer $controllerAnalyzer, /**
+    private $literalCallLikeConstFetchReplacer;
+    /**
      * @readonly
+     * @var \PHPStan\Type\ObjectType
      */
-    private readonly LiteralCallLikeConstFetchReplacer $literalCallLikeConstFetchReplacer)
+    private $responseObjectType;
+    public function __construct(ControllerAnalyzer $controllerAnalyzer, LiteralCallLikeConstFetchReplacer $literalCallLikeConstFetchReplacer)
     {
+        $this->controllerAnalyzer = $controllerAnalyzer;
+        $this->literalCallLikeConstFetchReplacer = $literalCallLikeConstFetchReplacer;
         $this->responseObjectType = new ObjectType('Symfony\\Component\\HttpFoundation\\Response');
     }
     public function getRuleDefinition() : RuleDefinition

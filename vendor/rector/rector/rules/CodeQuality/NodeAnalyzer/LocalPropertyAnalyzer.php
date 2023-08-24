@@ -24,39 +24,50 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\NodeTypeResolver\PHPStan\Type\TypeFactory;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
-final readonly class LocalPropertyAnalyzer
+final class LocalPropertyAnalyzer
 {
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\CodeQuality\TypeResolver\ArrayDimFetchTypeResolver
+     */
+    private $arrayDimFetchTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
+     */
+    private $propertyFetchAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
     /**
      * @var string
      */
     private const LARAVEL_COLLECTION_CLASS = 'Illuminate\\Support\\Collection';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private ArrayDimFetchTypeResolver $arrayDimFetchTypeResolver,
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private PropertyFetchAnalyzer $propertyFetchAnalyzer,
-        /**
-         * @readonly
-         */
-        private TypeFactory $typeFactory
-    )
+    public function __construct(SimpleCallableNodeTraverser $simpleCallableNodeTraverser, NodeNameResolver $nodeNameResolver, ArrayDimFetchTypeResolver $arrayDimFetchTypeResolver, NodeTypeResolver $nodeTypeResolver, PropertyFetchAnalyzer $propertyFetchAnalyzer, TypeFactory $typeFactory)
     {
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->arrayDimFetchTypeResolver = $arrayDimFetchTypeResolver;
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
+        $this->typeFactory = $typeFactory;
     }
     /**
      * @return array<string, Type>

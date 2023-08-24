@@ -5,19 +5,28 @@ namespace Rector\Transform\ValueObject;
 
 use PHPStan\Type\ObjectType;
 use Rector\Core\Validation\RectorAssert;
-final readonly class MethodCallToPropertyFetch
+final class MethodCallToPropertyFetch
 {
-    public function __construct(/**
+    /**
      * @readonly
+     * @var string
      */
-    private string $oldType, /**
+    private $oldType;
+    /**
      * @readonly
+     * @var string
      */
-    private string $oldMethod, /**
+    private $oldMethod;
+    /**
      * @readonly
+     * @var string
      */
-    private string $newProperty)
+    private $newProperty;
+    public function __construct(string $oldType, string $oldMethod, string $newProperty)
     {
+        $this->oldType = $oldType;
+        $this->oldMethod = $oldMethod;
+        $this->newProperty = $newProperty;
         RectorAssert::className($oldType);
         RectorAssert::methodName($oldMethod);
         RectorAssert::propertyName($newProperty);

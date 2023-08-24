@@ -12,7 +12,7 @@ final class PathPrefixer
 {
     private string $prefix = '';
 
-    public function __construct(string $prefix, private readonly string $separator = '/')
+    public function __construct(string $prefix, private string $separator = '/')
     {
         $this->prefix = rtrim($prefix, '\\/');
 

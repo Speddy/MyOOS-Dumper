@@ -107,7 +107,7 @@ final class BuilderHelpers
             if ($name[0] === '\\') {
                 return new Name\FullyQualified(\substr($name, 1));
             }
-            if (str_starts_with($name, 'namespace\\')) {
+            if (0 === \strpos($name, 'namespace\\')) {
                 return new Name\Relative(\substr($name, \strlen('namespace\\')));
             }
             return new Name($name);

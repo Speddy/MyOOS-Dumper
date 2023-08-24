@@ -18,22 +18,28 @@ use Rector\Skipper\Skipper\Skipper;
 final class PostFileProcessor
 {
     /**
+     * @readonly
+     * @var \Rector\Skipper\Skipper\Skipper
+     */
+    private $skipper;
+    /**
+     * @readonly
+     * @var \Rector\Core\Provider\CurrentFileProvider
+     */
+    private $currentFileProvider;
+    /**
+     * @readonly
+     * @var \Rector\Core\Logging\CurrentRectorProvider
+     */
+    private $currentRectorProvider;
+    /**
      * @var PostRectorInterface[]
      */
-    private array $postRectors = [];
+    private $postRectors = [];
     public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly Skipper $skipper,
-        /**
-         * @readonly
-         */
-        private readonly CurrentFileProvider $currentFileProvider,
-        /**
-         * @readonly
-         */
-        private readonly CurrentRectorProvider $currentRectorProvider,
+        Skipper $skipper,
+        CurrentFileProvider $currentFileProvider,
+        CurrentRectorProvider $currentRectorProvider,
         // set order here
         UseAddingPostRector $useAddingPostRector,
         NameImportingPostRector $nameImportingPostRector,
@@ -41,6 +47,9 @@ final class PostFileProcessor
         UnusedImportRemovingPostRector $unusedImportRemovingPostRector
     )
     {
+        $this->skipper = $skipper;
+        $this->currentFileProvider = $currentFileProvider;
+        $this->currentRectorProvider = $currentRectorProvider;
         $this->postRectors = [
             // priority: 650
             $classRenamingPostRector,

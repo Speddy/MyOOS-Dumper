@@ -36,51 +36,70 @@ use Rector\TypeDeclaration\TypeInferer\AssignToPropertyTypeInferer;
 /**
  * @internal
  */
-final readonly class TrustedClassMethodPropertyTypeInferer
+final class TrustedClassMethodPropertyTypeInferer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ClassMethodPropertyFetchManipulator $classMethodPropertyFetchManipulator,
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private TypeFactory $typeFactory,
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper,
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private ParamAnalyzer $paramAnalyzer,
-        /**
-         * @readonly
-         */
-        private AssignToPropertyTypeInferer $assignToPropertyTypeInferer,
-        /**
-         * @readonly
-         */
-        private TypeComparator $typeComparator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\ClassMethodPropertyFetchManipulator
+     */
+    private $classMethodPropertyFetchManipulator;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ParamAnalyzer
+     */
+    private $paramAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\TypeInferer\AssignToPropertyTypeInferer
+     */
+    private $assignToPropertyTypeInferer;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\TypeComparator\TypeComparator
+     */
+    private $typeComparator;
+    public function __construct(ClassMethodPropertyFetchManipulator $classMethodPropertyFetchManipulator, ReflectionProvider $reflectionProvider, NodeNameResolver $nodeNameResolver, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, TypeFactory $typeFactory, StaticTypeMapper $staticTypeMapper, NodeTypeResolver $nodeTypeResolver, ParamAnalyzer $paramAnalyzer, AssignToPropertyTypeInferer $assignToPropertyTypeInferer, TypeComparator $typeComparator)
     {
+        $this->classMethodPropertyFetchManipulator = $classMethodPropertyFetchManipulator;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->typeFactory = $typeFactory;
+        $this->staticTypeMapper = $staticTypeMapper;
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->paramAnalyzer = $paramAnalyzer;
+        $this->assignToPropertyTypeInferer = $assignToPropertyTypeInferer;
+        $this->typeComparator = $typeComparator;
     }
     public function inferProperty(Class_ $class, Property $property, ClassMethod $classMethod) : Type
     {
@@ -196,7 +215,7 @@ final readonly class TrustedClassMethodPropertyTypeInferer
             return null;
         }
         // if the FQN has different ending than the original, it was aliased and we need to return the alias
-        if (!str_ends_with($fullyQualifiedName, '\\' . $originalName->toString())) {
+        if (\substr_compare($fullyQualifiedName, '\\' . $originalName->toString(), -\strlen('\\' . $originalName->toString())) !== 0) {
             $className = $originalName->toString();
             if ($this->reflectionProvider->hasClass($className)) {
                 return new FullyQualifiedObjectType($className);

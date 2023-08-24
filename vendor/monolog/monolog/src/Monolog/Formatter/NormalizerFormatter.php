@@ -31,14 +31,15 @@ class NormalizerFormatter implements FormatterInterface
     /** @var int */
     protected $maxNormalizeItemCount = 1000;
 
-    private int $jsonEncodeOptions = Utils::DEFAULT_JSON_FLAGS;
+    /** @var int */
+    private $jsonEncodeOptions = Utils::DEFAULT_JSON_FLAGS;
 
     /**
      * @param string|null $dateFormat The format of the timestamp: one supported by DateTime::format
      */
     public function __construct(?string $dateFormat = null)
     {
-        $this->dateFormat = $dateFormat ?? static::SIMPLE_DATE;
+        $this->dateFormat = null === $dateFormat ? static::SIMPLE_DATE : $dateFormat;
         if (!function_exists('json_encode')) {
             throw new \RuntimeException('PHP\'s json extension is required to use Monolog\'s NormalizerFormatter');
         }
@@ -179,7 +180,7 @@ class NormalizerFormatter implements FormatterInterface
             } else {
                 // the rest is normalized by json encoding and decoding it
                 /** @var null|scalar|array<array|scalar|null> $value */
-                $value = json_decode($this->toJson($data, true), true, 512, JSON_THROW_ON_ERROR);
+                $value = json_decode($this->toJson($data, true), true);
             }
 
             return [Utils::getClass($data) => $value];
@@ -247,10 +248,11 @@ class NormalizerFormatter implements FormatterInterface
     /**
      * Return the JSON representation of a value
      *
+     * @param  mixed             $data
      * @throws \RuntimeException if encoding fails and errors are not ignored
      * @return string            if encoding fails and ignoreErrors is true 'null' is returned
      */
-    protected function toJson(mixed $data, bool $ignoreErrors = false): string
+    protected function toJson($data, bool $ignoreErrors = false): string
     {
         return Utils::jsonEncode($data, $this->jsonEncodeOptions, $ignoreErrors);
     }

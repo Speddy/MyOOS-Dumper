@@ -75,11 +75,15 @@ class MarkdownDescriptor extends Descriptor
     protected function describeCommand(Command $command, array $options = []) : void
     {
         if ($options['short'] ?? \false) {
-            $this->write('`' . $command->getName() . "`\n" . \str_repeat('-', Helper::width($command->getName()) + 2) . "\n\n" . ($command->getDescription() ? $command->getDescription() . "\n\n" : '') . '### Usage' . "\n\n" . \array_reduce($command->getAliases(), fn($carry, $usage) => $carry . '* `' . $usage . '`' . "\n"));
+            $this->write('`' . $command->getName() . "`\n" . \str_repeat('-', Helper::width($command->getName()) + 2) . "\n\n" . ($command->getDescription() ? $command->getDescription() . "\n\n" : '') . '### Usage' . "\n\n" . \array_reduce($command->getAliases(), function ($carry, $usage) {
+                return $carry . '* `' . $usage . '`' . "\n";
+            }));
             return;
         }
         $command->mergeApplicationDefinition(\false);
-        $this->write('`' . $command->getName() . "`\n" . \str_repeat('-', Helper::width($command->getName()) + 2) . "\n\n" . ($command->getDescription() ? $command->getDescription() . "\n\n" : '') . '### Usage' . "\n\n" . \array_reduce(\array_merge([$command->getSynopsis()], $command->getAliases(), $command->getUsages()), fn($carry, $usage) => $carry . '* `' . $usage . '`' . "\n"));
+        $this->write('`' . $command->getName() . "`\n" . \str_repeat('-', Helper::width($command->getName()) + 2) . "\n\n" . ($command->getDescription() ? $command->getDescription() . "\n\n" : '') . '### Usage' . "\n\n" . \array_reduce(\array_merge([$command->getSynopsis()], $command->getAliases(), $command->getUsages()), function ($carry, $usage) {
+            return $carry . '* `' . $usage . '`' . "\n";
+        }));
         if ($help = $command->getProcessedHelp()) {
             $this->write("\n");
             $this->write($help);
@@ -102,7 +106,9 @@ class MarkdownDescriptor extends Descriptor
                 $this->write('**' . $namespace['id'] . ':**');
             }
             $this->write("\n\n");
-            $this->write(\implode("\n", \array_map(fn($commandName) => \sprintf('* [`%s`](#%s)', $commandName, \str_replace(':', '', $description->getCommand($commandName)->getName())), $namespace['commands'])));
+            $this->write(\implode("\n", \array_map(function ($commandName) use($description) {
+                return \sprintf('* [`%s`](#%s)', $commandName, \str_replace(':', '', $description->getCommand($commandName)->getName()));
+            }, $namespace['commands'])));
         }
         foreach ($description->getCommands() as $command) {
             $this->write("\n\n");

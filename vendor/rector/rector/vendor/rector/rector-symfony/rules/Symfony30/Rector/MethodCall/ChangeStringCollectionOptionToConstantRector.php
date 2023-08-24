@@ -25,25 +25,32 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ChangeStringCollectionOptionToConstantRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly FormAddMethodCallAnalyzer $formAddMethodCallAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly FormOptionsArrayMatcher $formOptionsArrayMatcher,
-        /**
-         * @readonly
-         */
-        private readonly FormTypeStringToTypeProvider $formTypeStringToTypeProvider,
-        /**
-         * @readonly
-         */
-        private readonly FormCollectionAnalyzer $formCollectionAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\FormAddMethodCallAnalyzer
+     */
+    private $formAddMethodCallAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\FormOptionsArrayMatcher
+     */
+    private $formOptionsArrayMatcher;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\FormHelper\FormTypeStringToTypeProvider
+     */
+    private $formTypeStringToTypeProvider;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\FormCollectionAnalyzer
+     */
+    private $formCollectionAnalyzer;
+    public function __construct(FormAddMethodCallAnalyzer $formAddMethodCallAnalyzer, FormOptionsArrayMatcher $formOptionsArrayMatcher, FormTypeStringToTypeProvider $formTypeStringToTypeProvider, FormCollectionAnalyzer $formCollectionAnalyzer)
     {
+        $this->formAddMethodCallAnalyzer = $formAddMethodCallAnalyzer;
+        $this->formOptionsArrayMatcher = $formOptionsArrayMatcher;
+        $this->formTypeStringToTypeProvider = $formTypeStringToTypeProvider;
+        $this->formCollectionAnalyzer = $formCollectionAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

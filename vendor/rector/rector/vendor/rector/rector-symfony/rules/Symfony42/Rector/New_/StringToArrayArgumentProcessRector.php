@@ -29,16 +29,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class StringToArrayArgumentProcessRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\NodeTransformer
+     */
+    private $nodeTransformer;
+    /**
      * @var string[]
      */
     private const EXCLUDED_PROCESS_METHOD_CALLS = ['setWorkingDirectory', 'addOutput', 'addErrorOutput'];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly NodeTransformer $nodeTransformer
-    )
+    public function __construct(NodeTransformer $nodeTransformer)
     {
+        $this->nodeTransformer = $nodeTransformer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -9,15 +9,16 @@ use RectorPrefix202308\Symfony\Component\Console\Input\ArgvInput;
 use RectorPrefix202308\Symfony\Component\Console\Output\ConsoleOutput;
 use RectorPrefix202308\Symfony\Component\Console\Output\OutputInterface;
 use RectorPrefix202308\Symfony\Component\Console\Style\SymfonyStyle;
-final readonly class SymfonyStyleFactory
+final class SymfonyStyleFactory
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PrivatesAccessor $privatesAccessor
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Util\Reflection\PrivatesAccessor
+     */
+    private $privatesAccessor;
+    public function __construct(PrivatesAccessor $privatesAccessor)
     {
+        $this->privatesAccessor = $privatesAccessor;
     }
     /**
      * @api

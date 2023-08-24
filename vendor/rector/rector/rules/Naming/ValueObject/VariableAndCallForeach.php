@@ -13,22 +13,35 @@ use PhpParser\Node\Stmt\Function_;
 final class VariableAndCallForeach
 {
     /**
+     * @readonly
+     * @var \PhpParser\Node\Expr\Variable
+     */
+    private $variable;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Expr\FuncCall|\PhpParser\Node\Expr\StaticCall|\PhpParser\Node\Expr\MethodCall
+     */
+    private $expr;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $variableName;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Stmt\Function_|\PhpParser\Node\Expr\Closure
+     */
+    private $functionLike;
+    /**
      * @param \PhpParser\Node\Expr\FuncCall|\PhpParser\Node\Expr\StaticCall|\PhpParser\Node\Expr\MethodCall $expr
      * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Stmt\Function_|\PhpParser\Node\Expr\Closure $functionLike
      */
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly Variable $variable,
-        private $expr,
-        /**
-         * @readonly
-         */
-        private readonly string $variableName,
-        private $functionLike
-    )
+    public function __construct(Variable $variable, $expr, string $variableName, $functionLike)
     {
+        $this->variable = $variable;
+        $this->expr = $expr;
+        $this->variableName = $variableName;
+        $this->functionLike = $functionLike;
     }
     public function getVariable() : Variable
     {

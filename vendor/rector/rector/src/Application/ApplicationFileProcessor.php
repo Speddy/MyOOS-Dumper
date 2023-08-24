@@ -35,6 +35,21 @@ final class ApplicationFileProcessor
     private $symfonyStyle;
     /**
      * @readonly
+     * @var \Rector\Core\ValueObjectFactory\Application\FileFactory
+     */
+    private $fileFactory;
+    /**
+     * @readonly
+     * @var \Rector\Core\Util\ArrayParametersMerger
+     */
+    private $arrayParametersMerger;
+    /**
+     * @readonly
+     * @var \Rector\Parallel\Application\ParallelFileProcessor
+     */
+    private $parallelFileProcessor;
+    /**
+     * @readonly
      * @var \Symplify\EasyParallel\ScheduleFactory
      */
     private $scheduleFactory;
@@ -44,50 +59,56 @@ final class ApplicationFileProcessor
      */
     private $cpuCoreCountProvider;
     /**
+     * @readonly
+     * @var \Rector\Caching\Detector\ChangedFilesDetector
+     */
+    private $changedFilesDetector;
+    /**
+     * @readonly
+     * @var \Rector\Core\Provider\CurrentFileProvider
+     */
+    private $currentFileProvider;
+    /**
+     * @readonly
+     * @var \Rector\Core\Application\FileProcessor\PhpFileProcessor
+     */
+    private $phpFileProcessor;
+    /**
+     * @var FileProcessorInterface[]
+     * @readonly
+     */
+    private $fileProcessors;
+    /**
      * @var string
      */
     private const ARGV = 'argv';
     /**
      * @var SystemError[]
      */
-    private array $systemErrors = [];
+    private $systemErrors = [];
     /**
      * @param FileProcessorInterface[] $fileProcessors
      */
-    public function __construct(SymfonyStyle $symfonyStyle, /**
-     * @readonly
-     */
-    private readonly FileFactory $fileFactory, /**
-     * @readonly
-     */
-    private readonly ArrayParametersMerger $arrayParametersMerger, /**
-     * @readonly
-     */
-    private readonly ParallelFileProcessor $parallelFileProcessor, ScheduleFactory $scheduleFactory, CpuCoreCountProvider $cpuCoreCountProvider, /**
-     * @readonly
-     */
-    private readonly ChangedFilesDetector $changedFilesDetector, /**
-     * @readonly
-     */
-    private readonly CurrentFileProvider $currentFileProvider, /**
-     * @readonly
-     */
-    private readonly PhpFileProcessor $phpFileProcessor, /**
-     * @readonly
-     */
-    private readonly array $fileProcessors)
+    public function __construct(SymfonyStyle $symfonyStyle, FileFactory $fileFactory, ArrayParametersMerger $arrayParametersMerger, ParallelFileProcessor $parallelFileProcessor, ScheduleFactory $scheduleFactory, CpuCoreCountProvider $cpuCoreCountProvider, ChangedFilesDetector $changedFilesDetector, CurrentFileProvider $currentFileProvider, PhpFileProcessor $phpFileProcessor, array $fileProcessors)
     {
         $this->symfonyStyle = $symfonyStyle;
+        $this->fileFactory = $fileFactory;
+        $this->arrayParametersMerger = $arrayParametersMerger;
+        $this->parallelFileProcessor = $parallelFileProcessor;
         $this->scheduleFactory = $scheduleFactory;
         $this->cpuCoreCountProvider = $cpuCoreCountProvider;
+        $this->changedFilesDetector = $changedFilesDetector;
+        $this->currentFileProvider = $currentFileProvider;
+        $this->phpFileProcessor = $phpFileProcessor;
+        $this->fileProcessors = $fileProcessors;
         $fileProcessorClasses = [];
         foreach ($this->fileProcessors as $fileProcessor) {
-            \trigger_error(\sprintf('Rector will support only PHP, as that is the only code the AST can handle.%sThe custom "%s" file processor will not be supported, and should be refactored into own tool with file finder/printer.', \PHP_EOL, $fileProcessor::class) . \PHP_EOL . \PHP_EOL, \E_USER_WARNING);
+            \trigger_error(\sprintf('Rector will support only PHP, as that is the only code the AST can handle.%sThe custom "%s" file processor will not be supported, and should be refactored into own tool with file finder/printer.', \PHP_EOL, \get_class($fileProcessor)) . \PHP_EOL . \PHP_EOL, \E_USER_WARNING);
             // to notice
             \sleep(2);
         }
         foreach ($fileProcessors as $fileProcessor) {
-            $fileProcessorClasses[] = $fileProcessor::class;
+            $fileProcessorClasses[] = \get_class($fileProcessor);
         }
         Assert::uniqueValues($fileProcessorClasses);
     }

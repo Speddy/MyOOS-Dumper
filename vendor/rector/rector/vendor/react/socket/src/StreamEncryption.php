@@ -14,9 +14,13 @@ use UnexpectedValueException;
  */
 class StreamEncryption
 {
-    private ?int $method = null;
-    public function __construct(private LoopInterface $loop, private $server = \true)
+    private $loop;
+    private $method;
+    private $server;
+    public function __construct(LoopInterface $loop, $server = \true)
     {
+        $this->loop = $loop;
+        $this->server = $server;
         // support TLSv1.0+ by default and exclude legacy SSLv2/SSLv3.
         // As of PHP 7.2+ the main crypto method constant includes all TLS versions.
         // As of PHP 5.6+ the crypto method is a bitmask, so we explicitly include all TLS versions.
@@ -46,7 +50,7 @@ class StreamEncryption
         $stream->pause();
         // TODO: add write() event to make sure we're not sending any excessive data
         // cancelling this leaves this stream in an inconsistent state…
-        $deferred = new Deferred(function (): never {
+        $deferred = new Deferred(function () {
             throw new \RuntimeException();
         });
         // get actual stream socket from stream instance
@@ -71,7 +75,7 @@ class StreamEncryption
             $stream->encryptionEnabled = $toggle;
             $stream->resume();
             return $stream;
-        }, function ($error) use($stream, $socket, $loop): never {
+        }, function ($error) use($stream, $socket, $loop) {
             $loop->removeReadStream($socket);
             $stream->resume();
             throw $error;
@@ -81,7 +85,7 @@ class StreamEncryption
     {
         $error = null;
         \set_error_handler(function ($_, $errstr) use(&$error) {
-            $error = \str_replace(["\r", "\n"], ' ', $errstr);
+            $error = \str_replace(array("\r", "\n"), ' ', $errstr);
             // remove useless function name from error message
             if (($pos = \strpos($error, "): ")) !== \false) {
                 $error = \substr($error, $pos + 3);

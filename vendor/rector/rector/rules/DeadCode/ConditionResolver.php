@@ -17,27 +17,34 @@ use Rector\DeadCode\Contract\ConditionInterface;
 use Rector\DeadCode\ValueObject\BinaryToVersionCompareCondition;
 use Rector\DeadCode\ValueObject\VersionCompareCondition;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class ConditionResolver
+final class ConditionResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private PhpVersionProvider $phpVersionProvider,
-        /**
-         * @readonly
-         */
-        private ValueResolver $valueResolver,
-        /**
-         * @readonly
-         */
-        private PhpVersionFactory $phpVersionFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\Php\PhpVersionProvider
+     */
+    private $phpVersionProvider;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\Util\PhpVersionFactory
+     */
+    private $phpVersionFactory;
+    public function __construct(NodeNameResolver $nodeNameResolver, PhpVersionProvider $phpVersionProvider, ValueResolver $valueResolver, PhpVersionFactory $phpVersionFactory)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->phpVersionProvider = $phpVersionProvider;
+        $this->valueResolver = $valueResolver;
+        $this->phpVersionFactory = $phpVersionFactory;
     }
     public function resolveFromExpr(Expr $expr) : ?ConditionInterface
     {
@@ -48,7 +55,7 @@ final readonly class ConditionResolver
         if (!$expr instanceof Identical && !$expr instanceof Equal && !$expr instanceof NotIdentical && !$expr instanceof NotEqual) {
             return null;
         }
-        $binaryClass = $expr::class;
+        $binaryClass = \get_class($expr);
         if ($this->isVersionCompareFuncCall($expr->left)) {
             /** @var FuncCall $funcCall */
             $funcCall = $expr->left;

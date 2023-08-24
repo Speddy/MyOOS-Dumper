@@ -14,7 +14,9 @@ final class FileAndDirectoryFilter
      */
     public function filterDirectories(array $filesAndDirectories) : array
     {
-        $directories = \array_filter($filesAndDirectories, static fn(string $path): bool => \is_dir($path));
+        $directories = \array_filter($filesAndDirectories, static function (string $path) : bool {
+            return \is_dir($path);
+        });
         return \array_values($directories);
     }
     /**
@@ -23,7 +25,9 @@ final class FileAndDirectoryFilter
      */
     public function filterFiles(array $filesAndDirectories) : array
     {
-        $files = \array_filter($filesAndDirectories, static fn(string $path): bool => \is_file($path));
+        $files = \array_filter($filesAndDirectories, static function (string $path) : bool {
+            return \is_file($path);
+        });
         return \array_values($files);
     }
 }

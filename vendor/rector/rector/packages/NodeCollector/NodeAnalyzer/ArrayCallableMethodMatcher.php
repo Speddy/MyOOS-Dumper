@@ -25,27 +25,34 @@ use Rector\NodeCollector\ValueObject\ArrayCallable;
 use Rector\NodeCollector\ValueObject\ArrayCallableDynamicMethod;
 use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final readonly class ArrayCallableMethodMatcher
+final class ArrayCallableMethodMatcher
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private ValueResolver $valueResolver,
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(NodeTypeResolver $nodeTypeResolver, ValueResolver $valueResolver, ReflectionProvider $reflectionProvider, ReflectionResolver $reflectionResolver)
     {
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->valueResolver = $valueResolver;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->reflectionResolver = $reflectionResolver;
     }
     /**
      * Matches array like: "[$this, 'methodName']" → ['ClassName', 'methodName']
@@ -105,7 +112,10 @@ final readonly class ArrayCallableMethodMatcher
         }
         return !$array->items[1] instanceof ArrayItem;
     }
-    private function shouldSkipAssociativeArray(mixed $values) : bool
+    /**
+     * @param mixed $values
+     */
+    private function shouldSkipAssociativeArray($values) : bool
     {
         if (!\is_array($values)) {
             return \false;

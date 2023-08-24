@@ -20,7 +20,7 @@ final class RemoveTraitUseRector extends AbstractRector implements ConfigurableR
     /**
      * @var string[]
      */
-    private array $traitsToRemove = [];
+    private $traitsToRemove = [];
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Remove specific traits from code', [new ConfiguredCodeSample(<<<'CODE_SAMPLE'

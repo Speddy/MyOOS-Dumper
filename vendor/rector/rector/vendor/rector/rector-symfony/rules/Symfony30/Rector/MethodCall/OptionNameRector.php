@@ -19,20 +19,23 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class OptionNameRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\FormAddMethodCallAnalyzer
+     */
+    private $formAddMethodCallAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\FormOptionsArrayMatcher
+     */
+    private $formOptionsArrayMatcher;
+    /**
      * @var array<string, string>
      */
     private const OLD_TO_NEW_OPTION = ['precision' => 'scale', 'virtual' => 'inherit_data'];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly FormAddMethodCallAnalyzer $formAddMethodCallAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly FormOptionsArrayMatcher $formOptionsArrayMatcher
-    )
+    public function __construct(FormAddMethodCallAnalyzer $formAddMethodCallAnalyzer, FormOptionsArrayMatcher $formOptionsArrayMatcher)
     {
+        $this->formAddMethodCallAnalyzer = $formAddMethodCallAnalyzer;
+        $this->formOptionsArrayMatcher = $formOptionsArrayMatcher;
     }
     public function getRuleDefinition() : RuleDefinition
     {

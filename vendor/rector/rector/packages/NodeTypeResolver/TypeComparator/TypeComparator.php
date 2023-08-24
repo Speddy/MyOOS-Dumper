@@ -28,39 +28,52 @@ use Rector\NodeTypeResolver\PHPStan\TypeHasher;
 use Rector\StaticTypeMapper\StaticTypeMapper;
 use Rector\StaticTypeMapper\ValueObject\Type\AliasedObjectType;
 use Rector\TypeDeclaration\TypeNormalizer;
-final readonly class TypeComparator
+final class TypeComparator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private TypeHasher $typeHasher,
-        /**
-         * @readonly
-         */
-        private TypeNormalizer $typeNormalizer,
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper,
-        /**
-         * @readonly
-         */
-        private \Rector\NodeTypeResolver\TypeComparator\ArrayTypeComparator $arrayTypeComparator,
-        /**
-         * @readonly
-         */
-        private \Rector\NodeTypeResolver\TypeComparator\ScalarTypeComparator $scalarTypeComparator,
-        /**
-         * @readonly
-         */
-        private TypeFactory $typeFactory,
-        /**
-         * @readonly
-         */
-        private ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\TypeHasher
+     */
+    private $typeHasher;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\TypeNormalizer
+     */
+    private $typeNormalizer;
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\TypeComparator\ArrayTypeComparator
+     */
+    private $arrayTypeComparator;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\TypeComparator\ScalarTypeComparator
+     */
+    private $scalarTypeComparator;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(TypeHasher $typeHasher, TypeNormalizer $typeNormalizer, StaticTypeMapper $staticTypeMapper, \Rector\NodeTypeResolver\TypeComparator\ArrayTypeComparator $arrayTypeComparator, \Rector\NodeTypeResolver\TypeComparator\ScalarTypeComparator $scalarTypeComparator, TypeFactory $typeFactory, ReflectionResolver $reflectionResolver)
     {
+        $this->typeHasher = $typeHasher;
+        $this->typeNormalizer = $typeNormalizer;
+        $this->staticTypeMapper = $staticTypeMapper;
+        $this->arrayTypeComparator = $arrayTypeComparator;
+        $this->scalarTypeComparator = $scalarTypeComparator;
+        $this->typeFactory = $typeFactory;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function areTypesEqual(Type $firstType, Type $secondType) : bool
     {

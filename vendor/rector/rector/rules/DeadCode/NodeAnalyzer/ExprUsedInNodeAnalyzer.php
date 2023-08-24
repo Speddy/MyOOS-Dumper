@@ -9,23 +9,28 @@ use PhpParser\Node\Expr\Include_;
 use PhpParser\Node\Expr\Variable;
 use Rector\Core\NodeAnalyzer\CompactFuncCallAnalyzer;
 use Rector\Core\PhpParser\Printer\BetterStandardPrinter;
-final readonly class ExprUsedInNodeAnalyzer
+final class ExprUsedInNodeAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\DeadCode\NodeAnalyzer\UsedVariableNameAnalyzer $usedVariableNameAnalyzer,
-        /**
-         * @readonly
-         */
-        private CompactFuncCallAnalyzer $compactFuncCallAnalyzer,
-        /**
-         * @readonly
-         */
-        private BetterStandardPrinter $betterStandardPrinter
-    )
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\NodeAnalyzer\UsedVariableNameAnalyzer
+     */
+    private $usedVariableNameAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\CompactFuncCallAnalyzer
+     */
+    private $compactFuncCallAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Printer\BetterStandardPrinter
+     */
+    private $betterStandardPrinter;
+    public function __construct(\Rector\DeadCode\NodeAnalyzer\UsedVariableNameAnalyzer $usedVariableNameAnalyzer, CompactFuncCallAnalyzer $compactFuncCallAnalyzer, BetterStandardPrinter $betterStandardPrinter)
     {
+        $this->usedVariableNameAnalyzer = $usedVariableNameAnalyzer;
+        $this->compactFuncCallAnalyzer = $compactFuncCallAnalyzer;
+        $this->betterStandardPrinter = $betterStandardPrinter;
     }
     public function isUsed(Node $node, Variable $variable) : bool
     {
@@ -35,7 +40,7 @@ final readonly class ExprUsedInNodeAnalyzer
         // variable as variable variable need mark as used
         if ($node instanceof Variable) {
             $print = $this->betterStandardPrinter->print($node);
-            if (str_starts_with($print, '${$')) {
+            if (\strncmp($print, '${$', \strlen('${$')) === 0) {
                 return \true;
             }
         }

@@ -21,24 +21,29 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class AddMethodCallBasedStrictParamTypeRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\CallTypesResolver
+     */
+    private $callTypesResolver;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\ClassMethodParamTypeCompleter
+     */
+    private $classMethodParamTypeCompleter;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\NodeFinder\LocalMethodCallFinder
+     */
+    private $localMethodCallFinder;
+    /**
      * @var int
      */
     private const MAX_UNION_TYPES = 3;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly CallTypesResolver $callTypesResolver,
-        /**
-         * @readonly
-         */
-        private readonly ClassMethodParamTypeCompleter $classMethodParamTypeCompleter,
-        /**
-         * @readonly
-         */
-        private readonly LocalMethodCallFinder $localMethodCallFinder
-    )
+    public function __construct(CallTypesResolver $callTypesResolver, ClassMethodParamTypeCompleter $classMethodParamTypeCompleter, LocalMethodCallFinder $localMethodCallFinder)
     {
+        $this->callTypesResolver = $callTypesResolver;
+        $this->classMethodParamTypeCompleter = $classMethodParamTypeCompleter;
+        $this->localMethodCallFinder = $localMethodCallFinder;
     }
     public function getRuleDefinition() : RuleDefinition
     {

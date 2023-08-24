@@ -63,9 +63,11 @@ class Predis extends AbstractCache
     /**
      * Run a predis command.
      *
+     * @param string $cmd
+     * @param mixed ...$args
      * @return mixed|bool
      */
-    protected function execCommand(string $cmd, mixed ...$args)
+    protected function execCommand(string $cmd, ...$args)
     {
         $command = $this->predis->createCommand($cmd, $args);
         $response = $this->predis->executeCommand($command);
@@ -84,6 +86,7 @@ class Predis extends AbstractCache
     /**
      * Set multiple (mset) with expire
      *
+     * @param array    $dictionary
      * @param int|null $ttlSeconds
      * @return bool
      */
@@ -105,11 +108,13 @@ class Predis extends AbstractCache
 
         try {
             $responses = $transaction->execute();
-        } catch (ServerException) {
+        } catch (ServerException $e) {
             return false;
         }
 
-        $ok = array_reduce($responses, fn($ok, $response) => $ok && $response instanceof Status && $response->getPayload() === 'OK', true);
+        $ok = array_reduce($responses, function($ok, $response) {
+            return $ok && $response instanceof Status && $response->getPayload() === 'OK';
+        }, true);
 
         return $ok;
     }

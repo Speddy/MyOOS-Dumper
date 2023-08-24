@@ -28,7 +28,7 @@ final class FullyQualifiedObjectType extends ObjectType
     public function getShortName() : string
     {
         $className = $this->getClassName();
-        if (!str_contains($className, '\\')) {
+        if (\strpos($className, '\\') === \false) {
             return $className;
         }
         return (string) Strings::after($className, '\\', -1);

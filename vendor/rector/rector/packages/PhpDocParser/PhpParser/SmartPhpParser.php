@@ -10,15 +10,16 @@ use PHPStan\Parser\Parser;
  *
  * @api
  */
-final readonly class SmartPhpParser
+final class SmartPhpParser
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private Parser $parser
-    )
+    /**
+     * @readonly
+     * @var \PHPStan\Parser\Parser
+     */
+    private $parser;
+    public function __construct(Parser $parser)
     {
+        $this->parser = $parser;
     }
     /**
      * @return Stmt[]

@@ -80,18 +80,20 @@ class Process extends EventEmitter
      *
      * @var array<ReadableStreamInterface|WritableStreamInterface|DuplexStreamInterface>
      */
-    public $pipes = [];
-    private ?array $env = null;
-    private array $fds;
+    public $pipes = array();
+    private $cmd;
+    private $cwd;
+    private $env;
+    private $fds;
     private $enhanceSigchildCompatibility;
     private $sigchildPipe;
     private $process;
-    private ?array $status = null;
+    private $status;
     private $exitCode;
-    private ?int $fallbackExitCode = null;
-    private ?int $stopSignal = null;
-    private ?int $termSignal = null;
-    private static ?bool $sigchild = null;
+    private $fallbackExitCode;
+    private $stopSignal;
+    private $termSignal;
+    private static $sigchild;
     /**
      * Constructor.
      *
@@ -101,25 +103,27 @@ class Process extends EventEmitter
      * @param null|array  $fds File descriptors to allocate for this process (or null = default STDIO streams)
      * @throws \LogicException On windows or when proc_open() is not installed
      */
-    public function __construct(private $cmd, private $cwd = null, array $env = null, array $fds = null)
+    public function __construct($cmd, $cwd = null, array $env = null, array $fds = null)
     {
         if (!\function_exists('proc_open')) {
             throw new \LogicException('The Process class relies on proc_open(), which is not available on your PHP installation.');
         }
+        $this->cmd = $cmd;
+        $this->cwd = $cwd;
         if (null !== $env) {
-            $this->env = [];
+            $this->env = array();
             foreach ($env as $key => $value) {
                 $this->env[(string) $key] = (string) $value;
             }
         }
         if ($fds === null) {
-            $fds = [
-                ['pipe', 'r'],
+            $fds = array(
+                array('pipe', 'r'),
                 // stdin
-                ['pipe', 'w'],
+                array('pipe', 'w'),
                 // stdout
-                ['pipe', 'w'],
-            ];
+                array('pipe', 'w'),
+            );
         }
         if (\DIRECTORY_SEPARATOR === '\\') {
             foreach ($fds as $fd) {
@@ -158,8 +162,9 @@ class Process extends EventEmitter
         $sigchild = null;
         // Read exit code through fourth pipe to work around --enable-sigchild
         if ($this->enhanceSigchildCompatibility) {
-            $fdSpec[] = ['pipe', 'w'];
-            $sigchild = array_key_last($fdSpec);
+            $fdSpec[] = array('pipe', 'w');
+            \end($fdSpec);
+            $sigchild = \key($fdSpec);
             // make sure this is fourth or higher (do not mess with STDIO)
             if ($sigchild < 3) {
                 $fdSpec[3] = $fdSpec[$sigchild];
@@ -170,7 +175,7 @@ class Process extends EventEmitter
         }
         // on Windows, we do not launch the given command line in a shell (cmd.exe) by default and omit any error dialogs
         // the cmd.exe shell can explicitly be given as part of the command as detailed in both documentation and tests
-        $options = [];
+        $options = array();
         if (\DIRECTORY_SEPARATOR === '\\') {
             $options['bypass_shell'] = \true;
             $options['suppress_errors'] = \true;
@@ -181,7 +186,7 @@ class Process extends EventEmitter
             // proc_open(/dev/does-not-exist): Failed to open stream: No such file or directory
             $errstr = $error;
         });
-        $pipes = [];
+        $pipes = array();
         $this->process = @\proc_open($cmd, $fdSpec, $pipes, $this->cwd, $this->env, $options);
         \restore_error_handler();
         if (!\is_resource($this->process)) {
@@ -198,7 +203,7 @@ class Process extends EventEmitter
             // process already closed => report immediately
             if (!$that->isRunning()) {
                 $that->close();
-                $that->emit('exit', [$that->getExitCode(), $that->getTermSignal()]);
+                $that->emit('exit', array($that->getExitCode(), $that->getTermSignal()));
                 return;
             }
             // close not detected immediately => check regularly
@@ -206,7 +211,7 @@ class Process extends EventEmitter
                 if (!$that->isRunning()) {
                     $loop->cancelTimer($timer);
                     $that->close();
-                    $that->emit('exit', [$that->getExitCode(), $that->getTermSignal()]);
+                    $that->emit('exit', array($that->getExitCode(), $that->getTermSignal()));
                 }
             });
         };
@@ -231,9 +236,9 @@ class Process extends EventEmitter
             }
             $this->pipes[$n] = $stream;
         }
-        $this->stdin = $this->pipes[0] ?? null;
-        $this->stdout = $this->pipes[1] ?? null;
-        $this->stderr = $this->pipes[2] ?? null;
+        $this->stdin = isset($this->pipes[0]) ? $this->pipes[0] : null;
+        $this->stdout = isset($this->pipes[1]) ? $this->pipes[1] : null;
+        $this->stderr = isset($this->pipes[2]) ? $this->pipes[2] : null;
         // immediately start checking for process exit when started without any I/O pipes
         if (!$closeCount) {
             $streamCloseHandler();
@@ -394,7 +399,7 @@ class Process extends EventEmitter
         }
         \ob_start();
         \phpinfo(\INFO_GENERAL);
-        return self::$sigchild = str_contains(\ob_get_clean(), '--enable-sigchild');
+        return self::$sigchild = \false !== \strpos(\ob_get_clean(), '--enable-sigchild');
     }
     /**
      * Enable or disable sigchild compatibility mode.
@@ -420,7 +425,7 @@ class Process extends EventEmitter
         if ($this->sigchildPipe === null) {
             return;
         }
-        $r = [$this->sigchildPipe];
+        $r = array($this->sigchildPipe);
         $w = $e = null;
         $n = @\stream_select($r, $w, $e, 0);
         if (1 !== $n) {

@@ -52,8 +52,9 @@ class Stream
     /**
      * Mode
      *
+     * @var string
      */
-    private array|string|null $mode = null;
+    private $mode;
 
     /**
      * Position
@@ -79,8 +80,9 @@ class Stream
     /**
      * EOF flag
      *
+     * @var bool
      */
-    private ?bool $eof = null;
+    private $eof;
 
     /**
      * Context resource
@@ -109,7 +111,7 @@ class Stream
         if (in_array($protocol, stream_get_wrappers(), true)) {
             return false;
         }
-        return stream_wrapper_register($protocol, static::class);
+        return stream_wrapper_register($protocol, get_called_class());
     }
 
     /**
@@ -160,7 +162,7 @@ class Stream
             }
         }
 
-        if (preg_match('/^{[a-z0-9]+}$/i', (string) $host)) {
+        if (preg_match('/^{[a-z0-9]+}$/i', $host)) {
             $host = SSH2::getConnectionByResourceId($host);
             if ($host === false) {
                 return false;
@@ -302,14 +304,14 @@ class Stream
                 return 0;
             }
             // seems that PHP calls stream_read in 8k chunks
-            call_user_func($this->notification, STREAM_NOTIFY_PROGRESS, STREAM_NOTIFY_SEVERITY_INFO, '', 0, strlen((string) $result), $this->size);
+            call_user_func($this->notification, STREAM_NOTIFY_PROGRESS, STREAM_NOTIFY_SEVERITY_INFO, '', 0, strlen($result), $this->size);
         }
 
         if (empty($result)) { // ie. false or empty string
             $this->eof = true;
             return false;
         }
-        $this->pos += strlen((string) $result);
+        $this->pos += strlen($result);
 
         return $result;
     }
@@ -407,9 +409,10 @@ class Stream
      *
      * @param string $path
      * @param int $option
+     * @param mixed $var
      * @return bool
      */
-    private function _stream_metadata($path, $option, mixed $var)
+    private function _stream_metadata($path, $option, $var)
     {
         $path = $this->parse_path($path);
         if ($path === false) {
@@ -421,8 +424,8 @@ class Stream
         //     and https://github.com/php/php-src/blob/master/main/php_streams.h#L592
         switch ($option) {
             case 1: // PHP_STREAM_META_TOUCH
-                $time = $var[0] ?? null;
-                $atime = $var[1] ?? null;
+                $time = isset($var[0]) ? $var[0] : null;
+                $atime = isset($var[1]) ? $var[1] : null;
                 return $this->sftp->touch($path, $time, $atime);
             case 2: // PHP_STREAM_OWNER_NAME
             case 3: // PHP_STREAM_GROUP_NAME
@@ -728,6 +731,7 @@ class Stream
      * NET_SFTP_STREAM_LOGGING is enabled) the parameters will be passed through to the appropriate method.
      *
      * @param string $name
+     * @param array $arguments
      * @return mixed
      */
     public function __call($name, array $arguments)

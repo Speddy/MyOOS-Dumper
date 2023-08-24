@@ -19,13 +19,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class UnusedForeachValueToArrayKeysRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ExprUsedInNodeAnalyzer $exprUsedInNodeAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\NodeAnalyzer\ExprUsedInNodeAnalyzer
+     */
+    private $exprUsedInNodeAnalyzer;
+    public function __construct(ExprUsedInNodeAnalyzer $exprUsedInNodeAnalyzer)
     {
+        $this->exprUsedInNodeAnalyzer = $exprUsedInNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -139,7 +140,9 @@ CODE_SAMPLE
     }
     private function isVariableUsedInForeach(Variable $variable, Foreach_ $foreach) : bool
     {
-        return (bool) $this->betterNodeFinder->findFirst($foreach->stmts, fn(Node $node): bool => $this->exprUsedInNodeAnalyzer->isUsed($node, $variable));
+        return (bool) $this->betterNodeFinder->findFirst($foreach->stmts, function (Node $node) use($variable) : bool {
+            return $this->exprUsedInNodeAnalyzer->isUsed($node, $variable);
+        });
     }
     private function removeForeachValueAndUseArrayKeys(Foreach_ $foreach, Expr $keyVarExpr) : void
     {

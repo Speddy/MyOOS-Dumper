@@ -14,25 +14,33 @@ use Rector\Symfony\DataProvider\ServiceMapProvider;
 use Rector\Symfony\ValueObject\ServiceDefinition;
 final class MessengerHelper
 {
+    /**
+     * @readonly
+     * @var \Rector\PhpAttribute\NodeFactory\PhpAttributeGroupFactory
+     */
+    private $phpAttributeGroupFactory;
+    /**
+     * @readonly
+     * @var \Rector\PhpAttribute\AttributeArrayNameInliner
+     */
+    private $attributeArrayNameInliner;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\DataProvider\ServiceMapProvider
+     */
+    private $serviceMapProvider;
     public const MESSAGE_HANDLER_INTERFACE = 'Symfony\\Component\\Messenger\\Handler\\MessageHandlerInterface';
     public const MESSAGE_SUBSCRIBER_INTERFACE = 'Symfony\\Component\\Messenger\\Handler\\MessageSubscriberInterface';
     public const AS_MESSAGE_HANDLER_ATTRIBUTE = 'Symfony\\Component\\Messenger\\Attribute\\AsMessageHandler';
-    private string $messengerTagName = 'messenger.message_handler';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly PhpAttributeGroupFactory $phpAttributeGroupFactory,
-        /**
-         * @readonly
-         */
-        private readonly AttributeArrayNameInliner $attributeArrayNameInliner,
-        /**
-         * @readonly
-         */
-        private readonly ServiceMapProvider $serviceMapProvider
-    )
+    /**
+     * @var string
+     */
+    private $messengerTagName = 'messenger.message_handler';
+    public function __construct(PhpAttributeGroupFactory $phpAttributeGroupFactory, AttributeArrayNameInliner $attributeArrayNameInliner, ServiceMapProvider $serviceMapProvider)
     {
+        $this->phpAttributeGroupFactory = $phpAttributeGroupFactory;
+        $this->attributeArrayNameInliner = $attributeArrayNameInliner;
+        $this->serviceMapProvider = $serviceMapProvider;
     }
     /**
      * @return array<string, mixed>

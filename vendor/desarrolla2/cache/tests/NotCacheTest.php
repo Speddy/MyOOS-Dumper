@@ -36,7 +36,9 @@ class NotCacheTest extends TestCase
      */
     public function dataProvider()
     {
-        return [[]];
+        return array(
+            array(),
+        );
     }
 
     /**

@@ -20,27 +20,34 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 /**
  * @see \Rector\Core\Tests\PhpParser\Node\BetterNodeFinder\BetterNodeFinderTest
  */
-final readonly class BetterNodeFinder
+final class BetterNodeFinder
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeFinder $nodeFinder,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private ClassAnalyzer $classAnalyzer,
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser
-    )
+    /**
+     * @readonly
+     * @var \PhpParser\NodeFinder
+     */
+    private $nodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ClassAnalyzer
+     */
+    private $classAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    public function __construct(NodeFinder $nodeFinder, NodeNameResolver $nodeNameResolver, ClassAnalyzer $classAnalyzer, SimpleCallableNodeTraverser $simpleCallableNodeTraverser)
     {
+        $this->nodeFinder = $nodeFinder;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->classAnalyzer = $classAnalyzer;
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
     }
     /**
      * @template T of Node
@@ -137,7 +144,9 @@ final readonly class BetterNodeFinder
     public function findFirstNonAnonymousClass(array $nodes) : ?Node
     {
         // skip anonymous classes
-        return $this->findFirst($nodes, fn(Node $node): bool => $node instanceof Class_ && !$this->classAnalyzer->isAnonymousClass($node));
+        return $this->findFirst($nodes, function (Node $node) : bool {
+            return $node instanceof Class_ && !$this->classAnalyzer->isAnonymousClass($node);
+        });
     }
     /**
      * @param \PhpParser\Node|mixed[] $nodes
@@ -240,6 +249,8 @@ final readonly class BetterNodeFinder
     private function findInstanceOfName($nodes, string $type, string $name) : ?Node
     {
         Assert::isAOf($type, Node::class);
-        return $this->nodeFinder->findFirst($nodes, fn(Node $node): bool => $node instanceof $type && $this->nodeNameResolver->isName($node, $name));
+        return $this->nodeFinder->findFirst($nodes, function (Node $node) use($type, $name) : bool {
+            return $node instanceof $type && $this->nodeNameResolver->isName($node, $name);
+        });
     }
 }

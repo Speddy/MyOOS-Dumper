@@ -9,15 +9,16 @@ use PHPStan\Reflection\ReflectionProvider;
 /**
  * Verify whether Class_'s method or property allowed to be overridden by verify class parent or implements exists
  */
-final readonly class OverrideByParentClassGuard
+final class OverrideByParentClassGuard
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider
-    )
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    public function __construct(ReflectionProvider $reflectionProvider)
     {
+        $this->reflectionProvider = $reflectionProvider;
     }
     public function isLegal(Class_ $class) : bool
     {

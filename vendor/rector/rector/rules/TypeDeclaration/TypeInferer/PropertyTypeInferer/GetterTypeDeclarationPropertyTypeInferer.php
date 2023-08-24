@@ -10,23 +10,28 @@ use PHPStan\Type\Type;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\TypeDeclaration\FunctionLikeReturnTypeResolver;
 use Rector\TypeDeclaration\NodeAnalyzer\ClassMethodAndPropertyAnalyzer;
-final readonly class GetterTypeDeclarationPropertyTypeInferer
+final class GetterTypeDeclarationPropertyTypeInferer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private FunctionLikeReturnTypeResolver $functionLikeReturnTypeResolver,
-        /**
-         * @readonly
-         */
-        private ClassMethodAndPropertyAnalyzer $classMethodAndPropertyAnalyzer,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\FunctionLikeReturnTypeResolver
+     */
+    private $functionLikeReturnTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\ClassMethodAndPropertyAnalyzer
+     */
+    private $classMethodAndPropertyAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(FunctionLikeReturnTypeResolver $functionLikeReturnTypeResolver, ClassMethodAndPropertyAnalyzer $classMethodAndPropertyAnalyzer, NodeNameResolver $nodeNameResolver)
     {
+        $this->functionLikeReturnTypeResolver = $functionLikeReturnTypeResolver;
+        $this->classMethodAndPropertyAnalyzer = $classMethodAndPropertyAnalyzer;
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function inferProperty(Property $property, Class_ $class) : ?Type
     {

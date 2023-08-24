@@ -6,9 +6,13 @@ namespace RectorPrefix202308\Doctrine\Inflector\Rules;
 use function preg_match;
 final class Pattern
 {
-    private ?string $regex = null;
-    public function __construct(private string $pattern)
+    /** @var string */
+    private $pattern;
+    /** @var string */
+    private $regex;
+    public function __construct(string $pattern)
     {
+        $this->pattern = $pattern;
         if (isset($this->pattern[0]) && $this->pattern[0] === '/') {
             $this->regex = $this->pattern;
         } else {

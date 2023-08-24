@@ -15,19 +15,22 @@ use Rector\NodeNameResolver\NodeNameResolver;
 /**
  * @internal called from AstResolver
  */
-final readonly class ClassLikeAstResolver
+final class ClassLikeAstResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(BetterNodeFinder $betterNodeFinder, NodeNameResolver $nodeNameResolver)
     {
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @return \PhpParser\Node\Stmt\Trait_|\PhpParser\Node\Stmt\Class_|\PhpParser\Node\Stmt\Interface_|\PhpParser\Node\Stmt\Enum_|null

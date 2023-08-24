@@ -11,9 +11,9 @@ use SplQueue;
  * @see LoopInterface
  * @internal
  */
-final readonly class FutureTickQueue
+final class FutureTickQueue
 {
-    private \SplQueue $queue;
+    private $queue;
     public function __construct()
     {
         $this->queue = new SplQueue();

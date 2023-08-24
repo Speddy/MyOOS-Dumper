@@ -22,5 +22,5 @@ use phpseclib3\File\ASN1;
  */
 abstract class OrganizationName
 {
-    final public const MAP = ['type' => ASN1::TYPE_PRINTABLE_STRING];
+    const MAP = ['type' => ASN1::TYPE_PRINTABLE_STRING];
 }

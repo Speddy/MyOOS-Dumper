@@ -28,21 +28,38 @@ use RectorPrefix202308\SebastianBergmann\Diff\Differ;
  */
 final class UnifiedDiffOutputBuilder extends AbstractChunkOutputBuilder
 {
-    private bool $collapseRanges = \true;
-    private int $commonLineThreshold = 6;
+    /**
+     * @var bool
+     */
+    private $collapseRanges = \true;
+    /**
+     * @var int
+     */
+    private $commonLineThreshold = 6;
     /**
      * @psalm-var positive-int
+     * @var int
      */
-    private int $contextLines = 3;
-    public function __construct(private readonly string $header = "--- Original\n+++ New\n", private readonly bool $addLineNumbers = \false)
+    private $contextLines = 3;
+    /**
+     * @var string
+     */
+    private $header;
+    /**
+     * @var bool
+     */
+    private $addLineNumbers;
+    public function __construct(string $header = "--- Original\n+++ New\n", bool $addLineNumbers = \false)
     {
+        $this->header = $header;
+        $this->addLineNumbers = $addLineNumbers;
     }
     public function getDiff(array $diff) : string
     {
         $buffer = fopen('php://memory', 'r+b');
         if ('' !== $this->header) {
             fwrite($buffer, $this->header);
-            if (!str_ends_with($this->header, "\n")) {
+            if (\substr_compare($this->header, "\n", -strlen("\n")) !== 0) {
                 fwrite($buffer, "\n");
             }
         }
@@ -61,7 +78,7 @@ final class UnifiedDiffOutputBuilder extends AbstractChunkOutputBuilder
         // detect "No newline at end of file" and insert into `$diff` if needed
         $upperLimit = count($diff);
         if (0 === $diff[$upperLimit - 1][1]) {
-            $lc = substr((string) $diff[$upperLimit - 1][0], -1);
+            $lc = substr($diff[$upperLimit - 1][0], -1);
             if ("\n" !== $lc) {
                 array_splice($diff, $upperLimit, 0, [["\n\\ No newline at end of file\n", Differ::NO_LINE_END_EOF_WARNING]]);
             }
@@ -72,7 +89,7 @@ final class UnifiedDiffOutputBuilder extends AbstractChunkOutputBuilder
             for ($i = $upperLimit - 1; $i >= 0; $i--) {
                 if (isset($toFind[$diff[$i][1]])) {
                     unset($toFind[$diff[$i][1]]);
-                    $lc = substr((string) $diff[$i][0], -1);
+                    $lc = substr($diff[$i][0], -1);
                     if ("\n" !== $lc) {
                         array_splice($diff, $i + 1, 0, [["\n\\ No newline at end of file\n", Differ::NO_LINE_END_EOF_WARNING]]);
                     }

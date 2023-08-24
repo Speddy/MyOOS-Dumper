@@ -22,19 +22,22 @@ use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
 /**
  * @implements NodeTypeResolverInterface<New_>
  */
-final readonly class NewTypeResolver implements NodeTypeResolverInterface
+final class NewTypeResolver implements NodeTypeResolverInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private ClassAnalyzer $classAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ClassAnalyzer
+     */
+    private $classAnalyzer;
+    public function __construct(NodeNameResolver $nodeNameResolver, ClassAnalyzer $classAnalyzer)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->classAnalyzer = $classAnalyzer;
     }
     /**
      * @return array<class-string<Node>>

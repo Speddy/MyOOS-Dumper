@@ -35,10 +35,12 @@ use RectorPrefix202308\React\Promise\Promise;
  */
 final class CoopExecutor implements ExecutorInterface
 {
-    private array $pending = [];
-    private array $counts = [];
-    public function __construct(private readonly ExecutorInterface $executor)
+    private $executor;
+    private $pending = array();
+    private $counts = array();
+    public function __construct(ExecutorInterface $base)
     {
+        $this->executor = $base;
     }
     public function query(Query $query)
     {

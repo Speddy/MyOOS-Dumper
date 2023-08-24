@@ -27,22 +27,30 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class MixedTypeRector extends AbstractRector implements MinPhpVersionInterface
 {
-    private bool $hasChanged = \false;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private readonly ClassChildAnalyzer $classChildAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ParamTagRemover $paramTagRemover
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\FamilyTree\NodeAnalyzer\ClassChildAnalyzer
+     */
+    private $classChildAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\PhpDoc\TagRemover\ParamTagRemover
+     */
+    private $paramTagRemover;
+    /**
+     * @var bool
+     */
+    private $hasChanged = \false;
+    public function __construct(ReflectionResolver $reflectionResolver, ClassChildAnalyzer $classChildAnalyzer, ParamTagRemover $paramTagRemover)
     {
+        $this->reflectionResolver = $reflectionResolver;
+        $this->classChildAnalyzer = $classChildAnalyzer;
+        $this->paramTagRemover = $paramTagRemover;
     }
     public function getRuleDefinition() : RuleDefinition
     {

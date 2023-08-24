@@ -17,17 +17,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ParamTypeFromRouteRequiredRegexRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ControllerAnalyzer $controllerAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly RouteRequiredParamNameToTypesResolver $routeRequiredParamNameToTypesResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\TypeAnalyzer\ControllerAnalyzer
+     */
+    private $controllerAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\RouteRequiredParamNameToTypesResolver
+     */
+    private $routeRequiredParamNameToTypesResolver;
+    public function __construct(ControllerAnalyzer $controllerAnalyzer, RouteRequiredParamNameToTypesResolver $routeRequiredParamNameToTypesResolver)
     {
+        $this->controllerAnalyzer = $controllerAnalyzer;
+        $this->routeRequiredParamNameToTypesResolver = $routeRequiredParamNameToTypesResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

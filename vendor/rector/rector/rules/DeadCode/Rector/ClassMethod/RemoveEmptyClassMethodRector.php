@@ -19,21 +19,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveEmptyClassMethodRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ClassMethodManipulator $classMethodManipulator,
-        /**
-         * @readonly
-         */
-        private readonly ControllerClassMethodManipulator $controllerClassMethodManipulator,
-        /**
-         * @readonly
-         */
-        private readonly ParamAnalyzer $paramAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\ClassMethodManipulator
+     */
+    private $classMethodManipulator;
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\NodeManipulator\ControllerClassMethodManipulator
+     */
+    private $controllerClassMethodManipulator;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ParamAnalyzer
+     */
+    private $paramAnalyzer;
+    public function __construct(ClassMethodManipulator $classMethodManipulator, ControllerClassMethodManipulator $controllerClassMethodManipulator, ParamAnalyzer $paramAnalyzer)
     {
+        $this->classMethodManipulator = $classMethodManipulator;
+        $this->controllerClassMethodManipulator = $controllerClassMethodManipulator;
+        $this->paramAnalyzer = $paramAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

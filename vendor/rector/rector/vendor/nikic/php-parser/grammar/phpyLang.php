@@ -35,7 +35,7 @@ function resolveNodes($code)
             $paramCode .= $param . ', ';
         }
         return 'new ' . $matches['name'] . '(' . $paramCode . 'attributes())';
-    }, (string) $code);
+    }, $code);
 }
 function resolveMacros($code)
 {
@@ -88,23 +88,23 @@ function resolveMacros($code)
             return '$attrs = $this->startAttributeStack[#1]; $stmts = ' . $args[0] . '; ' . 'if (!empty($attrs[\'comments\'])) {' . '$stmts[0]->setAttribute(\'comments\', ' . 'array_merge($attrs[\'comments\'], $stmts[0]->getAttribute(\'comments\', []))); }';
         }
         return $matches[0];
-    }, (string) $code);
+    }, $code);
 }
 function assertArgs($num, $args, $name)
 {
-    if ($num != (is_countable($args) ? \count($args) : 0)) {
+    if ($num != \count($args)) {
         die('Wrong argument count for ' . $name . '().');
     }
 }
 function resolveStackAccess($code)
 {
-    $code = \preg_replace('/\\$\\d+/', '$this->semStack[$0]', (string) $code);
+    $code = \preg_replace('/\\$\\d+/', '$this->semStack[$0]', $code);
     $code = \preg_replace('/#(\\d+)/', '$$1', $code);
     return $code;
 }
 function removeTrailingWhitespace($code)
 {
-    $lines = \explode("\n", (string) $code);
+    $lines = \explode("\n", $code);
     $lines = \array_map('rtrim', $lines);
     return \implode("\n", $lines);
 }
@@ -113,11 +113,11 @@ function removeTrailingWhitespace($code)
 //////////////////////////////
 function regex($regex)
 {
-    return '~' . \RectorPrefix202308\LIB . '(?:' . \str_replace('~', '\\~', (string) $regex) . ')~';
+    return '~' . \RectorPrefix202308\LIB . '(?:' . \str_replace('~', '\\~', $regex) . ')~';
 }
 function magicSplit($regex, $string)
 {
-    $pieces = \preg_split(regex('(?:(?&string)|(?&comment)|(?&code))(*SKIP)(*FAIL)|' . $regex), (string) $string);
+    $pieces = \preg_split(regex('(?:(?&string)|(?&comment)|(?&code))(*SKIP)(*FAIL)|' . $regex), $string);
     foreach ($pieces as &$piece) {
         $piece = \trim($piece);
     }

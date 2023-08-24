@@ -23,8 +23,11 @@ class DebugFormatterHelper extends Helper
     /**
      * @var mixed[]
      */
-    private array $started = [];
-    private int $count = -1;
+    private $started = [];
+    /**
+     * @var int
+     */
+    private $count = -1;
     /**
      * Starts a debug formatting session.
      */

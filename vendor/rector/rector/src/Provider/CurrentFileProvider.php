@@ -6,7 +6,10 @@ namespace Rector\Core\Provider;
 use Rector\Core\ValueObject\Application\File;
 final class CurrentFileProvider
 {
-    private ?\Rector\Core\ValueObject\Application\File $file = null;
+    /**
+     * @var \Rector\Core\ValueObject\Application\File|null
+     */
+    private $file;
     public function setFile(File $file) : void
     {
         $this->file = $file;

@@ -13,19 +13,25 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 /**
  * @see \Rector\Tests\StaticTypeMapper\PhpDoc\PhpDocTypeMapperTest
  */
-final readonly class PhpDocTypeMapper
+final class PhpDocTypeMapper
 {
+    /**
+     * @var PhpDocTypeMapperInterface[]
+     * @readonly
+     */
+    private $phpDocTypeMappers;
+    /**
+     * @readonly
+     * @var \PHPStan\PhpDoc\TypeNodeResolver
+     */
+    private $typeNodeResolver;
     /**
      * @param PhpDocTypeMapperInterface[] $phpDocTypeMappers
      */
-    public function __construct(/**
-     * @readonly
-     */
-    private array $phpDocTypeMappers, /**
-     * @readonly
-     */
-    private TypeNodeResolver $typeNodeResolver)
+    public function __construct(array $phpDocTypeMappers, TypeNodeResolver $typeNodeResolver)
     {
+        $this->phpDocTypeMappers = $phpDocTypeMappers;
+        $this->typeNodeResolver = $typeNodeResolver;
         Assert::notEmpty($phpDocTypeMappers);
     }
     public function mapToPHPStanType(TypeNode $typeNode, Node $node, NameScope $nameScope) : Type

@@ -100,7 +100,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
         }
 
         if (!$this->handler instanceof HandlerInterface && !is_callable($this->handler)) {
-            throw new \RuntimeException("The given handler (".json_encode($this->handler, JSON_THROW_ON_ERROR).") is not a callable nor a Monolog\Handler\HandlerInterface object");
+            throw new \RuntimeException("The given handler (".json_encode($this->handler).") is not a callable nor a Monolog\Handler\HandlerInterface object");
         }
     }
 
@@ -189,7 +189,9 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
     {
         if (null !== $this->passthruLevel) {
             $level = $this->passthruLevel;
-            $this->buffer = array_filter($this->buffer, fn($record) => $record['level'] >= $level);
+            $this->buffer = array_filter($this->buffer, function ($record) use ($level) {
+                return $record['level'] >= $level;
+            });
             if (count($this->buffer) > 0) {
                 $this->getHandler(end($this->buffer))->handleBatch($this->buffer);
             }
@@ -232,7 +234,7 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
             return $this;
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.$handler::class.' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
     }
 
     /**
@@ -245,6 +247,6 @@ class FingersCrossedHandler extends Handler implements ProcessableHandlerInterfa
             return $handler->getFormatter();
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.$handler::class.' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
     }
 }

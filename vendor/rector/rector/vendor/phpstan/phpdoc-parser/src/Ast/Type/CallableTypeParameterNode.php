@@ -6,7 +6,7 @@ namespace PHPStan\PhpDocParser\Ast\Type;
 use PHPStan\PhpDocParser\Ast\Node;
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use function trim;
-class CallableTypeParameterNode implements Node, \Stringable
+class CallableTypeParameterNode implements Node
 {
     use NodeAttributes;
     /** @var TypeNode */

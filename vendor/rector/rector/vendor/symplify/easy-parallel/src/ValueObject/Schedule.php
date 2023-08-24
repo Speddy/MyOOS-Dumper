@@ -9,22 +9,25 @@ namespace RectorPrefix202308\Symplify\EasyParallel\ValueObject;
  *
  * @api
  */
-final readonly class Schedule
+final class Schedule
 {
+    /**
+     * @readonly
+     * @var int
+     */
+    private $numberOfProcesses;
+    /**
+     * @var array<array<string>>
+     * @readonly
+     */
+    private $jobs;
     /**
      * @param array<array<string>> $jobs
      */
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private int $numberOfProcesses,
-        /**
-         * @readonly
-         */
-        private array $jobs
-    )
+    public function __construct(int $numberOfProcesses, array $jobs)
     {
+        $this->numberOfProcesses = $numberOfProcesses;
+        $this->jobs = $jobs;
     }
     public function getNumberOfProcesses() : int
     {

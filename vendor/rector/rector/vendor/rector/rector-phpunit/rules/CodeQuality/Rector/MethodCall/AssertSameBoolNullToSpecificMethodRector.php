@@ -20,20 +20,29 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class AssertSameBoolNullToSpecificMethodRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\IdentifierManipulator
+     */
+    private $identifierManipulator;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\ArgumentMover
+     */
+    private $argumentMover;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
      * @var ConstantWithAssertMethods[]
      */
-    private array $constantWithAssertMethods = [];
-    public function __construct(/**
-     * @readonly
-     */
-    private readonly IdentifierManipulator $identifierManipulator, /**
-     * @readonly
-     */
-    private readonly ArgumentMover $argumentMover, /**
-     * @readonly
-     */
-    private readonly TestsNodeAnalyzer $testsNodeAnalyzer)
+    private $constantWithAssertMethods = [];
+    public function __construct(IdentifierManipulator $identifierManipulator, ArgumentMover $argumentMover, TestsNodeAnalyzer $testsNodeAnalyzer)
     {
+        $this->identifierManipulator = $identifierManipulator;
+        $this->argumentMover = $argumentMover;
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
         $this->constantWithAssertMethods = [new ConstantWithAssertMethods('null', 'assertNull', 'assertNotNull'), new ConstantWithAssertMethods('true', 'assertTrue', 'assertNotTrue'), new ConstantWithAssertMethods('false', 'assertFalse', 'assertNotFalse')];
     }
     public function getRuleDefinition() : RuleDefinition

@@ -20,7 +20,8 @@ use Monolog\ResettableInterface;
  */
 class UidProcessor implements ProcessorInterface, ResettableInterface
 {
-    private string $uid;
+    /** @var string */
+    private $uid;
 
     public function __construct(int $length = 7)
     {

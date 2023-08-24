@@ -20,6 +20,11 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class AssertCompareToSpecificMethodRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
      * @var string
      */
     private const ASSERT_COUNT = 'assertCount';
@@ -30,12 +35,10 @@ final class AssertCompareToSpecificMethodRector extends AbstractRector
     /**
      * @var FunctionNameWithAssertMethods[]
      */
-    private array $functionNamesWithAssertMethods = [];
-    public function __construct(/**
-     * @readonly
-     */
-    private readonly TestsNodeAnalyzer $testsNodeAnalyzer)
+    private $functionNamesWithAssertMethods = [];
+    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer)
     {
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
         $this->functionNamesWithAssertMethods = [new FunctionNameWithAssertMethods('count', self::ASSERT_COUNT, self::ASSERT_NOT_COUNT), new FunctionNameWithAssertMethods('sizeof', self::ASSERT_COUNT, self::ASSERT_NOT_COUNT), new FunctionNameWithAssertMethods('iterator_count', self::ASSERT_COUNT, self::ASSERT_NOT_COUNT), new FunctionNameWithAssertMethods('gettype', 'assertInternalType', 'assertNotInternalType'), new FunctionNameWithAssertMethods('get_class', 'assertInstanceOf', 'assertNotInstanceOf')];
     }
     public function getRuleDefinition() : RuleDefinition

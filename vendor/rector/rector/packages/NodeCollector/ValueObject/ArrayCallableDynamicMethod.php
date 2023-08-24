@@ -8,19 +8,28 @@ use Rector\Core\Validation\RectorAssert;
 /**
  * @api
  */
-final readonly class ArrayCallableDynamicMethod
+final class ArrayCallableDynamicMethod
 {
-    public function __construct(/**
+    /**
      * @readonly
+     * @var \PhpParser\Node\Expr
      */
-    private Expr $callerExpr, /**
+    private $callerExpr;
+    /**
      * @readonly
+     * @var string
      */
-    private string $class, /**
+    private $class;
+    /**
      * @readonly
+     * @var \PhpParser\Node\Expr
      */
-    private Expr $method)
+    private $method;
+    public function __construct(Expr $callerExpr, string $class, Expr $method)
     {
+        $this->callerExpr = $callerExpr;
+        $this->class = $class;
+        $this->method = $method;
         RectorAssert::className($class);
     }
     public function getClass() : string

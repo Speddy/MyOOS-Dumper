@@ -36,19 +36,19 @@ use RectorPrefix202308\Symfony\Component\Console\Exception\RuntimeException;
  * @see http://www.gnu.org/software/libc/manual/html_node/Argument-Syntax.html
  * @see http://www.opengroup.org/onlinepubs/009695399/basedefs/xbd_chap12.html#tag_12_02
  */
-class ArgvInput extends Input implements \Stringable
+class ArgvInput extends Input
 {
     /**
      * @var mixed[]
      */
-    private array $tokens;
+    private $tokens;
     /**
      * @var mixed[]
      */
     private $parsed;
     public function __construct(array $argv = null, InputDefinition $definition = null)
     {
-        $argv ??= $_SERVER['argv'] ?? [];
+        $argv = $argv ?? $_SERVER['argv'] ?? [];
         // strip the application name
         \array_shift($argv);
         $this->tokens = $argv;
@@ -78,7 +78,7 @@ class ArgvInput extends Input implements \Stringable
             $this->parseArgument($token);
         } elseif ($parseOptions && '--' == $token) {
             return \false;
-        } elseif ($parseOptions && str_starts_with($token, '--')) {
+        } elseif ($parseOptions && \strncmp($token, '--', \strlen('--')) === 0) {
             $this->parseLongOption($token);
         } elseif ($parseOptions && '-' === $token[0] && '-' !== $token) {
             $this->parseShortOption($token);
@@ -148,7 +148,7 @@ class ArgvInput extends Input implements \Stringable
      */
     private function parseArgument(string $token) : void
     {
-        $c = is_countable($this->arguments) ? \count($this->arguments) : 0;
+        $c = \count($this->arguments);
         // if input is expecting another argument, add it
         if ($this->definition->hasArgument($c)) {
             $arg = $this->definition->getArgument($c);
@@ -161,11 +161,12 @@ class ArgvInput extends Input implements \Stringable
         } else {
             $all = $this->definition->getArguments();
             $symfonyCommandName = null;
-            if (($inputArgument = $all[$key = array_key_first($all)] ?? null) && 'command' === $inputArgument->getName()) {
+            \reset($all);
+            if (($inputArgument = $all[$key = \key($all)] ?? null) && 'command' === $inputArgument->getName()) {
                 $symfonyCommandName = $this->arguments['command'] ?? null;
                 unset($all[$key]);
             }
-            if (is_countable($all) ? \count($all) : 0) {
+            if (\count($all)) {
                 if ($symfonyCommandName) {
                     $message = \sprintf('Too many arguments to "%s" command, expected arguments "%s".', $symfonyCommandName, \implode('" "', \array_keys($all)));
                 } else {
@@ -183,8 +184,9 @@ class ArgvInput extends Input implements \Stringable
      * Adds a short option value.
      *
      * @throws RuntimeException When option given doesn't exist
+     * @param mixed $value
      */
-    private function addShortOption(string $shortcut, mixed $value) : void
+    private function addShortOption(string $shortcut, $value) : void
     {
         if (!$this->definition->hasShortcut($shortcut)) {
             throw new RuntimeException(\sprintf('The "-%s" option does not exist.', $shortcut));
@@ -195,8 +197,9 @@ class ArgvInput extends Input implements \Stringable
      * Adds a long option value.
      *
      * @throws RuntimeException When option given doesn't exist
+     * @param mixed $value
      */
-    private function addLongOption(string $name, mixed $value) : void
+    private function addLongOption(string $name, $value) : void
     {
         if (!$this->definition->hasOption($name)) {
             if (!$this->definition->hasNegation($name)) {
@@ -213,7 +216,7 @@ class ArgvInput extends Input implements \Stringable
         if (null !== $value && !$option->acceptValue()) {
             throw new RuntimeException(\sprintf('The "--%s" option does not accept a value.', $name));
         }
-        if (\in_array($value, ['', null], \true) && $option->acceptValue() && \count((array) $this->parsed)) {
+        if (\in_array($value, ['', null], \true) && $option->acceptValue() && \count($this->parsed)) {
             // if option accepts an optional or mandatory argument
             // let's see if there is one provided
             $next = \array_shift($this->parsed);
@@ -242,12 +245,12 @@ class ArgvInput extends Input implements \Stringable
         $isOption = \false;
         foreach ($this->tokens as $i => $token) {
             if ($token && '-' === $token[0]) {
-                if (str_contains((string) $token, '=') || !isset($this->tokens[$i + 1])) {
+                if (\strpos($token, '=') !== \false || !isset($this->tokens[$i + 1])) {
                     continue;
                 }
                 // If it's a long option, consider that everything after "--" is the option name.
                 // Otherwise, use the last char (if it's a short option set, only the last one can take a value with space separator)
-                $name = '-' === $token[1] ? \substr((string) $token, 2) : \substr((string) $token, -1);
+                $name = '-' === $token[1] ? \substr($token, 2) : \substr($token, -1);
                 if (!isset($this->options[$name]) && !$this->definition->hasShortcut($name)) {
                     // noop
                 } elseif ((isset($this->options[$name]) || isset($this->options[$name = $this->definition->shortcutToName($name)])) && $this->tokens[$i + 1] === $this->options[$name]) {
@@ -277,8 +280,8 @@ class ArgvInput extends Input implements \Stringable
                 // Options with values:
                 //   For long options, test for '--option=' at beginning
                 //   For short options, test for '-o' at beginning
-                $leading = str_starts_with((string) $value, '--') ? $value . '=' : $value;
-                if ($token === $value || '' !== $leading && str_starts_with((string) $token, (string) $leading)) {
+                $leading = \strncmp($value, '--', \strlen('--')) === 0 ? $value . '=' : $value;
+                if ($token === $value || '' !== $leading && \strncmp($token, $leading, \strlen($leading)) === 0) {
                     return \true;
                 }
             }
@@ -306,9 +309,9 @@ class ArgvInput extends Input implements \Stringable
                 // Options with values:
                 //   For long options, test for '--option=' at beginning
                 //   For short options, test for '-o' at beginning
-                $leading = str_starts_with((string) $value, '--') ? $value . '=' : $value;
-                if ('' !== $leading && str_starts_with((string) $token, (string) $leading)) {
-                    return \substr((string) $token, \strlen((string) $leading));
+                $leading = \strncmp($value, '--', \strlen('--')) === 0 ? $value . '=' : $value;
+                if ('' !== $leading && \strncmp($token, $leading, \strlen($leading)) === 0) {
+                    return \substr($token, \strlen($leading));
                 }
             }
         }

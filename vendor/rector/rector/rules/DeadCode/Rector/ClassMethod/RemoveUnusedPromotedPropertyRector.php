@@ -24,21 +24,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveUnusedPromotedPropertyRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly PropertyFetchFinder $propertyFetchFinder,
-        /**
-         * @readonly
-         */
-        private readonly VisibilityManipulator $visibilityManipulator,
-        /**
-         * @readonly
-         */
-        private readonly PropertyWriteonlyAnalyzer $propertyWriteonlyAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\NodeFinder\PropertyFetchFinder
+     */
+    private $propertyFetchFinder;
+    /**
+     * @readonly
+     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
+     */
+    private $visibilityManipulator;
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\NodeAnalyzer\PropertyWriteonlyAnalyzer
+     */
+    private $propertyWriteonlyAnalyzer;
+    public function __construct(PropertyFetchFinder $propertyFetchFinder, VisibilityManipulator $visibilityManipulator, PropertyWriteonlyAnalyzer $propertyWriteonlyAnalyzer)
     {
+        $this->propertyFetchFinder = $propertyFetchFinder;
+        $this->visibilityManipulator = $visibilityManipulator;
+        $this->propertyWriteonlyAnalyzer = $propertyWriteonlyAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

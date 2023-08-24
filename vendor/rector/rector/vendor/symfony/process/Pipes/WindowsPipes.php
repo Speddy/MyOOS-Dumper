@@ -24,15 +24,17 @@ use RectorPrefix202308\Symfony\Component\Process\Process;
  */
 class WindowsPipes extends AbstractPipes
 {
-    private array $files = [];
-    private array $fileHandles = [];
-    private array $lockHandles = [];
-    private array $readBytes = [Process::STDOUT => 0, Process::STDERR => 0];
+    private $files = [];
+    private $fileHandles = [];
+    private $lockHandles = [];
+    private $readBytes = [Process::STDOUT => 0, Process::STDERR => 0];
+    private $haveReadSupport;
     /**
      * @param mixed $input
      */
-    public function __construct($input, private readonly bool $haveReadSupport)
+    public function __construct($input, bool $haveReadSupport)
     {
+        $this->haveReadSupport = $haveReadSupport;
         if ($this->haveReadSupport) {
             // Fix for PHP bug #51800: reading from STDOUT pipe hangs forever on Windows if the output is too big.
             // Workaround for this problem is to use temporary files instead of pipes on Windows platform.
@@ -79,11 +81,11 @@ class WindowsPipes extends AbstractPipes
     }
     public function __sleep() : array
     {
-        throw new \BadMethodCallException('Cannot serialize ' . self::class);
+        throw new \BadMethodCallException('Cannot serialize ' . __CLASS__);
     }
     public function __wakeup()
     {
-        throw new \BadMethodCallException('Cannot unserialize ' . self::class);
+        throw new \BadMethodCallException('Cannot unserialize ' . __CLASS__);
     }
     public function __destruct()
     {
@@ -111,9 +113,9 @@ class WindowsPipes extends AbstractPipes
         $read = $r = $e = [];
         if ($blocking) {
             if ($w) {
-                @\stream_select($r, $w, $e, 0, Process::TIMEOUT_PRECISION * 1_000_000.0);
+                @\stream_select($r, $w, $e, 0, Process::TIMEOUT_PRECISION * 1000000.0);
             } elseif ($this->fileHandles) {
-                \usleep(Process::TIMEOUT_PRECISION * 1_000_000.0);
+                \usleep(Process::TIMEOUT_PRECISION * 1000000.0);
             }
         }
         foreach ($this->fileHandles as $type => $fileHandle) {

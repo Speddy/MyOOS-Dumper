@@ -10,19 +10,22 @@ use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Return_;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\TypeDeclaration\NodeAnalyzer\ReturnAnalyzer;
-final readonly class AlwaysStrictReturnAnalyzer
+final class AlwaysStrictReturnAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private ReturnAnalyzer $returnAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\ReturnAnalyzer
+     */
+    private $returnAnalyzer;
+    public function __construct(BetterNodeFinder $betterNodeFinder, ReturnAnalyzer $returnAnalyzer)
     {
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->returnAnalyzer = $returnAnalyzer;
     }
     /**
      * @return Return_[]|null

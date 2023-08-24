@@ -6,7 +6,7 @@ use RectorPrefix202308\Evenement\EventEmitter;
 use RectorPrefix202308\React\EventLoop\LoopInterface;
 final class SocketServer extends EventEmitter implements ServerInterface
 {
-    private readonly \RectorPrefix202308\React\Socket\TcpServer|\RectorPrefix202308\React\Socket\SecureServer|\RectorPrefix202308\React\Socket\FdServer|\RectorPrefix202308\React\Socket\UnixServer $server;
+    private $server;
     /**
      * The `SocketServer` class is the main class in this package that implements the `ServerInterface` and
      * allows you to accept incoming streaming connections, such as plaintext TCP/IP or secure TLS connection streams.
@@ -24,14 +24,15 @@ final class SocketServer extends EventEmitter implements ServerInterface
      * given event loop instance.
      *
      * @param string         $uri
+     * @param array          $context
      * @param ?LoopInterface $loop
      * @throws \InvalidArgumentException if the listening address is invalid
      * @throws \RuntimeException if listening on this address fails (already in use etc.)
      */
-    public function __construct($uri, array $context = [], LoopInterface $loop = null)
+    public function __construct($uri, array $context = array(), LoopInterface $loop = null)
     {
         // apply default options if not explicitly given
-        $context += ['tcp' => [], 'tls' => [], 'unix' => []];
+        $context += array('tcp' => array(), 'tls' => array(), 'unix' => array());
         $scheme = 'tcp';
         $pos = \strpos($uri, '://');
         if ($pos !== \false) {
@@ -53,10 +54,10 @@ final class SocketServer extends EventEmitter implements ServerInterface
         $this->server = $server;
         $that = $this;
         $server->on('connection', function (ConnectionInterface $conn) use($that) {
-            $that->emit('connection', [$conn]);
+            $that->emit('connection', array($conn));
         });
         $server->on('error', function (\Exception $error) use($that) {
-            $that->emit('error', [$error]);
+            $that->emit('error', array($error));
         });
     }
     public function getAddress()
@@ -126,7 +127,7 @@ final class SocketServer extends EventEmitter implements ServerInterface
             // PHP also defines a hand full of errno constants like `EMFILE` through constants in `ext-pcntl` like `PCNTL_EMFILE`
             // go through list of all defined constants like `SOCKET_E*` and `PCNTL_E*` and see if they match the given `$errstr`
             foreach (\get_defined_constants(\false) as $name => $value) {
-                if (\is_int($value) && (str_starts_with($name, 'SOCKET_E') || str_starts_with($name, 'PCNTL_E')) && $strerror($value) === $errstr) {
+                if (\is_int($value) && (\strpos($name, 'SOCKET_E') === 0 || \strpos($name, 'PCNTL_E') === 0) && $strerror($value) === $errstr) {
                     return $value;
                 }
             }
@@ -167,7 +168,7 @@ final class SocketServer extends EventEmitter implements ServerInterface
         // PHP also defines a hand full of errno constants like `EMFILE` through constants in `ext-pcntl` like `PCNTL_EMFILE`
         // go through list of all defined constants like `SOCKET_E*` and `PCNTL_E*` and see if they match the given `$errno`
         foreach (\get_defined_constants(\false) as $name => $value) {
-            if ($value === $errno && (str_starts_with($name, 'SOCKET_E') || str_starts_with($name, 'PCNTL_E'))) {
+            if ($value === $errno && (\strpos($name, 'SOCKET_E') === 0 || \strpos($name, 'PCNTL_E') === 0)) {
                 return ' (' . \substr($name, \strpos($name, '_') + 1) . ')';
             }
         }

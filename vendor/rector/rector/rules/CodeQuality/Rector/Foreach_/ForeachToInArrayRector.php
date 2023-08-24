@@ -25,13 +25,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ForeachToInArrayRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly BinaryOpManipulator $binaryOpManipulator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\BinaryOpManipulator
+     */
+    private $binaryOpManipulator;
+    public function __construct(BinaryOpManipulator $binaryOpManipulator)
     {
+        $this->binaryOpManipulator = $binaryOpManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -146,7 +147,9 @@ CODE_SAMPLE
      */
     private function matchNodes($binaryOp, Expr $expr) : ?TwoNodeMatch
     {
-        return $this->binaryOpManipulator->matchFirstAndSecondConditionNode($binaryOp, Variable::class, fn(Node $node, Node $otherNode): bool => $this->nodeComparator->areNodesEqual($otherNode, $expr));
+        return $this->binaryOpManipulator->matchFirstAndSecondConditionNode($binaryOp, Variable::class, function (Node $node, Node $otherNode) use($expr) : bool {
+            return $this->nodeComparator->areNodesEqual($otherNode, $expr);
+        });
     }
     private function isIfBodyABoolReturnNode(If_ $if) : bool
     {

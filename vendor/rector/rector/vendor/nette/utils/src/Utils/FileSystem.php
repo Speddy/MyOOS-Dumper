@@ -41,7 +41,7 @@ final class FileSystem
             foreach (new \FilesystemIterator($target) as $item) {
                 static::delete($item->getPathname());
             }
-            foreach ($iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($origin, \RecursiveDirectoryIterator::SKIP_DOTS | \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST) as $item) {
+            foreach ($iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($origin, \RecursiveDirectoryIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST) as $item) {
                 if ($item->isDir()) {
                     static::createDir($target . '/' . $iterator->getSubPathName());
                 } else {

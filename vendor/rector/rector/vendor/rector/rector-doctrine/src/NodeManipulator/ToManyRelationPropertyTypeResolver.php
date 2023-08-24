@@ -15,8 +15,28 @@ use Rector\Core\PhpParser\Node\Value\ValueResolver;
 use Rector\Doctrine\NodeAnalyzer\AttributeFinder;
 use Rector\Doctrine\PhpDoc\ShortClassExpander;
 use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
-final readonly class ToManyRelationPropertyTypeResolver
+final class ToManyRelationPropertyTypeResolver
 {
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\Doctrine\PhpDoc\ShortClassExpander
+     */
+    private $shortClassExpander;
+    /**
+     * @readonly
+     * @var \Rector\Doctrine\NodeAnalyzer\AttributeFinder
+     */
+    private $attributeFinder;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
     /**
      * @var string
      */
@@ -25,25 +45,12 @@ final readonly class ToManyRelationPropertyTypeResolver
      * @var class-string[]
      */
     private const TO_MANY_ANNOTATION_CLASSES = ['Doctrine\\ORM\\Mapping\\OneToMany', 'Doctrine\\ORM\\Mapping\\ManyToMany'];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private ShortClassExpander $shortClassExpander,
-        /**
-         * @readonly
-         */
-        private AttributeFinder $attributeFinder,
-        /**
-         * @readonly
-         */
-        private ValueResolver $valueResolver
-    )
+    public function __construct(PhpDocInfoFactory $phpDocInfoFactory, ShortClassExpander $shortClassExpander, AttributeFinder $attributeFinder, ValueResolver $valueResolver)
     {
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->shortClassExpander = $shortClassExpander;
+        $this->attributeFinder = $attributeFinder;
+        $this->valueResolver = $valueResolver;
     }
     public function resolve(Property $property) : ?Type
     {

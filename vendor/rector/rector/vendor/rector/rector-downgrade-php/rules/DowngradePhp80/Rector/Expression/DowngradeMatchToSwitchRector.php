@@ -38,13 +38,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeMatchToSwitchRector extends AbstractScopeAwareRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly AnonymousFunctionFactory $anonymousFunctionFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\Php72\NodeFactory\AnonymousFunctionFactory
+     */
+    private $anonymousFunctionFactory;
+    public function __construct(AnonymousFunctionFactory $anonymousFunctionFactory)
     {
+        $this->anonymousFunctionFactory = $anonymousFunctionFactory;
     }
     public function getRuleDefinition() : RuleDefinition
     {

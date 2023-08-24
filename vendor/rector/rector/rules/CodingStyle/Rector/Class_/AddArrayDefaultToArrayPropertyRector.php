@@ -28,25 +28,32 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class AddArrayDefaultToArrayPropertyRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly PropertyFetchAnalyzer $propertyFetchAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly IterableTypeAnalyzer $iterableTypeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly VisibilityManipulator $visibilityManipulator,
-        /**
-         * @readonly
-         */
-        private readonly ConstructorAssignDetector $constructorAssignDetector
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
+     */
+    private $propertyFetchAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\CodingStyle\TypeAnalyzer\IterableTypeAnalyzer
+     */
+    private $iterableTypeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
+     */
+    private $visibilityManipulator;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\AlreadyAssignDetector\ConstructorAssignDetector
+     */
+    private $constructorAssignDetector;
+    public function __construct(PropertyFetchAnalyzer $propertyFetchAnalyzer, IterableTypeAnalyzer $iterableTypeAnalyzer, VisibilityManipulator $visibilityManipulator, ConstructorAssignDetector $constructorAssignDetector)
     {
+        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
+        $this->iterableTypeAnalyzer = $iterableTypeAnalyzer;
+        $this->visibilityManipulator = $visibilityManipulator;
+        $this->constructorAssignDetector = $constructorAssignDetector;
     }
     public function getRuleDefinition() : RuleDefinition
     {

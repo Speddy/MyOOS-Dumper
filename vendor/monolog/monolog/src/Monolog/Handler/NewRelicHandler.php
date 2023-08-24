@@ -138,7 +138,11 @@ class NewRelicHandler extends AbstractProcessingHandler
      */
     protected function getAppName(array $context): ?string
     {
-        return $context['appname'] ?? $this->appName;
+        if (isset($context['appname'])) {
+            return $context['appname'];
+        }
+
+        return $this->appName;
     }
 
     /**
@@ -149,7 +153,11 @@ class NewRelicHandler extends AbstractProcessingHandler
      */
     protected function getTransactionName(array $context): ?string
     {
-        return $context['transaction_name'] ?? $this->transactionName;
+        if (isset($context['transaction_name'])) {
+            return $context['transaction_name'];
+        }
+
+        return $this->transactionName;
     }
 
     /**
@@ -168,7 +176,11 @@ class NewRelicHandler extends AbstractProcessingHandler
         newrelic_name_transaction($transactionName);
     }
 
-    protected function setNewRelicParameter(string $key, mixed $value): void
+    /**
+     * @param string $key
+     * @param mixed  $value
+     */
+    protected function setNewRelicParameter(string $key, $value): void
     {
         if (null === $value || is_scalar($value)) {
             newrelic_add_custom_parameter($key, $value);

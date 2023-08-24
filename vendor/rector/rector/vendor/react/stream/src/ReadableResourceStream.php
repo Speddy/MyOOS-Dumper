@@ -30,10 +30,11 @@ final class ReadableResourceStream extends EventEmitter implements ReadableStrea
      * (i.e. underlying buffer drained), note that this does not neccessarily
      * mean it reached EOF.
      *
+     * @var int
      */
-    private readonly int $bufferSize;
-    private bool $closed = \false;
-    private bool $listening = \false;
+    private $bufferSize;
+    private $closed = \false;
+    private $listening = \false;
     public function __construct($stream, LoopInterface $loop = null, $readChunkSize = null)
     {
         if (!\is_resource($stream) || \get_resource_type($stream) !== "stream") {
@@ -79,11 +80,11 @@ final class ReadableResourceStream extends EventEmitter implements ReadableStrea
     public function resume()
     {
         if (!$this->listening && !$this->closed) {
-            $this->loop->addReadStream($this->stream, $this->handleData(...));
+            $this->loop->addReadStream($this->stream, array($this, 'handleData'));
             $this->listening = \true;
         }
     }
-    public function pipe(WritableStreamInterface $dest, array $options = [])
+    public function pipe(WritableStreamInterface $dest, array $options = array())
     {
         return Util::pipe($this, $dest, $options);
     }
@@ -110,12 +111,12 @@ final class ReadableResourceStream extends EventEmitter implements ReadableStrea
         $data = \stream_get_contents($this->stream, $this->bufferSize);
         \restore_error_handler();
         if ($error !== null) {
-            $this->emit('error', [new \RuntimeException('Unable to read from stream: ' . $error->getMessage(), 0, $error)]);
+            $this->emit('error', array(new \RuntimeException('Unable to read from stream: ' . $error->getMessage(), 0, $error)));
             $this->close();
             return;
         }
         if ($data !== '') {
-            $this->emit('data', [$data]);
+            $this->emit('data', array($data));
         } elseif (\feof($this->stream)) {
             // no data read => we reached the end and close the stream
             $this->emit('end');

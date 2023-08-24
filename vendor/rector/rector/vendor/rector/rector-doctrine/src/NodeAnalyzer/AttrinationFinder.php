@@ -14,19 +14,22 @@ use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 /**
  * @api
  */
-final readonly class AttrinationFinder
+final class AttrinationFinder
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private \Rector\Doctrine\NodeAnalyzer\AttributeFinder $attributeFinder
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\Doctrine\NodeAnalyzer\AttributeFinder
+     */
+    private $attributeFinder;
+    public function __construct(PhpDocInfoFactory $phpDocInfoFactory, \Rector\Doctrine\NodeAnalyzer\AttributeFinder $attributeFinder)
     {
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->attributeFinder = $attributeFinder;
     }
     /**
      * @api

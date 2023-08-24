@@ -28,36 +28,47 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class DowngradeParameterTypeWideningRector extends AbstractRector implements ConfigurableRectorInterface
 {
     /**
+     * @readonly
+     * @var \Rector\DowngradePhp72\PhpDoc\NativeParamToPhpDocDecorator
+     */
+    private $nativeParamToPhpDocDecorator;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\AutowiredClassMethodOrPropertyAnalyzer
+     */
+    private $autowiredClassMethodOrPropertyAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\DowngradePhp72\NodeAnalyzer\BuiltInMethodAnalyzer
+     */
+    private $builtInMethodAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\DowngradePhp72\NodeAnalyzer\OverrideFromAnonymousClassMethodAnalyzer
+     */
+    private $overrideFromAnonymousClassMethodAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\DowngradePhp72\NodeAnalyzer\SealedClassAnalyzer
+     */
+    private $sealedClassAnalyzer;
+    /**
      * @var array<string, string[]>
      */
-    private array $unsafeTypesToMethods = [];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly NativeParamToPhpDocDecorator $nativeParamToPhpDocDecorator,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private readonly AutowiredClassMethodOrPropertyAnalyzer $autowiredClassMethodOrPropertyAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly BuiltInMethodAnalyzer $builtInMethodAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly OverrideFromAnonymousClassMethodAnalyzer $overrideFromAnonymousClassMethodAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly SealedClassAnalyzer $sealedClassAnalyzer
-    )
+    private $unsafeTypesToMethods = [];
+    public function __construct(NativeParamToPhpDocDecorator $nativeParamToPhpDocDecorator, ReflectionResolver $reflectionResolver, AutowiredClassMethodOrPropertyAnalyzer $autowiredClassMethodOrPropertyAnalyzer, BuiltInMethodAnalyzer $builtInMethodAnalyzer, OverrideFromAnonymousClassMethodAnalyzer $overrideFromAnonymousClassMethodAnalyzer, SealedClassAnalyzer $sealedClassAnalyzer)
     {
+        $this->nativeParamToPhpDocDecorator = $nativeParamToPhpDocDecorator;
+        $this->reflectionResolver = $reflectionResolver;
+        $this->autowiredClassMethodOrPropertyAnalyzer = $autowiredClassMethodOrPropertyAnalyzer;
+        $this->builtInMethodAnalyzer = $builtInMethodAnalyzer;
+        $this->overrideFromAnonymousClassMethodAnalyzer = $overrideFromAnonymousClassMethodAnalyzer;
+        $this->sealedClassAnalyzer = $sealedClassAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

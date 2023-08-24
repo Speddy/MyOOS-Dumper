@@ -9,28 +9,51 @@ use Rector\Core\Validation\RectorAssert;
 final class ArgumentAdder
 {
     /**
+     * @readonly
+     * @var string
+     */
+    private $class;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $method;
+    /**
+     * @readonly
+     * @var int
+     */
+    private $position;
+    /**
+     * @readonly
+     * @var string|null
+     */
+    private $argumentName;
+    /**
+     * @var mixed|null
+     */
+    private $argumentDefaultValue = null;
+    /**
+     * @readonly
+     * @var \PHPStan\Type\Type|null
+     */
+    private $argumentType = null;
+    /**
+     * @readonly
+     * @var string|null
+     */
+    private $scope;
+    /**
      * @param mixed|null $argumentDefaultValue
      */
-    public function __construct(/**
-     * @readonly
-     */
-    private readonly string $class, /**
-     * @readonly
-     */
-    private readonly string $method, /**
-     * @readonly
-     */
-    private readonly int $position, /**
-     * @readonly
-     */
-    private readonly ?string $argumentName = null, private $argumentDefaultValue = null, /**
-     * @readonly
-     */
-    private readonly ?\PHPStan\Type\Type $argumentType = null, /**
-     * @readonly
-     */
-    private readonly ?string $scope = null)
+    public function __construct(string $class, string $method, int $position, ?string $argumentName = null, $argumentDefaultValue = null, ?\PHPStan\Type\Type $argumentType = null, ?string $scope = null)
     {
+        $this->class = $class;
+        $this->method = $method;
+        $this->position = $position;
+        $this->argumentName = $argumentName;
+        $this->argumentDefaultValue = $argumentDefaultValue;
+        $this->argumentType = $argumentType;
+        $this->scope = $scope;
         RectorAssert::className($class);
     }
     public function getObjectType() : ObjectType

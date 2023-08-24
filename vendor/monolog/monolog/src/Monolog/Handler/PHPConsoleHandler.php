@@ -44,7 +44,7 @@ use PhpConsole\Helper;
 class PHPConsoleHandler extends AbstractProcessingHandler
 {
     /** @var array<string, mixed> */
-    private array $options = [
+    private $options = [
         'enabled' => true, // bool Is PHP Console server enabled
         'classesPartialsTraceIgnore' => ['Monolog\\'], // array Hide calls of classes started with...
         'debugTagsKeysInContext' => [0, 'tag'], // bool Is PHP Console server enabled

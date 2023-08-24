@@ -5,15 +5,16 @@ namespace Rector\Symfony\NodeAnalyzer;
 
 use PhpParser\Node\Stmt\Class_;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class ClassAnalyzer
+final class ClassAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function hasImplements(Class_ $class, string $interfaceFQN) : bool
     {

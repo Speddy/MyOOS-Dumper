@@ -6,15 +6,16 @@ namespace Rector\Symfony\Bridge\NodeAnalyzer;
 use PhpParser\Node;
 use PhpParser\Node\Stmt\ClassMethod;
 use Rector\Symfony\TypeAnalyzer\ControllerAnalyzer;
-final readonly class ControllerMethodAnalyzer
+final class ControllerMethodAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ControllerAnalyzer $controllerAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\TypeAnalyzer\ControllerAnalyzer
+     */
+    private $controllerAnalyzer;
+    public function __construct(ControllerAnalyzer $controllerAnalyzer)
     {
+        $this->controllerAnalyzer = $controllerAnalyzer;
     }
     /**
      * Detect if is <some>Action() in Controller

@@ -11,27 +11,34 @@ use PHPStan\Reflection\ReflectionProvider;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\Core\PhpParser\Parser\RectorParser;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class BundleClassResolver
+final class BundleClassResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private RectorParser $rectorParser,
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Parser\RectorParser
+     */
+    private $rectorParser;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    public function __construct(BetterNodeFinder $betterNodeFinder, NodeNameResolver $nodeNameResolver, RectorParser $rectorParser, ReflectionProvider $reflectionProvider)
     {
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->rectorParser = $rectorParser;
+        $this->reflectionProvider = $reflectionProvider;
     }
     public function resolveShortBundleClassFromControllerClass(string $class) : ?string
     {

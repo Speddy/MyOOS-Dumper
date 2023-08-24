@@ -4,19 +4,22 @@ declare (strict_types=1);
 namespace Rector\NodeTypeResolver\ValueObject;
 
 use PHPStan\Type\Type;
-final readonly class OldToNewType
+final class OldToNewType
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private Type $oldType,
-        /**
-         * @readonly
-         */
-        private Type $newType
-    )
+    /**
+     * @readonly
+     * @var \PHPStan\Type\Type
+     */
+    private $oldType;
+    /**
+     * @readonly
+     * @var \PHPStan\Type\Type
+     */
+    private $newType;
+    public function __construct(Type $oldType, Type $newType)
     {
+        $this->oldType = $oldType;
+        $this->newType = $newType;
     }
     public function getOldType() : Type
     {

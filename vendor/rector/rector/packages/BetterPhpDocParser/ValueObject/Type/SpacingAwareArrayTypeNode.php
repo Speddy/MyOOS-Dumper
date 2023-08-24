@@ -9,7 +9,7 @@ use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 use PHPStan\PhpDocParser\Ast\Type\UnionTypeNode;
 use Rector\PHPStanStaticTypeMapper\TypeMapper\ArrayTypeMapper;
 use Stringable;
-final class SpacingAwareArrayTypeNode extends ArrayTypeNode implements \Stringable
+final class SpacingAwareArrayTypeNode extends ArrayTypeNode
 {
     public function __toString() : string
     {

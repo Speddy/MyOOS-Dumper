@@ -29,13 +29,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class StrictStringParamConcatRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard
-    )
+    /**
+     * @readonly
+     * @var \Rector\VendorLocker\ParentClassMethodTypeOverrideGuard
+     */
+    private $parentClassMethodTypeOverrideGuard;
+    public function __construct(ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard)
     {
+        $this->parentClassMethodTypeOverrideGuard = $parentClassMethodTypeOverrideGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {

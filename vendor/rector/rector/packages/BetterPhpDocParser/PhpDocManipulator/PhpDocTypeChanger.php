@@ -36,8 +36,48 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\NodeTypeResolver\TypeComparator\TypeComparator;
 use Rector\StaticTypeMapper\StaticTypeMapper;
 use Rector\TypeDeclaration\PhpDocParser\ParamPhpDocNodeFactory;
-final readonly class PhpDocTypeChanger
+final class PhpDocTypeChanger
 {
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\TypeComparator\TypeComparator
+     */
+    private $typeComparator;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\PhpDocParser\ParamPhpDocNodeFactory
+     */
+    private $paramPhpDocNodeFactory;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\Comment\CommentsMerger
+     */
+    private $commentsMerger;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\Guard\NewPhpDocFromPHPStanTypeGuard
+     */
+    private $newPhpDocFromPHPStanTypeGuard;
+    /**
+     * @readonly
+     * @var \Rector\Comments\NodeDocBlock\DocBlockUpdater
+     */
+    private $docBlockUpdater;
     /**
      * @var array<class-string<Node>>
      */
@@ -46,41 +86,16 @@ final readonly class PhpDocTypeChanger
      * @var string[]
      */
     private const ALLOWED_IDENTIFIER_TYPENODE_TYPES = ['class-string'];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper,
-        /**
-         * @readonly
-         */
-        private TypeComparator $typeComparator,
-        /**
-         * @readonly
-         */
-        private ParamPhpDocNodeFactory $paramPhpDocNodeFactory,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private CommentsMerger $commentsMerger,
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private NewPhpDocFromPHPStanTypeGuard $newPhpDocFromPHPStanTypeGuard,
-        /**
-         * @readonly
-         */
-        private DocBlockUpdater $docBlockUpdater
-    )
+    public function __construct(StaticTypeMapper $staticTypeMapper, TypeComparator $typeComparator, ParamPhpDocNodeFactory $paramPhpDocNodeFactory, NodeNameResolver $nodeNameResolver, CommentsMerger $commentsMerger, PhpDocInfoFactory $phpDocInfoFactory, NewPhpDocFromPHPStanTypeGuard $newPhpDocFromPHPStanTypeGuard, DocBlockUpdater $docBlockUpdater)
     {
+        $this->staticTypeMapper = $staticTypeMapper;
+        $this->typeComparator = $typeComparator;
+        $this->paramPhpDocNodeFactory = $paramPhpDocNodeFactory;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->commentsMerger = $commentsMerger;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->newPhpDocFromPHPStanTypeGuard = $newPhpDocFromPHPStanTypeGuard;
+        $this->docBlockUpdater = $docBlockUpdater;
     }
     public function changeVarType(Stmt $stmt, PhpDocInfo $phpDocInfo, Type $newType) : void
     {
@@ -183,7 +198,7 @@ final readonly class PhpDocTypeChanger
         if ($typeNode instanceof ConstTypeNode && $typeNode->constExpr instanceof ConstFetchNode) {
             return \true;
         }
-        if (\in_array($typeNode::class, self::ALLOWED_TYPES, \true)) {
+        if (\in_array(\get_class($typeNode), self::ALLOWED_TYPES, \true)) {
             return \true;
         }
         if (!$typeNode instanceof IdentifierTypeNode) {

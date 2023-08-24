@@ -50,6 +50,7 @@ interface ProcessResult
     /**
      * Throw an exception if the process failed and the given condition is true.
      *
+     * @param  bool  $condition
      * @param  callable|null  $callback
      * @return $this
      */

@@ -36,14 +36,14 @@ abstract class PKCS8 extends Progenitor
      *
      * @var string
      */
-    final public const OID_NAME = 'dhKeyAgreement';
+    const OID_NAME = 'dhKeyAgreement';
 
     /**
      * OID Value
      *
      * @var string
      */
-    final public const OID_VALUE = '1.2.840.113549.1.3.1';
+    const OID_VALUE = '1.2.840.113549.1.3.1';
 
     /**
      * Child OIDs loaded
@@ -89,6 +89,10 @@ abstract class PKCS8 extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
+     * @param \phpseclib3\Math\BigInteger $prime
+     * @param \phpseclib3\Math\BigInteger $base
+     * @param \phpseclib3\Math\BigInteger $privateKey
+     * @param \phpseclib3\Math\BigInteger $publicKey
      * @param string $password optional
      * @param array $options optional
      * @return string
@@ -108,6 +112,9 @@ abstract class PKCS8 extends Progenitor
     /**
      * Convert a public key to the appropriate format
      *
+     * @param \phpseclib3\Math\BigInteger $prime
+     * @param \phpseclib3\Math\BigInteger $base
+     * @param \phpseclib3\Math\BigInteger $publicKey
      * @param array $options optional
      * @return string
      */

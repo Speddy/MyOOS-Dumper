@@ -32,23 +32,28 @@ use Rector\NodeTypeResolver\PHPStan\Scope\PHPStanNodeScopeResolver;
 /**
  * In case of changed node, we need to re-traverse the PHPStan Scope to make all the new nodes aware of what is going on.
  */
-final readonly class ChangedNodeScopeRefresher
+final class ChangedNodeScopeRefresher
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PHPStanNodeScopeResolver $phpStanNodeScopeResolver,
-        /**
-         * @readonly
-         */
-        private ScopeAnalyzer $scopeAnalyzer,
-        /**
-         * @readonly
-         */
-        private CurrentFileProvider $currentFileProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Scope\PHPStanNodeScopeResolver
+     */
+    private $phpStanNodeScopeResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ScopeAnalyzer
+     */
+    private $scopeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\Provider\CurrentFileProvider
+     */
+    private $currentFileProvider;
+    public function __construct(PHPStanNodeScopeResolver $phpStanNodeScopeResolver, ScopeAnalyzer $scopeAnalyzer, CurrentFileProvider $currentFileProvider)
     {
+        $this->phpStanNodeScopeResolver = $phpStanNodeScopeResolver;
+        $this->scopeAnalyzer = $scopeAnalyzer;
+        $this->currentFileProvider = $currentFileProvider;
     }
     public function refresh(Node $node, ?MutatingScope $mutatingScope, ?string $filePath = null, ?Stmt $currentStmt = null) : void
     {
@@ -63,7 +68,7 @@ final readonly class ChangedNodeScopeRefresher
         }
         $mutatingScope = $mutatingScope instanceof MutatingScope ? $mutatingScope : $this->scopeAnalyzer->resolveScope($node, $filePath, $currentStmt);
         if (!$mutatingScope instanceof MutatingScope) {
-            $errorMessage = \sprintf('Node "%s" with is missing scope required for scope refresh', $node::class);
+            $errorMessage = \sprintf('Node "%s" with is missing scope required for scope refresh', \get_class($node));
             throw new ShouldNotHappenException($errorMessage);
         }
         // note from flight: when we traverse ClassMethod, the scope must be already in Class_, otherwise it crashes
@@ -110,7 +115,7 @@ final readonly class ChangedNodeScopeRefresher
         if ($node instanceof Expr) {
             return [new Expression($node)];
         }
-        $errorMessage = \sprintf('Complete parent node of "%s" be a stmt.', $node::class);
+        $errorMessage = \sprintf('Complete parent node of "%s" be a stmt.', \get_class($node));
         throw new ShouldNotHappenException($errorMessage);
     }
 }

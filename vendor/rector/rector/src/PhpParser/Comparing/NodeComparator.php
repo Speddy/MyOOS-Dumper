@@ -6,19 +6,22 @@ namespace Rector\Core\PhpParser\Comparing;
 use PhpParser\Node;
 use Rector\Comments\CommentRemover;
 use Rector\Core\PhpParser\Printer\BetterStandardPrinter;
-final readonly class NodeComparator
+final class NodeComparator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private CommentRemover $commentRemover,
-        /**
-         * @readonly
-         */
-        private BetterStandardPrinter $betterStandardPrinter
-    )
+    /**
+     * @readonly
+     * @var \Rector\Comments\CommentRemover
+     */
+    private $commentRemover;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Printer\BetterStandardPrinter
+     */
+    private $betterStandardPrinter;
+    public function __construct(CommentRemover $commentRemover, BetterStandardPrinter $betterStandardPrinter)
     {
+        $this->commentRemover = $commentRemover;
+        $this->betterStandardPrinter = $betterStandardPrinter;
     }
     /**
      * Removes all comments from both nodes
@@ -74,8 +77,8 @@ final readonly class NodeComparator
         if ($firstNode === $secondNode) {
             return \true;
         }
-        $firstClass = $firstNode::class;
-        $secondClass = $secondNode::class;
+        $firstClass = \get_class($firstNode);
+        $secondClass = \get_class($secondNode);
         if ($firstClass !== $secondClass) {
             return \false;
         }

@@ -25,6 +25,9 @@ abstract class DefaultEngine extends GMP
     /**
      * Performs modular exponentiation.
      *
+     * @param GMP $x
+     * @param GMP $e
+     * @param GMP $n
      * @return GMP
      */
     protected static function powModHelper(GMP $x, GMP $e, GMP $n)

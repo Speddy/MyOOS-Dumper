@@ -13,8 +13,9 @@ class AutoUpdateTest extends TestCase
     /**
      * AutoUpdate instance.
      *
+     * @var AutoUpdate
      */
-    private ?\VisualAppeal\AutoUpdate $_update = null;
+    private $_update;
 
     /**
      * Setup the auto update.

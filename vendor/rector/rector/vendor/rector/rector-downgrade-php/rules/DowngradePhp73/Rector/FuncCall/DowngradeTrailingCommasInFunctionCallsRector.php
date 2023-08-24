@@ -18,13 +18,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeTrailingCommasInFunctionCallsRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly FollowedByCommaAnalyzer $followedByCommaAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\DowngradePhp73\Tokenizer\FollowedByCommaAnalyzer
+     */
+    private $followedByCommaAnalyzer;
+    public function __construct(FollowedByCommaAnalyzer $followedByCommaAnalyzer)
     {
+        $this->followedByCommaAnalyzer = $followedByCommaAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

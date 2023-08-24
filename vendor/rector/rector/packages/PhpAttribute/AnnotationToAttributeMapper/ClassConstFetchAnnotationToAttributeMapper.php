@@ -19,11 +19,11 @@ final class ClassConstFetchAnnotationToAttributeMapper implements AnnotationToAt
         if (!\is_string($value)) {
             return \false;
         }
-        if (!str_contains($value, '::')) {
+        if (\strpos($value, '::') === \false) {
             return \false;
         }
         // is quoted? skip it
-        return !str_starts_with($value, '"');
+        return \strncmp($value, '"', \strlen('"')) !== 0;
     }
     /**
      * @param string $value

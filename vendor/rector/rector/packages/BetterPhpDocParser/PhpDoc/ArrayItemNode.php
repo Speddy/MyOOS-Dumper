@@ -6,11 +6,25 @@ namespace Rector\BetterPhpDocParser\PhpDoc;
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode;
 use Stringable;
-final class ArrayItemNode implements PhpDocTagValueNode, \Stringable
+final class ArrayItemNode implements PhpDocTagValueNode
 {
+    /**
+     * @var mixed
+     */
+    public $value;
+    /**
+     * @var mixed
+     */
+    public $key = null;
     use NodeAttributes;
-    public function __construct(public mixed $value, public mixed $key = null)
+    /**
+     * @param mixed $value
+     * @param mixed $key
+     */
+    public function __construct($value, $key = null)
     {
+        $this->value = $value;
+        $this->key = $key;
     }
     public function __toString() : string
     {

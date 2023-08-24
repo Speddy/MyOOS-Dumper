@@ -178,7 +178,7 @@ class TwistedEdwards extends Base
         if (!isset($p[2])) {
             return $p;
         }
-        [$x, $y, $z] = $p;
+        list($x, $y, $z) = $p;
         $z = $this->one->divide($z);
         return [
             $x->multiply($z),
@@ -203,7 +203,7 @@ class TwistedEdwards extends Base
      */
     public function verifyPoint(array $p)
     {
-        [$x, $y] = $p;
+        list($x, $y) = $p;
         $x2 = $x->multiply($x);
         $y2 = $y->multiply($y);
 

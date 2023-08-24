@@ -29,7 +29,10 @@ final class SetCookieOptionsArrayToArgumentsRector extends AbstractRector
      * @var array<int, int|string|bool>
      */
     private const ARGUMENT_DEFAULT_VALUES = [2 => 0, 3 => '', 4 => '', 5 => \false, 6 => \false];
-    private int $highestIndex = 1;
+    /**
+     * @var int
+     */
+    private $highestIndex = 1;
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Convert setcookie option array to arguments', [new CodeSample(<<<'CODE_SAMPLE'

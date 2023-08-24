@@ -10,23 +10,28 @@ use PHPStan\Type\Type;
 use Rector\Core\PhpParser\AstResolver;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\TypeDeclaration\TypeInferer\AssignToPropertyTypeInferer;
-final readonly class AllAssignNodePropertyTypeInferer
+final class AllAssignNodePropertyTypeInferer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private AssignToPropertyTypeInferer $assignToPropertyTypeInferer,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private AstResolver $astResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\TypeInferer\AssignToPropertyTypeInferer
+     */
+    private $assignToPropertyTypeInferer;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\AstResolver
+     */
+    private $astResolver;
+    public function __construct(AssignToPropertyTypeInferer $assignToPropertyTypeInferer, NodeNameResolver $nodeNameResolver, AstResolver $astResolver)
     {
+        $this->assignToPropertyTypeInferer = $assignToPropertyTypeInferer;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->astResolver = $astResolver;
     }
     public function inferProperty(Property $property, ClassReflection $classReflection) : ?Type
     {

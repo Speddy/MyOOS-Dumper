@@ -40,47 +40,62 @@ use Rector\PhpDocParser\PhpParser\SmartPhpParser;
 final class AstResolver
 {
     /**
+     * @readonly
+     * @var \Rector\PhpDocParser\PhpParser\SmartPhpParser
+     */
+    private $smartPhpParser;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeScopeAndMetadataDecorator
+     */
+    private $nodeScopeAndMetadataDecorator;
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\ClassLikeAstResolver
+     */
+    private $classLikeAstResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\MethodReflectionResolver
+     */
+    private $methodReflectionResolver;
+    /**
      * Parsing files is very heavy performance, so this will help to leverage it
      * The value can be also null, when no statements could be parsed from the file.
      *
      * @var array<string, Stmt[]|null>
      */
-    private array $parsedFileNodes = [];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly SmartPhpParser $smartPhpParser,
-        /**
-         * @readonly
-         */
-        private readonly NodeScopeAndMetadataDecorator $nodeScopeAndMetadataDecorator,
-        /**
-         * @readonly
-         */
-        private readonly SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private readonly NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private readonly NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private readonly \Rector\Core\PhpParser\ClassLikeAstResolver $classLikeAstResolver,
-        /**
-         * @readonly
-         */
-        private readonly MethodReflectionResolver $methodReflectionResolver
-    )
+    private $parsedFileNodes = [];
+    public function __construct(SmartPhpParser $smartPhpParser, NodeScopeAndMetadataDecorator $nodeScopeAndMetadataDecorator, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, NodeNameResolver $nodeNameResolver, ReflectionProvider $reflectionProvider, NodeTypeResolver $nodeTypeResolver, \Rector\Core\PhpParser\ClassLikeAstResolver $classLikeAstResolver, MethodReflectionResolver $methodReflectionResolver)
     {
+        $this->smartPhpParser = $smartPhpParser;
+        $this->nodeScopeAndMetadataDecorator = $nodeScopeAndMetadataDecorator;
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->classLikeAstResolver = $classLikeAstResolver;
+        $this->methodReflectionResolver = $methodReflectionResolver;
     }
     /**
      * @return \PhpParser\Node\Stmt\Class_|\PhpParser\Node\Stmt\Trait_|\PhpParser\Node\Stmt\Interface_|\PhpParser\Node\Stmt\Enum_|null

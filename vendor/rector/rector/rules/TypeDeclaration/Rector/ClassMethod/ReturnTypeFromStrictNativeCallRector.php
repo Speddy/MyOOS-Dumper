@@ -23,21 +23,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReturnTypeFromStrictNativeCallRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly StrictNativeFunctionReturnTypeAnalyzer $strictNativeFunctionReturnTypeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly TypeFactory $typeFactory,
-        /**
-         * @readonly
-         */
-        private readonly ClassMethodReturnTypeOverrideGuard $classMethodReturnTypeOverrideGuard
-    )
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\ReturnTypeAnalyzer\StrictNativeFunctionReturnTypeAnalyzer
+     */
+    private $strictNativeFunctionReturnTypeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
+    /**
+     * @readonly
+     * @var \Rector\VendorLocker\NodeVendorLocker\ClassMethodReturnTypeOverrideGuard
+     */
+    private $classMethodReturnTypeOverrideGuard;
+    public function __construct(StrictNativeFunctionReturnTypeAnalyzer $strictNativeFunctionReturnTypeAnalyzer, TypeFactory $typeFactory, ClassMethodReturnTypeOverrideGuard $classMethodReturnTypeOverrideGuard)
     {
+        $this->strictNativeFunctionReturnTypeAnalyzer = $strictNativeFunctionReturnTypeAnalyzer;
+        $this->typeFactory = $typeFactory;
+        $this->classMethodReturnTypeOverrideGuard = $classMethodReturnTypeOverrideGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {

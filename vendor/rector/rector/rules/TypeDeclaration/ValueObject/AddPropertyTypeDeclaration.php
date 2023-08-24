@@ -5,19 +5,28 @@ namespace Rector\TypeDeclaration\ValueObject;
 
 use PHPStan\Type\Type;
 use Rector\Core\Validation\RectorAssert;
-final readonly class AddPropertyTypeDeclaration
+final class AddPropertyTypeDeclaration
 {
-    public function __construct(/**
+    /**
      * @readonly
+     * @var string
      */
-    private string $class, /**
+    private $class;
+    /**
      * @readonly
+     * @var string
      */
-    private string $propertyName, /**
+    private $propertyName;
+    /**
      * @readonly
+     * @var \PHPStan\Type\Type
      */
-    private Type $type)
+    private $type;
+    public function __construct(string $class, string $propertyName, Type $type)
     {
+        $this->class = $class;
+        $this->propertyName = $propertyName;
+        $this->type = $type;
         RectorAssert::className($class);
     }
     public function getClass() : string

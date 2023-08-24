@@ -11,23 +11,28 @@ use PhpParser\NodeTraverser;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
-final readonly class SymfonyPhpClosureDetector
+final class SymfonyPhpClosureDetector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    public function __construct(NodeNameResolver $nodeNameResolver, BetterNodeFinder $betterNodeFinder, SimpleCallableNodeTraverser $simpleCallableNodeTraverser)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
     }
     public function detect(Closure $closure) : bool
     {

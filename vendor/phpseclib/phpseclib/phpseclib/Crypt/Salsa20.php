@@ -49,12 +49,12 @@ class Salsa20 extends StreamCipher
     /**
      * @see \phpseclib3\Crypt\Salsa20::crypt()
      */
-    final public const ENCRYPT = 0;
+    const ENCRYPT = 0;
 
     /**
      * @see \phpseclib3\Crypt\Salsa20::crypt()
      */
-    final public const DECRYPT = 1;
+    const DECRYPT = 1;
 
     /**
      * Encryption buffer for continuous mode
@@ -121,7 +121,7 @@ class Salsa20 extends StreamCipher
     public function setNonce($nonce)
     {
         if (strlen($nonce) != 8) {
-            throw new \LengthException('Nonce of size ' . strlen((string) $key) . ' not supported by this algorithm. Only an 64-bit nonce is supported');
+            throw new \LengthException('Nonce of size ' . strlen($key) . ' not supported by this algorithm. Only an 64-bit nonce is supported');
         }
 
         $this->nonce = $nonce;
@@ -268,7 +268,7 @@ class Salsa20 extends StreamCipher
                 throw new InsufficientSetupException('Authentication Tag has not been set');
             }
             $newtag = $this->poly1305($ciphertext);
-            if (!str_starts_with($newtag, $this->oldtag)) {
+            if ($this->oldtag != substr($newtag, 0, strlen($this->oldtag))) {
                 $this->oldtag = false;
                 throw new BadDecryptionException('Derived authentication tag and supplied authentication tag do not match');
             }
@@ -335,7 +335,7 @@ class Salsa20 extends StreamCipher
         } else {
             $buffer = &$this->debuffer;
         }
-        if (!strlen((string) $buffer['ciphertext'])) {
+        if (!strlen($buffer['ciphertext'])) {
             $ciphertext = '';
         } else {
             $ciphertext = $text ^ Strings::shift($buffer['ciphertext'], strlen($text));
@@ -351,7 +351,7 @@ class Salsa20 extends StreamCipher
             if ($this->engine == self::ENGINE_OPENSSL) {
                 $iv = pack('V', $buffer['counter']) . $this->p2;
                 // at this point $text should be a multiple of 64
-                $buffer['counter'] += (strlen((string) $text) >> 6) + 1; // ie. divide by 64
+                $buffer['counter'] += (strlen($text) >> 6) + 1; // ie. divide by 64
                 $encrypted = openssl_encrypt(
                     $text . str_repeat("\0", 64),
                     $this->cipher_name_openssl,
@@ -361,8 +361,8 @@ class Salsa20 extends StreamCipher
                 );
                 $temp = Strings::pop($encrypted, 64);
             } else {
-                $blocks = str_split((string) $text, 64);
-                if (strlen((string) $text)) {
+                $blocks = str_split($text, 64);
+                if (strlen($text)) {
                     foreach ($blocks as &$block) {
                         $block ^= static::salsa20($this->p1 . pack('V', $buffer['counter']++) . $this->p2);
                     }
@@ -371,8 +371,8 @@ class Salsa20 extends StreamCipher
                 $temp = static::salsa20($this->p1 . pack('V', $buffer['counter']++) . $this->p2);
             }
             $ciphertext .= $encrypted . ($text2 ^ $temp);
-            $buffer['ciphertext'] = substr((string) $temp, $overflow);
-        } elseif (!strlen((string) $buffer['ciphertext'])) {
+            $buffer['ciphertext'] = substr($temp, $overflow);
+        } elseif (!strlen($buffer['ciphertext'])) {
             if ($this->engine == self::ENGINE_OPENSSL) {
                 $iv = pack('V', $buffer['counter']) . $this->p2;
                 $buffer['counter'] += (strlen($text) >> 6);

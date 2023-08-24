@@ -33,7 +33,7 @@ class MemcachedTest extends AbstractCacheTest
             );
         }
 
-        [$host, $port] = explode(':', (string) CACHE_TESTS_MEMCACHED_SERVER) + [1 => 11211];
+        list($host, $port) = explode(':', CACHE_TESTS_MEMCACHED_SERVER) + [1 => 11211];
 
         $adapter = new Memcached();
         $adapter->addServer($host, (int)$port);

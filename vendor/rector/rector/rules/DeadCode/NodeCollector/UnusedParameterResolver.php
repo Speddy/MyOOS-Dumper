@@ -6,15 +6,16 @@ namespace Rector\DeadCode\NodeCollector;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\ClassMethod;
 use Rector\Core\NodeAnalyzer\ParamAnalyzer;
-final readonly class UnusedParameterResolver
+final class UnusedParameterResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ParamAnalyzer $paramAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ParamAnalyzer
+     */
+    private $paramAnalyzer;
+    public function __construct(ParamAnalyzer $paramAnalyzer)
     {
+        $this->paramAnalyzer = $paramAnalyzer;
     }
     /**
      * @return array<int, Param>

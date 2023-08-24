@@ -16,7 +16,8 @@ namespace Monolog\Processor;
  */
 class HostnameProcessor implements ProcessorInterface
 {
-    private static string $host;
+    /** @var string */
+    private static $host;
 
     public function __construct()
     {

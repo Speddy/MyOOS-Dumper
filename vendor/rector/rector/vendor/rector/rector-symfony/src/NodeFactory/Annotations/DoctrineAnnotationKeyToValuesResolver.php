@@ -7,19 +7,22 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
 use Rector\Core\PhpParser\Node\Value\ValueResolver;
-final readonly class DoctrineAnnotationKeyToValuesResolver
+final class DoctrineAnnotationKeyToValuesResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ValueResolver $valueResolver,
-        /**
-         * @readonly
-         */
-        private \Rector\Symfony\NodeFactory\Annotations\StringValueQuoteWrapper $stringValueQuoteWrapper
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeFactory\Annotations\StringValueQuoteWrapper
+     */
+    private $stringValueQuoteWrapper;
+    public function __construct(ValueResolver $valueResolver, \Rector\Symfony\NodeFactory\Annotations\StringValueQuoteWrapper $stringValueQuoteWrapper)
     {
+        $this->valueResolver = $valueResolver;
+        $this->stringValueQuoteWrapper = $stringValueQuoteWrapper;
     }
     /**
      * @return array<string|null, mixed>|mixed[]

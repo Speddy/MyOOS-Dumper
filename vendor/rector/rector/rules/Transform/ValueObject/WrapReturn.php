@@ -5,19 +5,28 @@ namespace Rector\Transform\ValueObject;
 
 use PHPStan\Type\ObjectType;
 use Rector\Core\Validation\RectorAssert;
-final readonly class WrapReturn
+final class WrapReturn
 {
-    public function __construct(/**
+    /**
      * @readonly
+     * @var string
      */
-    private string $type, /**
+    private $type;
+    /**
      * @readonly
+     * @var string
      */
-    private string $method, /**
+    private $method;
+    /**
      * @readonly
+     * @var bool
      */
-    private bool $isArrayWrap)
+    private $isArrayWrap;
+    public function __construct(string $type, string $method, bool $isArrayWrap)
     {
+        $this->type = $type;
+        $this->method = $method;
+        $this->isArrayWrap = $isArrayWrap;
         RectorAssert::className($type);
     }
     public function getObjectType() : ObjectType

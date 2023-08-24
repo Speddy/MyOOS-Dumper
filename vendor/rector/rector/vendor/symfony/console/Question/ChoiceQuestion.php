@@ -22,9 +22,18 @@ class ChoiceQuestion extends Question
      * @var mixed[]
      */
     private $choices;
-    private bool $multiselect = \false;
-    private string $prompt = ' > ';
-    private string $errorMessage = 'Value "%s" is invalid';
+    /**
+     * @var bool
+     */
+    private $multiselect = \false;
+    /**
+     * @var string
+     */
+    private $prompt = ' > ';
+    /**
+     * @var string
+     */
+    private $errorMessage = 'Value "%s" is invalid';
     /**
      * @param string $question The question to ask to the user
      * @param array  $choices  The list of available choices

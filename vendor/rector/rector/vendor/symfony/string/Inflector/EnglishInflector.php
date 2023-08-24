@@ -284,7 +284,7 @@ final class EnglishInflector implements InflectorInterface
                 if ($j === $suffixLength) {
                     // Is there any character preceding the suffix in the plural string?
                     if ($j < $pluralLength) {
-                        $nextIsVocal = str_contains('aeiou', $lowerPluralRev[$j]);
+                        $nextIsVocal = \strpos('aeiou', $lowerPluralRev[$j]) !== \false;
                         if (!$map[2] && $nextIsVocal) {
                             // suffix may not succeed a vocal but next char is one
                             break;
@@ -345,7 +345,7 @@ final class EnglishInflector implements InflectorInterface
                 if ($j === $suffixLength) {
                     // Is there any character preceding the suffix in the plural string?
                     if ($j < $singularLength) {
-                        $nextIsVocal = str_contains('aeiou', $lowerSingularRev[$j]);
+                        $nextIsVocal = \strpos('aeiou', $lowerSingularRev[$j]) !== \false;
                         if (!$map[2] && $nextIsVocal) {
                             // suffix may not succeed a vocal but next char is one
                             break;

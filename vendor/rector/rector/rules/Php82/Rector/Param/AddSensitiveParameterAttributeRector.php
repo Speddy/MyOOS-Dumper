@@ -21,13 +21,18 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
  */
 final class AddSensitiveParameterAttributeRector extends AbstractRector implements ConfigurableRectorInterface, MinPhpVersionInterface
 {
+    /**
+     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
+     */
+    protected $phpAttributeAnalyzer;
     public const SENSITIVE_PARAMETERS = 'sensitive_parameters';
     /**
      * @var string[]
      */
-    private array $sensitiveParameters = [];
-    public function __construct(protected PhpAttributeAnalyzer $phpAttributeAnalyzer)
+    private $sensitiveParameters = [];
+    public function __construct(PhpAttributeAnalyzer $phpAttributeAnalyzer)
     {
+        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
     }
     /**
      * @param mixed[] $configuration

@@ -6,26 +6,49 @@ namespace Rector\Arguments\ValueObject;
 use PHPStan\Type\ObjectType;
 use Rector\Arguments\Contract\ReplaceArgumentDefaultValueInterface;
 use Rector\Core\Validation\RectorAssert;
-final readonly class ReplaceArgumentDefaultValue implements ReplaceArgumentDefaultValueInterface
+final class ReplaceArgumentDefaultValue implements ReplaceArgumentDefaultValueInterface
 {
+    /**
+     * @readonly
+     * @var string
+     */
+    private $class;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $method;
+    /**
+     * @var int<0, max>
+     * @readonly
+     */
+    private $position;
+    /**
+     * @readonly
+     * @var mixed
+     */
+    private $valueBefore;
+    /**
+     * @readonly
+     * @var mixed
+     */
+    private $valueAfter;
     /**
      * @var string
      */
     public const ANY_VALUE_BEFORE = '*ANY_VALUE_BEFORE*';
     /**
      * @param int<0, max> $position
+     * @param mixed $valueBefore
+     * @param mixed $valueAfter
      */
-    public function __construct(/**
-     * @readonly
-     */
-    private string $class, /**
-     * @readonly
-     */
-    private string $method, /**
-     * @readonly
-     */
-    private int $position, private mixed $valueBefore, private mixed $valueAfter)
+    public function __construct(string $class, string $method, int $position, $valueBefore, $valueAfter)
     {
+        $this->class = $class;
+        $this->method = $method;
+        $this->position = $position;
+        $this->valueBefore = $valueBefore;
+        $this->valueAfter = $valueAfter;
         RectorAssert::className($class);
     }
     public function getObjectType() : ObjectType

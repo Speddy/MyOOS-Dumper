@@ -7,15 +7,16 @@ use PhpParser\Node\Expr\BinaryOp;
 use PhpParser\Node\Expr\FuncCall;
 use Rector\Core\ValueObject\FuncCallAndExpr;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class BinaryOpAnalyzer
+final class BinaryOpAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function matchFuncCallAndOtherExpr(BinaryOp $binaryOp, string $funcCallName) : ?FuncCallAndExpr
     {

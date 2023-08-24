@@ -4,15 +4,16 @@ declare (strict_types=1);
 namespace Rector\ChangesReporting\Annotation;
 
 use Rector\Core\Contract\Rector\RectorInterface;
-final readonly class RectorsChangelogResolver
+final class RectorsChangelogResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\ChangesReporting\Annotation\AnnotationExtractor $annotationExtractor
-    )
+    /**
+     * @readonly
+     * @var \Rector\ChangesReporting\Annotation\AnnotationExtractor
+     */
+    private $annotationExtractor;
+    public function __construct(\Rector\ChangesReporting\Annotation\AnnotationExtractor $annotationExtractor)
     {
+        $this->annotationExtractor = $annotationExtractor;
     }
     /**
      * @param array<class-string<RectorInterface>> $rectorClasses

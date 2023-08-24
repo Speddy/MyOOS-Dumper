@@ -21,7 +21,7 @@ final class RenameFunctionRector extends AbstractRector implements ConfigurableR
     /**
      * @var array<string, string>
      */
-    private array $oldFunctionToNewFunction = [];
+    private $oldFunctionToNewFunction = [];
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Turns defined function call new one.', [new ConfiguredCodeSample('view("...", []);', 'Laravel\\Templating\\render("...", []);', ['view' => 'Laravel\\Templating\\render'])]);
@@ -63,7 +63,7 @@ final class RenameFunctionRector extends AbstractRector implements ConfigurableR
     }
     private function createName(string $newFunction) : Name
     {
-        if (str_contains($newFunction, '\\')) {
+        if (\strpos($newFunction, '\\') !== \false) {
             return new FullyQualified($newFunction);
         }
         return new Name($newFunction);

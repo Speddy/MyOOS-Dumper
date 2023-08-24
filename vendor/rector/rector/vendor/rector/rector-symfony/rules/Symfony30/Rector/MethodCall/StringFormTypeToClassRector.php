@@ -20,20 +20,23 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class StringFormTypeToClassRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\FormAddMethodCallAnalyzer
+     */
+    private $formAddMethodCallAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\FormHelper\FormTypeStringToTypeProvider
+     */
+    private $formTypeStringToTypeProvider;
+    /**
      * @var string
      */
     private const DESCRIPTION = 'Turns string Form Type references to their CONSTANT alternatives in FormTypes in Form in Symfony. To enable custom types, add link to your container XML dump in "$rectorConfig->symfonyContainerXml(...)"';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly FormAddMethodCallAnalyzer $formAddMethodCallAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly FormTypeStringToTypeProvider $formTypeStringToTypeProvider
-    )
+    public function __construct(FormAddMethodCallAnalyzer $formAddMethodCallAnalyzer, FormTypeStringToTypeProvider $formTypeStringToTypeProvider)
     {
+        $this->formAddMethodCallAnalyzer = $formAddMethodCallAnalyzer;
+        $this->formTypeStringToTypeProvider = $formTypeStringToTypeProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

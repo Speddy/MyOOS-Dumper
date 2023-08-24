@@ -11,19 +11,22 @@ use Rector\Core\PhpParser\Comparing\NodeComparator;
 use Rector\Core\PhpParser\Node\Value\ValueResolver;
 use Rector\Php70\Enum\BattleshipCompareOrder;
 use Rector\Php70\ValueObject\ComparedExprs;
-final readonly class BattleshipTernaryAnalyzer
+final class BattleshipTernaryAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeComparator $nodeComparator,
-        /**
-         * @readonly
-         */
-        private ValueResolver $valueResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
+     */
+    private $nodeComparator;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
+    public function __construct(NodeComparator $nodeComparator, ValueResolver $valueResolver)
     {
+        $this->nodeComparator = $nodeComparator;
+        $this->valueResolver = $valueResolver;
     }
     /**
      * @return BattleshipCompareOrder::*|null

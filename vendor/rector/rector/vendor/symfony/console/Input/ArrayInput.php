@@ -21,13 +21,15 @@ use RectorPrefix202308\Symfony\Component\Console\Exception\InvalidOptionExceptio
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class ArrayInput extends Input implements \Stringable
+class ArrayInput extends Input
 {
     /**
-     * @param mixed[] $parameters
+     * @var mixed[]
      */
-    public function __construct(private readonly array $parameters, InputDefinition $definition = null)
+    private $parameters;
+    public function __construct(array $parameters, InputDefinition $definition = null)
     {
+        $this->parameters = $parameters;
         parent::__construct($definition);
     }
     public function getFirstArgument() : ?string
@@ -98,7 +100,7 @@ class ArrayInput extends Input implements \Stringable
                     $params[] = $param . ('' != $val ? $glue . $this->escapeToken($val) : '');
                 }
             } else {
-                $params[] = \is_array($val) ? \implode(' ', \array_map(\Closure::fromCallable($this->escapeToken(...)), $val)) : $this->escapeToken($val);
+                $params[] = \is_array($val) ? \implode(' ', \array_map(\Closure::fromCallable([$this, 'escapeToken']), $val)) : $this->escapeToken($val);
             }
         }
         return \implode(' ', $params);
@@ -112,9 +114,9 @@ class ArrayInput extends Input implements \Stringable
             if ('--' === $key) {
                 return;
             }
-            if (str_starts_with($key, '--')) {
+            if (\strncmp($key, '--', \strlen('--')) === 0) {
                 $this->addLongOption(\substr($key, 2), $value);
-            } elseif (str_starts_with($key, '-')) {
+            } elseif (\strncmp($key, '-', \strlen('-')) === 0) {
                 $this->addShortOption(\substr($key, 1), $value);
             } else {
                 $this->addArgument($key, $value);
@@ -125,8 +127,9 @@ class ArrayInput extends Input implements \Stringable
      * Adds a short option value.
      *
      * @throws InvalidOptionException When option given doesn't exist
+     * @param mixed $value
      */
-    private function addShortOption(string $shortcut, mixed $value) : void
+    private function addShortOption(string $shortcut, $value) : void
     {
         if (!$this->definition->hasShortcut($shortcut)) {
             throw new InvalidOptionException(\sprintf('The "-%s" option does not exist.', $shortcut));
@@ -138,8 +141,9 @@ class ArrayInput extends Input implements \Stringable
      *
      * @throws InvalidOptionException When option given doesn't exist
      * @throws InvalidOptionException When a required value is missing
+     * @param mixed $value
      */
-    private function addLongOption(string $name, mixed $value) : void
+    private function addLongOption(string $name, $value) : void
     {
         if (!$this->definition->hasOption($name)) {
             if (!$this->definition->hasNegation($name)) {
@@ -165,8 +169,9 @@ class ArrayInput extends Input implements \Stringable
      *
      * @throws InvalidArgumentException When argument given doesn't exist
      * @param string|int $name
+     * @param mixed $value
      */
-    private function addArgument($name, mixed $value) : void
+    private function addArgument($name, $value) : void
     {
         if (!$this->definition->hasArgument($name)) {
             throw new InvalidArgumentException(\sprintf('The "%s" argument does not exist.', $name));

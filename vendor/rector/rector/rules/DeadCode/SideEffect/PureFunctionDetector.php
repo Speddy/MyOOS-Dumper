@@ -9,8 +9,18 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\Native\NativeFunctionReflection;
 use PHPStan\Reflection\ReflectionProvider;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class PureFunctionDetector
+final class PureFunctionDetector
 {
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
     /**
      * @see https://github.com/vimeo/psalm/blob/d470903722cfcbc1cd04744c5491d3e6d13ec3d9/src/Psalm/Internal/Codebase/Functions.php#L288
      * @var string[]
@@ -225,17 +235,10 @@ final readonly class PureFunctionDetector
         // stream
         'stream_filter_append',
     ];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider
-    )
+    public function __construct(NodeNameResolver $nodeNameResolver, ReflectionProvider $reflectionProvider)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->reflectionProvider = $reflectionProvider;
     }
     public function detect(FuncCall $funcCall, Scope $scope) : bool
     {

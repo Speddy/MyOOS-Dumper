@@ -11,19 +11,22 @@ use PhpParser\Node\Scalar\String_;
 use PHPStan\Reflection\ReflectionProvider;
 use Rector\Core\PhpParser\Node\NodeFactory;
 use ReflectionMethod;
-final readonly class CreateFormTypeOptionsArgMover
+final class CreateFormTypeOptionsArgMover
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private NodeFactory $nodeFactory
-    )
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\NodeFactory
+     */
+    private $nodeFactory;
+    public function __construct(ReflectionProvider $reflectionProvider, NodeFactory $nodeFactory)
     {
+        $this->reflectionProvider = $reflectionProvider;
+        $this->nodeFactory = $nodeFactory;
     }
     /**
      * @param Arg[] $argNodes

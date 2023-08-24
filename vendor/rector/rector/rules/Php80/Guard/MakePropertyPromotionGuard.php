@@ -9,15 +9,16 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
 use PHPStan\Reflection\ClassReflection;
 use Rector\Php74\Guard\PropertyTypeChangeGuard;
-final readonly class MakePropertyPromotionGuard
+final class MakePropertyPromotionGuard
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PropertyTypeChangeGuard $propertyTypeChangeGuard
-    )
+    /**
+     * @readonly
+     * @var \Rector\Php74\Guard\PropertyTypeChangeGuard
+     */
+    private $propertyTypeChangeGuard;
+    public function __construct(PropertyTypeChangeGuard $propertyTypeChangeGuard)
     {
+        $this->propertyTypeChangeGuard = $propertyTypeChangeGuard;
     }
     public function isLegal(Class_ $class, ClassReflection $classReflection, Property $property, Param $param, bool $inlinePublic = \true) : bool
     {

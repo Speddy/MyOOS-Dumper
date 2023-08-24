@@ -30,51 +30,70 @@ use Rector\TypeDeclaration\Matcher\PropertyAssignMatcher;
 /**
  * @internal
  */
-final readonly class AssignToPropertyTypeInferer
+final class AssignToPropertyTypeInferer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ConstructorAssignDetector $constructorAssignDetector,
-        /**
-         * @readonly
-         */
-        private PropertyAssignMatcher $propertyAssignMatcher,
-        /**
-         * @readonly
-         */
-        private PropertyDefaultAssignDetector $propertyDefaultAssignDetector,
-        /**
-         * @readonly
-         */
-        private NullTypeAssignDetector $nullTypeAssignDetector,
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private TypeFactory $typeFactory,
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private ExprAnalyzer $exprAnalyzer,
-        /**
-         * @readonly
-         */
-        private ValueResolver $valueResolver,
-        /**
-         * @readonly
-         */
-        private PropertyFetchAnalyzer $propertyFetchAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\AlreadyAssignDetector\ConstructorAssignDetector
+     */
+    private $constructorAssignDetector;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\Matcher\PropertyAssignMatcher
+     */
+    private $propertyAssignMatcher;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\AlreadyAssignDetector\PropertyDefaultAssignDetector
+     */
+    private $propertyDefaultAssignDetector;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\AlreadyAssignDetector\NullTypeAssignDetector
+     */
+    private $nullTypeAssignDetector;
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ExprAnalyzer
+     */
+    private $exprAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
+     */
+    private $propertyFetchAnalyzer;
+    public function __construct(ConstructorAssignDetector $constructorAssignDetector, PropertyAssignMatcher $propertyAssignMatcher, PropertyDefaultAssignDetector $propertyDefaultAssignDetector, NullTypeAssignDetector $nullTypeAssignDetector, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, TypeFactory $typeFactory, NodeTypeResolver $nodeTypeResolver, ExprAnalyzer $exprAnalyzer, ValueResolver $valueResolver, PropertyFetchAnalyzer $propertyFetchAnalyzer)
     {
+        $this->constructorAssignDetector = $constructorAssignDetector;
+        $this->propertyAssignMatcher = $propertyAssignMatcher;
+        $this->propertyDefaultAssignDetector = $propertyDefaultAssignDetector;
+        $this->nullTypeAssignDetector = $nullTypeAssignDetector;
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->typeFactory = $typeFactory;
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->exprAnalyzer = $exprAnalyzer;
+        $this->valueResolver = $valueResolver;
+        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
     }
     public function inferPropertyInClassLike(Property $property, string $propertyName, ClassLike $classLike) : ?Type
     {

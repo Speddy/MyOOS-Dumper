@@ -36,7 +36,9 @@ class NodeFinder
      */
     public function findInstanceOf($nodes, string $class) : array
     {
-        return $this->find($nodes, fn($node) => $node instanceof $class);
+        return $this->find($nodes, function ($node) use($class) {
+            return $node instanceof $class;
+        });
     }
     /**
      * Find first node satisfying a filter callback.
@@ -67,6 +69,8 @@ class NodeFinder
      */
     public function findFirstInstanceOf($nodes, string $class)
     {
-        return $this->findFirst($nodes, fn($node) => $node instanceof $class);
+        return $this->findFirst($nodes, function ($node) use($class) {
+            return $node instanceof $class;
+        });
     }
 }

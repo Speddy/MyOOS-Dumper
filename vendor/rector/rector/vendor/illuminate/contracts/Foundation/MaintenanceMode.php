@@ -7,6 +7,7 @@ interface MaintenanceMode
     /**
      * Take the application down for maintenance.
      *
+     * @param  array  $payload
      * @return void
      */
     public function activate(array $payload) : void;

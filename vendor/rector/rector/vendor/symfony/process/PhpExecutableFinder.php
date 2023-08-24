@@ -18,7 +18,7 @@ namespace RectorPrefix202308\Symfony\Component\Process;
  */
 class PhpExecutableFinder
 {
-    private readonly \RectorPrefix202308\Symfony\Component\Process\ExecutableFinder $executableFinder;
+    private $executableFinder;
     public function __construct()
     {
         $this->executableFinder = new ExecutableFinder();

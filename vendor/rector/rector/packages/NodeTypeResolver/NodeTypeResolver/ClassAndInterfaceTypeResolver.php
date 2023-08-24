@@ -20,15 +20,16 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
  *
  * @implements NodeTypeResolverInterface<Class_|Interface_>
  */
-final readonly class ClassAndInterfaceTypeResolver implements NodeTypeResolverInterface
+final class ClassAndInterfaceTypeResolver implements NodeTypeResolverInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @return array<class-string<Node>>

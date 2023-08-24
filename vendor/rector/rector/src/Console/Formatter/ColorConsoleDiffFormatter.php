@@ -11,7 +11,7 @@ use RectorPrefix202308\Symfony\Component\Console\Formatter\OutputFormatter;
  *
  * @see \Rector\Core\Tests\Console\Formatter\ColorConsoleDiffFormatterTest
  */
-final readonly class ColorConsoleDiffFormatter
+final class ColorConsoleDiffFormatter
 {
     /**
      * @var string
@@ -35,8 +35,9 @@ final readonly class ColorConsoleDiffFormatter
     private const NEWLINES_REGEX = "#\n\r|\n#";
     /**
      * @readonly
+     * @var string
      */
-    private string $template;
+    private $template;
     public function __construct()
     {
         $this->template = \sprintf('<comment>    ---------- begin diff ----------</comment>%s%%s%s<comment>    ----------- end diff -----------</comment>' . \PHP_EOL, \PHP_EOL, \PHP_EOL);

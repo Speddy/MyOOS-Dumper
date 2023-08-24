@@ -23,21 +23,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class AddRouteAnnotationRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly SymfonyRoutesProviderInterface $symfonyRoutesProvider,
-        /**
-         * @readonly
-         */
-        private readonly SymfonyRouteTagValueNodeFactory $symfonyRouteTagValueNodeFactory,
-        /**
-         * @readonly
-         */
-        private readonly ArrayParser $arrayParser
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\Contract\Bridge\Symfony\Routing\SymfonyRoutesProviderInterface
+     */
+    private $symfonyRoutesProvider;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\PhpDocNode\SymfonyRouteTagValueNodeFactory
+     */
+    private $symfonyRouteTagValueNodeFactory;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\ArrayParser
+     */
+    private $arrayParser;
+    public function __construct(SymfonyRoutesProviderInterface $symfonyRoutesProvider, SymfonyRouteTagValueNodeFactory $symfonyRouteTagValueNodeFactory, ArrayParser $arrayParser)
     {
+        $this->symfonyRoutesProvider = $symfonyRoutesProvider;
+        $this->symfonyRouteTagValueNodeFactory = $symfonyRouteTagValueNodeFactory;
+        $this->arrayParser = $arrayParser;
     }
     public function getNodeTypes() : array
     {

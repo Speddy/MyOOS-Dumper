@@ -153,7 +153,7 @@ final class Cursor
     public function getCurrentPosition() : array
     {
         static $isTtySupported;
-        if (!($isTtySupported ??= '/' === \DIRECTORY_SEPARATOR && \stream_isatty(\STDOUT))) {
+        if (!($isTtySupported = $isTtySupported ?? '/' === \DIRECTORY_SEPARATOR && \stream_isatty(\STDOUT))) {
             return [1, 1];
         }
         $sttyMode = \shell_exec('stty -g');

@@ -22,23 +22,38 @@ use SplObjectStorage;
  */
 class ExtEvLoop implements LoopInterface
 {
-    private readonly \EvLoop $loop;
-    private readonly \RectorPrefix202308\React\EventLoop\Tick\FutureTickQueue $futureTickQueue;
-    private \SplObjectStorage $timers;
+    /**
+     * @var EvLoop
+     */
+    private $loop;
+    /**
+     * @var FutureTickQueue
+     */
+    private $futureTickQueue;
+    /**
+     * @var SplObjectStorage
+     */
+    private $timers;
     /**
      * @var EvIo[]
      */
-    private array $readStreams = [];
+    private $readStreams = array();
     /**
      * @var EvIo[]
      */
-    private array $writeStreams = [];
-    private ?bool $running = null;
-    private readonly \RectorPrefix202308\React\EventLoop\SignalsHandler $signals;
+    private $writeStreams = array();
+    /**
+     * @var bool
+     */
+    private $running;
+    /**
+     * @var SignalsHandler
+     */
+    private $signals;
     /**
      * @var \EvSignal[]
      */
-    private array $signalEvents = [];
+    private $signalEvents = array();
     public function __construct()
     {
         $this->loop = new EvLoop();

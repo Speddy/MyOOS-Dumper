@@ -5,7 +5,7 @@ namespace PHPStan\PhpDocParser\Ast\Type;
 
 use PHPStan\PhpDocParser\Ast\ConstExpr\ConstExprNode;
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
-class ConstTypeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode, \Stringable
+class ConstTypeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode
 {
     use NodeAttributes;
     /** @var ConstExprNode */

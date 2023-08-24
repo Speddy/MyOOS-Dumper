@@ -22,7 +22,7 @@ final class CreatedByRuleDecorator
             $node = [$node];
         }
         foreach ($node as $singleNode) {
-            if ($singleNode::class === $originalNode::class) {
+            if (\get_class($singleNode) === \get_class($originalNode)) {
                 $this->createByRule($singleNode, $rectorClass);
             }
         }
@@ -45,7 +45,9 @@ final class CreatedByRuleDecorator
             return;
         }
         // filter out when exists, then append
-        $createdByRule = \array_filter($createdByRule, static fn(string $rectorRule): bool => $rectorRule !== $rectorClass);
+        $createdByRule = \array_filter($createdByRule, static function (string $rectorRule) use($rectorClass) : bool {
+            return $rectorRule !== $rectorClass;
+        });
         $node->setAttribute(AttributeKey::CREATED_BY_RULE, \array_merge($createdByRule, [$rectorClass]));
     }
 }

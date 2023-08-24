@@ -6,20 +6,22 @@ namespace Rector\Symfony\NodeFactory\Annotations;
 use Rector\BetterPhpDocParser\PhpDoc\StringNode;
 use Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\ArrayParser;
 use Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\CurlyListNode;
-final readonly class StringValueQuoteWrapper
+final class StringValueQuoteWrapper
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ArrayParser $arrayParser
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\ArrayParser
+     */
+    private $arrayParser;
+    public function __construct(ArrayParser $arrayParser)
     {
+        $this->arrayParser = $arrayParser;
     }
     /**
      * @return mixed|CurlyListNode|StringNode
+     * @param mixed $value
      */
-    public function wrap(mixed $value, ?string $key)
+    public function wrap($value, ?string $key)
     {
         if (\is_string($value)) {
             return new StringNode($value);

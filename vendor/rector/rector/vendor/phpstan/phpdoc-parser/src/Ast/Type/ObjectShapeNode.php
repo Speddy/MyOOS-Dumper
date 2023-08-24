@@ -5,7 +5,7 @@ namespace PHPStan\PhpDocParser\Ast\Type;
 
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use function implode;
-class ObjectShapeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode, \Stringable
+class ObjectShapeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode
 {
     use NodeAttributes;
     /** @var ObjectShapeItemNode[] */

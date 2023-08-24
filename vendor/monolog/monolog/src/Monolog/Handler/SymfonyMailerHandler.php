@@ -28,6 +28,8 @@ use Symfony\Component\Mime\Email;
  */
 class SymfonyMailerHandler extends MailHandler
 {
+    /** @var MailerInterface|TransportInterface */
+    protected $mailer;
     /** @var Email|callable(string, Record[]): Email */
     private $emailTemplate;
 
@@ -37,9 +39,11 @@ class SymfonyMailerHandler extends MailHandler
      * @param MailerInterface|TransportInterface $mailer The mailer to use
      * @param callable|Email                     $email  An email template, the subject/body will be replaced
      */
-    public function __construct(protected $mailer, $email, $level = Logger::ERROR, bool $bubble = true)
+    public function __construct($mailer, $email, $level = Logger::ERROR, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
+
+        $this->mailer = $mailer;
         $this->emailTemplate = $email;
     }
 

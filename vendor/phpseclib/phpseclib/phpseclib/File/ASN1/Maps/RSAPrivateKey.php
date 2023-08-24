@@ -23,7 +23,7 @@ use phpseclib3\File\ASN1;
 abstract class RSAPrivateKey
 {
     // version must be multi if otherPrimeInfos present
-    final public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'version' => [

@@ -29,7 +29,7 @@ class WildfireFormatter extends NormalizerFormatter
      *
      * @var array<Level, string>
      */
-    private array $logLevels = [
+    private $logLevels = [
         Logger::DEBUG     => 'LOG',
         Logger::INFO      => 'INFO',
         Logger::NOTICE    => 'INFO',
@@ -118,7 +118,7 @@ class WildfireFormatter extends NormalizerFormatter
      *
      * @phpstan-return never
      */
-    public function formatBatch(array $records): never
+    public function formatBatch(array $records)
     {
         throw new \BadMethodCallException('Batch formatting does not make sense for the WildfireFormatter');
     }

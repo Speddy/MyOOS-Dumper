@@ -26,17 +26,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class AddReturnTypeDeclarationBasedOnParentClassMethodRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard,
-        /**
-         * @readonly
-         */
-        private readonly PhpVersionProvider $phpVersionProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\VendorLocker\ParentClassMethodTypeOverrideGuard
+     */
+    private $parentClassMethodTypeOverrideGuard;
+    /**
+     * @readonly
+     * @var \Rector\Core\Php\PhpVersionProvider
+     */
+    private $phpVersionProvider;
+    public function __construct(ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard, PhpVersionProvider $phpVersionProvider)
     {
+        $this->parentClassMethodTypeOverrideGuard = $parentClassMethodTypeOverrideGuard;
+        $this->phpVersionProvider = $phpVersionProvider;
     }
     public function provideMinPhpVersion() : int
     {

@@ -47,7 +47,10 @@ class GelfMessageFormatter extends NormalizerFormatter
      */
     protected $maxLength;
 
-    private int $gelfVersion = 2;
+    /**
+     * @var int
+     */
+    private $gelfVersion = 2;
 
     /**
      * Translates Monolog log levels to Graylog2 log priorities.
@@ -56,7 +59,7 @@ class GelfMessageFormatter extends NormalizerFormatter
      *
      * @phpstan-var array<Level, int>
      */
-    private array $logLevels = [
+    private $logLevels = [
         Logger::DEBUG     => 7,
         Logger::INFO      => 6,
         Logger::NOTICE    => 5,
@@ -160,7 +163,7 @@ class GelfMessageFormatter extends NormalizerFormatter
         if ($this->gelfVersion === 1) {
             /** @phpstan-ignore-next-line */
             if (null === $message->getFile() && isset($context['exception']['file'])) {
-                if (preg_match("/^(.+):([0-9]+)$/", (string) $context['exception']['file'], $matches)) {
+                if (preg_match("/^(.+):([0-9]+)$/", $context['exception']['file'], $matches)) {
                     $message->setFile($matches[1]);
                     $message->setLine($matches[2]);
                 }

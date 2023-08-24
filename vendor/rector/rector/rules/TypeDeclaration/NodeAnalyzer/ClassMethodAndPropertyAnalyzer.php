@@ -10,15 +10,16 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Return_;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class ClassMethodAndPropertyAnalyzer
+final class ClassMethodAndPropertyAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function hasPropertyFetchReturn(ClassMethod $classMethod, string $propertyName) : bool
     {

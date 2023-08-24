@@ -5,10 +5,10 @@ namespace PHPStan\PhpDocParser\Ast\Type;
 
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use function implode;
-class ArrayShapeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode, \Stringable
+class ArrayShapeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode
 {
-    final public const KIND_ARRAY = 'array';
-    final public const KIND_LIST = 'list';
+    public const KIND_ARRAY = 'array';
+    public const KIND_LIST = 'list';
     use NodeAttributes;
     /** @var ArrayShapeItemNode[] */
     public $items;

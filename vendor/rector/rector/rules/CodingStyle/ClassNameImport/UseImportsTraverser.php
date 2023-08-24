@@ -10,19 +10,22 @@ use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\UseUse;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
-final readonly class UseImportsTraverser
+final class UseImportsTraverser
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(SimpleCallableNodeTraverser $simpleCallableNodeTraverser, NodeNameResolver $nodeNameResolver)
     {
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @param Stmt[] $stmts

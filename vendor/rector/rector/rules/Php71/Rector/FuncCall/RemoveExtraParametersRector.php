@@ -28,17 +28,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveExtraParametersRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly VariadicAnalyzer $variadicAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\VariadicAnalyzer
+     */
+    private $variadicAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(VariadicAnalyzer $variadicAnalyzer, ReflectionResolver $reflectionResolver)
     {
+        $this->variadicAnalyzer = $variadicAnalyzer;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function provideMinPhpVersion() : int
     {
@@ -100,14 +103,14 @@ final class RemoveExtraParametersRector extends AbstractRector implements MinPhp
     {
         if ($reflection instanceof FunctionReflection) {
             $fileName = (string) $reflection->getFileName();
-            if (str_contains($fileName, 'phpstan.phar')) {
+            if (\strpos($fileName, 'phpstan.phar') !== \false) {
                 return \true;
             }
         }
         if ($reflection instanceof MethodReflection) {
             $classReflection = $reflection->getDeclaringClass();
             $fileName = (string) $classReflection->getFileName();
-            if (str_contains($fileName, 'phpstan.phar')) {
+            if (\strpos($fileName, 'phpstan.phar') !== \false) {
                 return \true;
             }
         }

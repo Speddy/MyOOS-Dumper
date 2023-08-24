@@ -25,25 +25,32 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class UnSpreadOperatorRector extends AbstractScopeAwareRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly SpreadVariablesCollector $spreadVariablesCollector,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private readonly VendorLocationDetector $vendorLocationDetector,
-        /**
-         * @readonly
-         */
-        private readonly ClassChildAnalyzer $classChildAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\CodingStyle\NodeAnalyzer\SpreadVariablesCollector
+     */
+    private $spreadVariablesCollector;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\CodingStyle\Reflection\VendorLocationDetector
+     */
+    private $vendorLocationDetector;
+    /**
+     * @readonly
+     * @var \Rector\FamilyTree\NodeAnalyzer\ClassChildAnalyzer
+     */
+    private $classChildAnalyzer;
+    public function __construct(SpreadVariablesCollector $spreadVariablesCollector, ReflectionResolver $reflectionResolver, VendorLocationDetector $vendorLocationDetector, ClassChildAnalyzer $classChildAnalyzer)
     {
+        $this->spreadVariablesCollector = $spreadVariablesCollector;
+        $this->reflectionResolver = $reflectionResolver;
+        $this->vendorLocationDetector = $vendorLocationDetector;
+        $this->classChildAnalyzer = $classChildAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -134,7 +141,8 @@ CODE_SAMPLE
         if ($spreadParameterReflections === []) {
             return null;
         }
-        $firstSpreadParamPosition = array_key_first($spreadParameterReflections);
+        \reset($spreadParameterReflections);
+        $firstSpreadParamPosition = \key($spreadParameterReflections);
         $variadicArgs = $this->resolveVariadicArgsByVariadicParams($methodCall, $firstSpreadParamPosition);
         if ($this->hasUnpackedArgs($variadicArgs)) {
             $this->changeArgToPacked($variadicArgs, $methodCall);
@@ -209,6 +217,6 @@ CODE_SAMPLE
         if (!$classMethod->isPublic()) {
             return \false;
         }
-        return $classReflection->isSubclassOf(\PHPUnit\Framework\TestCase::class);
+        return $classReflection->isSubclassOf('PHPUnit\\Framework\\TestCase');
     }
 }

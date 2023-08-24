@@ -29,7 +29,7 @@ abstract class PuTTY extends Progenitor
      *
      * @var string
      */
-    final public const PUBLIC_HANDLER = 'phpseclib3\Crypt\RSA\Formats\Keys\OpenSSH';
+    const PUBLIC_HANDLER = 'phpseclib3\Crypt\RSA\Formats\Keys\OpenSSH';
 
     /**
      * Algorithm Identifier
@@ -65,14 +65,14 @@ abstract class PuTTY extends Progenitor
         if ($result === false) {
             throw new \UnexpectedValueException('Key appears to be malformed');
         }
-        [$publicExponent, $modulus] = $result;
+        list($publicExponent, $modulus) = $result;
 
         $result = Strings::unpackSSH2('iiii', $private);
         if ($result === false) {
             throw new \UnexpectedValueException('Key appears to be malformed');
         }
         $primes = $coefficients = [];
-        [$privateExponent, $primes[1], $primes[2], $coefficients[2]] = $result;
+        list($privateExponent, $primes[1], $primes[2], $coefficients[2]) = $result;
 
         $temp = $primes[1]->subtract($one);
         $exponents = [1 => $publicExponent->modInverse($temp)];
@@ -85,6 +85,12 @@ abstract class PuTTY extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
+     * @param \phpseclib3\Math\BigInteger $n
+     * @param \phpseclib3\Math\BigInteger $e
+     * @param \phpseclib3\Math\BigInteger $d
+     * @param array $primes
+     * @param array $exponents
+     * @param array $coefficients
      * @param string $password optional
      * @param array $options optional
      * @return string
@@ -104,6 +110,8 @@ abstract class PuTTY extends Progenitor
     /**
      * Convert a public key to the appropriate format
      *
+     * @param \phpseclib3\Math\BigInteger $n
+     * @param \phpseclib3\Math\BigInteger $e
      * @return string
      */
     public static function savePublicKey(BigInteger $n, BigInteger $e)

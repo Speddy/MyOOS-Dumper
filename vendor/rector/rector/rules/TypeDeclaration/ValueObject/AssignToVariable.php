@@ -4,19 +4,22 @@ declare (strict_types=1);
 namespace Rector\TypeDeclaration\ValueObject;
 
 use PhpParser\Node\Expr;
-final readonly class AssignToVariable
+final class AssignToVariable
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private string $variableName,
-        /**
-         * @readonly
-         */
-        private Expr $assignedExpr
-    )
+    /**
+     * @readonly
+     * @var string
+     */
+    private $variableName;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Expr
+     */
+    private $assignedExpr;
+    public function __construct(string $variableName, Expr $assignedExpr)
     {
+        $this->variableName = $variableName;
+        $this->assignedExpr = $assignedExpr;
     }
     public function getVariableName() : string
     {

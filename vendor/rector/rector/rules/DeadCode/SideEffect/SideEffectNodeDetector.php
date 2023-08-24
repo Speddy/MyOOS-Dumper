@@ -23,8 +23,18 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Type\ConstantType;
 use PHPStan\Type\ObjectType;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final readonly class SideEffectNodeDetector
+final class SideEffectNodeDetector
 {
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\SideEffect\PureFunctionDetector
+     */
+    private $pureFunctionDetector;
     /**
      * @var array<class-string<Expr>>
      */
@@ -33,17 +43,10 @@ final readonly class SideEffectNodeDetector
      * @var array<class-string<Expr>>
      */
     private const CALL_EXPR_SIDE_EFFECT_NODE_TYPES = [MethodCall::class, New_::class, NullsafeMethodCall::class, StaticCall::class];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private \Rector\DeadCode\SideEffect\PureFunctionDetector $pureFunctionDetector
-    )
+    public function __construct(NodeTypeResolver $nodeTypeResolver, \Rector\DeadCode\SideEffect\PureFunctionDetector $pureFunctionDetector)
     {
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->pureFunctionDetector = $pureFunctionDetector;
     }
     public function detect(Expr $expr, Scope $scope) : bool
     {
@@ -80,7 +83,7 @@ final readonly class SideEffectNodeDetector
         if ($node instanceof New_ && $this->isPhpParser($node)) {
             return \false;
         }
-        $exprClass = $node::class;
+        $exprClass = \get_class($node);
         if (\in_array($exprClass, self::CALL_EXPR_SIDE_EFFECT_NODE_TYPES, \true)) {
             return \true;
         }

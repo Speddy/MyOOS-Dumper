@@ -7,15 +7,16 @@ use PhpParser\Node\Expr\Assign;
 use PHPStan\Type\Type;
 use PHPStan\Type\UnionType;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final readonly class AssignVariableTypeResolver
+final class AssignVariableTypeResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    public function __construct(NodeTypeResolver $nodeTypeResolver)
     {
+        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     public function resolve(Assign $assign) : Type
     {

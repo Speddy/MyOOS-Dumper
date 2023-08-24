@@ -16,8 +16,12 @@ use function sprintf;
  * This finder returns whatever value you gave to it. This is useful for testing
  * or as a fallback to avoid to catch the NumberOfCpuCoreNotFound exception.
  */
-final readonly class DummyCpuCoreFinder implements CpuCoreFinder
+final class DummyCpuCoreFinder implements CpuCoreFinder
 {
+    /**
+     * @var positive-int
+     */
+    private $count;
     public function diagnose() : string
     {
         return sprintf('Will return "%d".', $this->count);
@@ -25,8 +29,9 @@ final readonly class DummyCpuCoreFinder implements CpuCoreFinder
     /**
      * @param positive-int $count
      */
-    public function __construct(private int $count)
+    public function __construct(int $count)
     {
+        $this->count = $count;
     }
     public function find() : ?int
     {

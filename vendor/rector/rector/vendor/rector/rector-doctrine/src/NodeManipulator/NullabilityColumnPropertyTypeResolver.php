@@ -12,8 +12,23 @@ use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\Core\PhpParser\Node\Value\ValueResolver;
 use Rector\Doctrine\NodeAnalyzer\AttributeFinder;
-final readonly class NullabilityColumnPropertyTypeResolver
+final class NullabilityColumnPropertyTypeResolver
 {
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\Doctrine\NodeAnalyzer\AttributeFinder
+     */
+    private $attributeFinder;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
     /**
      * @var string
      */
@@ -21,21 +36,11 @@ final readonly class NullabilityColumnPropertyTypeResolver
     /**
      * @see https://www.doctrine-project.org/projects/doctrine-orm/en/2.6/reference/basic-mapping.html#doctrine-mapping-types
      */
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private AttributeFinder $attributeFinder,
-        /**
-         * @readonly
-         */
-        private ValueResolver $valueResolver
-    )
+    public function __construct(PhpDocInfoFactory $phpDocInfoFactory, AttributeFinder $attributeFinder, ValueResolver $valueResolver)
     {
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->attributeFinder = $attributeFinder;
+        $this->valueResolver = $valueResolver;
     }
     public function isNullable(Property $property) : bool
     {

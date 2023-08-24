@@ -4,22 +4,25 @@ declare (strict_types=1);
 namespace Rector\Symfony\ValueObject;
 
 use Rector\Symfony\Contract\Tag\TagInterface;
-final readonly class Tag implements TagInterface
+final class Tag implements TagInterface
 {
+    /**
+     * @readonly
+     * @var string
+     */
+    private $name;
+    /**
+     * @var array<string, mixed>
+     * @readonly
+     */
+    private $data = [];
     /**
      * @param array<string, mixed> $data
      */
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private string $name,
-        /**
-         * @readonly
-         */
-        private array $data = []
-    )
+    public function __construct(string $name, array $data = [])
     {
+        $this->name = $name;
+        $this->data = $data;
     }
     public function getName() : string
     {

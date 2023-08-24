@@ -22,26 +22,26 @@ namespace Symfony\Polyfill\Intl\Normalizer;
  */
 class Normalizer
 {
-    final public const FORM_D = \Normalizer::FORM_D;
-    final public const FORM_KD = \Normalizer::FORM_KD;
-    final public const FORM_C = \Normalizer::FORM_C;
-    final public const FORM_KC = \Normalizer::FORM_KC;
-    final public const NFD = \Normalizer::NFD;
-    final public const NFKD = \Normalizer::NFKD;
-    final public const NFC = \Normalizer::NFC;
-    final public const NFKC = \Normalizer::NFKC;
+    public const FORM_D = \Normalizer::FORM_D;
+    public const FORM_KD = \Normalizer::FORM_KD;
+    public const FORM_C = \Normalizer::FORM_C;
+    public const FORM_KC = \Normalizer::FORM_KC;
+    public const NFD = \Normalizer::NFD;
+    public const NFKD = \Normalizer::NFKD;
+    public const NFC = \Normalizer::NFC;
+    public const NFKC = \Normalizer::NFKC;
     private static $C;
     private static $D;
     private static $KD;
     private static $cC;
-    private static array $ulenMask = ["\xc0" => 2, "\xd0" => 2, "\xe0" => 3, "\xf0" => 4];
-    private static string $ASCII = " eiasntrolud][cmp'\ng|hv.fb,:=-q10C2*yx)(L9AS/P\"EjMIk3>5T<D4}B{8FwR67UGN;JzV#HOW_&!K?XQ%Y\\\tZ+~^\$@`\x00\x01\x02\x03\x04\x05\x06\x07\x08\v\f\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f";
+    private static $ulenMask = ["\xc0" => 2, "\xd0" => 2, "\xe0" => 3, "\xf0" => 4];
+    private static $ASCII = " eiasntrolud][cmp'\ng|hv.fb,:=-q10C2*yx)(L9AS/P\"EjMIk3>5T<D4}B{8FwR67UGN;JzV#HOW_&!K?XQ%Y\\\tZ+~^\$@`\x00\x01\x02\x03\x04\x05\x06\x07\x08\v\f\r\x0e\x0f\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f";
     public static function isNormalized(string $s, int $form = self::FORM_C)
     {
         if (!\in_array($form, [self::NFD, self::NFKD, self::NFC, self::NFKC])) {
             return \false;
         }
-        if (!isset($s[\strspn($s, (string) self::$ASCII)])) {
+        if (!isset($s[\strspn($s, self::$ASCII)])) {
             return \true;
         }
         if (self::NFC == $form && \preg_match('//u', $s) && !\preg_match('/[^\\x00-\\x{2FF}]/u', $s)) {
@@ -113,8 +113,8 @@ class Normalizer
         $ulenMask = self::$ulenMask;
         $result = $tail = '';
         $i = $s[0] < "\x80" ? 1 : $ulenMask[$s[0] & "\xf0"];
-        $len = \strlen((string) $s);
-        $lastUchr = \substr((string) $s, 0, $i);
+        $len = \strlen($s);
+        $lastUchr = \substr($s, 0, $i);
         $lastUcls = isset($combClass[$lastUchr]) ? 256 : 0;
         while ($i < $len) {
             if ($s[$i] < "\x80") {
@@ -123,8 +123,8 @@ class Normalizer
                     $lastUchr .= $tail;
                     $tail = '';
                 }
-                if ($j = \strspn((string) $s, (string) $ASCII, $i + 1)) {
-                    $lastUchr .= \substr((string) $s, $i, $j);
+                if ($j = \strspn($s, $ASCII, $i + 1)) {
+                    $lastUchr .= \substr($s, $i, $j);
                     $i += $j;
                 }
                 $result .= $lastUchr;
@@ -134,7 +134,7 @@ class Normalizer
                 continue;
             }
             $ulen = $ulenMask[$s[$i] & "\xf0"];
-            $uchr = \substr((string) $s, $i, $ulen);
+            $uchr = \substr($s, $i, $ulen);
             if ($lastUchr < "ᄀ" || "ᄒ" < $lastUchr || $uchr < "ᅡ" || "ᅵ" < $uchr || $lastUcls) {
                 // Table lookup and combining chars composition
                 $ucls = $combClass[$uchr] ?? 0;
@@ -155,7 +155,7 @@ class Normalizer
                 $L = \ord($lastUchr[2]) - 0x80;
                 $V = \ord($uchr[2]) - 0xa1;
                 $T = 0;
-                $uchr = \substr((string) $s, $i + $ulen, 3);
+                $uchr = \substr($s, $i + $ulen, 3);
                 if ("ᆧ" <= $uchr && $uchr <= "ᇂ") {
                     $T = \ord($uchr[2]) - 0xa7;
                     0 > $T && ($T += 0x40);
@@ -180,7 +180,7 @@ class Normalizer
         }
         $c = [];
         $i = 0;
-        $len = \strlen((string) $s);
+        $len = \strlen($s);
         while ($i < $len) {
             if ($s[$i] < "\x80") {
                 // ASCII chars
@@ -189,19 +189,19 @@ class Normalizer
                     $result .= \implode('', $c);
                     $c = [];
                 }
-                $j = 1 + \strspn((string) $s, (string) $ASCII, $i + 1);
-                $result .= \substr((string) $s, $i, $j);
+                $j = 1 + \strspn($s, $ASCII, $i + 1);
+                $result .= \substr($s, $i, $j);
                 $i += $j;
                 continue;
             }
             $ulen = $ulenMask[$s[$i] & "\xf0"];
-            $uchr = \substr((string) $s, $i, $ulen);
+            $uchr = \substr($s, $i, $ulen);
             $i += $ulen;
             if ($uchr < "가" || "힣" < $uchr) {
                 // Table lookup
                 if ($uchr !== ($j = $compatMap[$uchr] ?? $decompMap[$uchr] ?? $uchr)) {
                     $uchr = $j;
-                    $j = \strlen((string) $uchr);
+                    $j = \strlen($uchr);
                     $ulen = $uchr[0] < "\x80" ? 1 : $ulenMask[$uchr[0] & "\xf0"];
                     if ($ulen != $j) {
                         // Put trailing chars in $s
@@ -215,7 +215,7 @@ class Normalizer
                         while ($j--) {
                             $s[$i + $j] = $uchr[$ulen + $j];
                         }
-                        $uchr = \substr((string) $uchr, 0, $ulen);
+                        $uchr = \substr($uchr, 0, $ulen);
                     }
                 }
                 if (isset($combClass[$uchr])) {

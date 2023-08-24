@@ -18,17 +18,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class LiteralGetToRequestClassConstantRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly LiteralCallLikeConstFetchReplacer $literalCallLikeConstFetchReplacer,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionProvider $reflectionProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\LiteralCallLikeConstFetchReplacer
+     */
+    private $literalCallLikeConstFetchReplacer;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    public function __construct(LiteralCallLikeConstFetchReplacer $literalCallLikeConstFetchReplacer, ReflectionProvider $reflectionProvider)
     {
+        $this->literalCallLikeConstFetchReplacer = $literalCallLikeConstFetchReplacer;
+        $this->reflectionProvider = $reflectionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

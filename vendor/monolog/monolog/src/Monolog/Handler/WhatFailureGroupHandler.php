@@ -34,7 +34,7 @@ class WhatFailureGroupHandler extends GroupHandler
         foreach ($this->handlers as $handler) {
             try {
                 $handler->handle($record);
-            } catch (\Throwable) {
+            } catch (\Throwable $e) {
                 // What failure?
             }
         }
@@ -48,7 +48,7 @@ class WhatFailureGroupHandler extends GroupHandler
     public function handleBatch(array $records): void
     {
         if ($this->processors) {
-            $processed = [];
+            $processed = array();
             foreach ($records as $record) {
                 $processed[] = $this->processRecord($record);
             }
@@ -59,7 +59,7 @@ class WhatFailureGroupHandler extends GroupHandler
         foreach ($this->handlers as $handler) {
             try {
                 $handler->handleBatch($records);
-            } catch (\Throwable) {
+            } catch (\Throwable $e) {
                 // What failure?
             }
         }
@@ -73,7 +73,7 @@ class WhatFailureGroupHandler extends GroupHandler
         foreach ($this->handlers as $handler) {
             try {
                 $handler->close();
-            } catch (\Throwable) {
+            } catch (\Throwable $e) {
                 // What failure?
             }
         }

@@ -18,25 +18,28 @@ use PHPStan\Type\ObjectType;
 use PHPStan\Type\UnionType;
 use Rector\Core\Contract\Rector\RectorInterface;
 use Rector\NodeTypeResolver\NodeTypeCorrector\GenericClassStringTypeCorrector;
-final readonly class UnionTypeCommonTypeNarrower
+final class UnionTypeCommonTypeNarrower
 {
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeCorrector\GenericClassStringTypeCorrector
+     */
+    private $genericClassStringTypeCorrector;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
     /**
      * Key = the winner Array = the group of types matched
      *
      * @var array<string, array<class-string<Node>|class-string<\PHPStan\PhpDocParser\Ast\Node>|class-string<RectorInterface>>>
      */
     private const PRIORITY_TYPES = [ClassLike::class => [ClassLike::class], FunctionLike::class => [FunctionLike::class], BinaryOp::class => [BinaryOp::class, Expr::class], Expr::class => [Node::class, Expr::class], Stmt::class => [Node::class, Stmt::class], PhpDocTagValueNode::class => [PhpDocTagValueNode::class, \PHPStan\PhpDocParser\Ast\Node::class], Node::class => [Node::class], RectorInterface::class => [RectorInterface::class]];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private GenericClassStringTypeCorrector $genericClassStringTypeCorrector,
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider
-    )
+    public function __construct(GenericClassStringTypeCorrector $genericClassStringTypeCorrector, ReflectionProvider $reflectionProvider)
     {
+        $this->genericClassStringTypeCorrector = $genericClassStringTypeCorrector;
+        $this->reflectionProvider = $reflectionProvider;
     }
     public function narrowToSharedObjectType(UnionType $unionType) : ?ObjectType
     {
@@ -155,6 +158,8 @@ final readonly class UnionTypeCommonTypeNarrower
      */
     private function filterOutNativeClassReflections(array $classReflections) : array
     {
-        return \array_filter($classReflections, static fn(ClassReflection $classReflection): bool => !$classReflection->isBuiltin());
+        return \array_filter($classReflections, static function (ClassReflection $classReflection) : bool {
+            return !$classReflection->isBuiltin();
+        });
     }
 }

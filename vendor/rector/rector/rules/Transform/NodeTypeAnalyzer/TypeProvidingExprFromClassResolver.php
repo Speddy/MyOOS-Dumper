@@ -22,23 +22,28 @@ use PHPStan\Type\TypeWithClassName;
 use Rector\Core\ValueObject\MethodName;
 use Rector\Naming\Naming\PropertyNaming;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class TypeProvidingExprFromClassResolver
+final class TypeProvidingExprFromClassResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private PropertyNaming $propertyNaming
-    )
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Naming\Naming\PropertyNaming
+     */
+    private $propertyNaming;
+    public function __construct(ReflectionProvider $reflectionProvider, NodeNameResolver $nodeNameResolver, PropertyNaming $propertyNaming)
     {
+        $this->reflectionProvider = $reflectionProvider;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->propertyNaming = $propertyNaming;
     }
     /**
      * @return MethodCall|PropertyFetch|Variable|null

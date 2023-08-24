@@ -6,12 +6,12 @@ namespace PHPStan\PhpDocParser\Ast\Type;
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use function implode;
 use function sprintf;
-class GenericTypeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode, \Stringable
+class GenericTypeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode
 {
-    final public const VARIANCE_INVARIANT = 'invariant';
-    final public const VARIANCE_COVARIANT = 'covariant';
-    final public const VARIANCE_CONTRAVARIANT = 'contravariant';
-    final public const VARIANCE_BIVARIANT = 'bivariant';
+    public const VARIANCE_INVARIANT = 'invariant';
+    public const VARIANCE_COVARIANT = 'covariant';
+    public const VARIANCE_CONTRAVARIANT = 'contravariant';
+    public const VARIANCE_BIVARIANT = 'bivariant';
     use NodeAttributes;
     /** @var IdentifierTypeNode */
     public $type;

@@ -90,22 +90,22 @@ use RectorPrefix202308\Nette;
  * @property-read positive-int $height
  * @property-read resource|\GdImage $imageResource
  */
-class Image implements \Stringable
+class Image
 {
     use Nette\SmartObject;
     /** Prevent from getting resized to a bigger size than the original */
-    final public const SHRINK_ONLY = 0b1;
+    public const SHRINK_ONLY = 0b1;
     /** Resizes to a specified width and height without keeping aspect ratio */
-    final public const STRETCH = 0b10;
+    public const STRETCH = 0b10;
     /** Resizes to fit into a specified width and height and preserves aspect ratio */
-    final public const FIT = 0b0;
+    public const FIT = 0b0;
     /** Resizes while bounding the smaller dimension to the specified width or height and preserves aspect ratio */
-    final public const FILL = 0b100;
+    public const FILL = 0b100;
     /** Resizes to the smallest possible size to completely cover specified width and height and reserves aspect ratio */
-    final public const EXACT = 0b1000;
+    public const EXACT = 0b1000;
     /** image types */
-    final public const JPEG = \IMAGETYPE_JPEG, PNG = \IMAGETYPE_PNG, GIF = \IMAGETYPE_GIF, WEBP = \IMAGETYPE_WEBP, AVIF = 19, BMP = \IMAGETYPE_BMP;
-    final public const EMPTY_GIF = "GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02D\x01\x00;";
+    public const JPEG = \IMAGETYPE_JPEG, PNG = \IMAGETYPE_PNG, GIF = \IMAGETYPE_GIF, WEBP = \IMAGETYPE_WEBP, AVIF = 19, BMP = \IMAGETYPE_BMP;
+    public const EMPTY_GIF = "GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x02D\x01\x00;";
     private const Formats = [self::JPEG => 'jpeg', self::PNG => 'png', self::GIF => 'gif', self::WEBP => 'webp', self::AVIF => 'avif', self::BMP => 'bmp'];
     /** @var resource|\GdImage */
     private $image;
@@ -480,7 +480,7 @@ class Image implements \Stringable
      */
     public function save(string $file, ?int $quality = null, ?int $type = null) : void
     {
-        $type ??= self::extensionToType(\pathinfo($file, \PATHINFO_EXTENSION));
+        $type = $type ?? self::extensionToType(\pathinfo($file, \PATHINFO_EXTENSION));
         $this->output($type, $quality, $file);
     }
     /**
@@ -592,7 +592,7 @@ class Image implements \Stringable
      */
     private static function isPercent(&$num) : bool
     {
-        if (\is_string($num) && str_ends_with($num, '%')) {
+        if (\is_string($num) && \substr($num, -1) === '%') {
             $num = (float) \substr($num, 0, -1);
             return \true;
         } elseif (\is_int($num) || $num === (string) (int) $num) {

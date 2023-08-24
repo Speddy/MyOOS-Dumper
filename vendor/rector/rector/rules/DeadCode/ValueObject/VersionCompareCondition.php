@@ -4,23 +4,28 @@ declare (strict_types=1);
 namespace Rector\DeadCode\ValueObject;
 
 use Rector\DeadCode\Contract\ConditionInterface;
-final readonly class VersionCompareCondition implements ConditionInterface
+final class VersionCompareCondition implements ConditionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private int $firstVersion,
-        /**
-         * @readonly
-         */
-        private int $secondVersion,
-        /**
-         * @readonly
-         */
-        private ?string $compareSign
-    )
+    /**
+     * @readonly
+     * @var int
+     */
+    private $firstVersion;
+    /**
+     * @readonly
+     * @var int
+     */
+    private $secondVersion;
+    /**
+     * @readonly
+     * @var string|null
+     */
+    private $compareSign;
+    public function __construct(int $firstVersion, int $secondVersion, ?string $compareSign)
     {
+        $this->firstVersion = $firstVersion;
+        $this->secondVersion = $secondVersion;
+        $this->compareSign = $compareSign;
     }
     public function getFirstVersion() : int
     {

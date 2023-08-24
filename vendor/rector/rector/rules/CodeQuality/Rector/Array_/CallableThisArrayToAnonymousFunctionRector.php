@@ -23,21 +23,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class CallableThisArrayToAnonymousFunctionRector extends AbstractScopeAwareRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly AnonymousFunctionFactory $anonymousFunctionFactory,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private readonly ArrayCallableMethodMatcher $arrayCallableMethodMatcher
-    )
+    /**
+     * @readonly
+     * @var \Rector\Php72\NodeFactory\AnonymousFunctionFactory
+     */
+    private $anonymousFunctionFactory;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeCollector\NodeAnalyzer\ArrayCallableMethodMatcher
+     */
+    private $arrayCallableMethodMatcher;
+    public function __construct(AnonymousFunctionFactory $anonymousFunctionFactory, ReflectionResolver $reflectionResolver, ArrayCallableMethodMatcher $arrayCallableMethodMatcher)
     {
+        $this->anonymousFunctionFactory = $anonymousFunctionFactory;
+        $this->reflectionResolver = $reflectionResolver;
+        $this->arrayCallableMethodMatcher = $arrayCallableMethodMatcher;
     }
     public function getRuleDefinition() : RuleDefinition
     {

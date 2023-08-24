@@ -6,7 +6,7 @@ namespace PHPStan\PhpDocParser\Ast\PhpDoc\Doctrine;
 use PHPStan\PhpDocParser\Ast\Node;
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use function implode;
-class DoctrineAnnotation implements Node, \Stringable
+class DoctrineAnnotation implements Node
 {
     use NodeAttributes;
     /** @var string */

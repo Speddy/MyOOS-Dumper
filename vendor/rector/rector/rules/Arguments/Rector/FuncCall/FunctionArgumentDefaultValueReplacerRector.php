@@ -21,16 +21,17 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class FunctionArgumentDefaultValueReplacerRector extends AbstractRector implements ConfigurableRectorInterface
 {
     /**
+     * @readonly
+     * @var \Rector\Arguments\ArgumentDefaultValueReplacer
+     */
+    private $argumentDefaultValueReplacer;
+    /**
      * @var ReplaceFuncCallArgumentDefaultValue[]
      */
-    private array $replacedArguments = [];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ArgumentDefaultValueReplacer $argumentDefaultValueReplacer
-    )
+    private $replacedArguments = [];
+    public function __construct(ArgumentDefaultValueReplacer $argumentDefaultValueReplacer)
     {
+        $this->argumentDefaultValueReplacer = $argumentDefaultValueReplacer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

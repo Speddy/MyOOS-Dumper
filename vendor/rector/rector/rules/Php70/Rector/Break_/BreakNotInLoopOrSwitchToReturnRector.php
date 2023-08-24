@@ -26,16 +26,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class BreakNotInLoopOrSwitchToReturnRector extends AbstractRector implements MinPhpVersionInterface
 {
     /**
+     * @readonly
+     * @var \Rector\NodeNestingScope\ContextAnalyzer
+     */
+    private $contextAnalyzer;
+    /**
      * @var string
      */
     private const IS_BREAK_IN_SWITCH = 'is_break_in_switch';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ContextAnalyzer $contextAnalyzer
-    )
+    public function __construct(ContextAnalyzer $contextAnalyzer)
     {
+        $this->contextAnalyzer = $contextAnalyzer;
     }
     public function provideMinPhpVersion() : int
     {

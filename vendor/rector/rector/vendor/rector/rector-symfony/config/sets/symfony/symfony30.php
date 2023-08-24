@@ -103,14 +103,14 @@ return static function (RectorConfig $rectorConfig) : void {
         'Symfony\\Component\\HttpKernel\\Exception\\FatalErrorException' => 'Symfony\\Component\\Debug\\Exception\\FatalErrorException',
         'Symfony\\Component\\HttpKernel\\Exception\\FlattenException' => 'Symfony\\Component\\Debug\\Exception\\FlattenException',
         # partial with method rename
-        'Symfony\\Component\\HttpKernel\\Log\\LoggerInterface' => \Psr\Log\LoggerInterface::class,
+        'Symfony\\Component\\HttpKernel\\Log\\LoggerInterface' => 'Psr\\Log\\LoggerInterface',
         # event disptacher
         'Symfony\\Component\\HttpKernel\\DependencyInjection\\RegisterListenersPass' => 'Symfony\\Component\\EventDispatcher\\DependencyInjection\\RegisterListenersPass',
         # partial with methor rename
-        'Symfony\\Component\\HttpKernel\\Log\\NullLogger' => \Psr\Log\LoggerInterface::class,
+        'Symfony\\Component\\HttpKernel\\Log\\NullLogger' => 'Psr\\Log\\LoggerInterface',
         # monolog
         # partial with method rename
-        'Symfony\\Bridge\\Monolog\\Logger' => \Psr\Log\LoggerInterface::class,
+        'Symfony\\Bridge\\Monolog\\Logger' => 'Psr\\Log\\LoggerInterface',
         # security
         'Symfony\\Component\\Security\\Core\\Authorization\\Voter\\AbstractVoter' => 'Symfony\\Component\\Security\\Core\\Authorization\\Voter\\Voter',
         # twig

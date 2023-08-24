@@ -21,7 +21,7 @@ final class ReplaceServiceArgumentRector extends AbstractRector implements Confi
     /**
      * @var ReplaceServiceArgument[]
      */
-    private array $replaceServiceArguments = [];
+    private $replaceServiceArguments = [];
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Replace defined service() argument in Symfony PHP config', [new ConfiguredCodeSample(<<<'CODE_SAMPLE'

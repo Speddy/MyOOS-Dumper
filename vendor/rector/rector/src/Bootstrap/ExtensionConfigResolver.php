@@ -14,10 +14,10 @@ final class ExtensionConfigResolver
     public function provide() : array
     {
         $configFilePaths = [];
-        if (!\class_exists(\Rector\RectorInstaller\GeneratedConfig::class)) {
+        if (!\class_exists('Rector\\RectorInstaller\\GeneratedConfig')) {
             return $configFilePaths;
         }
-        $generatedConfigReflectionClass = new ReflectionClass(\Rector\RectorInstaller\GeneratedConfig::class);
+        $generatedConfigReflectionClass = new ReflectionClass('Rector\\RectorInstaller\\GeneratedConfig');
         if ($generatedConfigReflectionClass->getFileName() === \false) {
             return $configFilePaths;
         }

@@ -31,29 +31,38 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class FormTypeInstanceToClassConstRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly FormInstanceToFormClassConstFetchConverter $formInstanceToFormClassConstFetchConverter,
-        /**
-         * @readonly
-         */
-        private readonly FormAddMethodCallAnalyzer $formAddMethodCallAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly FormOptionsArrayMatcher $formOptionsArrayMatcher,
-        /**
-         * @readonly
-         */
-        private readonly FormCollectionAnalyzer $formCollectionAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ControllerAnalyzer $controllerAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\FormInstanceToFormClassConstFetchConverter
+     */
+    private $formInstanceToFormClassConstFetchConverter;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\FormAddMethodCallAnalyzer
+     */
+    private $formAddMethodCallAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\FormOptionsArrayMatcher
+     */
+    private $formOptionsArrayMatcher;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\FormCollectionAnalyzer
+     */
+    private $formCollectionAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\TypeAnalyzer\ControllerAnalyzer
+     */
+    private $controllerAnalyzer;
+    public function __construct(FormInstanceToFormClassConstFetchConverter $formInstanceToFormClassConstFetchConverter, FormAddMethodCallAnalyzer $formAddMethodCallAnalyzer, FormOptionsArrayMatcher $formOptionsArrayMatcher, FormCollectionAnalyzer $formCollectionAnalyzer, ControllerAnalyzer $controllerAnalyzer)
     {
+        $this->formInstanceToFormClassConstFetchConverter = $formInstanceToFormClassConstFetchConverter;
+        $this->formAddMethodCallAnalyzer = $formAddMethodCallAnalyzer;
+        $this->formOptionsArrayMatcher = $formOptionsArrayMatcher;
+        $this->formCollectionAnalyzer = $formCollectionAnalyzer;
+        $this->controllerAnalyzer = $controllerAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

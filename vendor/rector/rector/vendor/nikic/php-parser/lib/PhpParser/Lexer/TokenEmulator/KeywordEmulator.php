@@ -9,7 +9,7 @@ abstract class KeywordEmulator extends \PhpParser\Lexer\TokenEmulator\TokenEmula
     abstract function getKeywordToken() : int;
     public function isEmulationNeeded(string $code) : bool
     {
-        return str_contains(\strtolower($code), $this->getKeywordString());
+        return \strpos(\strtolower($code), $this->getKeywordString()) !== \false;
     }
     protected function isKeywordContext(array $tokens, int $pos) : bool
     {
@@ -20,7 +20,7 @@ abstract class KeywordEmulator extends \PhpParser\Lexer\TokenEmulator\TokenEmula
     {
         $keywordString = $this->getKeywordString();
         foreach ($tokens as $i => $token) {
-            if ($token[0] === \T_STRING && \strtolower((string) $token[1]) === $keywordString && $this->isKeywordContext($tokens, $i)) {
+            if ($token[0] === \T_STRING && \strtolower($token[1]) === $keywordString && $this->isKeywordContext($tokens, $i)) {
                 $tokens[$i][0] = $this->getKeywordToken();
             }
         }

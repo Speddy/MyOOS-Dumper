@@ -20,7 +20,10 @@ use RectorPrefix202308\Webmozart\Assert\InvalidArgumentException;
  */
 final class ArrayItemNodeAnnotationToAttributeMapper implements AnnotationToAttributeMapperInterface
 {
-    private ?\Rector\PhpAttribute\AnnotationToAttributeMapper $annotationToAttributeMapper = null;
+    /**
+     * @var \Rector\PhpAttribute\AnnotationToAttributeMapper
+     */
+    private $annotationToAttributeMapper;
     /**
      * Avoid circular reference
      */
@@ -54,7 +57,7 @@ final class ArrayItemNodeAnnotationToAttributeMapper implements AnnotationToAttr
                     $identifierTypeNode = new IdentifierTypeNode($arrayItemNode->value);
                     $arrayItemNode->value = new DoctrineAnnotationTagValueNode($identifierTypeNode);
                     return $this->map($arrayItemNode);
-                } catch (InvalidArgumentException) {
+                } catch (InvalidArgumentException $exception) {
                 }
             }
             $keyExpr = null;
@@ -70,9 +73,9 @@ final class ArrayItemNodeAnnotationToAttributeMapper implements AnnotationToAttr
         if (!\is_string($arrayItemNode->value)) {
             return \false;
         }
-        if (!str_starts_with($arrayItemNode->value, '@')) {
+        if (\strncmp($arrayItemNode->value, '@', \strlen('@')) !== 0) {
             return \false;
         }
-        return !str_ends_with($arrayItemNode->value, ')');
+        return \substr_compare($arrayItemNode->value, ')', -\strlen(')')) !== 0;
     }
 }

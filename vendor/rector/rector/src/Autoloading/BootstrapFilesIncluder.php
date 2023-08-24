@@ -38,7 +38,7 @@ final class BootstrapFilesIncluder
         if ($stubsRectorDirectory === \false) {
             return;
         }
-        $dir = new RecursiveDirectoryIterator($stubsRectorDirectory, RecursiveDirectoryIterator::SKIP_DOTS | \FilesystemIterator::SKIP_DOTS);
+        $dir = new RecursiveDirectoryIterator($stubsRectorDirectory, RecursiveDirectoryIterator::SKIP_DOTS);
         /** @var SplFileInfo[] $stubs */
         $stubs = new RecursiveIteratorIterator($dir);
         foreach ($stubs as $stub) {

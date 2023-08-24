@@ -5,27 +5,32 @@ namespace Rector\Php80\ValueObject;
 
 use PhpParser\Node\Expr;
 use Rector\Php80\Enum\MatchKind;
-final readonly class CondAndExpr
+final class CondAndExpr
 {
+    /**
+     * @var Expr[]|null
+     * @readonly
+     */
+    private $condExprs;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Expr
+     */
+    private $expr;
+    /**
+     * @var MatchKind::*
+     * @readonly
+     */
+    private $matchKind;
     /**
      * @param Expr[]|null $condExprs
      * @param MatchKind::* $matchKind
      */
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ?array $condExprs,
-        /**
-         * @readonly
-         */
-        private Expr $expr,
-        /**
-         * @readonly
-         */
-        private string $matchKind
-    )
+    public function __construct(?array $condExprs, Expr $expr, string $matchKind)
     {
+        $this->condExprs = $condExprs;
+        $this->expr = $expr;
+        $this->matchKind = $matchKind;
     }
     public function getExpr() : Expr
     {

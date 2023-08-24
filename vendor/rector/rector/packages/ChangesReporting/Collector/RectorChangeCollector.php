@@ -9,19 +9,22 @@ use Rector\Core\Contract\Rector\RectorInterface;
 use Rector\Core\Logging\CurrentRectorProvider;
 use Rector\Core\Provider\CurrentFileProvider;
 use Rector\Core\ValueObject\Application\File;
-final readonly class RectorChangeCollector
+final class RectorChangeCollector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private CurrentRectorProvider $currentRectorProvider,
-        /**
-         * @readonly
-         */
-        private CurrentFileProvider $currentFileProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Logging\CurrentRectorProvider
+     */
+    private $currentRectorProvider;
+    /**
+     * @readonly
+     * @var \Rector\Core\Provider\CurrentFileProvider
+     */
+    private $currentFileProvider;
+    public function __construct(CurrentRectorProvider $currentRectorProvider, CurrentFileProvider $currentFileProvider)
     {
+        $this->currentRectorProvider = $currentRectorProvider;
+        $this->currentFileProvider = $currentFileProvider;
     }
     /**
      * @internal Use file-> method instead
@@ -38,7 +41,7 @@ final readonly class RectorChangeCollector
         if (!$currentRector instanceof RectorInterface) {
             return;
         }
-        $rectorWithLineChange = new RectorWithLineChange($currentRector::class, $node->getLine());
+        $rectorWithLineChange = new RectorWithLineChange(\get_class($currentRector), $node->getLine());
         $file->addRectorClassWithLine($rectorWithLineChange);
     }
 }

@@ -14,23 +14,28 @@ use Rector\BetterPhpDocParser\ValueObject\Type\FullyQualifiedIdentifierTypeNode;
 use Rector\Core\Php\PhpVersionProvider;
 use Rector\Core\ValueObject\PhpVersionFeature;
 use Rector\StaticTypeMapper\StaticTypeMapper;
-final readonly class ReturnTypeDeclarationUpdater
+final class ReturnTypeDeclarationUpdater
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpVersionProvider $phpVersionProvider,
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper,
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Php\PhpVersionProvider
+     */
+    private $phpVersionProvider;
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    public function __construct(PhpVersionProvider $phpVersionProvider, StaticTypeMapper $staticTypeMapper, PhpDocInfoFactory $phpDocInfoFactory)
     {
+        $this->phpVersionProvider = $phpVersionProvider;
+        $this->staticTypeMapper = $staticTypeMapper;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
     /**
      * @param class-string $className

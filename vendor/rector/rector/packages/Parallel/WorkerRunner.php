@@ -14,23 +14,26 @@ use RectorPrefix202308\Symplify\EasyParallel\Enum\Action;
 use RectorPrefix202308\Symplify\EasyParallel\Enum\ReactCommand;
 use RectorPrefix202308\Symplify\EasyParallel\Enum\ReactEvent;
 use Throwable;
-final readonly class WorkerRunner
+final class WorkerRunner
 {
+    /**
+     * @readonly
+     * @var \Rector\Core\StaticReflection\DynamicSourceLocatorDecorator
+     */
+    private $dynamicSourceLocatorDecorator;
+    /**
+     * @readonly
+     * @var \Rector\Core\Application\ApplicationFileProcessor
+     */
+    private $applicationFileProcessor;
     /**
      * @var string
      */
     private const RESULT = 'result';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private DynamicSourceLocatorDecorator $dynamicSourceLocatorDecorator,
-        /**
-         * @readonly
-         */
-        private ApplicationFileProcessor $applicationFileProcessor
-    )
+    public function __construct(DynamicSourceLocatorDecorator $dynamicSourceLocatorDecorator, ApplicationFileProcessor $applicationFileProcessor)
     {
+        $this->dynamicSourceLocatorDecorator = $dynamicSourceLocatorDecorator;
+        $this->applicationFileProcessor = $applicationFileProcessor;
     }
     public function run(Encoder $encoder, Decoder $decoder, Configuration $configuration) : void
     {

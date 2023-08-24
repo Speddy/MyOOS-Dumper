@@ -25,9 +25,10 @@ use Psr\Log\LogLevel;
  */
 class GitProcessor implements ProcessorInterface
 {
-    private readonly int $level;
+    /** @var int */
+    private $level;
     /** @var array{branch: string, commit: string}|array<never>|null */
-    private static ?array $cache = null;
+    private static $cache = null;
 
     /**
      * @param string|int $level The minimum logging level at which this Processor will be triggered
@@ -64,7 +65,7 @@ class GitProcessor implements ProcessorInterface
         }
 
         $branches = `git branch -v --no-abbrev`;
-        if ($branches && preg_match('{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m', (string) $branches, $matches)) {
+        if ($branches && preg_match('{^\* (.+?)\s+([a-f0-9]{40})(?:\s|$)}m', $branches, $matches)) {
             return self::$cache = [
                 'branch' => $matches[1],
                 'commit' => $matches[2],

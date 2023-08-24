@@ -7,15 +7,16 @@ use PHPStan\PhpDocParser\Ast\PhpDoc\ParamTagValueNode;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\BetterPhpDocParser\ValueObject\PhpDocAttributeKey;
 use Rector\Naming\ValueObject\ParamRename;
-final readonly class PropertyDocBlockManipulator
+final class PropertyDocBlockManipulator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    public function __construct(PhpDocInfoFactory $phpDocInfoFactory)
     {
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
     public function renameParameterNameInDocBlock(ParamRename $paramRename) : void
     {

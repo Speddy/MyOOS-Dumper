@@ -4,19 +4,22 @@ declare (strict_types=1);
 namespace Rector\Core\FileSystem;
 
 use Rector\Caching\UnchangedFilesFilter;
-final readonly class PhpFilesFinder
+final class PhpFilesFinder
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\Core\FileSystem\FilesFinder $filesFinder,
-        /**
-         * @readonly
-         */
-        private UnchangedFilesFilter $unchangedFilesFilter
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\FileSystem\FilesFinder
+     */
+    private $filesFinder;
+    /**
+     * @readonly
+     * @var \Rector\Caching\UnchangedFilesFilter
+     */
+    private $unchangedFilesFilter;
+    public function __construct(\Rector\Core\FileSystem\FilesFinder $filesFinder, UnchangedFilesFilter $unchangedFilesFilter)
     {
+        $this->filesFinder = $filesFinder;
+        $this->unchangedFilesFilter = $unchangedFilesFilter;
     }
     /**
      * @param string[] $paths
@@ -30,7 +33,7 @@ final readonly class PhpFilesFinder
             /**
              *  check .blade.php early so next .php check in next if can be skipped
              */
-            if (str_ends_with($filePath, '.blade.php')) {
+            if (\substr_compare($filePath, '.blade.php', -\strlen('.blade.php')) === 0) {
                 unset($filePaths[$key]);
             }
         }

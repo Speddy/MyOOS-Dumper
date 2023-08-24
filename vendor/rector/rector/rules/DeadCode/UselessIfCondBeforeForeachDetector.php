@@ -13,15 +13,16 @@ use PhpParser\Node\Stmt\If_;
 use PhpParser\Node\Stmt\Return_;
 use PHPStan\Analyser\Scope;
 use Rector\Core\PhpParser\Comparing\NodeComparator;
-final readonly class UselessIfCondBeforeForeachDetector
+final class UselessIfCondBeforeForeachDetector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeComparator $nodeComparator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
+     */
+    private $nodeComparator;
+    public function __construct(NodeComparator $nodeComparator)
     {
+        $this->nodeComparator = $nodeComparator;
     }
     /**
      * Matches:

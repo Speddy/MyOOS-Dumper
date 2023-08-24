@@ -3,15 +3,16 @@
 declare (strict_types=1);
 namespace Rector\Symfony\DataProvider;
 
-final readonly class ServiceNameToTypeUniqueProvider
+final class ServiceNameToTypeUniqueProvider
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\Symfony\DataProvider\ServiceMapProvider $serviceMapProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\DataProvider\ServiceMapProvider
+     */
+    private $serviceMapProvider;
+    public function __construct(\Rector\Symfony\DataProvider\ServiceMapProvider $serviceMapProvider)
     {
+        $this->serviceMapProvider = $serviceMapProvider;
     }
     /**
      * @return array<string, string>

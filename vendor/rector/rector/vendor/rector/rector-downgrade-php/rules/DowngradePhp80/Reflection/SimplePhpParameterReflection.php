@@ -53,7 +53,7 @@ final class SimplePhpParameterReflection implements ParameterReflection
                 $defaultValue = $this->reflectionParameter->getDefaultValue();
                 return ConstantTypeHelper::getTypeFromValue($defaultValue);
             }
-        } catch (Throwable) {
+        } catch (Throwable $exception) {
             return null;
         }
         return null;

@@ -24,20 +24,23 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class AddProphecyTraitRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
      * @var string
      */
     private const PROPHECY_TRAIT = 'Prophecy\\PhpUnit\\ProphecyTrait';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver
-    )
+    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer, ReflectionResolver $reflectionResolver)
     {
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -89,7 +92,9 @@ CODE_SAMPLE
     }
     private function shouldSkipClass(Class_ $class) : bool
     {
-        $hasProphesizeMethodCall = (bool) $this->betterNodeFinder->findFirst($class, fn(Node $node): bool => $this->testsNodeAnalyzer->isAssertMethodCallName($node, 'prophesize'));
+        $hasProphesizeMethodCall = (bool) $this->betterNodeFinder->findFirst($class, function (Node $node) : bool {
+            return $this->testsNodeAnalyzer->isAssertMethodCallName($node, 'prophesize');
+        });
         if (!$hasProphesizeMethodCall) {
             return \true;
         }

@@ -7,7 +7,10 @@ use Rector\BetterPhpDocParser\ValueObject\Parser\BetterTokenIterator;
 use Rector\Core\Exception\ShouldNotHappenException;
 final class CurrentTokenIteratorProvider
 {
-    private ?\Rector\BetterPhpDocParser\ValueObject\Parser\BetterTokenIterator $betterTokenIterator = null;
+    /**
+     * @var \Rector\BetterPhpDocParser\ValueObject\Parser\BetterTokenIterator|null
+     */
+    private $betterTokenIterator;
     public function setBetterTokenIterator(BetterTokenIterator $betterTokenIterator) : void
     {
         $this->betterTokenIterator = $betterTokenIterator;

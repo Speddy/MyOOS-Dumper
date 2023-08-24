@@ -13,11 +13,11 @@ namespace Monolog;
 
 final class Utils
 {
-    public const DEFAULT_JSON_FLAGS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION | JSON_INVALID_UTF8_SUBSTITUTE | JSON_PARTIAL_OUTPUT_ON_ERROR;
+    const DEFAULT_JSON_FLAGS = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRESERVE_ZERO_FRACTION | JSON_INVALID_UTF8_SUBSTITUTE | JSON_PARTIAL_OUTPUT_ON_ERROR;
 
     public static function getClass(object $object): string
     {
-        $class = $object::class;
+        $class = \get_class($object);
 
         if (false === ($pos = \strpos($class, "@anonymous\0"))) {
             return $class;
@@ -36,7 +36,7 @@ final class Utils
             return mb_strcut($string, $start, $length);
         }
 
-        return substr($string, $start, $length ?? strlen($string));
+        return substr($string, $start, (null === $length) ? strlen($string) : $length);
     }
 
     /**
@@ -47,18 +47,18 @@ final class Utils
     public static function canonicalizePath(string $streamUrl): string
     {
         $prefix = '';
-        if (str_starts_with($streamUrl, 'file://')) {
+        if ('file://' === substr($streamUrl, 0, 7)) {
             $streamUrl = substr($streamUrl, 7);
             $prefix = 'file://';
         }
 
         // other type of stream, not supported
-        if (str_contains($streamUrl, '://')) {
+        if (false !== strpos($streamUrl, '://')) {
             return $streamUrl;
         }
 
         // already absolute
-        if (str_starts_with($streamUrl, '/') || substr($streamUrl, 1, 1) === ':' || str_starts_with($streamUrl, '\\\\')) {
+        if (substr($streamUrl, 0, 1) === '/' || substr($streamUrl, 1, 1) === ':' || substr($streamUrl, 0, 2) === '\\\\') {
             return $prefix.$streamUrl;
         }
 
@@ -70,12 +70,13 @@ final class Utils
     /**
      * Return the JSON representation of a value
      *
+     * @param  mixed             $data
      * @param  int               $encodeFlags  flags to pass to json encode, defaults to DEFAULT_JSON_FLAGS
      * @param  bool              $ignoreErrors whether to ignore encoding errors or to throw on error, when ignored and the encoding fails, "null" is returned which is valid json for null
      * @throws \RuntimeException if encoding fails and errors are not ignored
      * @return string            when errors are ignored and the encoding fails, "null" is returned which is valid json for null
      */
-    public static function jsonEncode(mixed $data, ?int $encodeFlags = null, bool $ignoreErrors = false): string
+    public static function jsonEncode($data, ?int $encodeFlags = null, bool $ignoreErrors = false): string
     {
         if (null === $encodeFlags) {
             $encodeFlags = self::DEFAULT_JSON_FLAGS;
@@ -112,7 +113,7 @@ final class Utils
      * @throws \RuntimeException if failure can't be corrected
      * @return string            JSON encoded data after error correction
      */
-    public static function handleJsonError(int $code, mixed $data, ?int $encodeFlags = null): string
+    public static function handleJsonError(int $code, $data, ?int $encodeFlags = null): string
     {
         if ($code !== JSON_ERROR_UTF8) {
             self::throwEncodeError($code, $data);
@@ -121,7 +122,7 @@ final class Utils
         if (is_string($data)) {
             self::detectAndCleanUtf8($data);
         } elseif (is_array($data)) {
-            array_walk_recursive($data, \Monolog\Utils::detectAndCleanUtf8(...));
+            array_walk_recursive($data, array('Monolog\Utils', 'detectAndCleanUtf8'));
         } else {
             self::throwEncodeError($code, $data);
         }
@@ -149,7 +150,9 @@ final class Utils
         }
 
         $constants = (get_defined_constants(true))['pcre'];
-        $constants = array_filter($constants, fn($key) => str_ends_with((string) $key, '_ERROR'), ARRAY_FILTER_USE_KEY);
+        $constants = array_filter($constants, function ($key) {
+            return substr($key, -6) == '_ERROR';
+        }, ARRAY_FILTER_USE_KEY);
 
         $constants = array_flip($constants);
 
@@ -165,15 +168,24 @@ final class Utils
      *
      * @return never
      */
-    private static function throwEncodeError(int $code, mixed $data): void
+    private static function throwEncodeError(int $code, $data): void
     {
-        $msg = match ($code) {
-            JSON_ERROR_DEPTH => 'Maximum stack depth exceeded',
-            JSON_ERROR_STATE_MISMATCH => 'Underflow or the modes mismatch',
-            JSON_ERROR_CTRL_CHAR => 'Unexpected control character found',
-            JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, possibly incorrectly encoded',
-            default => 'Unknown error',
-        };
+        switch ($code) {
+            case JSON_ERROR_DEPTH:
+                $msg = 'Maximum stack depth exceeded';
+                break;
+            case JSON_ERROR_STATE_MISMATCH:
+                $msg = 'Underflow or the modes mismatch';
+                break;
+            case JSON_ERROR_CTRL_CHAR:
+                $msg = 'Unexpected control character found';
+                break;
+            case JSON_ERROR_UTF8:
+                $msg = 'Malformed UTF-8 characters, possibly incorrectly encoded';
+                break;
+            default:
+                $msg = 'Unknown error';
+        }
 
         throw new \RuntimeException('JSON encoding failed: '.$msg.'. Encoding: '.var_export($data, true));
     }
@@ -193,12 +205,14 @@ final class Utils
      *
      * @param mixed $data Input to check and convert if needed, passed by ref
      */
-    private static function detectAndCleanUtf8(mixed &$data): void
+    private static function detectAndCleanUtf8(&$data): void
     {
         if (is_string($data) && !preg_match('//u', $data)) {
             $data = preg_replace_callback(
                 '/[\x80-\xFF]+/',
-                fn($m) => function_exists('mb_convert_encoding') ? mb_convert_encoding((string) $m[0], 'UTF-8', 'ISO-8859-1') : mb_convert_encoding((string) $m[0], 'UTF-8', 'ISO-8859-1'),
+                function ($m) {
+                    return function_exists('mb_convert_encoding') ? mb_convert_encoding($m[0], 'UTF-8', 'ISO-8859-1') : utf8_encode($m[0]);
+                },
                 $data
             );
             if (!is_string($data)) {
@@ -256,12 +270,12 @@ final class Utils
         $extra = '';
         try {
             if ($record['context']) {
-                $context = "\nContext: " . json_encode($record['context'], JSON_THROW_ON_ERROR);
+                $context = "\nContext: " . json_encode($record['context']);
             }
             if ($record['extra']) {
-                $extra = "\nExtra: " . json_encode($record['extra'], JSON_THROW_ON_ERROR);
+                $extra = "\nExtra: " . json_encode($record['extra']);
             }
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
             // noop
         }
 

@@ -19,7 +19,7 @@ namespace Monolog\Processor;
 class TagProcessor implements ProcessorInterface
 {
     /** @var string[] */
-    private array $tags;
+    private $tags;
 
     /**
      * @param string[] $tags

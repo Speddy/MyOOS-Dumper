@@ -13,9 +13,9 @@ namespace RectorPrefix202308\Symfony\Component\Console\Output;
 use RectorPrefix202308\Symfony\Component\Console\Exception\InvalidArgumentException;
 class AnsiColorMode
 {
-    final public const Ansi4 = 'ansi4';
-    final public const Ansi8 = 'ansi8';
-    final public const Ansi24 = 'ansi24';
+    public const Ansi4 = 'ansi4';
+    public const Ansi8 = 'ansi8';
+    public const Ansi24 = 'ansi24';
     /**
      * Converts an RGB hexadecimal color to the corresponding Ansi code.
      */
@@ -43,11 +43,14 @@ class AnsiColorMode
     }
     private function convertFromRGB(int $r, int $g, int $b) : int
     {
-        return match ($this) {
-            self::Ansi4 => $this->degradeHexColorToAnsi4($r, $g, $b),
-            self::Ansi8 => $this->degradeHexColorToAnsi8($r, $g, $b),
-            default => throw new InvalidArgumentException("RGB cannot be converted to {$this->name}."),
-        };
+        switch ($this) {
+            case self::Ansi4:
+                return $this->degradeHexColorToAnsi4($r, $g, $b);
+            case self::Ansi8:
+                return $this->degradeHexColorToAnsi8($r, $g, $b);
+            default:
+                throw new InvalidArgumentException("RGB cannot be converted to {$this->name}.");
+        }
     }
     private function degradeHexColorToAnsi4(int $r, int $g, int $b) : int
     {

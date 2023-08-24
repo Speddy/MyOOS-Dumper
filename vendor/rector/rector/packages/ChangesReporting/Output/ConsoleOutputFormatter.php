@@ -19,6 +19,11 @@ final class ConsoleOutputFormatter implements OutputFormatterInterface
      */
     private $symfonyStyle;
     /**
+     * @readonly
+     * @var \Rector\ChangesReporting\Annotation\RectorsChangelogResolver
+     */
+    private $rectorsChangelogResolver;
+    /**
      * @var string
      */
     public const NAME = 'console';
@@ -27,12 +32,10 @@ final class ConsoleOutputFormatter implements OutputFormatterInterface
      * @see https://regex101.com/r/q8I66g/1
      */
     private const ON_LINE_REGEX = '# on line #';
-    public function __construct(SymfonyStyle $symfonyStyle, /**
-     * @readonly
-     */
-    private readonly RectorsChangelogResolver $rectorsChangelogResolver)
+    public function __construct(SymfonyStyle $symfonyStyle, RectorsChangelogResolver $rectorsChangelogResolver)
     {
         $this->symfonyStyle = $symfonyStyle;
+        $this->rectorsChangelogResolver = $rectorsChangelogResolver;
     }
     public function report(ProcessResult $processResult, Configuration $configuration) : void
     {

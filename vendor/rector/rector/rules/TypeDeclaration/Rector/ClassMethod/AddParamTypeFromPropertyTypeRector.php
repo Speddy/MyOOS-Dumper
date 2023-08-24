@@ -27,32 +27,41 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class AddParamTypeFromPropertyTypeRector extends AbstractRector implements MinPhpVersionInterface
 {
     /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
+     */
+    private $propertyFetchAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
+    /**
+     * @readonly
+     * @var \Rector\VendorLocker\ParentClassMethodTypeOverrideGuard
+     */
+    private $parentClassMethodTypeOverrideGuard;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\Guard\ParamTypeAddGuard
+     */
+    private $paramTypeAddGuard;
+    /**
      * @var string
      */
     private const ERROR_MESSAGE = 'Adds param type declaration based on property type the value is assigned to PHPUnit provider return type declaration';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly PropertyFetchAnalyzer $propertyFetchAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private readonly TypeFactory $typeFactory,
-        /**
-         * @readonly
-         */
-        private readonly ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard,
-        /**
-         * @readonly
-         */
-        private readonly ParamTypeAddGuard $paramTypeAddGuard
-    )
+    public function __construct(PropertyFetchAnalyzer $propertyFetchAnalyzer, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, TypeFactory $typeFactory, ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard, ParamTypeAddGuard $paramTypeAddGuard)
     {
+        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->typeFactory = $typeFactory;
+        $this->parentClassMethodTypeOverrideGuard = $parentClassMethodTypeOverrideGuard;
+        $this->paramTypeAddGuard = $paramTypeAddGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {

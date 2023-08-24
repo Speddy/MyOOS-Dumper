@@ -16,15 +16,18 @@ use RectorPrefix202308\Symfony\Component\Finder\Gitignore;
  */
 final class VcsIgnoredFilterIterator extends \FilterIterator
 {
-    private string $baseDir;
+    /**
+     * @var string
+     */
+    private $baseDir;
     /**
      * @var array<string, array{0: string, 1: string}|null>
      */
-    private array $gitignoreFilesCache = [];
+    private $gitignoreFilesCache = [];
     /**
      * @var array<string, bool>
      */
-    private array $ignoredPathsCache = [];
+    private $ignoredPathsCache = [];
     /**
      * @param \Iterator<string, \SplFileInfo> $iterator
      */
@@ -47,7 +50,7 @@ final class VcsIgnoredFilterIterator extends \FilterIterator
     }
     private function isIgnored(string $fileRealPath) : bool
     {
-        if (\is_dir($fileRealPath) && !str_ends_with($fileRealPath, '/')) {
+        if (\is_dir($fileRealPath) && \substr_compare($fileRealPath, '/', -\strlen('/')) !== 0) {
             $fileRealPath .= '/';
         }
         if (isset($this->ignoredPathsCache[$fileRealPath])) {
@@ -93,7 +96,9 @@ final class VcsIgnoredFilterIterator extends \FilterIterator
     }
     private function parentDirectoriesUpTo(string $from, string $upTo) : array
     {
-        return \array_filter($this->parentDirectoriesUpwards($from), static fn(string $directory): bool => str_starts_with($directory, $upTo));
+        return \array_filter($this->parentDirectoriesUpwards($from), static function (string $directory) use($upTo) : bool {
+            return \strncmp($directory, $upTo, \strlen($upTo)) === 0;
+        });
     }
     /**
      * @return list<string>

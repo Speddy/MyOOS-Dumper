@@ -26,17 +26,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ThisCallOnStaticMethodToStaticCallRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly StaticAnalyzer $staticAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeCollector\StaticAnalyzer
+     */
+    private $staticAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(StaticAnalyzer $staticAnalyzer, ReflectionResolver $reflectionResolver)
     {
+        $this->staticAnalyzer = $staticAnalyzer;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function provideMinPhpVersion() : int
     {
@@ -89,7 +92,7 @@ CODE_SAMPLE
         }
         $classReflection = $scope->getClassReflection();
         // skip PHPUnit calls, as they accept both self:: and $this-> formats
-        if ($classReflection->isSubclassOf(\PHPUnit\Framework\TestCase::class)) {
+        if ($classReflection->isSubclassOf('PHPUnit\\Framework\\TestCase')) {
             return null;
         }
         $hasChanged = \false;

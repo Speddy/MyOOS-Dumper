@@ -15,12 +15,27 @@ use RectorPrefix202308\React\Dns\Model\Message;
 final class Query
 {
     /**
+     * @var string query name, i.e. hostname to look up
+     */
+    public $name;
+    /**
+     * @var int query type (aka QTYPE), see Message::TYPE_* constants
+     */
+    public $type;
+    /**
+     * @var int query class (aka QCLASS), see Message::CLASS_IN constant
+     */
+    public $class;
+    /**
      * @param string $name  query name, i.e. hostname to look up
      * @param int    $type  query type, see Message::TYPE_* constants
      * @param int    $class query class, see Message::CLASS_IN constant
      */
-    public function __construct(public $name, public $type, public $class)
+    public function __construct($name, $type, $class)
     {
+        $this->name = $name;
+        $this->type = $type;
+        $this->class = $class;
     }
     /**
      * Describes the hostname and query type/class for this query
@@ -35,9 +50,9 @@ final class Query
     {
         $class = $this->class !== Message::CLASS_IN ? 'CLASS' . $this->class . ' ' : '';
         $type = 'TYPE' . $this->type;
-        $ref = new \ReflectionClass(\RectorPrefix202308\React\Dns\Model\Message::class);
+        $ref = new \ReflectionClass('RectorPrefix202308\\React\\Dns\\Model\\Message');
         foreach ($ref->getConstants() as $name => $value) {
-            if ($value === $this->type && str_starts_with($name, 'TYPE_')) {
+            if ($value === $this->type && \strpos($name, 'TYPE_') === 0) {
                 $type = \substr($name, 5);
                 break;
             }

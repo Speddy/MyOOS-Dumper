@@ -13,6 +13,7 @@ interface InvokedProcess
     /**
      * Send a signal to the process.
      *
+     * @param  int  $signal
      * @return $this
      */
     public function signal(int $signal);

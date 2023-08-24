@@ -85,13 +85,13 @@ trait EventEmitterTrait
     {
         if ($event === null) {
             $events = [];
-            $eventNames = array_unique([...array_keys($this->listeners), ...array_keys($this->onceListeners)]);
+            $eventNames = array_unique(array_merge(array_keys($this->listeners), array_keys($this->onceListeners)));
             foreach ($eventNames as $eventName) {
-                $events[$eventName] = array_merge($this->listeners[$eventName] ?? [], $this->onceListeners[$eventName] ?? []);
+                $events[$eventName] = array_merge(isset($this->listeners[$eventName]) ? $this->listeners[$eventName] : [], isset($this->onceListeners[$eventName]) ? $this->onceListeners[$eventName] : []);
             }
             return $events;
         }
-        return array_merge($this->listeners[$event] ?? [], $this->onceListeners[$event] ?? []);
+        return array_merge(isset($this->listeners[$event]) ? $this->listeners[$event] : [], isset($this->onceListeners[$event]) ? $this->onceListeners[$event] : []);
     }
     public function emit($event, array $arguments = [])
     {

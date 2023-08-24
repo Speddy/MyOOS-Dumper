@@ -16,27 +16,34 @@ use Rector\Core\Php\PhpVersionProvider;
 use Rector\Core\PhpParser\Node\NodeFactory;
 use Rector\Core\ValueObject\PhpVersionFeature;
 use Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeAnalyzer;
-final readonly class PropertyTypeDecorator
+final class PropertyTypeDecorator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private UnionTypeAnalyzer $unionTypeAnalyzer,
-        /**
-         * @readonly
-         */
-        private PhpDocTypeChanger $phpDocTypeChanger,
-        /**
-         * @readonly
-         */
-        private PhpVersionProvider $phpVersionProvider,
-        /**
-         * @readonly
-         */
-        private NodeFactory $nodeFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeAnalyzer
+     */
+    private $unionTypeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
+     */
+    private $phpDocTypeChanger;
+    /**
+     * @readonly
+     * @var \Rector\Core\Php\PhpVersionProvider
+     */
+    private $phpVersionProvider;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\NodeFactory
+     */
+    private $nodeFactory;
+    public function __construct(UnionTypeAnalyzer $unionTypeAnalyzer, PhpDocTypeChanger $phpDocTypeChanger, PhpVersionProvider $phpVersionProvider, NodeFactory $nodeFactory)
     {
+        $this->unionTypeAnalyzer = $unionTypeAnalyzer;
+        $this->phpDocTypeChanger = $phpDocTypeChanger;
+        $this->phpVersionProvider = $phpVersionProvider;
+        $this->nodeFactory = $nodeFactory;
     }
     /**
      * @param \PhpParser\Node\Name|\PhpParser\Node\ComplexType|\PhpParser\Node\Identifier $typeNode

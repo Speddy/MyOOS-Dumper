@@ -12,23 +12,28 @@ use PhpParser\Node\Stmt\Function_;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\Naming\ValueObject\VariableAndCallAssign;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class VariableAndCallAssignMatcher
+final class VariableAndCallAssignMatcher
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\Naming\Matcher\CallMatcher $callMatcher,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder
-    )
+    /**
+     * @readonly
+     * @var \Rector\Naming\Matcher\CallMatcher
+     */
+    private $callMatcher;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    public function __construct(\Rector\Naming\Matcher\CallMatcher $callMatcher, NodeNameResolver $nodeNameResolver, BetterNodeFinder $betterNodeFinder)
     {
+        $this->callMatcher = $callMatcher;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->betterNodeFinder = $betterNodeFinder;
     }
     /**
      * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Expr\Closure|\PhpParser\Node\Stmt\Function_ $functionLike
@@ -46,7 +51,9 @@ final readonly class VariableAndCallAssignMatcher
         if ($variableName === null) {
             return null;
         }
-        $isVariableFoundInCallArgs = (bool) $this->betterNodeFinder->findFirst($call->isFirstClassCallable() ? [] : $call->getArgs(), fn(Node $subNode): bool => $subNode instanceof Variable && $this->nodeNameResolver->isName($subNode, $variableName));
+        $isVariableFoundInCallArgs = (bool) $this->betterNodeFinder->findFirst($call->isFirstClassCallable() ? [] : $call->getArgs(), function (Node $subNode) use($variableName) : bool {
+            return $subNode instanceof Variable && $this->nodeNameResolver->isName($subNode, $variableName);
+        });
         if ($isVariableFoundInCallArgs) {
             return null;
         }

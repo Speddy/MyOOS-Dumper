@@ -10,10 +10,14 @@ use InvalidArgumentException;
 use UnexpectedValueException;
 final class SecureConnector implements ConnectorInterface
 {
-    private \RectorPrefix202308\React\Socket\StreamEncryption $streamEncryption;
-    public function __construct(private readonly ConnectorInterface $connector, LoopInterface $loop = null, private array $context = [])
+    private $connector;
+    private $streamEncryption;
+    private $context;
+    public function __construct(ConnectorInterface $connector, LoopInterface $loop = null, array $context = array())
     {
+        $this->connector = $connector;
         $this->streamEncryption = new StreamEncryption($loop ?: Loop::get(), \false);
+        $this->context = $context;
     }
     public function connect($uri)
     {
@@ -21,7 +25,7 @@ final class SecureConnector implements ConnectorInterface
             return Promise\reject(new \BadMethodCallException('Encryption not supported on your platform (HHVM < 3.8?)'));
             // @codeCoverageIgnore
         }
-        if (!str_contains($uri, '://')) {
+        if (\strpos($uri, '://') === \false) {
             $uri = 'tls://' . $uri;
         }
         $parts = \parse_url($uri);
@@ -44,7 +48,7 @@ final class SecureConnector implements ConnectorInterface
                 \stream_context_set_option($connection->stream, 'ssl', $name, $value);
             }
             // try to enable encryption
-            return $promise = $encryption->enable($connection)->then(null, function ($error) use($connection, $uri): never {
+            return $promise = $encryption->enable($connection)->then(null, function ($error) use($connection, $uri) {
                 // establishing encryption failed => close invalid connection and return error
                 $connection->close();
                 throw new \RuntimeException('Connection to ' . $uri . ' failed during TLS handshake: ' . $error->getMessage(), $error->getCode());
@@ -64,7 +68,7 @@ final class SecureConnector implements ConnectorInterface
                     if (isset($one['args'])) {
                         foreach ($one['args'] as $ai => $arg) {
                             if ($arg instanceof \Closure) {
-                                $trace[$ti]['args'][$ai] = 'Object(' . $arg::class . ')';
+                                $trace[$ti]['args'][$ai] = 'Object(' . \get_class($arg) . ')';
                             }
                         }
                     }

@@ -7,23 +7,28 @@ use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Property;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final readonly class PropertyPromotionCandidate
+final class PropertyPromotionCandidate
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private Property $property,
-        /**
-         * @readonly
-         */
-        private Param $param,
-        /**
-         * @readonly
-         */
-        private Expression $expression
-    )
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Stmt\Property
+     */
+    private $property;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Param
+     */
+    private $param;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Stmt\Expression
+     */
+    private $expression;
+    public function __construct(Property $property, Param $param, Expression $expression)
     {
+        $this->property = $property;
+        $this->param = $param;
+        $this->expression = $expression;
     }
     public function getProperty() : Property
     {

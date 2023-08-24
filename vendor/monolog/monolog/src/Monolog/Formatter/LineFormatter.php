@@ -23,7 +23,7 @@ use Monolog\Utils;
  */
 class LineFormatter extends NormalizerFormatter
 {
-    final public const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n";
+    public const SIMPLE_FORMAT = "[%datetime%] %channel%.%level_name%: %message% %context% %extra%\n";
 
     /** @var string */
     protected $format;
@@ -44,7 +44,7 @@ class LineFormatter extends NormalizerFormatter
      */
     public function __construct(?string $format = null, ?string $dateFormat = null, bool $allowInlineLineBreaks = false, bool $ignoreEmptyContextAndExtra = false, bool $includeStacktraces = false)
     {
-        $this->format = $format ?? static::SIMPLE_FORMAT;
+        $this->format = $format === null ? static::SIMPLE_FORMAT : $format;
         $this->allowInlineLineBreaks = $allowInlineLineBreaks;
         $this->ignoreEmptyContextAndExtra = $ignoreEmptyContextAndExtra;
         $this->includeStacktraces($includeStacktraces);
@@ -86,14 +86,14 @@ class LineFormatter extends NormalizerFormatter
         $output = $this->format;
 
         foreach ($vars['extra'] as $var => $val) {
-            if (str_contains($output, '%extra.'.$var.'%')) {
+            if (false !== strpos($output, '%extra.'.$var.'%')) {
                 $output = str_replace('%extra.'.$var.'%', $this->stringify($val), $output);
                 unset($vars['extra'][$var]);
             }
         }
 
         foreach ($vars['context'] as $var => $val) {
-            if (str_contains($output, '%context.'.$var.'%')) {
+            if (false !== strpos($output, '%context.'.$var.'%')) {
                 $output = str_replace('%context.'.$var.'%', $this->stringify($val), $output);
                 unset($vars['context'][$var]);
             }
@@ -112,13 +112,13 @@ class LineFormatter extends NormalizerFormatter
         }
 
         foreach ($vars as $var => $val) {
-            if (str_contains($output, '%'.$var.'%')) {
+            if (false !== strpos($output, '%'.$var.'%')) {
                 $output = str_replace('%'.$var.'%', $this->stringify($val), $output);
             }
         }
 
         // remove leftover %extra.xxx% and %context.xxx% if any
-        if (str_contains($output, '%')) {
+        if (false !== strpos($output, '%')) {
             $output = preg_replace('/%(?:extra|context)\..+?%/', '', $output);
             if (null === $output) {
                 $pcreErrorCode = preg_last_error();
@@ -139,7 +139,10 @@ class LineFormatter extends NormalizerFormatter
         return $message;
     }
 
-    public function stringify(mixed $value): string
+    /**
+     * @param mixed $value
+     */
+    public function stringify($value): string
     {
         return $this->replaceNewlines($this->convertToString($value));
     }
@@ -163,7 +166,10 @@ class LineFormatter extends NormalizerFormatter
         return $str;
     }
 
-    protected function convertToString(mixed $data): string
+    /**
+     * @param mixed $data
+     */
+    protected function convertToString($data): string
     {
         if (null === $data || is_bool($data)) {
             return var_export($data, true);
@@ -179,7 +185,7 @@ class LineFormatter extends NormalizerFormatter
     protected function replaceNewlines(string $str): string
     {
         if ($this->allowInlineLineBreaks) {
-            if (str_starts_with($str, '{')) {
+            if (0 === strpos($str, '{')) {
                 $str = preg_replace('/(?<!\\\\)\\\\[rn]/', "\n", $str);
                 if (null === $str) {
                     $pcreErrorCode = preg_last_error();

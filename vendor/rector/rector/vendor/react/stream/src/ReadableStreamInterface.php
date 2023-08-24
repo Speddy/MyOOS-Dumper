@@ -318,7 +318,7 @@ interface ReadableStreamInterface extends EventEmitterInterface
      * @param array $options
      * @return WritableStreamInterface $dest stream as-is
      */
-    public function pipe(WritableStreamInterface $dest, array $options = []);
+    public function pipe(WritableStreamInterface $dest, array $options = array());
     /**
      * Closes the stream (forcefully).
      *

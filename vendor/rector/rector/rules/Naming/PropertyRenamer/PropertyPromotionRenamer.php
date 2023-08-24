@@ -22,43 +22,58 @@ use Rector\Naming\ValueObject\ParamRename;
 use Rector\Naming\ValueObjectFactory\ParamRenameFactory;
 use Rector\Naming\VariableRenamer;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class PropertyPromotionRenamer
+final class PropertyPromotionRenamer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpVersionProvider $phpVersionProvider,
-        /**
-         * @readonly
-         */
-        private MatchParamTypeExpectedNameResolver $matchParamTypeExpectedNameResolver,
-        /**
-         * @readonly
-         */
-        private ParamRenameFactory $paramRenameFactory,
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private ParamRenamer $paramRenamer,
-        /**
-         * @readonly
-         */
-        private \Rector\Naming\PropertyRenamer\PropertyFetchRenamer $propertyFetchRenamer,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private VariableRenamer $variableRenamer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Php\PhpVersionProvider
+     */
+    private $phpVersionProvider;
+    /**
+     * @readonly
+     * @var \Rector\Naming\ExpectedNameResolver\MatchParamTypeExpectedNameResolver
+     */
+    private $matchParamTypeExpectedNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Naming\ValueObjectFactory\ParamRenameFactory
+     */
+    private $paramRenameFactory;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\Naming\ParamRenamer\ParamRenamer
+     */
+    private $paramRenamer;
+    /**
+     * @readonly
+     * @var \Rector\Naming\PropertyRenamer\PropertyFetchRenamer
+     */
+    private $propertyFetchRenamer;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Naming\VariableRenamer
+     */
+    private $variableRenamer;
+    public function __construct(PhpVersionProvider $phpVersionProvider, MatchParamTypeExpectedNameResolver $matchParamTypeExpectedNameResolver, ParamRenameFactory $paramRenameFactory, PhpDocInfoFactory $phpDocInfoFactory, ParamRenamer $paramRenamer, \Rector\Naming\PropertyRenamer\PropertyFetchRenamer $propertyFetchRenamer, NodeNameResolver $nodeNameResolver, VariableRenamer $variableRenamer)
     {
+        $this->phpVersionProvider = $phpVersionProvider;
+        $this->matchParamTypeExpectedNameResolver = $matchParamTypeExpectedNameResolver;
+        $this->paramRenameFactory = $paramRenameFactory;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->paramRenamer = $paramRenamer;
+        $this->propertyFetchRenamer = $propertyFetchRenamer;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->variableRenamer = $variableRenamer;
     }
     /**
      * @param \PhpParser\Node\Stmt\Class_|\PhpParser\Node\Stmt\Interface_ $classLike
@@ -130,7 +145,7 @@ final readonly class PropertyPromotionRenamer
     {
         $currentNameLowercased = \strtolower($currentParamName);
         $expectedNameLowercased = \strtolower($desiredPropertyName);
-        return str_ends_with($currentNameLowercased, $expectedNameLowercased);
+        return \substr_compare($currentNameLowercased, $expectedNameLowercased, -\strlen($expectedNameLowercased)) === 0;
     }
     /**
      * @return int[]|string[]

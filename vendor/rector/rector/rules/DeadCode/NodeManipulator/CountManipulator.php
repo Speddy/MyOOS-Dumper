@@ -12,19 +12,22 @@ use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Scalar\LNumber;
 use Rector\Core\PhpParser\Comparing\NodeComparator;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class CountManipulator
+final class CountManipulator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private NodeComparator $nodeComparator
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
+     */
+    private $nodeComparator;
+    public function __construct(NodeNameResolver $nodeNameResolver, NodeComparator $nodeComparator)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->nodeComparator = $nodeComparator;
     }
     public function isCounterHigherThanOne(Expr $firstExpr, Expr $secondExpr) : bool
     {

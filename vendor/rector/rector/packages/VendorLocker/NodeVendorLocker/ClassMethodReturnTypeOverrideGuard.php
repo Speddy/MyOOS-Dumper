@@ -23,55 +23,74 @@ use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\PHPStan\ParametersAcceptorSelectorVariantsWrapper;
 use Rector\TypeDeclaration\TypeInferer\ReturnTypeInferer;
 use Rector\VendorLocker\ParentClassMethodTypeOverrideGuard;
-final readonly class ClassMethodReturnTypeOverrideGuard
+final class ClassMethodReturnTypeOverrideGuard
 {
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\FamilyTree\Reflection\FamilyRelationsAnalyzer
+     */
+    private $familyRelationsAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\AstResolver
+     */
+    private $astResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\TypeInferer\ReturnTypeInferer
+     */
+    private $returnTypeInferer;
+    /**
+     * @readonly
+     * @var \Rector\VendorLocker\ParentClassMethodTypeOverrideGuard
+     */
+    private $parentClassMethodTypeOverrideGuard;
+    /**
+     * @readonly
+     * @var \Rector\Core\FileSystem\FilePathHelper
+     */
+    private $filePathHelper;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\MagicClassMethodAnalyzer
+     */
+    private $magicClassMethodAnalyzer;
     /**
      * @var array<class-string, array<string>>
      */
     private const CHAOTIC_CLASS_METHOD_NAMES = ['PhpParser\\NodeVisitor' => ['enterNode', 'leaveNode', 'beforeTraverse', 'afterTraverse']];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private FamilyRelationsAnalyzer $familyRelationsAnalyzer,
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private AstResolver $astResolver,
-        /**
-         * @readonly
-         */
-        private ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private ReturnTypeInferer $returnTypeInferer,
-        /**
-         * @readonly
-         */
-        private ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard,
-        /**
-         * @readonly
-         */
-        private FilePathHelper $filePathHelper,
-        /**
-         * @readonly
-         */
-        private MagicClassMethodAnalyzer $magicClassMethodAnalyzer
-    )
+    public function __construct(NodeNameResolver $nodeNameResolver, ReflectionProvider $reflectionProvider, FamilyRelationsAnalyzer $familyRelationsAnalyzer, BetterNodeFinder $betterNodeFinder, AstResolver $astResolver, ReflectionResolver $reflectionResolver, ReturnTypeInferer $returnTypeInferer, ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard, FilePathHelper $filePathHelper, MagicClassMethodAnalyzer $magicClassMethodAnalyzer)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->familyRelationsAnalyzer = $familyRelationsAnalyzer;
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->astResolver = $astResolver;
+        $this->reflectionResolver = $reflectionResolver;
+        $this->returnTypeInferer = $returnTypeInferer;
+        $this->parentClassMethodTypeOverrideGuard = $parentClassMethodTypeOverrideGuard;
+        $this->filePathHelper = $filePathHelper;
+        $this->magicClassMethodAnalyzer = $magicClassMethodAnalyzer;
     }
     public function shouldSkipClassMethod(ClassMethod $classMethod, Scope $scope) : bool
     {
@@ -145,10 +164,10 @@ final readonly class ClassMethodReturnTypeOverrideGuard
         $currentFileName = $currentClassReflection->getFileName();
         // child (current)
         $normalizedCurrentFileName = $this->filePathHelper->normalizePathAndSchema($currentFileName);
-        $isCurrentInVendor = str_contains($normalizedCurrentFileName, '/vendor/');
+        $isCurrentInVendor = \strpos($normalizedCurrentFileName, '/vendor/') !== \false;
         // parent
         $normalizedFileName = $this->filePathHelper->normalizePathAndSchema($fileName);
-        $isParentInVendor = str_contains($normalizedFileName, '/vendor/');
+        $isParentInVendor = \strpos($normalizedFileName, '/vendor/') !== \false;
         return $isCurrentInVendor && $isParentInVendor || !$isCurrentInVendor && !$isParentInVendor;
     }
     /**

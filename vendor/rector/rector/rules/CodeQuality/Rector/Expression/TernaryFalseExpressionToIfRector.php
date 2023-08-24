@@ -18,13 +18,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class TernaryFalseExpressionToIfRector extends AbstractScopeAwareRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly SideEffectNodeDetector $sideEffectNodeDetector
-    )
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\SideEffect\SideEffectNodeDetector
+     */
+    private $sideEffectNodeDetector;
+    public function __construct(SideEffectNodeDetector $sideEffectNodeDetector)
     {
+        $this->sideEffectNodeDetector = $sideEffectNodeDetector;
     }
     public function getRuleDefinition() : RuleDefinition
     {

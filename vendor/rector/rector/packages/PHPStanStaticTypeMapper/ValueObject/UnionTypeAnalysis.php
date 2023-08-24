@@ -3,23 +3,28 @@
 declare (strict_types=1);
 namespace Rector\PHPStanStaticTypeMapper\ValueObject;
 
-final readonly class UnionTypeAnalysis
+final class UnionTypeAnalysis
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private bool $isNullableType,
-        /**
-         * @readonly
-         */
-        private bool $hasIterable,
-        /**
-         * @readonly
-         */
-        private bool $hasArray
-    )
+    /**
+     * @readonly
+     * @var bool
+     */
+    private $isNullableType;
+    /**
+     * @readonly
+     * @var bool
+     */
+    private $hasIterable;
+    /**
+     * @readonly
+     * @var bool
+     */
+    private $hasArray;
+    public function __construct(bool $isNullableType, bool $hasIterable, bool $hasArray)
     {
+        $this->isNullableType = $isNullableType;
+        $this->hasIterable = $hasIterable;
+        $this->hasArray = $hasArray;
     }
     public function isNullableType() : bool
     {

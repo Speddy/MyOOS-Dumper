@@ -7,15 +7,16 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Stmt\PropertyProperty;
 use PHPStan\Type\Type;
 use Rector\StaticTypeMapper\StaticTypeMapper;
-final readonly class PropertyTypeDefaultValueAnalyzer
+final class PropertyTypeDefaultValueAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper
-    )
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    public function __construct(StaticTypeMapper $staticTypeMapper)
     {
+        $this->staticTypeMapper = $staticTypeMapper;
     }
     public function doesConflictWithDefaultValue(PropertyProperty $propertyProperty, Type $propertyType) : bool
     {

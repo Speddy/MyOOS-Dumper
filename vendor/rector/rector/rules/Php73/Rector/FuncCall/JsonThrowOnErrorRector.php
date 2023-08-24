@@ -23,7 +23,10 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class JsonThrowOnErrorRector extends AbstractRector implements MinPhpVersionInterface
 {
-    private bool $hasChanged = \false;
+    /**
+     * @var bool
+     */
+    private $hasChanged = \false;
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Adds JSON_THROW_ON_ERROR to json_encode() and json_decode() to throw JsonException on error', [new CodeSample(<<<'CODE_SAMPLE'
@@ -49,7 +52,9 @@ CODE_SAMPLE
     public function refactor(Node $node) : ?Node
     {
         // if found, skip it :)
-        $hasJsonErrorFuncCall = (bool) $this->betterNodeFinder->findFirst($node, fn(Node $node): bool => $this->isNames($node, ['json_last_error', 'json_last_error_msg']));
+        $hasJsonErrorFuncCall = (bool) $this->betterNodeFinder->findFirst($node, function (Node $node) : bool {
+            return $this->isNames($node, ['json_last_error', 'json_last_error_msg']);
+        });
         if ($hasJsonErrorFuncCall) {
             return null;
         }

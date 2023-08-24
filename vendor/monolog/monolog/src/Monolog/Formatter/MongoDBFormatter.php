@@ -22,17 +22,21 @@ use Monolog\Utils;
  */
 class MongoDBFormatter implements FormatterInterface
 {
+    /** @var bool */
+    private $exceptionTraceAsString;
     /** @var int */
     private $maxNestingLevel;
-    private readonly bool $isLegacyMongoExt;
+    /** @var bool */
+    private $isLegacyMongoExt;
 
     /**
      * @param int  $maxNestingLevel        0 means infinite nesting, the $record itself is level 1, $record['context'] is 2
      * @param bool $exceptionTraceAsString set to false to log exception traces as a sub documents instead of strings
      */
-    public function __construct(int $maxNestingLevel = 3, private readonly bool $exceptionTraceAsString = true)
+    public function __construct(int $maxNestingLevel = 3, bool $exceptionTraceAsString = true)
     {
         $this->maxNestingLevel = max($maxNestingLevel, 0);
+        $this->exceptionTraceAsString = $exceptionTraceAsString;
 
         $this->isLegacyMongoExt = extension_loaded('mongodb') && version_compare((string) phpversion('mongodb'), '1.1.9', '<=');
     }
@@ -91,9 +95,10 @@ class MongoDBFormatter implements FormatterInterface
     }
 
     /**
+     * @param  mixed          $value
      * @return mixed[]|string
      */
-    protected function formatObject(mixed $value, int $nestingLevel)
+    protected function formatObject($value, int $nestingLevel)
     {
         $objectVars = get_object_vars($value);
         $objectVars['class'] = Utils::getClass($value);

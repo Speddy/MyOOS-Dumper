@@ -5,7 +5,7 @@ namespace Rector\BetterPhpDocParser\ValueObject\Type;
 
 use PHPStan\PhpDocParser\Ast\Type\IntersectionTypeNode;
 use Stringable;
-final class BracketsAwareIntersectionTypeNode extends IntersectionTypeNode implements \Stringable
+final class BracketsAwareIntersectionTypeNode extends IntersectionTypeNode
 {
     public function __toString() : string
     {

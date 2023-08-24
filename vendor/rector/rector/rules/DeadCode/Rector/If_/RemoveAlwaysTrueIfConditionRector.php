@@ -25,17 +25,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveAlwaysTrueIfConditionRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private readonly ExprAnalyzer $exprAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ExprAnalyzer
+     */
+    private $exprAnalyzer;
+    public function __construct(ReflectionResolver $reflectionResolver, ExprAnalyzer $exprAnalyzer)
     {
+        $this->reflectionResolver = $reflectionResolver;
+        $this->exprAnalyzer = $exprAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

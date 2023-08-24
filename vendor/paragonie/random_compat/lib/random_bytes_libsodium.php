@@ -45,7 +45,7 @@ if (!is_callable('random_bytes')) {
         try {
             /** @var int $bytes */
             $bytes = RandomCompat_intval($bytes);
-        } catch (TypeError) {
+        } catch (TypeError $ex) {
             throw new TypeError(
                 'random_bytes(): $bytes must be an integer'
             );
@@ -62,11 +62,11 @@ if (!is_callable('random_bytes')) {
          * generated in one invocation.
          */
         /** @var string|bool $buf */
-        if ($bytes > 2_147_483_647) {
+        if ($bytes > 2147483647) {
             $buf = '';
-            for ($i = 0; $i < $bytes; $i += 1_073_741_824) {
-                $n = ($bytes - $i) > 1_073_741_824
-                    ? 1_073_741_824
+            for ($i = 0; $i < $bytes; $i += 1073741824) {
+                $n = ($bytes - $i) > 1073741824
+                    ? 1073741824
                     : $bytes - $i;
                 $buf .= \Sodium\randombytes_buf($n);
             }

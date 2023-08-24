@@ -14,19 +14,22 @@ use Rector\NodeNameResolver\NodeNameResolver;
 /**
  * @api
  */
-final readonly class AttributeCleaner
+final class AttributeCleaner
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\Doctrine\NodeAnalyzer\AttributeFinder $attributeFinder,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Doctrine\NodeAnalyzer\AttributeFinder
+     */
+    private $attributeFinder;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(\Rector\Doctrine\NodeAnalyzer\AttributeFinder $attributeFinder, NodeNameResolver $nodeNameResolver)
     {
+        $this->attributeFinder = $attributeFinder;
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Stmt\Property|\PhpParser\Node\Stmt\ClassLike|\PhpParser\Node\Param $node

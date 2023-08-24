@@ -30,6 +30,7 @@ trait InitializeTrait
     /**
      * Enable/disable initialization
      *
+     * @param bool $enabled
      */
     public function setInitializeOption(bool $enabled)
     {

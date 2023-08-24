@@ -9,15 +9,16 @@ use PHPStan\BetterReflection\Reflection\Reflection;
 use PHPStan\BetterReflection\Reflector\Reflector;
 use PHPStan\BetterReflection\SourceLocator\Type\SourceLocator;
 use Rector\NodeTypeResolver\Reflection\BetterReflection\SourceLocatorProvider\DynamicSourceLocatorProvider;
-final readonly class IntermediateSourceLocator implements SourceLocator
+final class IntermediateSourceLocator implements SourceLocator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private DynamicSourceLocatorProvider $dynamicSourceLocatorProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\Reflection\BetterReflection\SourceLocatorProvider\DynamicSourceLocatorProvider
+     */
+    private $dynamicSourceLocatorProvider;
+    public function __construct(DynamicSourceLocatorProvider $dynamicSourceLocatorProvider)
     {
+        $this->dynamicSourceLocatorProvider = $dynamicSourceLocatorProvider;
     }
     public function locateIdentifier(Reflector $reflector, Identifier $identifier) : ?Reflection
     {

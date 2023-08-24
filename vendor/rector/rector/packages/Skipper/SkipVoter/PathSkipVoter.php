@@ -9,20 +9,23 @@ use Rector\Skipper\SkipCriteriaResolver\SkippedPathsResolver;
 final class PathSkipVoter implements SkipVoterInterface
 {
     /**
+     * @readonly
+     * @var \Rector\Skipper\Matcher\FileInfoMatcher
+     */
+    private $fileInfoMatcher;
+    /**
+     * @readonly
+     * @var \Rector\Skipper\SkipCriteriaResolver\SkippedPathsResolver
+     */
+    private $skippedPathsResolver;
+    /**
      * @var array<string, bool>
      */
-    private array $skippedFiles = [];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly FileInfoMatcher $fileInfoMatcher,
-        /**
-         * @readonly
-         */
-        private readonly SkippedPathsResolver $skippedPathsResolver
-    )
+    private $skippedFiles = [];
+    public function __construct(FileInfoMatcher $fileInfoMatcher, SkippedPathsResolver $skippedPathsResolver)
     {
+        $this->fileInfoMatcher = $fileInfoMatcher;
+        $this->skippedPathsResolver = $skippedPathsResolver;
     }
     /**
      * @param string|object $element

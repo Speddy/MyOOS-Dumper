@@ -34,17 +34,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeThrowExprRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly CoalesceAnalyzer $coalesceAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly BinaryOpManipulator $binaryOpManipulator
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeAnalyzer\CoalesceAnalyzer
+     */
+    private $coalesceAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\BinaryOpManipulator
+     */
+    private $binaryOpManipulator;
+    public function __construct(CoalesceAnalyzer $coalesceAnalyzer, BinaryOpManipulator $binaryOpManipulator)
     {
+        $this->coalesceAnalyzer = $coalesceAnalyzer;
+        $this->binaryOpManipulator = $binaryOpManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -149,7 +152,9 @@ CODE_SAMPLE
     }
     private function hasThrowInAssignExpr(Assign $assign) : bool
     {
-        return (bool) $this->betterNodeFinder->findFirst($assign->expr, static fn(Node $node): bool => $node instanceof Throw_);
+        return (bool) $this->betterNodeFinder->findFirst($assign->expr, static function (Node $node) : bool {
+            return $node instanceof Throw_;
+        });
     }
     /**
      * @return Node[]|null

@@ -31,17 +31,23 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class AssertComparisonToSpecificMethodRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\IdentifierManipulator
+     */
+    private $identifierManipulator;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
      * @var BinaryOpWithAssertMethod[]
      */
-    private array $binaryOpWithAssertMethods = [];
-    public function __construct(/**
-     * @readonly
-     */
-    private readonly IdentifierManipulator $identifierManipulator, /**
-     * @readonly
-     */
-    private readonly TestsNodeAnalyzer $testsNodeAnalyzer)
+    private $binaryOpWithAssertMethods = [];
+    public function __construct(IdentifierManipulator $identifierManipulator, TestsNodeAnalyzer $testsNodeAnalyzer)
     {
+        $this->identifierManipulator = $identifierManipulator;
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
         $this->binaryOpWithAssertMethods = [new BinaryOpWithAssertMethod(Identical::class, 'assertSame', 'assertNotSame'), new BinaryOpWithAssertMethod(NotIdentical::class, 'assertNotSame', 'assertSame'), new BinaryOpWithAssertMethod(Equal::class, 'assertEquals', 'assertNotEquals'), new BinaryOpWithAssertMethod(NotEqual::class, 'assertNotEquals', 'assertEquals'), new BinaryOpWithAssertMethod(Greater::class, 'assertGreaterThan', 'assertLessThan'), new BinaryOpWithAssertMethod(Smaller::class, 'assertLessThan', 'assertGreaterThan'), new BinaryOpWithAssertMethod(GreaterOrEqual::class, 'assertGreaterThanOrEqual', 'assertLessThanOrEqual'), new BinaryOpWithAssertMethod(SmallerOrEqual::class, 'assertLessThanOrEqual', 'assertGreaterThanOrEqual')];
     }
     public function getRuleDefinition() : RuleDefinition
@@ -77,7 +83,7 @@ final class AssertComparisonToSpecificMethodRector extends AbstractRector
      */
     private function processCallWithBinaryOp($node, BinaryOp $binaryOp) : ?Node
     {
-        $binaryOpClass = $binaryOp::class;
+        $binaryOpClass = \get_class($binaryOp);
         foreach ($this->binaryOpWithAssertMethods as $binaryOpWithAssertMethod) {
             if ($binaryOpClass !== $binaryOpWithAssertMethod->getBinaryOpClass()) {
                 continue;

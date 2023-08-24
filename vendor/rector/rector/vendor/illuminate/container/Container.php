@@ -292,9 +292,10 @@ class Container implements ArrayAccess, ContainerContract
      * Get the method binding for the given method.
      *
      * @param  string  $method
+     * @param  mixed  $instance
      * @return mixed
      */
-    public function callMethodBinding($method, mixed $instance)
+    public function callMethodBinding($method, $instance)
     {
         return \call_user_func($this->methodBindings[$method], $instance, $this);
     }
@@ -492,6 +493,7 @@ class Container implements ArrayAccess, ContainerContract
      * Bind a new callback to an abstract's rebind event.
      *
      * @param  string  $abstract
+     * @param  \Closure  $callback
      * @return mixed
      */
     public function rebinding($abstract, Closure $callback)
@@ -505,10 +507,11 @@ class Container implements ArrayAccess, ContainerContract
      * Refresh an instance on the given target and method.
      *
      * @param  string  $abstract
+     * @param  mixed  $target
      * @param  string  $method
      * @return mixed
      */
-    public function refresh($abstract, mixed $target, $method)
+    public function refresh($abstract, $target, $method)
     {
         return $this->rebinding($abstract, function ($app, $instance) use($target, $method) {
             $target->{$method}($instance);
@@ -540,11 +543,15 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Wrap the given closure such that its dependencies will be injected when executed.
      *
+     * @param  \Closure  $callback
+     * @param  array  $parameters
      * @return \Closure
      */
     public function wrap(Closure $callback, array $parameters = [])
     {
-        return fn() => $this->call($callback, $parameters);
+        return function () use($callback, $parameters) {
+            return $this->call($callback, $parameters);
+        };
     }
     /**
      * Call the given Closure / class@method and inject its dependencies.
@@ -586,7 +593,7 @@ class Container implements ArrayAccess, ContainerContract
         if (!\is_array($callback)) {
             return \false;
         }
-        return \is_string($callback[0]) ? $callback[0] : $callback[0]::class;
+        return \is_string($callback[0]) ? $callback[0] : \get_class($callback[0]);
     }
     /**
      * Get a closure to resolve the given type from the container.
@@ -596,12 +603,15 @@ class Container implements ArrayAccess, ContainerContract
      */
     public function factory($abstract)
     {
-        return fn() => $this->make($abstract);
+        return function () use($abstract) {
+            return $this->make($abstract);
+        };
     }
     /**
      * An alias function name for make().
      *
      * @param  string|callable  $abstract
+     * @param  array  $parameters
      * @return mixed
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
@@ -749,10 +759,11 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Determine if the given concrete is buildable.
      *
+     * @param  mixed  $concrete
      * @param  string  $abstract
      * @return bool
      */
-    protected function isBuildable(mixed $concrete, $abstract)
+    protected function isBuildable($concrete, $abstract)
     {
         return $concrete === $abstract || $concrete instanceof Closure;
     }
@@ -869,6 +880,7 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Resolve a non-class hinted primitive dependency.
      *
+     * @param  \ReflectionParameter  $parameter
      * @return mixed
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
@@ -889,6 +901,7 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Resolve a class based dependency from the container.
      *
+     * @param  \ReflectionParameter  $parameter
      * @return mixed
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
@@ -912,6 +925,7 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Resolve a class based variadic dependency from the container.
      *
+     * @param  \ReflectionParameter  $parameter
      * @return mixed
      */
     protected function resolveVariadicClass(ReflectionParameter $parameter)
@@ -921,7 +935,9 @@ class Container implements ArrayAccess, ContainerContract
         if (!\is_array($concrete = $this->getContextualConcrete($abstract))) {
             return $this->make($className);
         }
-        return \array_map(fn($abstract) => $this->resolve($abstract), $concrete);
+        return \array_map(function ($abstract) {
+            return $this->resolve($abstract);
+        }, $concrete);
     }
     /**
      * Throw an exception that the concrete is not instantiable.
@@ -944,11 +960,12 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Throw an exception for an unresolvable primitive.
      *
+     * @param  \ReflectionParameter  $parameter
      * @return void
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
-    protected function unresolvablePrimitive(ReflectionParameter $parameter): never
+    protected function unresolvablePrimitive(ReflectionParameter $parameter)
     {
         $message = "Unresolvable dependency resolving [{$parameter}] in class {$parameter->getDeclaringClass()->getName()}";
         throw new BindingResolutionException($message);
@@ -1028,6 +1045,7 @@ class Container implements ArrayAccess, ContainerContract
      *
      * @param  string  $abstract
      * @param  array  $parameters
+     * @param  array  $callbacks
      * @return void
      */
     protected function fireBeforeCallbackArray($abstract, $parameters, array $callbacks)
@@ -1040,9 +1058,10 @@ class Container implements ArrayAccess, ContainerContract
      * Fire all of the resolving callbacks.
      *
      * @param  string  $abstract
+     * @param  mixed  $object
      * @return void
      */
-    protected function fireResolvingCallbacks($abstract, mixed $object)
+    protected function fireResolvingCallbacks($abstract, $object)
     {
         $this->fireCallbackArray($object, $this->globalResolvingCallbacks);
         $this->fireCallbackArray($object, $this->getCallbacksForType($abstract, $object, $this->resolvingCallbacks));
@@ -1052,9 +1071,10 @@ class Container implements ArrayAccess, ContainerContract
      * Fire all of the after resolving callbacks.
      *
      * @param  string  $abstract
+     * @param  mixed  $object
      * @return void
      */
-    protected function fireAfterResolvingCallbacks($abstract, mixed $object)
+    protected function fireAfterResolvingCallbacks($abstract, $object)
     {
         $this->fireCallbackArray($object, $this->globalAfterResolvingCallbacks);
         $this->fireCallbackArray($object, $this->getCallbacksForType($abstract, $object, $this->afterResolvingCallbacks));
@@ -1064,6 +1084,7 @@ class Container implements ArrayAccess, ContainerContract
      *
      * @param  string  $abstract
      * @param  object  $object
+     * @param  array  $callbacksPerType
      * @return array
      */
     protected function getCallbacksForType($abstract, $object, array $callbacksPerType)
@@ -1079,9 +1100,11 @@ class Container implements ArrayAccess, ContainerContract
     /**
      * Fire an array of callbacks with an object.
      *
+     * @param  mixed  $object
+     * @param  array  $callbacks
      * @return void
      */
-    protected function fireCallbackArray(mixed $object, array $callbacks)
+    protected function fireCallbackArray($object, array $callbacks)
     {
         foreach ($callbacks as $callback) {
             $callback($object, $this);
@@ -1227,11 +1250,14 @@ class Container implements ArrayAccess, ContainerContract
      * Set the value at a given offset.
      *
      * @param  string  $key
+     * @param  mixed  $value
      * @return void
      */
-    public function offsetSet($key, mixed $value) : void
+    public function offsetSet($key, $value) : void
     {
-        $this->bind($key, $value instanceof Closure ? $value : fn() => $value);
+        $this->bind($key, $value instanceof Closure ? $value : function () use($value) {
+            return $value;
+        });
     }
     /**
      * Unset the value at a given offset.
@@ -1257,9 +1283,10 @@ class Container implements ArrayAccess, ContainerContract
      * Dynamically set container services.
      *
      * @param  string  $key
+     * @param  mixed  $value
      * @return void
      */
-    public function __set($key, mixed $value)
+    public function __set($key, $value)
     {
         $this[$key] = $value;
     }

@@ -20,20 +20,23 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class AssertInstanceOfComparisonRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\IdentifierManipulator
+     */
+    private $identifierManipulator;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
      * @var array<string, string>
      */
     private const RENAME_METHODS_MAP = ['assertTrue' => 'assertInstanceOf', 'assertFalse' => 'assertNotInstanceOf'];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly IdentifierManipulator $identifierManipulator,
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer
-    )
+    public function __construct(IdentifierManipulator $identifierManipulator, TestsNodeAnalyzer $testsNodeAnalyzer)
     {
+        $this->identifierManipulator = $identifierManipulator;
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

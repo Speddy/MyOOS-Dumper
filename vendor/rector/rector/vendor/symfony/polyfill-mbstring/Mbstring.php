@@ -68,38 +68,38 @@ final class Mbstring
 {
     public const MB_CASE_FOLD = \PHP_INT_MAX;
     private const CASE_FOLD = [['µ', 'ſ', "ͅ", 'ς', "ϐ", "ϑ", "ϕ", "ϖ", "ϰ", "ϱ", "ϵ", "ẛ", "ι"], ['μ', 's', 'ι', 'σ', 'β', 'θ', 'φ', 'π', 'κ', 'ρ', 'ε', "ṡ", 'ι']];
-    private static array $encodingList = ['ASCII', 'UTF-8'];
-    private static string $language = 'neutral';
-    private static string $internalEncoding = 'UTF-8';
+    private static $encodingList = ['ASCII', 'UTF-8'];
+    private static $language = 'neutral';
+    private static $internalEncoding = 'UTF-8';
     public static function mb_convert_encoding($s, $toEncoding, $fromEncoding = null)
     {
-        if (\is_array($fromEncoding) || null !== $fromEncoding && str_contains((string) $fromEncoding, ',')) {
+        if (\is_array($fromEncoding) || null !== $fromEncoding && \false !== \strpos($fromEncoding, ',')) {
             $fromEncoding = self::mb_detect_encoding($s, $fromEncoding);
         } else {
             $fromEncoding = self::getEncoding($fromEncoding);
         }
         $toEncoding = self::getEncoding($toEncoding);
         if ('BASE64' === $fromEncoding) {
-            $s = \base64_decode((string) $s);
+            $s = \base64_decode($s);
             $fromEncoding = $toEncoding;
         }
         if ('BASE64' === $toEncoding) {
-            return \base64_encode((string) $s);
+            return \base64_encode($s);
         }
         if ('HTML-ENTITIES' === $toEncoding || 'HTML' === $toEncoding) {
             if ('HTML-ENTITIES' === $fromEncoding || 'HTML' === $fromEncoding) {
                 $fromEncoding = 'Windows-1252';
             }
             if ('UTF-8' !== $fromEncoding) {
-                $s = \iconv((string) $fromEncoding, 'UTF-8//IGNORE', (string) $s);
+                $s = \iconv($fromEncoding, 'UTF-8//IGNORE', $s);
             }
-            return \preg_replace_callback('/[\\x80-\\xFF]+/', self::html_encoding_callback(...), (string) $s);
+            return \preg_replace_callback('/[\\x80-\\xFF]+/', [__CLASS__, 'html_encoding_callback'], $s);
         }
         if ('HTML-ENTITIES' === $fromEncoding) {
-            $s = \html_entity_decode((string) $s, \ENT_COMPAT, 'UTF-8');
+            $s = \html_entity_decode($s, \ENT_COMPAT, 'UTF-8');
             $fromEncoding = 'UTF-8';
         }
-        return \iconv((string) $fromEncoding, $toEncoding . '//IGNORE', (string) $s);
+        return \iconv($fromEncoding, $toEncoding . '//IGNORE', $s);
     }
     public static function mb_convert_variables($toEncoding, $fromEncoding, &...$vars)
     {
@@ -113,7 +113,7 @@ final class Mbstring
     }
     public static function mb_decode_mimeheader($s)
     {
-        return \iconv_mime_decode((string) $s, 2, self::$internalEncoding);
+        return \iconv_mime_decode($s, 2, self::$internalEncoding);
     }
     public static function mb_encode_mimeheader($s, $charset = null, $transferEncoding = null, $linefeed = null, $indent = null)
     {
@@ -144,7 +144,7 @@ final class Mbstring
                 $s = @\iconv('UTF-8', 'UTF-8//IGNORE', $s);
             }
         } else {
-            $s = \iconv((string) $encoding, 'UTF-8//IGNORE', $s);
+            $s = \iconv($encoding, 'UTF-8//IGNORE', $s);
         }
         $cnt = \floor(\count($convmap) / 4) * 4;
         for ($i = 0; $i < $cnt; $i += 4) {
@@ -195,7 +195,7 @@ final class Mbstring
                 $s = @\iconv('UTF-8', 'UTF-8//IGNORE', $s);
             }
         } else {
-            $s = \iconv((string) $encoding, 'UTF-8//IGNORE', $s);
+            $s = \iconv($encoding, 'UTF-8//IGNORE', $s);
         }
         static $ulenMask = ["\xc0" => 2, "\xd0" => 2, "\xe0" => 3, "\xf0" => 4];
         $cnt = \floor(\count($convmap) / 4) * 4;
@@ -234,14 +234,14 @@ final class Mbstring
                 $s = @\iconv('UTF-8', 'UTF-8//IGNORE', $s);
             }
         } else {
-            $s = \iconv((string) $encoding, 'UTF-8//IGNORE', $s);
+            $s = \iconv($encoding, 'UTF-8//IGNORE', $s);
         }
         if (\MB_CASE_TITLE == $mode) {
             static $titleRegexp = null;
             if (null === $titleRegexp) {
                 $titleRegexp = self::getData('titleCaseRegexp');
             }
-            $s = \preg_replace_callback($titleRegexp, self::title_case(...), $s);
+            $s = \preg_replace_callback($titleRegexp, [__CLASS__, 'title_case'], $s);
         } else {
             if (\MB_CASE_UPPER == $mode) {
                 static $upper = null;
@@ -264,18 +264,18 @@ final class Mbstring
             $len = \strlen($s);
             while ($i < $len) {
                 $ulen = $s[$i] < "\x80" ? 1 : $ulenMask[$s[$i] & "\xf0"];
-                $uchr = \substr((string) $s, $i, $ulen);
+                $uchr = \substr($s, $i, $ulen);
                 $i += $ulen;
                 if (isset($map[$uchr])) {
                     $uchr = $map[$uchr];
-                    $nlen = \strlen((string) $uchr);
+                    $nlen = \strlen($uchr);
                     if ($nlen == $ulen) {
                         $nlen = $i;
                         do {
                             $s[--$nlen] = $uchr[--$ulen];
                         } while ($ulen);
                     } else {
-                        $s = \substr_replace((string) $s, (string) $uchr, $i - $ulen, $ulen);
+                        $s = \substr_replace($s, $uchr, $i - $ulen, $ulen);
                         $len += $nlen - $ulen;
                         $i += $nlen - $ulen;
                     }
@@ -285,7 +285,7 @@ final class Mbstring
         if (null === $encoding) {
             return $s;
         }
-        return \iconv('UTF-8', $encoding . '//IGNORE', (string) $s);
+        return \iconv('UTF-8', $encoding . '//IGNORE', $s);
     }
     public static function mb_internal_encoding($encoding = null)
     {
@@ -293,7 +293,7 @@ final class Mbstring
             return self::$internalEncoding;
         }
         $normalizedEncoding = self::getEncoding($encoding);
-        if ('UTF-8' === $normalizedEncoding || \false !== @\iconv((string) $normalizedEncoding, (string) $normalizedEncoding, ' ')) {
+        if ('UTF-8' === $normalizedEncoding || \false !== @\iconv($normalizedEncoding, $normalizedEncoding, ' ')) {
             self::$internalEncoding = $normalizedEncoding;
             return \true;
         }
@@ -307,7 +307,7 @@ final class Mbstring
         if (null === $lang) {
             return self::$language;
         }
-        switch ($normalizedLang = \strtolower((string) $lang)) {
+        switch ($normalizedLang = \strtolower($lang)) {
             case 'uni':
             case 'neutral':
                 self::$language = $normalizedLang;
@@ -324,10 +324,12 @@ final class Mbstring
     }
     public static function mb_encoding_aliases($encoding)
     {
-        return match (\strtoupper((string) $encoding)) {
-            'UTF8', 'UTF-8' => ['utf8'],
-            default => \false,
-        };
+        switch (\strtoupper($encoding)) {
+            case 'UTF8':
+            case 'UTF-8':
+                return ['utf8'];
+        }
+        return \false;
     }
     public static function mb_check_encoding($var = null, $encoding = null)
     {
@@ -337,7 +339,7 @@ final class Mbstring
             }
             $encoding = self::$internalEncoding;
         }
-        return self::mb_detect_encoding($var, [$encoding]) || \false !== @\iconv((string) $encoding, (string) $encoding, (string) $var);
+        return self::mb_detect_encoding($var, [$encoding]) || \false !== @\iconv($encoding, $encoding, $var);
     }
     public static function mb_detect_encoding($str, $encodingList = null, $strict = \false)
     {
@@ -345,25 +347,25 @@ final class Mbstring
             $encodingList = self::$encodingList;
         } else {
             if (!\is_array($encodingList)) {
-                $encodingList = \array_map('trim', \explode(',', (string) $encodingList));
+                $encodingList = \array_map('trim', \explode(',', $encodingList));
             }
             $encodingList = \array_map('strtoupper', $encodingList);
         }
         foreach ($encodingList as $enc) {
             switch ($enc) {
                 case 'ASCII':
-                    if (!\preg_match('/[\\x80-\\xFF]/', (string) $str)) {
+                    if (!\preg_match('/[\\x80-\\xFF]/', $str)) {
                         return $enc;
                     }
                     break;
                 case 'UTF8':
                 case 'UTF-8':
-                    if (\preg_match('//u', (string) $str)) {
+                    if (\preg_match('//u', $str)) {
                         return 'UTF-8';
                     }
                     break;
                 default:
-                    if (str_starts_with((string) $enc, 'ISO-8859-')) {
+                    if (0 === \strncmp($enc, 'ISO-8859-', 9)) {
                         return $enc;
                     }
             }
@@ -376,7 +378,7 @@ final class Mbstring
             return self::$encodingList;
         }
         if (!\is_array($encodingList)) {
-            $encodingList = \array_map('trim', \explode(',', (string) $encodingList));
+            $encodingList = \array_map('trim', \explode(',', $encodingList));
         }
         $encodingList = \array_map('strtoupper', $encodingList);
         foreach ($encodingList as $enc) {
@@ -398,15 +400,15 @@ final class Mbstring
     {
         $encoding = self::getEncoding($encoding);
         if ('CP850' === $encoding || 'ASCII' === $encoding) {
-            return \strlen((string) $s);
+            return \strlen($s);
         }
-        return @\iconv_strlen((string) $s, $encoding);
+        return @\iconv_strlen($s, $encoding);
     }
     public static function mb_strpos($haystack, $needle, $offset = 0, $encoding = null)
     {
         $encoding = self::getEncoding($encoding);
         if ('CP850' === $encoding || 'ASCII' === $encoding) {
-            return \strpos((string) $haystack, (string) $needle, $offset);
+            return \strpos($haystack, $needle, $offset);
         }
         $needle = (string) $needle;
         if ('' === $needle) {
@@ -416,13 +418,13 @@ final class Mbstring
             }
             return 0;
         }
-        return \iconv_strpos((string) $haystack, $needle, $offset, $encoding);
+        return \iconv_strpos($haystack, $needle, $offset, $encoding);
     }
     public static function mb_strrpos($haystack, $needle, $offset = 0, $encoding = null)
     {
         $encoding = self::getEncoding($encoding);
         if ('CP850' === $encoding || 'ASCII' === $encoding) {
-            return \strrpos((string) $haystack, (string) $needle, $offset);
+            return \strrpos($haystack, $needle, $offset);
         }
         if ($offset != (int) $offset) {
             $offset = 0;
@@ -433,10 +435,10 @@ final class Mbstring
                 }
                 $offset = 0;
             } else {
-                $haystack = self::mb_substr($haystack, $offset, 2_147_483_647, $encoding);
+                $haystack = self::mb_substr($haystack, $offset, 2147483647, $encoding);
             }
         }
-        $pos = '' !== $needle || 80000 > \PHP_VERSION_ID ? \iconv_strrpos((string) $haystack, (string) $needle, $encoding) : self::mb_strlen($haystack, $encoding);
+        $pos = '' !== $needle || 80000 > \PHP_VERSION_ID ? \iconv_strrpos($haystack, $needle, $encoding) : self::mb_strlen($haystack, $encoding);
         return \false !== $pos ? $offset + $pos : \false;
     }
     public static function mb_str_split($string, $split_length = 1, $encoding = null)
@@ -484,7 +486,7 @@ final class Mbstring
         if (null === $c) {
             return 'none';
         }
-        if (0 === \strcasecmp((string) $c, 'none')) {
+        if (0 === \strcasecmp($c, 'none')) {
             return \true;
         }
         if (80000 > \PHP_VERSION_ID) {
@@ -499,23 +501,23 @@ final class Mbstring
     {
         $encoding = self::getEncoding($encoding);
         if ('CP850' === $encoding || 'ASCII' === $encoding) {
-            return (string) \substr((string) $s, $start, $length ?? 2_147_483_647);
+            return (string) \substr($s, $start, null === $length ? 2147483647 : $length);
         }
         if ($start < 0) {
-            $start = \iconv_strlen((string) $s, $encoding) + $start;
+            $start = \iconv_strlen($s, $encoding) + $start;
             if ($start < 0) {
                 $start = 0;
             }
         }
         if (null === $length) {
-            $length = 2_147_483_647;
+            $length = 2147483647;
         } elseif ($length < 0) {
-            $length = \iconv_strlen((string) $s, $encoding) + $length - $start;
+            $length = \iconv_strlen($s, $encoding) + $length - $start;
             if ($length < 0) {
                 return '';
             }
         }
-        return (string) \iconv_substr((string) $s, $start, $length, $encoding);
+        return (string) \iconv_substr($s, $start, $length, $encoding);
     }
     public static function mb_stripos($haystack, $needle, $offset = 0, $encoding = null)
     {
@@ -532,10 +534,10 @@ final class Mbstring
     {
         $encoding = self::getEncoding($encoding);
         if ('CP850' === $encoding || 'ASCII' === $encoding) {
-            $pos = \strrpos((string) $haystack, (string) $needle);
+            $pos = \strrpos($haystack, $needle);
         } else {
             $needle = self::mb_substr($needle, 0, 1, $encoding);
-            $pos = \iconv_strrpos((string) $haystack, (string) $needle, $encoding);
+            $pos = \iconv_strrpos($haystack, $needle, $encoding);
         }
         return self::getSubpart($pos, $part, $haystack, $encoding);
     }
@@ -553,14 +555,14 @@ final class Mbstring
     }
     public static function mb_strstr($haystack, $needle, $part = \false, $encoding = null)
     {
-        $pos = \strpos((string) $haystack, (string) $needle);
+        $pos = \strpos($haystack, $needle);
         if (\false === $pos) {
             return \false;
         }
         if ($part) {
-            return \substr((string) $haystack, 0, $pos);
+            return \substr($haystack, 0, $pos);
         }
-        return \substr((string) $haystack, $pos);
+        return \substr($haystack, $pos);
     }
     public static function mb_get_info($type = 'all')
     {
@@ -568,7 +570,10 @@ final class Mbstring
         if ('all' === $type) {
             return $info;
         }
-        return $info[$type] ?? \false;
+        if (isset($info[$type])) {
+            return $info[$type];
+        }
+        return \false;
     }
     public static function mb_http_input($type = '')
     {
@@ -582,14 +587,14 @@ final class Mbstring
     {
         $encoding = self::getEncoding($encoding);
         if ('UTF-8' !== $encoding) {
-            $s = \iconv((string) $encoding, 'UTF-8//IGNORE', (string) $s);
+            $s = \iconv($encoding, 'UTF-8//IGNORE', $s);
         }
-        $s = \preg_replace('/[\\x{1100}-\\x{115F}\\x{2329}\\x{232A}\\x{2E80}-\\x{303E}\\x{3040}-\\x{A4CF}\\x{AC00}-\\x{D7A3}\\x{F900}-\\x{FAFF}\\x{FE10}-\\x{FE19}\\x{FE30}-\\x{FE6F}\\x{FF00}-\\x{FF60}\\x{FFE0}-\\x{FFE6}\\x{20000}-\\x{2FFFD}\\x{30000}-\\x{3FFFD}]/u', '', (string) $s, -1, $wide);
+        $s = \preg_replace('/[\\x{1100}-\\x{115F}\\x{2329}\\x{232A}\\x{2E80}-\\x{303E}\\x{3040}-\\x{A4CF}\\x{AC00}-\\x{D7A3}\\x{F900}-\\x{FAFF}\\x{FE10}-\\x{FE19}\\x{FE30}-\\x{FE6F}\\x{FF00}-\\x{FF60}\\x{FFE0}-\\x{FFE6}\\x{20000}-\\x{2FFFD}\\x{30000}-\\x{3FFFD}]/u', '', $s, -1, $wide);
         return ($wide << 1) + \iconv_strlen($s, 'UTF-8');
     }
     public static function mb_substr_count($haystack, $needle, $encoding = null)
     {
-        return \substr_count((string) $haystack, (string) $needle);
+        return \substr_count($haystack, $needle);
     }
     public static function mb_output_handler($contents, $status)
     {
@@ -614,12 +619,12 @@ final class Mbstring
     public static function mb_ord($s, $encoding = null)
     {
         if ('UTF-8' !== ($encoding = self::getEncoding($encoding))) {
-            $s = \mb_convert_encoding((string) $s, 'UTF-8', $encoding);
+            $s = \mb_convert_encoding($s, 'UTF-8', $encoding);
         }
-        if (1 === \strlen((string) $s)) {
+        if (1 === \strlen($s)) {
             return \ord($s);
         }
-        $code = ($s = \unpack('C*', \substr((string) $s, 0, 4))) ? $s[1] : 0;
+        $code = ($s = \unpack('C*', \substr($s, 0, 4))) ? $s[1] : 0;
         if (0xf0 <= $code) {
             return ($code - 0xf0 << 18) + ($s[2] - 0x80 << 12) + ($s[3] - 0x80 << 6) + $s[4] - 0x80;
         }
@@ -645,7 +650,7 @@ final class Mbstring
     {
         $i = 1;
         $entities = '';
-        $m = \unpack('C*', \htmlentities((string) $m[0], \ENT_COMPAT, 'UTF-8'));
+        $m = \unpack('C*', \htmlentities($m[0], \ENT_COMPAT, 'UTF-8'));
         while (isset($m[$i])) {
             if (0x80 > $m[$i]) {
                 $entities .= \chr($m[$i++]);
@@ -681,7 +686,7 @@ final class Mbstring
         if ('UTF-8' === $encoding) {
             return 'UTF-8';
         }
-        $encoding = \strtoupper((string) $encoding);
+        $encoding = \strtoupper($encoding);
         if ('8BIT' === $encoding || 'BINARY' === $encoding) {
             return 'CP850';
         }

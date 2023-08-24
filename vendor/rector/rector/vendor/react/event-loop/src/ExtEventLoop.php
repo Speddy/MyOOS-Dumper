@@ -21,20 +21,20 @@ use SplObjectStorage;
  */
 final class ExtEventLoop implements LoopInterface
 {
-    private readonly \EventBase $eventBase;
-    private readonly \RectorPrefix202308\React\EventLoop\Tick\FutureTickQueue $futureTickQueue;
-    private \Closure $timerCallback;
-    private \SplObjectStorage|array $timerEvents;
-    private \Closure $streamCallback;
-    private array $readEvents = [];
-    private array $writeEvents = [];
-    private array $readListeners = [];
-    private array $writeListeners = [];
-    private array $readRefs = [];
-    private array $writeRefs = [];
-    private ?bool $running = null;
-    private readonly \RectorPrefix202308\React\EventLoop\SignalsHandler $signals;
-    private array $signalEvents = [];
+    private $eventBase;
+    private $futureTickQueue;
+    private $timerCallback;
+    private $timerEvents;
+    private $streamCallback;
+    private $readEvents = array();
+    private $writeEvents = array();
+    private $readListeners = array();
+    private $writeListeners = array();
+    private $readRefs = array();
+    private $writeRefs = array();
+    private $running;
+    private $signals;
+    private $signalEvents = array();
     public function __construct()
     {
         if (!\class_exists('EventBase', \false)) {
@@ -60,8 +60,8 @@ final class ExtEventLoop implements LoopInterface
         foreach ($this->timerEvents as $timer) {
             $this->timerEvents->detach($timer);
         }
-        $this->readEvents = [];
-        $this->writeEvents = [];
+        $this->readEvents = array();
+        $this->writeEvents = array();
     }
     public function addReadStream($stream, $listener)
     {
@@ -138,7 +138,7 @@ final class ExtEventLoop implements LoopInterface
     {
         $this->signals->add($signal, $listener);
         if (!isset($this->signalEvents[$signal])) {
-            $this->signalEvents[$signal] = Event::signal($this->eventBase, $signal, $this->signals->call(...));
+            $this->signalEvents[$signal] = Event::signal($this->eventBase, $signal, array($this->signals, 'call'));
             $this->signalEvents[$signal]->add();
         }
     }
@@ -171,6 +171,7 @@ final class ExtEventLoop implements LoopInterface
     /**
      * Schedule a timer for execution.
      *
+     * @param TimerInterface $timer
      */
     private function scheduleTimer(TimerInterface $timer)
     {

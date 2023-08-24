@@ -22,21 +22,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DependsAnnotationWithValueToAttributeRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly PhpAttributeGroupFactory $phpAttributeGroupFactory,
-        /**
-         * @readonly
-         */
-        private readonly PhpDocTagRemover $phpDocTagRemover
-    )
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\PhpAttribute\NodeFactory\PhpAttributeGroupFactory
+     */
+    private $phpAttributeGroupFactory;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
+     */
+    private $phpDocTagRemover;
+    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer, PhpAttributeGroupFactory $phpAttributeGroupFactory, PhpDocTagRemover $phpDocTagRemover)
     {
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
+        $this->phpAttributeGroupFactory = $phpAttributeGroupFactory;
+        $this->phpDocTagRemover = $phpDocTagRemover;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -157,7 +162,7 @@ CODE_SAMPLE
     }
     private function resolveDependsClass(string $attributeValue) : ?string
     {
-        if (!str_ends_with($attributeValue, '::class')) {
+        if (\substr_compare($attributeValue, '::class', -\strlen('::class')) !== 0) {
             return null;
         }
         $className = \substr($attributeValue, 0, -7);
@@ -176,7 +181,7 @@ CODE_SAMPLE
     }
     private function resolveDependsCloneClassMethod(Class_ $currentClass, string $currentMethodName, string $attributeValue) : ?string
     {
-        if (!str_starts_with($attributeValue, 'clone ')) {
+        if (\strncmp($attributeValue, 'clone ', \strlen('clone ')) !== 0) {
             return null;
         }
         [, $attributeValue] = \explode('clone ', $attributeValue);

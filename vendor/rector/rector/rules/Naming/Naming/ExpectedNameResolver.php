@@ -22,27 +22,34 @@ use Rector\Naming\ValueObject\VariableAndCallForeach;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
-final readonly class ExpectedNameResolver
+final class ExpectedNameResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private \Rector\Naming\Naming\PropertyNaming $propertyNaming,
-        /**
-         * @readonly
-         */
-        private MatchParamTypeExpectedNameResolver $matchParamTypeExpectedNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\Naming\Naming\PropertyNaming
+     */
+    private $propertyNaming;
+    /**
+     * @readonly
+     * @var \Rector\Naming\ExpectedNameResolver\MatchParamTypeExpectedNameResolver
+     */
+    private $matchParamTypeExpectedNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver, \Rector\Naming\Naming\PropertyNaming $propertyNaming, MatchParamTypeExpectedNameResolver $matchParamTypeExpectedNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->propertyNaming = $propertyNaming;
+        $this->matchParamTypeExpectedNameResolver = $matchParamTypeExpectedNameResolver;
     }
     public function resolveForParamIfNotYet(Param $param) : ?string
     {

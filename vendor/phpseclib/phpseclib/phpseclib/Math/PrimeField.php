@@ -28,8 +28,9 @@ class PrimeField extends FiniteField
     /**
      * Instance Counter
      *
+     * @var int
      */
-    private static int $instanceCounter = 0;
+    private static $instanceCounter = 0;
 
     /**
      * Keeps track of current instance

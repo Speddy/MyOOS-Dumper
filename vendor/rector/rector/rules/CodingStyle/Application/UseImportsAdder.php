@@ -17,19 +17,22 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\NodeTypeResolver\PHPStan\Type\TypeFactory;
 use Rector\StaticTypeMapper\ValueObject\Type\AliasedObjectType;
 use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
-final readonly class UseImportsAdder
+final class UseImportsAdder
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private UsedImportsResolver $usedImportsResolver,
-        /**
-         * @readonly
-         */
-        private TypeFactory $typeFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\CodingStyle\ClassNameImport\UsedImportsResolver
+     */
+    private $usedImportsResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
+    public function __construct(UsedImportsResolver $usedImportsResolver, TypeFactory $typeFactory)
     {
+        $this->usedImportsResolver = $usedImportsResolver;
+        $this->typeFactory = $typeFactory;
     }
     /**
      * @param Stmt[] $stmts
@@ -162,6 +165,6 @@ final readonly class UseImportsAdder
         if ($afterCurrentNamespace === null) {
             return \false;
         }
-        return !str_contains($afterCurrentNamespace, '\\');
+        return \strpos($afterCurrentNamespace, '\\') === \false;
     }
 }

@@ -90,10 +90,10 @@ final class CompleteCommand extends Command
                 $command->mergeApplicationDefinition();
                 $completionInput->bind($command->getDefinition());
                 if (CompletionInput::TYPE_OPTION_NAME === $completionInput->getCompletionType()) {
-                    $this->log('  Completing option names for the <comment>' . ($command instanceof LazyCommand ? $command->getCommand() : $command)::class . '</> command.');
+                    $this->log('  Completing option names for the <comment>' . \get_class($command instanceof LazyCommand ? $command->getCommand() : $command) . '</> command.');
                     $suggestions->suggestOptions($command->getDefinition()->getOptions());
                 } else {
-                    $this->log(['  Completing using the <comment>' . ($command instanceof LazyCommand ? $command->getCommand() : $command)::class . '</> class.', '  Completing <comment>' . $completionInput->getCompletionType() . '</> for <comment>' . $completionInput->getCompletionName() . '</>']);
+                    $this->log(['  Completing using the <comment>' . \get_class($command instanceof LazyCommand ? $command->getCommand() : $command) . '</> class.', '  Completing <comment>' . $completionInput->getCompletionType() . '</> for <comment>' . $completionInput->getCompletionName() . '</>']);
                     if (null !== ($compval = $completionInput->getCompletionValue())) {
                         $this->log('  Current value: <comment>' . $compval . '</>');
                     }
@@ -104,7 +104,9 @@ final class CompleteCommand extends Command
             $completionOutput = new $completionOutput();
             $this->log('<info>Suggestions:</>');
             if ($options = $suggestions->getOptionSuggestions()) {
-                $this->log('  --' . \implode(' --', \array_map(fn($o) => $o->getName(), $options)));
+                $this->log('  --' . \implode(' --', \array_map(function ($o) {
+                    return $o->getName();
+                }, $options)));
             } elseif ($values = $suggestions->getValueSuggestions()) {
                 $this->log('  ' . \implode(' ', $values));
             } else {
@@ -123,13 +125,13 @@ final class CompleteCommand extends Command
     private function createCompletionInput(InputInterface $input) : CompletionInput
     {
         $currentIndex = $input->getOption('current');
-        if (!$currentIndex || !\ctype_digit((string) $currentIndex)) {
+        if (!$currentIndex || !\ctype_digit($currentIndex)) {
             throw new \RuntimeException('The "--current" option must be set and it must be an integer.');
         }
         $completionInput = CompletionInput::fromTokens($input->getOption('input'), (int) $currentIndex);
         try {
             $completionInput->bind($this->getApplication()->getDefinition());
-        } catch (ExceptionInterface) {
+        } catch (ExceptionInterface $exception) {
         }
         return $completionInput;
     }
@@ -141,7 +143,7 @@ final class CompleteCommand extends Command
                 return null;
             }
             return $this->getApplication()->find($inputName);
-        } catch (CommandNotFoundException) {
+        } catch (CommandNotFoundException $exception) {
         }
         return null;
     }
@@ -150,7 +152,7 @@ final class CompleteCommand extends Command
         if (!$this->isDebug) {
             return;
         }
-        $commandName = \basename((string) $_SERVER['argv'][0]);
+        $commandName = \basename($_SERVER['argv'][0]);
         \file_put_contents(\sys_get_temp_dir() . '/sf_' . $commandName . '.log', \implode(\PHP_EOL, (array) $messages) . \PHP_EOL, \FILE_APPEND);
     }
 }

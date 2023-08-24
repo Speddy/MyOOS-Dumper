@@ -45,52 +45,69 @@ use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
 use Rector\PHPStanStaticTypeMapper\Enum\TypeKind;
 use Rector\StaticTypeMapper\StaticTypeMapper;
 use ReflectionParameter;
-final readonly class AnonymousFunctionFactory
+final class AnonymousFunctionFactory
 {
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\NodeFactory
+     */
+    private $nodeFactory;
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Parser\SimplePhpParser
+     */
+    private $simplePhpParser;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\AstResolver
+     */
+    private $astResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\Util\Reflection\PrivatesAccessor
+     */
+    private $privatesAccessor;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Parser\InlineCodeParser
+     */
+    private $inlineCodeParser;
     /**
      * @var string
      * @see https://regex101.com/r/jkLLlM/2
      */
     private const DIM_FETCH_REGEX = '#(\\$|\\\\|\\x0)(?<number>\\d+)#';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private NodeFactory $nodeFactory,
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper,
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private SimplePhpParser $simplePhpParser,
-        /**
-         * @readonly
-         */
-        private AstResolver $astResolver,
-        /**
-         * @readonly
-         */
-        private PrivatesAccessor $privatesAccessor,
-        /**
-         * @readonly
-         */
-        private InlineCodeParser $inlineCodeParser
-    )
+    public function __construct(NodeNameResolver $nodeNameResolver, BetterNodeFinder $betterNodeFinder, NodeFactory $nodeFactory, StaticTypeMapper $staticTypeMapper, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, SimplePhpParser $simplePhpParser, AstResolver $astResolver, PrivatesAccessor $privatesAccessor, InlineCodeParser $inlineCodeParser)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->nodeFactory = $nodeFactory;
+        $this->staticTypeMapper = $staticTypeMapper;
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->simplePhpParser = $simplePhpParser;
+        $this->astResolver = $astResolver;
+        $this->privatesAccessor = $privatesAccessor;
+        $this->inlineCodeParser = $inlineCodeParser;
     }
     /**
      * @api
@@ -161,7 +178,9 @@ final readonly class AnonymousFunctionFactory
         $anonymousFunction->stmts[] = new Return_($stmt);
         $anonymousFunction->params[] = new Param(new Variable('matches'));
         $variables = $expr instanceof Variable ? [] : $this->betterNodeFinder->findInstanceOf($expr, Variable::class);
-        $anonymousFunction->uses = \array_map(static fn(Variable $variable): ClosureUse => new ClosureUse($variable), $variables);
+        $anonymousFunction->uses = \array_map(static function (Variable $variable) : ClosureUse {
+            return new ClosureUse($variable);
+        }, $variables);
         return $anonymousFunction;
     }
     /**

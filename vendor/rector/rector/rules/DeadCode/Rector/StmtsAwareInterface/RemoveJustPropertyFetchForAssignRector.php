@@ -19,13 +19,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveJustPropertyFetchForAssignRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly JustPropertyFetchVariableAssignMatcher $justPropertyFetchVariableAssignMatcher
-    )
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\NodeAnalyzer\JustPropertyFetchVariableAssignMatcher
+     */
+    private $justPropertyFetchVariableAssignMatcher;
+    public function __construct(JustPropertyFetchVariableAssignMatcher $justPropertyFetchVariableAssignMatcher)
     {
+        $this->justPropertyFetchVariableAssignMatcher = $justPropertyFetchVariableAssignMatcher;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -11,15 +11,16 @@ use PhpParser\Node\Scalar\LNumber;
 use Rector\Enum\JsonConstant;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final readonly class JsonConstCleaner
+final class JsonConstCleaner
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @param array<JsonConstant::*> $constants

@@ -5,7 +5,7 @@ namespace PHPStan\PhpDocParser\Ast\ConstExpr;
 
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use function sprintf;
-class ConstExprArrayItemNode implements \PHPStan\PhpDocParser\Ast\ConstExpr\ConstExprNode, \Stringable
+class ConstExprArrayItemNode implements \PHPStan\PhpDocParser\Ast\ConstExpr\ConstExprNode
 {
     use NodeAttributes;
     /** @var ConstExprNode|null */

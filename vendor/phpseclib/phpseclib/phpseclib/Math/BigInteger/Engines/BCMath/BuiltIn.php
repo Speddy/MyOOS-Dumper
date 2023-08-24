@@ -25,6 +25,9 @@ abstract class BuiltIn extends BCMath
     /**
      * Performs modular exponentiation.
      *
+     * @param BCMath $x
+     * @param BCMath $e
+     * @param BCMath $n
      * @return BCMath
      */
     protected static function powModHelper(BCMath $x, BCMath $e, BCMath $n)

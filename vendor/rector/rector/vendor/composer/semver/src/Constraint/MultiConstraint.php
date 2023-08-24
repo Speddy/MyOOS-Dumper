@@ -13,7 +13,7 @@ namespace RectorPrefix202308\Composer\Semver\Constraint;
 /**
  * Defines a conjunctive or disjunctive set of constraints.
  */
-class MultiConstraint implements ConstraintInterface, \Stringable
+class MultiConstraint implements ConstraintInterface
 {
     /**
      * @var ConstraintInterface[]
@@ -24,6 +24,8 @@ class MultiConstraint implements ConstraintInterface, \Stringable
     protected $prettyString;
     /** @var string|null */
     protected $string;
+    /** @var bool */
+    protected $conjunctive;
     /** @var Bound|null */
     protected $lowerBound;
     /** @var Bound|null */
@@ -34,12 +36,13 @@ class MultiConstraint implements ConstraintInterface, \Stringable
      *
      * @throws \InvalidArgumentException If less than 2 constraints are passed
      */
-    public function __construct(array $constraints, protected $conjunctive = \true)
+    public function __construct(array $constraints, $conjunctive = \true)
     {
         if (\count($constraints) < 2) {
             throw new \InvalidArgumentException('Must provide at least two constraints for a MultiConstraint. Use ' . 'the regular Constraint class for one constraint only or MatchAllConstraint for none. You may use ' . 'MultiConstraint::create() which optimizes and handles those cases automatically.');
         }
         $this->constraints = $constraints;
+        $this->conjunctive = $conjunctive;
     }
     /**
      * @return ConstraintInterface[]
@@ -67,7 +70,7 @@ class MultiConstraint implements ConstraintInterface, \Stringable
      */
     public function compile($otherOperator)
     {
-        $parts = [];
+        $parts = array();
         foreach ($this->constraints as $constraint) {
             $code = $constraint->compile($otherOperator);
             if ($code === 'true') {
@@ -135,12 +138,12 @@ class MultiConstraint implements ConstraintInterface, \Stringable
     /**
      * {@inheritDoc}
      */
-    public function __toString(): string
+    public function __toString()
     {
         if ($this->string !== null) {
             return $this->string;
         }
-        $constraints = [];
+        $constraints = array();
         foreach ($this->constraints as $constraint) {
             $constraints[] = (string) $constraint;
         }
@@ -189,7 +192,7 @@ class MultiConstraint implements ConstraintInterface, \Stringable
         }
         $optimized = self::optimizeConstraints($constraints, $conjunctive);
         if ($optimized !== null) {
-            [$constraints, $conjunctive] = $optimized;
+            list($constraints, $conjunctive) = $optimized;
             if (\count($constraints) === 1) {
                 return $constraints[0];
             }
@@ -210,13 +213,13 @@ class MultiConstraint implements ConstraintInterface, \Stringable
         // [>= 1 < 2] || [>= 2 < 3] || [>= 3 < 4] => [>= 1 < 4]
         if (!$conjunctive) {
             $left = $constraints[0];
-            $mergedConstraints = [];
+            $mergedConstraints = array();
             $optimized = \false;
             for ($i = 1, $l = \count($constraints); $i < $l; $i++) {
                 $right = $constraints[$i];
                 if ($left instanceof self && $left->conjunctive && $right instanceof self && $right->conjunctive && \count($left->constraints) === 2 && \count($right->constraints) === 2 && ($left0 = (string) $left->constraints[0]) && $left0[0] === '>' && $left0[1] === '=' && ($left1 = (string) $left->constraints[1]) && $left1[0] === '<' && ($right0 = (string) $right->constraints[0]) && $right0[0] === '>' && $right0[1] === '=' && ($right1 = (string) $right->constraints[1]) && $right1[0] === '<' && \substr($left1, 2) === \substr($right0, 3)) {
                     $optimized = \true;
-                    $left = new MultiConstraint([$left->constraints[0], $right->constraints[1]], \true);
+                    $left = new MultiConstraint(array($left->constraints[0], $right->constraints[1]), \true);
                 } else {
                     $mergedConstraints[] = $left;
                     $left = $right;
@@ -224,7 +227,7 @@ class MultiConstraint implements ConstraintInterface, \Stringable
             }
             if ($optimized) {
                 $mergedConstraints[] = $left;
-                return [$mergedConstraints, \false];
+                return array($mergedConstraints, \false);
             }
         }
         // TODO: Here's the place to put more optimizations

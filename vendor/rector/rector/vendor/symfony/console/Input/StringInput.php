@@ -25,9 +25,9 @@ class StringInput extends ArgvInput
     /**
      * @deprecated since Symfony 6.1
      */
-    final public const REGEX_STRING = '([^\\s]+?)(?:\\s|(?<!\\\\)"|(?<!\\\\)\'|$)';
-    final public const REGEX_UNQUOTED_STRING = '([^\\s\\\\]+?)';
-    final public const REGEX_QUOTED_STRING = '(?:"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\')';
+    public const REGEX_STRING = '([^\\s]+?)(?:\\s|(?<!\\\\)"|(?<!\\\\)\'|$)';
+    public const REGEX_UNQUOTED_STRING = '([^\\s\\\\]+?)';
+    public const REGEX_QUOTED_STRING = '(?:"([^"\\\\]*(?:\\\\.[^"\\\\]*)*)"|\'([^\'\\\\]*(?:\\\\.[^\'\\\\]*)*)\')';
     /**
      * @param string $input A string representing the parameters from the CLI
      */

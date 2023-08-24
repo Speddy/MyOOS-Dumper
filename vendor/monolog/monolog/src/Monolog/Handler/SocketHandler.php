@@ -24,18 +24,28 @@ use Monolog\Logger;
  */
 class SocketHandler extends AbstractProcessingHandler
 {
-    private float $connectionTimeout;
+    /** @var string */
+    private $connectionString;
+    /** @var float */
+    private $connectionTimeout;
     /** @var resource|null */
     private $resource;
-    private float $timeout;
-    private float $writingTimeout;
-    private ?int $lastSentBytes = null;
+    /** @var float */
+    private $timeout;
+    /** @var float */
+    private $writingTimeout;
+    /** @var ?int */
+    private $lastSentBytes = null;
+    /** @var ?int */
+    private $chunkSize;
+    /** @var bool */
+    private $persistent;
     /** @var ?int */
     private $errno = null;
     /** @var ?string */
     private $errstr = null;
     /** @var ?float */
-    private string|float|null $lastWritingAt = null;
+    private $lastWritingAt = null;
 
     /**
      * @param string     $connectionString  Socket connection string
@@ -49,26 +59,29 @@ class SocketHandler extends AbstractProcessingHandler
      * @throws \InvalidArgumentException    If an invalid timeout value (less than 0) is passed.
      */
     public function __construct(
-        private readonly string $connectionString,
+        string $connectionString,
         $level = Logger::DEBUG,
         bool $bubble = true,
-        private bool $persistent = false,
+        bool $persistent = false,
         float $timeout = 0.0,
         float $writingTimeout = 10.0,
         ?float $connectionTimeout = null,
-        private ?int $chunkSize = null
+        ?int $chunkSize = null
     ) {
         parent::__construct($level, $bubble);
+        $this->connectionString = $connectionString;
 
         if ($connectionTimeout !== null) {
             $this->validateTimeout($connectionTimeout);
         }
 
         $this->connectionTimeout = $connectionTimeout ?? (float) ini_get('default_socket_timeout');
+        $this->persistent = $persistent;
         $this->validateTimeout($timeout);
         $this->timeout = $timeout;
         $this->validateTimeout($writingTimeout);
         $this->writingTimeout = $writingTimeout;
+        $this->chunkSize = $chunkSize;
     }
 
     /**

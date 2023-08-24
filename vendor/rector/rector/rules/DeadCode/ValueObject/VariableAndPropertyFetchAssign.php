@@ -5,19 +5,22 @@ namespace Rector\DeadCode\ValueObject;
 
 use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\Variable;
-final readonly class VariableAndPropertyFetchAssign
+final class VariableAndPropertyFetchAssign
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private Variable $variable,
-        /**
-         * @readonly
-         */
-        private PropertyFetch $propertyFetch
-    )
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Expr\Variable
+     */
+    private $variable;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Expr\PropertyFetch
+     */
+    private $propertyFetch;
+    public function __construct(Variable $variable, PropertyFetch $propertyFetch)
     {
+        $this->variable = $variable;
+        $this->propertyFetch = $propertyFetch;
     }
     public function getVariable() : Variable
     {

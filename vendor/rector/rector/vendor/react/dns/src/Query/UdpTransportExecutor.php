@@ -81,30 +81,31 @@ use RectorPrefix202308\React\Promise\Deferred;
  */
 final class UdpTransportExecutor implements ExecutorInterface
 {
-    private string $nameserver;
+    private $nameserver;
     private $loop;
-    private \RectorPrefix202308\React\Dns\Protocol\Parser $parser;
-    private readonly \RectorPrefix202308\React\Dns\Protocol\BinaryDumper $dumper;
+    private $parser;
+    private $dumper;
     /**
      * maximum UDP packet size to send and receive
      *
+     * @var int
      */
-    private int $maxPacketSize = 512;
+    private $maxPacketSize = 512;
     /**
      * @param string         $nameserver
      * @param ?LoopInterface $loop
      */
     public function __construct($nameserver, LoopInterface $loop = null)
     {
-        if (!str_contains($nameserver, '[') && \substr_count($nameserver, ':') >= 2 && !str_contains($nameserver, '://')) {
+        if (\strpos($nameserver, '[') === \false && \substr_count($nameserver, ':') >= 2 && \strpos($nameserver, '://') === \false) {
             // several colons, but not enclosed in square brackets => enclose IPv6 address in square brackets
             $nameserver = '[' . $nameserver . ']';
         }
-        $parts = \parse_url((!str_contains($nameserver, '://') ? 'udp://' : '') . $nameserver);
+        $parts = \parse_url((\strpos($nameserver, '://') === \false ? 'udp://' : '') . $nameserver);
         if (!isset($parts['scheme'], $parts['host']) || $parts['scheme'] !== 'udp' || @\inet_pton(\trim($parts['host'], '[]')) === \false) {
             throw new \InvalidArgumentException('Invalid nameserver address given');
         }
-        $this->nameserver = 'udp://' . $parts['host'] . ':' . ($parts['port'] ?? 53);
+        $this->nameserver = 'udp://' . $parts['host'] . ':' . (isset($parts['port']) ? $parts['port'] : 53);
         $this->loop = $loop ?: Loop::get();
         $this->parser = new Parser();
         $this->dumper = new BinaryDumper();
@@ -132,7 +133,7 @@ final class UdpTransportExecutor implements ExecutorInterface
             // fwrite(): send of 8192 bytes failed with errno=111 Connection refused
             \preg_match('/errno=(\\d+) (.+)/', $error, $m);
             $errno = isset($m[1]) ? (int) $m[1] : 0;
-            $errstr = $m[2] ?? $error;
+            $errstr = isset($m[2]) ? $m[2] : $error;
         });
         $written = \fwrite($socket, $queryData);
         \restore_error_handler();
@@ -140,7 +141,7 @@ final class UdpTransportExecutor implements ExecutorInterface
             return \RectorPrefix202308\React\Promise\reject(new \RuntimeException('DNS query for ' . $query->describe() . ' failed: Unable to send query to DNS server ' . $this->nameserver . ' (' . $errstr . ')', $errno));
         }
         $loop = $this->loop;
-        $deferred = new Deferred(function () use($loop, $socket, $query): never {
+        $deferred = new Deferred(function () use($loop, $socket, $query) {
             // cancellation should remove socket from loop and close socket
             $loop->removeReadStream($socket);
             \fclose($socket);
@@ -158,7 +159,7 @@ final class UdpTransportExecutor implements ExecutorInterface
             }
             try {
                 $response = $parser->parseMessage($data);
-            } catch (\Exception) {
+            } catch (\Exception $e) {
                 // ignore and await next if we received an invalid message from remote server
                 // this may as well be a fake response from an attacker (possible DOS)
                 return;

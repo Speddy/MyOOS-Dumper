@@ -3,23 +3,28 @@
 declare (strict_types=1);
 namespace Rector\PHPUnit\ValueObject;
 
-final readonly class ConstantWithAssertMethods
+final class ConstantWithAssertMethods
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private string $constant,
-        /**
-         * @readonly
-         */
-        private string $assetMethodName,
-        /**
-         * @readonly
-         */
-        private string $notAssertMethodName
-    )
+    /**
+     * @readonly
+     * @var string
+     */
+    private $constant;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $assetMethodName;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $notAssertMethodName;
+    public function __construct(string $constant, string $assetMethodName, string $notAssertMethodName)
     {
+        $this->constant = $constant;
+        $this->assetMethodName = $assetMethodName;
+        $this->notAssertMethodName = $notAssertMethodName;
     }
     public function getConstant() : string
     {

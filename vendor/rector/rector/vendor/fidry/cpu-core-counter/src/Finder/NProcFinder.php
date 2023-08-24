@@ -22,11 +22,16 @@ use function sprintf;
 final class NProcFinder extends ProcOpenBasedFinder
 {
     /**
+     * @var bool
+     */
+    private $all;
+    /**
      * @param bool $all If disabled will give the number of cores available for the current process only.
      */
-    public function __construct(private readonly bool $all = \true, ?ProcessExecutor $executor = null)
+    public function __construct(bool $all = \true, ?ProcessExecutor $executor = null)
     {
         parent::__construct($executor);
+        $this->all = $all;
     }
     public function toString() : string
     {

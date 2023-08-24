@@ -12,16 +12,19 @@ use Rector\Core\Exception\NotImplementedYetException;
 use Rector\PHPStanStaticTypeMapper\Contract\TypeMapperInterface;
 use Rector\PHPStanStaticTypeMapper\Enum\TypeKind;
 use RectorPrefix202308\Webmozart\Assert\Assert;
-final readonly class PHPStanStaticTypeMapper
+final class PHPStanStaticTypeMapper
 {
+    /**
+     * @var TypeMapperInterface[]
+     * @readonly
+     */
+    private $typeMappers;
     /**
      * @param TypeMapperInterface[] $typeMappers
      */
-    public function __construct(/**
-     * @readonly
-     */
-    private array $typeMappers)
+    public function __construct(array $typeMappers)
     {
+        $this->typeMappers = $typeMappers;
         Assert::notEmpty($typeMappers);
     }
     public function mapToPHPStanPhpDocTypeNode(Type $type) : TypeNode
@@ -32,7 +35,7 @@ final readonly class PHPStanStaticTypeMapper
             }
             return $typeMapper->mapToPHPStanPhpDocTypeNode($type);
         }
-        throw new NotImplementedYetException(__METHOD__ . ' for ' . $type::class);
+        throw new NotImplementedYetException(__METHOD__ . ' for ' . \get_class($type));
     }
     /**
      * @param TypeKind::* $typeKind
@@ -46,6 +49,6 @@ final readonly class PHPStanStaticTypeMapper
             }
             return $typeMapper->mapToPhpParserNode($type, $typeKind);
         }
-        throw new NotImplementedYetException(__METHOD__ . ' for ' . $type::class);
+        throw new NotImplementedYetException(__METHOD__ . ' for ' . \get_class($type));
     }
 }

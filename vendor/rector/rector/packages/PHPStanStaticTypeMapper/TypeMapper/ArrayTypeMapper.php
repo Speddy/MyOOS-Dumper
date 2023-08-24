@@ -34,29 +34,39 @@ use Rector\TypeDeclaration\TypeAnalyzer\GenericClassStringTypeNormalizer;
 final class ArrayTypeMapper implements TypeMapperInterface
 {
     /**
+     * @readonly
+     * @var \Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeCommonTypeNarrower
+     */
+    private $unionTypeCommonTypeNarrower;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\TypeAnalyzer\GenericClassStringTypeNormalizer
+     */
+    private $genericClassStringTypeNormalizer;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeTypeAnalyzer\DetailedTypeAnalyzer
+     */
+    private $detailedTypeAnalyzer;
+    /**
      * @var string
      */
     public const HAS_GENERIC_TYPE_PARENT = 'has_generic_type_parent';
-    private ?\Rector\PHPStanStaticTypeMapper\PHPStanStaticTypeMapper $phpStanStaticTypeMapper = null;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly UnionTypeCommonTypeNarrower $unionTypeCommonTypeNarrower,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private readonly GenericClassStringTypeNormalizer $genericClassStringTypeNormalizer,
-        /**
-         * @readonly
-         */
-        private readonly DetailedTypeAnalyzer $detailedTypeAnalyzer
-    )
+    /**
+     * @var \Rector\PHPStanStaticTypeMapper\PHPStanStaticTypeMapper
+     */
+    private $phpStanStaticTypeMapper;
+    public function __construct(UnionTypeCommonTypeNarrower $unionTypeCommonTypeNarrower, ReflectionProvider $reflectionProvider, GenericClassStringTypeNormalizer $genericClassStringTypeNormalizer, DetailedTypeAnalyzer $detailedTypeAnalyzer)
     {
+        $this->unionTypeCommonTypeNarrower = $unionTypeCommonTypeNarrower;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->genericClassStringTypeNormalizer = $genericClassStringTypeNormalizer;
+        $this->detailedTypeAnalyzer = $detailedTypeAnalyzer;
     }
     // To avoid circular dependency
     public function autowire(PHPStanStaticTypeMapper $phpStanStaticTypeMapper) : void

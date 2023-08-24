@@ -75,10 +75,11 @@ trait SmartObject
         }
     }
     /**
+     * @param  mixed  $value
      * @return void
      * @throws MemberAccessException if the property is not defined or is read-only
      */
-    public function __set(string $name, mixed $value)
+    public function __set(string $name, $value)
     {
         $class = static::class;
         if (ObjectHelpers::hasProperty($class, $name)) {

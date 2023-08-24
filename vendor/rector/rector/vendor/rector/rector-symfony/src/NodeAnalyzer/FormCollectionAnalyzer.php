@@ -7,19 +7,22 @@ use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\MethodCall;
 use Rector\Core\PhpParser\Node\Value\ValueResolver;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class FormCollectionAnalyzer
+final class FormCollectionAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ValueResolver $valueResolver,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(ValueResolver $valueResolver, NodeNameResolver $nodeNameResolver)
     {
+        $this->valueResolver = $valueResolver;
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function isCollectionType(MethodCall $methodCall) : bool
     {

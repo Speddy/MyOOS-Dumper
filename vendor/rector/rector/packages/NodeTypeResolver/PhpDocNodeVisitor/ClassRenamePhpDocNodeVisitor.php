@@ -27,24 +27,29 @@ use Rector\StaticTypeMapper\ValueObject\Type\ShortenedObjectType;
 final class ClassRenamePhpDocNodeVisitor extends AbstractPhpDocNodeVisitor
 {
     /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    /**
+     * @readonly
+     * @var \Rector\Core\Configuration\CurrentNodeProvider
+     */
+    private $currentNodeProvider;
+    /**
+     * @readonly
+     * @var \Rector\Naming\Naming\UseImportsResolver
+     */
+    private $useImportsResolver;
+    /**
      * @var OldToNewType[]
      */
-    private array $oldToNewTypes = [];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly StaticTypeMapper $staticTypeMapper,
-        /**
-         * @readonly
-         */
-        private readonly CurrentNodeProvider $currentNodeProvider,
-        /**
-         * @readonly
-         */
-        private readonly UseImportsResolver $useImportsResolver
-    )
+    private $oldToNewTypes = [];
+    public function __construct(StaticTypeMapper $staticTypeMapper, CurrentNodeProvider $currentNodeProvider, UseImportsResolver $useImportsResolver)
     {
+        $this->staticTypeMapper = $staticTypeMapper;
+        $this->currentNodeProvider = $currentNodeProvider;
+        $this->useImportsResolver = $useImportsResolver;
     }
     public function beforeTraverse(Node $node) : void
     {
@@ -69,7 +74,7 @@ final class ClassRenamePhpDocNodeVisitor extends AbstractPhpDocNodeVisitor
         $identifier->name = $this->resolveNamespacedName($identifier, $phpParserNode, $node->name);
         $staticType = $this->staticTypeMapper->mapPHPStanPhpDocTypeNodeToPHPStanType($identifier, $phpParserNode);
         $shouldImport = SimpleParameterProvider::provideBoolParameter(Option::AUTO_IMPORT_NAMES);
-        $isNoNamespacedName = !str_starts_with($identifier->name, '\\') && \substr_count($identifier->name, '\\') === 0;
+        $isNoNamespacedName = \strncmp($identifier->name, '\\', \strlen('\\')) !== 0 && \substr_count($identifier->name, '\\') === 0;
         // tweak overlapped import + rename
         if ($shouldImport && $isNoNamespacedName) {
             return null;
@@ -99,10 +104,10 @@ final class ClassRenamePhpDocNodeVisitor extends AbstractPhpDocNodeVisitor
     }
     private function resolveNamespacedName(IdentifierTypeNode $identifierTypeNode, PhpParserNode $phpParserNode, string $name) : string
     {
-        if (str_starts_with($name, '\\')) {
+        if (\strncmp($name, '\\', \strlen('\\')) === 0) {
             return $name;
         }
-        if (str_contains($name, '\\')) {
+        if (\strpos($name, '\\') !== \false) {
             return $name;
         }
         $staticType = $this->staticTypeMapper->mapPHPStanPhpDocTypeNodeToPHPStanType($identifierTypeNode, $phpParserNode);

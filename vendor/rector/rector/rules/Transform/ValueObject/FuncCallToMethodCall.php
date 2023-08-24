@@ -5,19 +5,28 @@ namespace Rector\Transform\ValueObject;
 
 use PHPStan\Type\ObjectType;
 use Rector\Core\Validation\RectorAssert;
-final readonly class FuncCallToMethodCall
+final class FuncCallToMethodCall
 {
-    public function __construct(/**
+    /**
      * @readonly
+     * @var string
      */
-    private string $oldFuncName, /**
+    private $oldFuncName;
+    /**
      * @readonly
+     * @var string
      */
-    private string $newClassName, /**
+    private $newClassName;
+    /**
      * @readonly
+     * @var string
      */
-    private string $newMethodName)
+    private $newMethodName;
+    public function __construct(string $oldFuncName, string $newClassName, string $newMethodName)
     {
+        $this->oldFuncName = $oldFuncName;
+        $this->newClassName = $newClassName;
+        $this->newMethodName = $newMethodName;
         RectorAssert::functionName($oldFuncName);
         RectorAssert::className($newClassName);
         RectorAssert::methodName($newMethodName);

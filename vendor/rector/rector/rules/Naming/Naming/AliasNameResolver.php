@@ -7,15 +7,16 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\GroupUse;
 use PhpParser\Node\Stmt\Use_;
-final readonly class AliasNameResolver
+final class AliasNameResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\Naming\Naming\UseImportsResolver $useImportsResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Naming\Naming\UseImportsResolver
+     */
+    private $useImportsResolver;
+    public function __construct(\Rector\Naming\Naming\UseImportsResolver $useImportsResolver)
     {
+        $this->useImportsResolver = $useImportsResolver;
     }
     /**
      * @param Use_[]|GroupUse[] $uses

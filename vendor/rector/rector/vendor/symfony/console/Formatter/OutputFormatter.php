@@ -20,9 +20,13 @@ use RectorPrefix202308\Symfony\Component\Console\Exception\InvalidArgumentExcept
 class OutputFormatter implements WrappableOutputFormatterInterface
 {
     /**
+     * @var bool
+     */
+    private $decorated;
+    /**
      * @var mixed[]
      */
-    private array $styles = [];
+    private $styles = [];
     /**
      * @var \Symfony\Component\Console\Formatter\OutputFormatterStyleStack
      */
@@ -49,7 +53,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      */
     public static function escapeTrailingBackslash(string $text) : string
     {
-        if (str_ends_with($text, '\\')) {
+        if (\substr_compare($text, '\\', -\strlen('\\')) === 0) {
             $len = \strlen($text);
             $text = \rtrim($text, '\\');
             $text = \str_replace("\x00", '', $text);
@@ -62,8 +66,9 @@ class OutputFormatter implements WrappableOutputFormatterInterface
      *
      * @param OutputFormatterStyleInterface[] $styles Array of "name => FormatterStyle" instances
      */
-    public function __construct(private bool $decorated = \false, array $styles = [])
+    public function __construct(bool $decorated = \false, array $styles = [])
     {
+        $this->decorated = $decorated;
         $this->setStyle('error', new OutputFormatterStyle('white', 'red'));
         $this->setStyle('info', new OutputFormatterStyle('green'));
         $this->setStyle('comment', new OutputFormatterStyle('yellow'));
@@ -210,7 +215,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
         \preg_match('~(\\n)$~', $text, $matches);
         $text = $prefix . \preg_replace('~([^\\n]{' . $width . '})\\ *~', "\$1\n", $text);
         $text = \rtrim($text, "\n") . ($matches[1] ?? '');
-        if (!$currentLineLength && '' !== $current && !str_ends_with($current, "\n")) {
+        if (!$currentLineLength && '' !== $current && \substr_compare($current, "\n", -\strlen("\n")) !== 0) {
             $text = "\n" . $text;
         }
         $lines = \explode("\n", $text);

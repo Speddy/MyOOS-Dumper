@@ -18,15 +18,15 @@ class Filesystem implements FilesystemOperator
 {
     use CalculateChecksumFromStream;
 
-    private readonly Config $config;
-    private readonly PathNormalizer $pathNormalizer;
+    private Config $config;
+    private PathNormalizer $pathNormalizer;
 
     public function __construct(
-        private readonly FilesystemAdapter $adapter,
+        private FilesystemAdapter $adapter,
         array $config = [],
         PathNormalizer $pathNormalizer = null,
         private ?PublicUrlGenerator $publicUrlGenerator = null,
-        private readonly ?TemporaryUrlGenerator $temporaryUrlGenerator = null,
+        private ?TemporaryUrlGenerator $temporaryUrlGenerator = null,
     ) {
         $this->config = new Config($config);
         $this->pathNormalizer = $pathNormalizer ?: new WhitespacePathNormalizer();
@@ -211,7 +211,10 @@ class Filesystem implements FilesystemOperator
         return null;
     }
 
-    private function assertIsResource(mixed $contents): void
+    /**
+     * @param mixed $contents
+     */
+    private function assertIsResource($contents): void
     {
         if (is_resource($contents) === false) {
             throw new InvalidStreamProvided(

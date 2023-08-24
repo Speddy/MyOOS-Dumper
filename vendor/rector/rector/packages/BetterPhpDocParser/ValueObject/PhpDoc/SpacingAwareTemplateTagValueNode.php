@@ -6,13 +6,16 @@ namespace Rector\BetterPhpDocParser\ValueObject\PhpDoc;
 use PHPStan\PhpDocParser\Ast\PhpDoc\TemplateTagValueNode;
 use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 use Stringable;
-final class SpacingAwareTemplateTagValueNode extends TemplateTagValueNode implements \Stringable
+final class SpacingAwareTemplateTagValueNode extends TemplateTagValueNode
 {
-    public function __construct(string $name, ?TypeNode $typeNode, string $description, /**
+    /**
      * @readonly
+     * @var string
      */
-    private readonly string $preposition)
+    private $preposition;
+    public function __construct(string $name, ?TypeNode $typeNode, string $description, string $preposition)
     {
+        $this->preposition = $preposition;
         parent::__construct($name, $typeNode, $description);
     }
     public function __toString() : string

@@ -7,15 +7,16 @@ use PhpParser\Node\AttributeGroup;
 use PhpParser\Node\Stmt\Use_;
 use Rector\Php80\ValueObject\NestedDoctrineTagAndAnnotationToAttribute;
 use Rector\PhpAttribute\NodeFactory\PhpNestedAttributeGroupFactory;
-final readonly class NestedAttrGroupsFactory
+final class NestedAttrGroupsFactory
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpNestedAttributeGroupFactory $phpNestedAttributeGroupFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\PhpAttribute\NodeFactory\PhpNestedAttributeGroupFactory
+     */
+    private $phpNestedAttributeGroupFactory;
+    public function __construct(PhpNestedAttributeGroupFactory $phpNestedAttributeGroupFactory)
     {
+        $this->phpNestedAttributeGroupFactory = $phpNestedAttributeGroupFactory;
     }
     /**
      * @param NestedDoctrineTagAndAnnotationToAttribute[] $nestedDoctrineTagAndAnnotationToAttributes

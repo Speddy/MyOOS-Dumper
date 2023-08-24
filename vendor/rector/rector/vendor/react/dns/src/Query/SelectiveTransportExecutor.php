@@ -51,8 +51,12 @@ use RectorPrefix202308\React\Promise\Promise;
  */
 class SelectiveTransportExecutor implements ExecutorInterface
 {
-    public function __construct(private readonly ExecutorInterface $datagramExecutor, private ExecutorInterface $streamExecutor)
+    private $datagramExecutor;
+    private $streamExecutor;
+    public function __construct(ExecutorInterface $datagramExecutor, ExecutorInterface $streamExecutor)
     {
+        $this->datagramExecutor = $datagramExecutor;
+        $this->streamExecutor = $streamExecutor;
     }
     public function query(Query $query)
     {

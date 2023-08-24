@@ -41,7 +41,7 @@ final class WorkerCommandLineFactory
         $args = \array_merge([\PHP_BINARY, $baseScript], $commandArguments);
         $mainCommand = $this->commandFromReflectionFactory->create($mainCommandClass);
         if ($mainCommand->getName() === null) {
-            $errorMessage = \sprintf('The command name for "%s" is missing', $mainCommand::class);
+            $errorMessage = \sprintf('The command name for "%s" is missing', \get_class($mainCommand));
             throw new ParallelShouldNotHappenException($errorMessage);
         }
         $mainCommandName = $mainCommand->getName();

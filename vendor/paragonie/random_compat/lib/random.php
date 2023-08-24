@@ -52,7 +52,7 @@ if (!defined('RANDOM_COMPAT_READ_BUFFER')) {
     define('RANDOM_COMPAT_READ_BUFFER', 8);
 }
 
-$RandomCompatDIR = __DIR__;
+$RandomCompatDIR = dirname(__FILE__);
 
 require_once $RandomCompatDIR.DIRECTORY_SEPARATOR.'byte_safe_strings.php';
 require_once $RandomCompatDIR.DIRECTORY_SEPARATOR.'cast_to_int.php';
@@ -96,8 +96,8 @@ if (!is_callable('random_bytes')) {
                 PATH_SEPARATOR,
                 strtolower($RandomCompat_basedir)
             );
-            $RandomCompatUrandom = ([] !== array_intersect(
-                ['/dev', '/dev/', '/dev/urandom'],
+            $RandomCompatUrandom = (array() !== array_intersect(
+                array('/dev', '/dev/', '/dev/urandom'),
                 $RandomCompat_open_basedir
             ));
             $RandomCompat_open_basedir = null;
@@ -183,11 +183,11 @@ if (!is_callable('random_bytes')) {
             try {
                 $RandomCompatCOMtest = new COM('CAPICOM.Utilities.1');
                 /** @psalm-suppress TypeDoesNotContainType */
-                if (is_callable([$RandomCompatCOMtest, 'GetRandom'])) {
+                if (is_callable(array($RandomCompatCOMtest, 'GetRandom'))) {
                     // See random_bytes_com_dotnet.php
                     require_once $RandomCompatDIR.DIRECTORY_SEPARATOR.'random_bytes_com_dotnet.php';
                 }
-            } catch (com_exception) {
+            } catch (com_exception $e) {
                 // Don't try to use it.
             }
         }
@@ -203,11 +203,12 @@ if (!is_callable('random_bytes')) {
          * We don't have any more options, so let's throw an exception right now
          * and hope the developer won't let it fail silently.
          *
+         * @param mixed $length
          * @psalm-suppress InvalidReturnType
          * @throws Exception
          * @return string
          */
-        function random_bytes(mixed $length)
+        function random_bytes($length)
         {
             unset($length); // Suppress "variable not used" warnings.
             throw new Exception(

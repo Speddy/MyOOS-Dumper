@@ -126,7 +126,10 @@ class HtmlFormatter extends NormalizerFormatter
         return $message;
     }
 
-    protected function convertToString(mixed $data): string
+    /**
+     * @param mixed $data
+     */
+    protected function convertToString($data): string
     {
         if (null === $data || is_scalar($data)) {
             return (string) $data;

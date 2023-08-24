@@ -12,23 +12,28 @@ use PhpParser\Node\Stmt\Return_;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\TypeDeclaration\NodeAnalyzer\ReturnAnalyzer;
 use Rector\TypeDeclaration\NodeAnalyzer\ReturnFilter\ExclusiveNativeCallLikeReturnMatcher;
-final readonly class StrictNativeFunctionReturnTypeAnalyzer
+final class StrictNativeFunctionReturnTypeAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private ExclusiveNativeCallLikeReturnMatcher $exclusiveNativeCallLikeReturnMatcher,
-        /**
-         * @readonly
-         */
-        private ReturnAnalyzer $returnAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\ReturnFilter\ExclusiveNativeCallLikeReturnMatcher
+     */
+    private $exclusiveNativeCallLikeReturnMatcher;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\ReturnAnalyzer
+     */
+    private $returnAnalyzer;
+    public function __construct(BetterNodeFinder $betterNodeFinder, ExclusiveNativeCallLikeReturnMatcher $exclusiveNativeCallLikeReturnMatcher, ReturnAnalyzer $returnAnalyzer)
     {
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->exclusiveNativeCallLikeReturnMatcher = $exclusiveNativeCallLikeReturnMatcher;
+        $this->returnAnalyzer = $returnAnalyzer;
     }
     /**
      * @return CallLike[]|null

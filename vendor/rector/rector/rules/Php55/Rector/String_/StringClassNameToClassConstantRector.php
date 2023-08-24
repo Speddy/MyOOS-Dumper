@@ -27,20 +27,21 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class StringClassNameToClassConstantRector extends AbstractRector implements MinPhpVersionInterface, ConfigurableRectorInterface
 {
     /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
      * @var string
      */
     private const IS_UNDER_CLASS_CONST = 'is_under_class_const';
     /**
      * @var string[]
      */
-    private array $classesToSkip = [];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ReflectionProvider $reflectionProvider
-    )
+    private $classesToSkip = [];
+    public function __construct(ReflectionProvider $reflectionProvider)
     {
+        $this->reflectionProvider = $reflectionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -138,7 +139,7 @@ CODE_SAMPLE
     private function shouldSkip(string $classLikeName) : bool
     {
         // skip short class names, mostly invalid use of strings
-        if (!str_contains($classLikeName, '\\')) {
+        if (\strpos($classLikeName, '\\') === \false) {
             return \true;
         }
         // possibly string

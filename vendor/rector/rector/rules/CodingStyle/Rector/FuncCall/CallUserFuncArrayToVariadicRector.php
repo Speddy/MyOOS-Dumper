@@ -24,13 +24,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class CallUserFuncArrayToVariadicRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ArrayCallableToMethodCallFactory $arrayCallableToMethodCallFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\CodingStyle\NodeFactory\ArrayCallableToMethodCallFactory
+     */
+    private $arrayCallableToMethodCallFactory;
+    public function __construct(ArrayCallableToMethodCallFactory $arrayCallableToMethodCallFactory)
     {
+        $this->arrayCallableToMethodCallFactory = $arrayCallableToMethodCallFactory;
     }
     public function getRuleDefinition() : RuleDefinition
     {

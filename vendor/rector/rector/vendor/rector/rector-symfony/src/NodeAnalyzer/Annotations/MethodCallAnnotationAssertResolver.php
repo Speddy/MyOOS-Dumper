@@ -9,23 +9,28 @@ use PhpParser\Node\Stmt;
 use Rector\Core\PhpParser\Node\Value\ValueResolver;
 use Rector\Symfony\NodeFactory\Annotations\DoctrineAnnotationFromNewFactory;
 use Rector\Symfony\ValueObject\ValidatorAssert\ClassMethodAndAnnotation;
-final readonly class MethodCallAnnotationAssertResolver
+final class MethodCallAnnotationAssertResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ValueResolver $valueResolver,
-        /**
-         * @readonly
-         */
-        private DoctrineAnnotationFromNewFactory $doctrineAnnotationFromNewFactory,
-        /**
-         * @readonly
-         */
-        private \Rector\Symfony\NodeAnalyzer\Annotations\StmtMethodCallMatcher $stmtMethodCallMatcher
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeFactory\Annotations\DoctrineAnnotationFromNewFactory
+     */
+    private $doctrineAnnotationFromNewFactory;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\Annotations\StmtMethodCallMatcher
+     */
+    private $stmtMethodCallMatcher;
+    public function __construct(ValueResolver $valueResolver, DoctrineAnnotationFromNewFactory $doctrineAnnotationFromNewFactory, \Rector\Symfony\NodeAnalyzer\Annotations\StmtMethodCallMatcher $stmtMethodCallMatcher)
     {
+        $this->valueResolver = $valueResolver;
+        $this->doctrineAnnotationFromNewFactory = $doctrineAnnotationFromNewFactory;
+        $this->stmtMethodCallMatcher = $stmtMethodCallMatcher;
     }
     public function resolve(Stmt $stmt) : ?ClassMethodAndAnnotation
     {

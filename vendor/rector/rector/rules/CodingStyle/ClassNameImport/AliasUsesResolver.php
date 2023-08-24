@@ -8,15 +8,16 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\UseUse;
-final readonly class AliasUsesResolver
+final class AliasUsesResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\CodingStyle\ClassNameImport\UseImportsTraverser $useImportsTraverser
-    )
+    /**
+     * @readonly
+     * @var \Rector\CodingStyle\ClassNameImport\UseImportsTraverser
+     */
+    private $useImportsTraverser;
+    public function __construct(\Rector\CodingStyle\ClassNameImport\UseImportsTraverser $useImportsTraverser)
     {
+        $this->useImportsTraverser = $useImportsTraverser;
     }
     /**
      * @param Stmt[] $stmts
@@ -26,7 +27,9 @@ final readonly class AliasUsesResolver
     {
         if (!$node instanceof Namespace_) {
             /** @var Namespace_[] $namespaces */
-            $namespaces = \array_filter($stmts, static fn(Stmt $stmt): bool => $stmt instanceof Namespace_);
+            $namespaces = \array_filter($stmts, static function (Stmt $stmt) : bool {
+                return $stmt instanceof Namespace_;
+            });
             if (\count($namespaces) !== 1) {
                 return [];
             }

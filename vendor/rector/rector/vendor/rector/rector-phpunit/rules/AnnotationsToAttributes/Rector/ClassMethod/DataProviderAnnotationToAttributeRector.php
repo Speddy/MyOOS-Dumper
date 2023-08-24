@@ -24,25 +24,32 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DataProviderAnnotationToAttributeRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly PhpAttributeGroupFactory $phpAttributeGroupFactory,
-        /**
-         * @readonly
-         */
-        private readonly PhpDocTagRemover $phpDocTagRemover,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\PhpAttribute\NodeFactory\PhpAttributeGroupFactory
+     */
+    private $phpAttributeGroupFactory;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
+     */
+    private $phpDocTagRemover;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer, PhpAttributeGroupFactory $phpAttributeGroupFactory, PhpDocTagRemover $phpDocTagRemover, ReflectionResolver $reflectionResolver)
     {
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
+        $this->phpAttributeGroupFactory = $phpAttributeGroupFactory;
+        $this->phpDocTagRemover = $phpDocTagRemover;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -125,7 +132,7 @@ CODE_SAMPLE
     {
         $methodName = \trim($originalAttributeValue, '()');
         $className = '';
-        if (str_contains($methodName, '::')) {
+        if (\strpos($methodName, '::') !== \false) {
             [$className, $methodName] = \explode('::', $methodName, 2);
         }
         if ($className !== '') {

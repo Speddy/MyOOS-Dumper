@@ -20,7 +20,7 @@ final class ProcessPool
     /**
      * @var array<string, ParallelProcess>
      */
-    private array $processes = [];
+    private $processes = [];
     public function __construct(TcpServer $tcpServer)
     {
         $this->tcpServer = $tcpServer;

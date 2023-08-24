@@ -7,7 +7,7 @@ use PHPStan\PhpDocParser\Ast\Type\CallableTypeNode;
 use PHPStan\PhpDocParser\Ast\Type\GenericTypeNode;
 use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
 use Stringable;
-final class SpacingAwareCallableTypeNode extends CallableTypeNode implements \Stringable
+final class SpacingAwareCallableTypeNode extends CallableTypeNode
 {
     public function __toString() : string
     {
@@ -20,7 +20,7 @@ final class SpacingAwareCallableTypeNode extends CallableTypeNode implements \St
         $returnType = $this->returnType;
         $parameterTypeString = $this->createParameterTypeString();
         $returnTypeAsString = (string) $returnType;
-        if (str_contains($returnTypeAsString, '|')) {
+        if (\strpos($returnTypeAsString, '|') !== \false) {
             $returnTypeAsString = '(' . $returnTypeAsString . ')';
         }
         $parameterTypeString = $this->normalizeParameterType($parameterTypeString, $returnTypeAsString);

@@ -18,17 +18,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeStringReturnTypeOnToStringRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ClassChildAnalyzer $classChildAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\FamilyTree\NodeAnalyzer\ClassChildAnalyzer
+     */
+    private $classChildAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(ClassChildAnalyzer $classChildAnalyzer, ReflectionResolver $reflectionResolver)
     {
+        $this->classChildAnalyzer = $classChildAnalyzer;
+        $this->reflectionResolver = $reflectionResolver;
     }
     /**
      * @return array<class-string<Node>>

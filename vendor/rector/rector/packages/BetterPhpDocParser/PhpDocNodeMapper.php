@@ -14,25 +14,37 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 /**
  * @see \Rector\Tests\BetterPhpDocParser\PhpDocNodeMapperTest
  */
-final readonly class PhpDocNodeMapper
+final class PhpDocNodeMapper
 {
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\DataProvider\CurrentTokenIteratorProvider
+     */
+    private $currentTokenIteratorProvider;
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\PhpDocParser\PhpDocNodeVisitor\ParentConnectingPhpDocNodeVisitor
+     */
+    private $parentConnectingPhpDocNodeVisitor;
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\PhpDocParser\PhpDocNodeVisitor\CloningPhpDocNodeVisitor
+     */
+    private $cloningPhpDocNodeVisitor;
+    /**
+     * @var BasePhpDocNodeVisitorInterface[]
+     * @readonly
+     */
+    private $phpDocNodeVisitors;
     /**
      * @param BasePhpDocNodeVisitorInterface[] $phpDocNodeVisitors
      */
-    public function __construct(/**
-     * @readonly
-     */
-    private CurrentTokenIteratorProvider $currentTokenIteratorProvider, /**
-     * @readonly
-     */
-    private ParentConnectingPhpDocNodeVisitor $parentConnectingPhpDocNodeVisitor, /**
-     * @readonly
-     */
-    private CloningPhpDocNodeVisitor $cloningPhpDocNodeVisitor, /**
-     * @readonly
-     */
-    private array $phpDocNodeVisitors)
+    public function __construct(CurrentTokenIteratorProvider $currentTokenIteratorProvider, ParentConnectingPhpDocNodeVisitor $parentConnectingPhpDocNodeVisitor, CloningPhpDocNodeVisitor $cloningPhpDocNodeVisitor, array $phpDocNodeVisitors)
     {
+        $this->currentTokenIteratorProvider = $currentTokenIteratorProvider;
+        $this->parentConnectingPhpDocNodeVisitor = $parentConnectingPhpDocNodeVisitor;
+        $this->cloningPhpDocNodeVisitor = $cloningPhpDocNodeVisitor;
+        $this->phpDocNodeVisitors = $phpDocNodeVisitors;
         Assert::notEmpty($phpDocNodeVisitors);
     }
     public function transform(PhpDocNode $phpDocNode, BetterTokenIterator $betterTokenIterator) : void

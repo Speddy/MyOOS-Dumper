@@ -7,15 +7,16 @@ use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Scalar\String_;
 use Rector\ChangesReporting\Collector\RectorChangeCollector;
-final readonly class ArrayManipulator
+final class ArrayManipulator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private RectorChangeCollector $rectorChangeCollector
-    )
+    /**
+     * @readonly
+     * @var \Rector\ChangesReporting\Collector\RectorChangeCollector
+     */
+    private $rectorChangeCollector;
+    public function __construct(RectorChangeCollector $rectorChangeCollector)
     {
+        $this->rectorChangeCollector = $rectorChangeCollector;
     }
     public function addItemToArrayUnderKey(Array_ $array, ArrayItem $newArrayItem, string $key) : void
     {

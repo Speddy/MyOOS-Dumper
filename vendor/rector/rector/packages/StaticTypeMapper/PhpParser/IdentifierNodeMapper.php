@@ -11,15 +11,16 @@ use Rector\StaticTypeMapper\Mapper\ScalarStringToTypeMapper;
 /**
  * @implements PhpParserNodeMapperInterface<Identifier>
  */
-final readonly class IdentifierNodeMapper implements PhpParserNodeMapperInterface
+final class IdentifierNodeMapper implements PhpParserNodeMapperInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ScalarStringToTypeMapper $scalarStringToTypeMapper
-    )
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\Mapper\ScalarStringToTypeMapper
+     */
+    private $scalarStringToTypeMapper;
+    public function __construct(ScalarStringToTypeMapper $scalarStringToTypeMapper)
     {
+        $this->scalarStringToTypeMapper = $scalarStringToTypeMapper;
     }
     public function getNodeType() : string
     {

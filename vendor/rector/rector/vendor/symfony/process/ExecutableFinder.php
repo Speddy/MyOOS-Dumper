@@ -18,7 +18,7 @@ namespace RectorPrefix202308\Symfony\Component\Process;
  */
 class ExecutableFinder
 {
-    private array $suffixes = ['.exe', '.bat', '.cmd', '.com'];
+    private $suffixes = ['.exe', '.bat', '.cmd', '.com'];
     /**
      * Replaces default suffixes of executable.
      *
@@ -54,7 +54,7 @@ class ExecutableFinder
                 if (@\is_dir($path)) {
                     $dirs[] = $path;
                 } else {
-                    if (\basename((string) $path) == $name && @\is_executable($path)) {
+                    if (\basename($path) == $name && @\is_executable($path)) {
                         return $path;
                     }
                 }

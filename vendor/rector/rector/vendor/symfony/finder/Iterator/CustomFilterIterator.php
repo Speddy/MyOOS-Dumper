@@ -25,7 +25,7 @@ class CustomFilterIterator extends \FilterIterator
     /**
      * @var mixed[]
      */
-    private array $filters = [];
+    private $filters = [];
     /**
      * @param \Iterator<string, \SplFileInfo> $iterator The Iterator to filter
      * @param callable[]                      $filters  An array of PHP callbacks

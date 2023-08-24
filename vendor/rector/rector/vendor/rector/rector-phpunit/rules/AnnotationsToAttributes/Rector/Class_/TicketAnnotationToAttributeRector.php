@@ -32,13 +32,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class TicketAnnotationToAttributeRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly PhpDocTagRemover $phpDocTagRemover
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
+     */
+    private $phpDocTagRemover;
+    public function __construct(PhpDocTagRemover $phpDocTagRemover)
     {
+        $this->phpDocTagRemover = $phpDocTagRemover;
     }
     public function getRuleDefinition() : RuleDefinition
     {

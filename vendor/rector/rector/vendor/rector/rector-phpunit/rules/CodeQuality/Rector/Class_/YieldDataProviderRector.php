@@ -25,21 +25,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class YieldDataProviderRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly NodeTransformer $nodeTransformer,
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly DataProviderClassMethodFinder $dataProviderClassMethodFinder
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\NodeTransformer
+     */
+    private $nodeTransformer;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeFinder\DataProviderClassMethodFinder
+     */
+    private $dataProviderClassMethodFinder;
+    public function __construct(NodeTransformer $nodeTransformer, TestsNodeAnalyzer $testsNodeAnalyzer, DataProviderClassMethodFinder $dataProviderClassMethodFinder)
     {
+        $this->nodeTransformer = $nodeTransformer;
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
+        $this->dataProviderClassMethodFinder = $dataProviderClassMethodFinder;
     }
     public function getRuleDefinition() : RuleDefinition
     {

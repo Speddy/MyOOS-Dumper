@@ -9,19 +9,22 @@ use PhpParser\Node\Stmt\Property;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer;
 use RectorPrefix202308\Symfony\Contracts\Service\Attribute\Required;
-final readonly class AutowiredClassMethodOrPropertyAnalyzer
+final class AutowiredClassMethodOrPropertyAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private PhpAttributeAnalyzer $phpAttributeAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
+     */
+    private $phpAttributeAnalyzer;
+    public function __construct(PhpDocInfoFactory $phpDocInfoFactory, PhpAttributeAnalyzer $phpAttributeAnalyzer)
     {
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
     }
     /**
      * @param \PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Param|\PhpParser\Node\Stmt\Property $node

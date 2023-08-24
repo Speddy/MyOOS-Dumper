@@ -9,25 +9,33 @@ use PHPStan\Type\Type;
 use Rector\Core\PhpParser\Node\Value\ValueResolver;
 use Rector\NodeTypeResolver\TypeComparator\TypeComparator;
 use Rector\StaticTypeMapper\StaticTypeMapper;
-final readonly class ChangedArgumentsDetector
+final class ChangedArgumentsDetector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ValueResolver $valueResolver,
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper,
-        /**
-         * @readonly
-         */
-        private TypeComparator $typeComparator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\TypeComparator\TypeComparator
+     */
+    private $typeComparator;
+    public function __construct(ValueResolver $valueResolver, StaticTypeMapper $staticTypeMapper, TypeComparator $typeComparator)
     {
+        $this->valueResolver = $valueResolver;
+        $this->staticTypeMapper = $staticTypeMapper;
+        $this->typeComparator = $typeComparator;
     }
-    public function isDefaultValueChanged(Param $param, mixed $value) : bool
+    /**
+     * @param mixed $value
+     */
+    public function isDefaultValueChanged(Param $param, $value) : bool
     {
         if (!$param->default instanceof Expr) {
             return \false;

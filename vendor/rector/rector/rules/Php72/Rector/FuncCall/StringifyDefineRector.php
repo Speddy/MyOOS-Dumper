@@ -19,13 +19,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class StringifyDefineRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly StringTypeAnalyzer $stringTypeAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\TypeAnalyzer\StringTypeAnalyzer
+     */
+    private $stringTypeAnalyzer;
+    public function __construct(StringTypeAnalyzer $stringTypeAnalyzer)
     {
+        $this->stringTypeAnalyzer = $stringTypeAnalyzer;
     }
     public function provideMinPhpVersion() : int
     {

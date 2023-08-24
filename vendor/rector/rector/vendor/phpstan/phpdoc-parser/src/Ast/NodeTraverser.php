@@ -56,12 +56,16 @@ final class NodeTraverser
      * leaveNode() will be invoked for visitors that has enterNode() method invoked.
      */
     public const DONT_TRAVERSE_CURRENT_AND_CHILDREN = 4;
-    private ?bool $stopTraversal = null;
+    /** @var list<NodeVisitor> Visitors */
+    private $visitors = [];
+    /** @var bool Whether traversal should be stopped */
+    private $stopTraversal;
     /**
      * @param list<NodeVisitor> $visitors
      */
-    public function __construct(private readonly array $visitors)
+    public function __construct(array $visitors)
     {
+        $this->visitors = $visitors;
     }
     /**
      * Traverses an array of nodes using the registered visitors.
@@ -244,16 +248,16 @@ final class NodeTraverser
     private function ensureReplacementReasonable(\PHPStan\PhpDocParser\Ast\Node $old, \PHPStan\PhpDocParser\Ast\Node $new) : void
     {
         if ($old instanceof TypeNode && !$new instanceof TypeNode) {
-            throw new LogicException(sprintf('Trying to replace TypeNode with %s', $new::class));
+            throw new LogicException(sprintf('Trying to replace TypeNode with %s', get_class($new)));
         }
         if ($old instanceof ConstExprNode && !$new instanceof ConstExprNode) {
-            throw new LogicException(sprintf('Trying to replace ConstExprNode with %s', $new::class));
+            throw new LogicException(sprintf('Trying to replace ConstExprNode with %s', get_class($new)));
         }
         if ($old instanceof PhpDocChildNode && !$new instanceof PhpDocChildNode) {
-            throw new LogicException(sprintf('Trying to replace PhpDocChildNode with %s', $new::class));
+            throw new LogicException(sprintf('Trying to replace PhpDocChildNode with %s', get_class($new)));
         }
         if ($old instanceof PhpDocTagValueNode && !$new instanceof PhpDocTagValueNode) {
-            throw new LogicException(sprintf('Trying to replace PhpDocTagValueNode with %s', $new::class));
+            throw new LogicException(sprintf('Trying to replace PhpDocTagValueNode with %s', get_class($new)));
         }
     }
 }

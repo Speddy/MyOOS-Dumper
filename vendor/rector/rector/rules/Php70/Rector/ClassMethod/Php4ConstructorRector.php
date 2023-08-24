@@ -30,17 +30,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class Php4ConstructorRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly Php4ConstructorClassMethodAnalyzer $php4ConstructorClassMethodAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ParentClassScopeResolver $parentClassScopeResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Php70\NodeAnalyzer\Php4ConstructorClassMethodAnalyzer
+     */
+    private $php4ConstructorClassMethodAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\NodeCollector\ScopeResolver\ParentClassScopeResolver
+     */
+    private $parentClassScopeResolver;
+    public function __construct(Php4ConstructorClassMethodAnalyzer $php4ConstructorClassMethodAnalyzer, ParentClassScopeResolver $parentClassScopeResolver)
     {
+        $this->php4ConstructorClassMethodAnalyzer = $php4ConstructorClassMethodAnalyzer;
+        $this->parentClassScopeResolver = $parentClassScopeResolver;
     }
     public function provideMinPhpVersion() : int
     {

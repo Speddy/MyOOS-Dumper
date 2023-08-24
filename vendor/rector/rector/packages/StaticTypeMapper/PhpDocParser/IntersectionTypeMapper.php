@@ -15,15 +15,16 @@ use Rector\StaticTypeMapper\Contract\PhpDocParser\PhpDocTypeMapperInterface;
 /**
  * @implements PhpDocTypeMapperInterface<IntersectionTypeNode>
  */
-final readonly class IntersectionTypeMapper implements PhpDocTypeMapperInterface
+final class IntersectionTypeMapper implements PhpDocTypeMapperInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\StaticTypeMapper\PhpDocParser\IdentifierTypeMapper $identifierTypeMapper
-    )
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\PhpDocParser\IdentifierTypeMapper
+     */
+    private $identifierTypeMapper;
+    public function __construct(\Rector\StaticTypeMapper\PhpDocParser\IdentifierTypeMapper $identifierTypeMapper)
     {
+        $this->identifierTypeMapper = $identifierTypeMapper;
     }
     public function getNodeType() : string
     {

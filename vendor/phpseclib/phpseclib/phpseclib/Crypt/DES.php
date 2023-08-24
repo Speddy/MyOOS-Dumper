@@ -56,14 +56,14 @@ class DES extends BlockCipher
      * @see \phpseclib3\Crypt\DES::setupKey()
      * @see \phpseclib3\Crypt\DES::processBlock()
      */
-    public const ENCRYPT = 0;
+    const ENCRYPT = 0;
     /**
      * Contains $keys[self::DECRYPT]
      *
      * @see \phpseclib3\Crypt\DES::setupKey()
      * @see \phpseclib3\Crypt\DES::processBlock()
      */
-    public const DECRYPT = 1;
+    const DECRYPT = 1;
 
     /**
      * Block Length of the cipher
@@ -134,15 +134,17 @@ class DES extends BlockCipher
      * The Key Schedule
      *
      * @see self::setupKey()
+     * @var array
      */
-    private ?array $keys = null;
+    private $keys;
 
     /**
      * Key Cache "key"
      *
      * @see self::setupKey()
+     * @var array
      */
-    private ?array $kl = null;
+    private $kl;
 
     /**
      * Shuffle table.
@@ -691,7 +693,7 @@ class DES extends BlockCipher
 
         // Do the initial IP permutation.
         $t = unpack('Nl/Nr', $block);
-        [$l, $r] = [$t['l'], $t['r']];
+        list($l, $r) = [$t['l'], $t['r']];
         $block = ($shuffleip[ $r        & 0xFF] & "\x80\x80\x80\x80\x80\x80\x80\x80") |
                  ($shuffleip[($r >>  8) & 0xFF] & "\x40\x40\x40\x40\x40\x40\x40\x40") |
                  ($shuffleip[($r >> 16) & 0xFF] & "\x20\x20\x20\x20\x20\x20\x20\x20") |
@@ -703,7 +705,7 @@ class DES extends BlockCipher
 
         // Extract L0 and R0.
         $t = unpack('Nl/Nr', $block);
-        [$l, $r] = [$t['l'], $t['r']];
+        list($l, $r) = [$t['l'], $t['r']];
 
         for ($des_round = 0; $des_round < $this->des_rounds; ++$des_round) {
             // Perform the 16 steps.
@@ -1211,7 +1213,7 @@ class DES extends BlockCipher
 
             // Perform the PC/1 transformation and compute C and D.
             $t = unpack('Nl/Nr', $key);
-            [$l, $r] = [$t['l'], $t['r']];
+            list($l, $r) = [$t['l'], $t['r']];
             $key = (self::$shuffle[$pc1map[ $r        & 0xFF]] & "\x80\x80\x80\x80\x80\x80\x80\x00") |
                    (self::$shuffle[$pc1map[($r >>  8) & 0xFF]] & "\x40\x40\x40\x40\x40\x40\x40\x00") |
                    (self::$shuffle[$pc1map[($r >> 16) & 0xFF]] & "\x20\x20\x20\x20\x20\x20\x20\x00") |
@@ -1252,24 +1254,28 @@ class DES extends BlockCipher
             }
         }
 
-        $this->keys = match ($this->des_rounds) {
-            3 => [
-                self::ENCRYPT => array_merge(
-                    $keys[0][self::ENCRYPT],
-                    $keys[1][self::DECRYPT],
-                    $keys[2][self::ENCRYPT]
-                ),
-                self::DECRYPT => array_merge(
-                    $keys[2][self::DECRYPT],
-                    $keys[1][self::ENCRYPT],
-                    $keys[0][self::DECRYPT]
-                )
-            ],
-            default => [
-                self::ENCRYPT => $keys[0][self::ENCRYPT],
-                self::DECRYPT => $keys[0][self::DECRYPT]
-            ],
-        };
+        switch ($this->des_rounds) {
+            case 3: // 3DES keys
+                $this->keys = [
+                    self::ENCRYPT => array_merge(
+                        $keys[0][self::ENCRYPT],
+                        $keys[1][self::DECRYPT],
+                        $keys[2][self::ENCRYPT]
+                    ),
+                    self::DECRYPT => array_merge(
+                        $keys[2][self::DECRYPT],
+                        $keys[1][self::ENCRYPT],
+                        $keys[0][self::DECRYPT]
+                    )
+                ];
+                break;
+            // case 1: // DES keys
+            default:
+                $this->keys = [
+                    self::ENCRYPT => $keys[0][self::ENCRYPT],
+                    self::DECRYPT => $keys[0][self::DECRYPT]
+                ];
+        }
     }
 
     /**
@@ -1354,9 +1360,9 @@ class DES extends BlockCipher
                     // end of "the Feistel (F) function"
 
                     // swap L & R
-                    [$l, $r] = [$r, $l];
+                    list($l, $r) = [$r, $l];
                 }
-                [$l, $r] = [$r, $l];
+                list($l, $r) = [$r, $l];
             }
 
             // Perform the inverse IP permutation.

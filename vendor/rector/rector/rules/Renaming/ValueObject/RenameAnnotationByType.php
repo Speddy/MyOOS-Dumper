@@ -6,19 +6,28 @@ namespace Rector\Renaming\ValueObject;
 use PHPStan\Type\ObjectType;
 use Rector\Core\Validation\RectorAssert;
 use Rector\Renaming\Contract\RenameAnnotationInterface;
-final readonly class RenameAnnotationByType implements RenameAnnotationInterface
+final class RenameAnnotationByType implements RenameAnnotationInterface
 {
-    public function __construct(/**
+    /**
      * @readonly
+     * @var string
      */
-    private string $type, /**
+    private $type;
+    /**
      * @readonly
+     * @var string
      */
-    private string $oldAnnotation, /**
+    private $oldAnnotation;
+    /**
      * @readonly
+     * @var string
      */
-    private string $newAnnotation)
+    private $newAnnotation;
+    public function __construct(string $type, string $oldAnnotation, string $newAnnotation)
     {
+        $this->type = $type;
+        $this->oldAnnotation = $oldAnnotation;
+        $this->newAnnotation = $newAnnotation;
         RectorAssert::className($type);
     }
     public function getObjectType() : ObjectType

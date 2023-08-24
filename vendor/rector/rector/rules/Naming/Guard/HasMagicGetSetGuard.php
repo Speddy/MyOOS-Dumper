@@ -5,15 +5,16 @@ namespace Rector\Naming\Guard;
 
 use PHPStan\Reflection\ReflectionProvider;
 use Rector\Naming\ValueObject\PropertyRename;
-final readonly class HasMagicGetSetGuard
+final class HasMagicGetSetGuard
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider
-    )
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    public function __construct(ReflectionProvider $reflectionProvider)
     {
+        $this->reflectionProvider = $reflectionProvider;
     }
     public function isConflicting(PropertyRename $propertyRename) : bool
     {

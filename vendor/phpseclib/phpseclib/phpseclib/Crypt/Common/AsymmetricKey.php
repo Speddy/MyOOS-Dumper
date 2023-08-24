@@ -25,7 +25,7 @@ use phpseclib3\Math\BigInteger;
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-abstract class AsymmetricKey implements \Stringable
+abstract class AsymmetricKey
 {
     /**
      * Precomputed Zero
@@ -58,22 +58,25 @@ abstract class AsymmetricKey implements \Stringable
     /**
      * HMAC function
      *
+     * @var \phpseclib3\Crypt\Hash
      */
-    private \phpseclib3\Crypt\Hash $hmac;
+    private $hmac;
 
     /**
      * Supported plugins (lower case)
      *
      * @see self::initialize_static_variables()
+     * @var array
      */
-    private static array $plugins = [];
+    private static $plugins = [];
 
     /**
      * Invisible plugins
      *
      * @see self::initialize_static_variables()
+     * @var array
      */
-    private static array $invisiblePlugins = [];
+    private static $invisiblePlugins = [];
 
     /**
      * Available Engines
@@ -145,7 +148,7 @@ abstract class AsymmetricKey implements \Stringable
             }
             try {
                 $components = $format::load($key, $password);
-            } catch (\Exception) {
+            } catch (\Exception $e) {
                 $components = false;
             }
             if ($components !== false) {
@@ -158,8 +161,8 @@ abstract class AsymmetricKey implements \Stringable
         }
 
         $components['format'] = $format;
-        $components['secret'] ??= '';
-        $comment = $components['comment'] ?? null;
+        $components['secret'] = isset($components['secret']) ? $components['secret'] : '';
+        $comment = isset($components['comment']) ? $components['comment'] : null;
         $new = static::onLoad($components);
         $new->format = $format;
         $new->comment = $comment;
@@ -238,7 +241,7 @@ abstract class AsymmetricKey implements \Stringable
         }
 
         $components['format'] = $format;
-        $components['secret'] ??= '';
+        $components['secret'] = isset($components['secret']) ? $components['secret'] : '';
 
         $new = static::onLoad($components);
         $new->format = $format;
@@ -379,7 +382,7 @@ abstract class AsymmetricKey implements \Stringable
             $shortname = $meta->getShortName();
             self::$plugins[static::ALGORITHM]['Keys'][strtolower($shortname)] = $fullname;
             if ($meta->hasConstant('IS_INVISIBLE')) {
-                self::$invisiblePlugins[static::ALGORITHM] = strtolower((string) $name);
+                self::$invisiblePlugins[static::ALGORITHM] = strtolower($name);
             }
         }
     }
@@ -451,7 +454,7 @@ abstract class AsymmetricKey implements \Stringable
      *
      * @return string
      */
-    public function __toString(): string
+    public function __toString()
     {
         return $this->toString('PKCS8');
     }

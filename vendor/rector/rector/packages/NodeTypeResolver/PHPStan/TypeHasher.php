@@ -39,7 +39,7 @@ final class TypeHasher
             return $this->resolveUniqueTypeWithClassNameHash($type);
         }
         if ($type instanceof ConstantType) {
-            return $type::class . $type->getValue();
+            return \get_class($type) . $type->getValue();
         }
         if ($type instanceof UnionType) {
             return $this->createUnionTypeHash($type);

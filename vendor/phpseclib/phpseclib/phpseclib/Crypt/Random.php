@@ -48,9 +48,9 @@ abstract class Random
 
         try {
             return random_bytes($length);
-        } catch (\Exception) {
+        } catch (\Exception $e) {
             // random_compat will throw an Exception, which in PHP 5 does not implement Throwable
-        } catch (\Throwable) {
+        } catch (\Throwable $e) {
             // If a sufficient source of randomness is unavailable, random_bytes() will throw an
             // object that implements the Throwable interface (Exception, TypeError, Error).
             // We don't actually need to do anything here. The string() method should just continue
@@ -83,7 +83,7 @@ abstract class Random
             $old_session_id = session_id();
             $old_use_cookies = ini_get('session.use_cookies');
             $old_session_cache_limiter = session_cache_limiter();
-            $_OLD_SESSION = $_SESSION ?? false;
+            $_OLD_SESSION = isset($_SESSION) ? $_SESSION : false;
             if ($old_session_id != '') {
                 session_write_close();
             }
@@ -137,15 +137,31 @@ abstract class Random
             $key = sha1($seed . 'A', true);
             $iv = sha1($seed . 'C', true);
 
-            $crypto = match (true) {
-                class_exists('\phpseclib3\Crypt\AES') => new AES('ctr'),
-                class_exists('\phpseclib3\Crypt\Twofish') => new Twofish('ctr'),
-                class_exists('\phpseclib3\Crypt\Blowfish') => new Blowfish('ctr'),
-                class_exists('\phpseclib3\Crypt\TripleDES') => new TripleDES('ctr'),
-                class_exists('\phpseclib3\Crypt\DES') => new DES('ctr'),
-                class_exists('\phpseclib3\Crypt\RC4') => new RC4(),
-                default => throw new \RuntimeException(self::class . ' requires at least one symmetric cipher be loaded'),
-            };
+            // ciphers are used as per the nist.gov link below. also, see this link:
+            //
+            // http://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator#Designs_based_on_cryptographic_primitives
+            switch (true) {
+                case class_exists('\phpseclib3\Crypt\AES'):
+                    $crypto = new AES('ctr');
+                    break;
+                case class_exists('\phpseclib3\Crypt\Twofish'):
+                    $crypto = new Twofish('ctr');
+                    break;
+                case class_exists('\phpseclib3\Crypt\Blowfish'):
+                    $crypto = new Blowfish('ctr');
+                    break;
+                case class_exists('\phpseclib3\Crypt\TripleDES'):
+                    $crypto = new TripleDES('ctr');
+                    break;
+                case class_exists('\phpseclib3\Crypt\DES'):
+                    $crypto = new DES('ctr');
+                    break;
+                case class_exists('\phpseclib3\Crypt\RC4'):
+                    $crypto = new RC4();
+                    break;
+                default:
+                    throw new \RuntimeException(__CLASS__ . ' requires at least one symmetric cipher be loaded');
+            }
 
             $crypto->setKey(substr($key, 0, $crypto->getKeyLength() >> 3));
             $crypto->setIV(substr($iv, 0, $crypto->getBlockLength() >> 3));
@@ -178,8 +194,9 @@ abstract class Random
      *
      * If a class has a private __sleep() it'll emit a warning
      * @return mixed
+     * @param mixed $arr
      */
-    private static function safe_serialize(mixed &$arr)
+    private static function safe_serialize(&$arr)
     {
         if (is_object($arr)) {
             return '';

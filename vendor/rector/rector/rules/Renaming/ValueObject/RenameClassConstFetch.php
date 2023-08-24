@@ -6,19 +6,28 @@ namespace Rector\Renaming\ValueObject;
 use PHPStan\Type\ObjectType;
 use Rector\Core\Validation\RectorAssert;
 use Rector\Renaming\Contract\RenameClassConstFetchInterface;
-final readonly class RenameClassConstFetch implements RenameClassConstFetchInterface
+final class RenameClassConstFetch implements RenameClassConstFetchInterface
 {
-    public function __construct(/**
+    /**
      * @readonly
+     * @var string
      */
-    private string $oldClass, /**
+    private $oldClass;
+    /**
      * @readonly
+     * @var string
      */
-    private string $oldConstant, /**
+    private $oldConstant;
+    /**
      * @readonly
+     * @var string
      */
-    private string $newConstant)
+    private $newConstant;
+    public function __construct(string $oldClass, string $oldConstant, string $newConstant)
     {
+        $this->oldClass = $oldClass;
+        $this->oldConstant = $oldConstant;
+        $this->newConstant = $newConstant;
         RectorAssert::className($oldClass);
         RectorAssert::constantName($oldConstant);
         RectorAssert::constantName($newConstant);

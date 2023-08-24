@@ -35,8 +35,9 @@ abstract class AbstractCacheTest extends SimpleCacheTest
      * @dataProvider dataProviderForOptions
      *
      * @param string $key
+     * @param mixed  $value
      */
-    public function testWithOption($key, mixed $value)
+    public function testWithOption($key, $value)
     {
         $cache = $this->cache->withOption($key, $value);
         $this->assertEquals($value, $cache->getOption($key));
@@ -81,9 +82,10 @@ abstract class AbstractCacheTest extends SimpleCacheTest
      * @dataProvider dataProviderForOptionsException
      *
      * @param string   $key
+     * @param mixed    $value
      * @param string   $expectedException
      */
-    public function testWithOptionException($key, mixed $value, $expectedException)
+    public function testWithOptionException($key, $value, $expectedException)
     {
         $this->expectException($expectedException);
         $this->createSimpleCache()->withOption($key, $value);

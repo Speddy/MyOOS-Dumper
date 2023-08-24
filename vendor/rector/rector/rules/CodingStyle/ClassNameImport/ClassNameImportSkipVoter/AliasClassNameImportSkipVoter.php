@@ -17,15 +17,16 @@ use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
  *
  * use App\Something as SomeClass;
  */
-final readonly class AliasClassNameImportSkipVoter implements ClassNameImportSkipVoterInterface
+final class AliasClassNameImportSkipVoter implements ClassNameImportSkipVoterInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private AliasUsesResolver $aliasUsesResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\CodingStyle\ClassNameImport\AliasUsesResolver
+     */
+    private $aliasUsesResolver;
+    public function __construct(AliasUsesResolver $aliasUsesResolver)
     {
+        $this->aliasUsesResolver = $aliasUsesResolver;
     }
     public function shouldSkip(File $file, FullyQualifiedObjectType $fullyQualifiedObjectType, Node $node) : bool
     {
@@ -34,7 +35,7 @@ final readonly class AliasClassNameImportSkipVoter implements ClassNameImportSki
         foreach ($aliasedUses as $aliasedUse) {
             $aliasedUseLowered = \strtolower($aliasedUse);
             // its aliased, we cannot just rename it
-            if (str_ends_with($aliasedUseLowered, '\\' . $shortNameLowered)) {
+            if (\substr_compare($aliasedUseLowered, '\\' . $shortNameLowered, -\strlen('\\' . $shortNameLowered)) === 0) {
                 return \true;
             }
         }

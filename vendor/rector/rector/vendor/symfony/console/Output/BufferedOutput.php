@@ -15,7 +15,10 @@ namespace RectorPrefix202308\Symfony\Component\Console\Output;
  */
 class BufferedOutput extends Output
 {
-    private string $buffer = '';
+    /**
+     * @var string
+     */
+    private $buffer = '';
     /**
      * Empties buffer and returns its content.
      */

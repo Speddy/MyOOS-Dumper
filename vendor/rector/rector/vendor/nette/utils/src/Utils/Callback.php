@@ -75,10 +75,11 @@ final class Callback
     /**
      * Checks that $callable is valid PHP callback. Otherwise throws exception. If the $syntax is set to true, only verifies
      * that $callable has a valid structure to be used as a callback, but does not verify if the class or method actually exists.
+     * @param  mixed  $callable
      * @return callable
      * @throws Nette\InvalidArgumentException
      */
-    public static function check(mixed $callable, bool $syntax = \false)
+    public static function check($callable, bool $syntax = \false)
     {
         if (!\is_callable($callable, $syntax)) {
             throw new Nette\InvalidArgumentException($syntax ? 'Given value is not a callable type.' : \sprintf("Callback '%s' is not callable.", self::toString($callable)));
@@ -87,8 +88,9 @@ final class Callback
     }
     /**
      * Converts PHP callback to textual form. Class or method may not exists.
+     * @param  mixed  $callable
      */
-    public static function toString(mixed $callable) : string
+    public static function toString($callable) : string
     {
         if ($callable instanceof \Closure) {
             $inner = self::unwrap($callable);
@@ -136,9 +138,9 @@ final class Callback
     {
         $r = new \ReflectionFunction($closure);
         $class = $r->getClosureScopeClass();
-        if (str_ends_with($r->name, '}')) {
+        if (\substr($r->name, -1) === '}') {
             return $closure;
-        } elseif (($obj = $r->getClosureThis()) && $class && $obj::class === $class->name) {
+        } elseif (($obj = $r->getClosureThis()) && $class && \get_class($obj) === $class->name) {
             return [$obj, $r->name];
         } elseif ($class) {
             return [$class->name, $r->name];

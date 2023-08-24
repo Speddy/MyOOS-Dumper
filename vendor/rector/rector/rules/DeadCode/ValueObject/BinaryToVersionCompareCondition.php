@@ -4,20 +4,31 @@ declare (strict_types=1);
 namespace Rector\DeadCode\ValueObject;
 
 use Rector\DeadCode\Contract\ConditionInterface;
-final readonly class BinaryToVersionCompareCondition implements ConditionInterface
+final class BinaryToVersionCompareCondition implements ConditionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\DeadCode\ValueObject\VersionCompareCondition $versionCompareCondition,
-        /**
-         * @readonly
-         */
-        private string $binaryClass,
-        private mixed $expectedValue
-    )
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\ValueObject\VersionCompareCondition
+     */
+    private $versionCompareCondition;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $binaryClass;
+    /**
+     * @readonly
+     * @var mixed
+     */
+    private $expectedValue;
+    /**
+     * @param mixed $expectedValue
+     */
+    public function __construct(\Rector\DeadCode\ValueObject\VersionCompareCondition $versionCompareCondition, string $binaryClass, $expectedValue)
     {
+        $this->versionCompareCondition = $versionCompareCondition;
+        $this->binaryClass = $binaryClass;
+        $this->expectedValue = $expectedValue;
     }
     public function getVersionCompareCondition() : \Rector\DeadCode\ValueObject\VersionCompareCondition
     {

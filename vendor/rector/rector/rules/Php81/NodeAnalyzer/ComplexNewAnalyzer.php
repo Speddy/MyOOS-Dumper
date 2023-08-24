@@ -9,15 +9,16 @@ use PhpParser\Node\Expr\ArrayItem;
 use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Name\FullyQualified;
 use Rector\Core\NodeAnalyzer\ExprAnalyzer;
-final readonly class ComplexNewAnalyzer
+final class ComplexNewAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ExprAnalyzer $exprAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ExprAnalyzer
+     */
+    private $exprAnalyzer;
+    public function __construct(ExprAnalyzer $exprAnalyzer)
     {
+        $this->exprAnalyzer = $exprAnalyzer;
     }
     public function isDynamic(New_ $new) : bool
     {

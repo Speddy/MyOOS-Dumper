@@ -14,10 +14,10 @@ use RectorPrefix202308\React\EventLoop\TimerInterface;
 final class Timers
 {
     private $time;
-    private array $timers = [];
-    private array $schedule = [];
-    private bool $sorted = \true;
-    private readonly bool $useHighResolution;
+    private $timers = array();
+    private $schedule = array();
+    private $sorted = \true;
+    private $useHighResolution;
     public function __construct()
     {
         // prefer high-resolution timer, available as of PHP 7.3+

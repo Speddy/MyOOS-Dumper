@@ -24,13 +24,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class InlineArrayReturnAssignRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly VariableDimFetchAssignResolver $variableDimFetchAssignResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\CodeQuality\NodeAnalyzer\VariableDimFetchAssignResolver
+     */
+    private $variableDimFetchAssignResolver;
+    public function __construct(VariableDimFetchAssignResolver $variableDimFetchAssignResolver)
     {
+        $this->variableDimFetchAssignResolver = $variableDimFetchAssignResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -142,7 +143,8 @@ CODE_SAMPLE
      */
     private function areAssignExclusiveToDimFetch(array $stmts) : bool
     {
-        $lastKey = array_key_last($stmts);
+        \end($stmts);
+        $lastKey = \key($stmts);
         foreach ($stmts as $key => $stmt) {
             if ($key === $lastKey) {
                 // skip last item

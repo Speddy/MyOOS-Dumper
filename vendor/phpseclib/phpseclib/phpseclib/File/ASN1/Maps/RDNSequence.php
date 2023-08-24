@@ -28,7 +28,7 @@ use phpseclib3\File\ASN1;
  */
 abstract class RDNSequence
 {
-    final public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         // RDNSequence does not define a min or a max, which means it doesn't have one
         'min' => 0,

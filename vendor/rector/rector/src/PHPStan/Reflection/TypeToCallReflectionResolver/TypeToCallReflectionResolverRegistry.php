@@ -13,7 +13,7 @@ final class TypeToCallReflectionResolverRegistry
     /**
      * @var TypeToCallReflectionResolverInterface[]
      */
-    private array $typeToCallReflectionResolvers = [];
+    private $typeToCallReflectionResolvers = [];
     public function __construct(\Rector\Core\PHPStan\Reflection\TypeToCallReflectionResolver\ClosureTypeToCallReflectionResolver $closureTypeToCallReflectionResolver, \Rector\Core\PHPStan\Reflection\TypeToCallReflectionResolver\ConstantArrayTypeToCallReflectionResolver $constantArrayTypeToCallReflectionResolver, \Rector\Core\PHPStan\Reflection\TypeToCallReflectionResolver\ConstantStringTypeToCallReflectionResolver $constantStringTypeToCallReflectionResolver, \Rector\Core\PHPStan\Reflection\TypeToCallReflectionResolver\ObjectTypeToCallReflectionResolver $objectTypeToCallReflectionResolver)
     {
         $this->typeToCallReflectionResolvers = [$closureTypeToCallReflectionResolver, $constantArrayTypeToCallReflectionResolver, $constantStringTypeToCallReflectionResolver, $objectTypeToCallReflectionResolver];

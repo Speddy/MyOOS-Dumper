@@ -30,15 +30,16 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Scalar;
 use PHPStan\Type\ObjectType;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final readonly class LivingCodeManipulator
+final class LivingCodeManipulator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    public function __construct(NodeTypeResolver $nodeTypeResolver)
     {
+        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     /**
      * @return Expr[]|mixed[]

@@ -18,21 +18,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class StaticDataProviderClassMethodRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly DataProviderClassMethodFinder $dataProviderClassMethodFinder,
-        /**
-         * @readonly
-         */
-        private readonly VisibilityManipulator $visibilityManipulator
-    )
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeFinder\DataProviderClassMethodFinder
+     */
+    private $dataProviderClassMethodFinder;
+    /**
+     * @readonly
+     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
+     */
+    private $visibilityManipulator;
+    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer, DataProviderClassMethodFinder $dataProviderClassMethodFinder, VisibilityManipulator $visibilityManipulator)
     {
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
+        $this->dataProviderClassMethodFinder = $dataProviderClassMethodFinder;
+        $this->visibilityManipulator = $visibilityManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -112,6 +117,8 @@ CODE_SAMPLE
         if ($classMethod->stmts === null) {
             return \false;
         }
-        return (bool) $this->betterNodeFinder->findFirst($classMethod->stmts, fn(Node $node): bool => $node instanceof Variable && $this->nodeNameResolver->isName($node, 'this'));
+        return (bool) $this->betterNodeFinder->findFirst($classMethod->stmts, function (Node $node) : bool {
+            return $node instanceof Variable && $this->nodeNameResolver->isName($node, 'this');
+        });
     }
 }

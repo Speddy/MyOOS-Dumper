@@ -9,13 +9,13 @@ interface Filesystem
      *
      * @var string
      */
-    public const VISIBILITY_PUBLIC = 'public';
+    const VISIBILITY_PUBLIC = 'public';
     /**
      * The private visibility setting.
      *
      * @var string
      */
-    public const VISIBILITY_PRIVATE = 'private';
+    const VISIBILITY_PRIVATE = 'private';
     /**
      * Determine if a file exists.
      *
@@ -42,14 +42,16 @@ interface Filesystem
      *
      * @param  string  $path
      * @param  \Psr\Http\Message\StreamInterface|\Illuminate\Http\File|\Illuminate\Http\UploadedFile|string|resource  $contents
+     * @param  mixed  $options
      * @return bool
      */
-    public function put($path, $contents, mixed $options = []);
+    public function put($path, $contents, $options = []);
     /**
      * Write a new file using a stream.
      *
      * @param  string  $path
      * @param  resource  $resource
+     * @param  array  $options
      * @return bool
      */
     public function writeStream($path, $resource, array $options = []);

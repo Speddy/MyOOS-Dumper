@@ -4,15 +4,16 @@ declare (strict_types=1);
 namespace Rector\Caching;
 
 use Rector\Caching\Contract\ValueObject\Storage\CacheStorageInterface;
-final readonly class Cache
+final class Cache
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private CacheStorageInterface $cacheStorage
-    )
+    /**
+     * @readonly
+     * @var \Rector\Caching\Contract\ValueObject\Storage\CacheStorageInterface
+     */
+    private $cacheStorage;
+    public function __construct(CacheStorageInterface $cacheStorage)
     {
+        $this->cacheStorage = $cacheStorage;
     }
     /**
      * @return mixed|null
@@ -21,7 +22,10 @@ final readonly class Cache
     {
         return $this->cacheStorage->load($key, $variableKey);
     }
-    public function save(string $key, string $variableKey, mixed $data) : void
+    /**
+     * @param mixed $data
+     */
+    public function save(string $key, string $variableKey, $data) : void
     {
         $this->cacheStorage->save($key, $variableKey, $data);
     }

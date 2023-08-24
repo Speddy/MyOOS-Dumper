@@ -183,6 +183,7 @@ trait Common
      * If the key contains an implicit curve phpseclib needs the curve
      * to be explicitly provided
      *
+     * @param \phpseclib3\Crypt\EC\BaseCurves\Base $curve
      */
     public static function setImplicitCurve(BaseCurve $curve)
     {
@@ -193,6 +194,7 @@ trait Common
      * Returns an instance of \phpseclib3\Crypt\EC\BaseCurves\Base based
      * on the curve parameters
      *
+     * @param array $params
      * @return \phpseclib3\Crypt\EC\BaseCurves\Base|false
      */
     protected static function loadCurveByParam(array $params)
@@ -267,6 +269,7 @@ trait Common
      * Supports both compressed and uncompressed points
      *
      * @param string $str
+     * @param \phpseclib3\Crypt\EC\BaseCurves\Base $curve
      * @return object[]
      */
     public static function extractPoint($str, BaseCurve $curve)
@@ -299,7 +302,7 @@ trait Common
             return [];
         }
 
-        $keylen = strlen((string) $str);
+        $keylen = strlen($str);
         $order = $curve->getLengthInBytes();
         // point compression is being used
         if ($keylen == $order + 1) {
@@ -308,8 +311,8 @@ trait Common
 
         // point compression is not being used
         if ($keylen == 2 * $order + 1) {
-            preg_match("#(.)(.{{$order}})(.{{$order}})#s", (string) $str, $matches);
-            [, $w, $x, $y] = $matches;
+            preg_match("#(.)(.{{$order}})(.{{$order}})#s", $str, $matches);
+            list(, $w, $x, $y) = $matches;
             if ($w != "\4") {
                 throw new \UnexpectedValueException('The first byte of an uncompressed point should be 04 - not ' . Strings::bin2hex($val));
             }
@@ -332,13 +335,14 @@ trait Common
      * Encode Parameters
      *
      * @todo Maybe at some point this could be moved to __toString() for each of the curves?
+     * @param \phpseclib3\Crypt\EC\BaseCurves\Base $curve
      * @param bool $returnArray optional
      * @param array $options optional
      * @return string|false
      */
     private static function encodeParameters(BaseCurve $curve, $returnArray = false, array $options = [])
     {
-        $useNamedCurves = $options['namedCurve'] ?? self::$useNamedCurves;
+        $useNamedCurves = isset($options['namedCurve']) ? $options['namedCurve'] : self::$useNamedCurves;
 
         $reflect = new \ReflectionClass($curve);
         $name = $reflect->getShortName();
@@ -378,8 +382,8 @@ trait Common
                             break;
                         }
 
-                        [$candidateX, $candidateY] = $candidate->getBasePoint();
-                        [$curveX, $curveY] = $curve->getBasePoint();
+                        list($candidateX, $candidateY) = $candidate->getBasePoint();
+                        list($curveX, $curveY) = $curve->getBasePoint();
                         if ($candidateX->toBytes() != $curveX->toBytes()) {
                             break;
                         }
@@ -404,8 +408,8 @@ trait Common
                             break;
                         }
 
-                        [$candidateX, $candidateY] = $candidate->getBasePoint();
-                        [$curveX, $curveY] = $curve->getBasePoint();
+                        list($candidateX, $candidateY) = $candidate->getBasePoint();
+                        list($curveX, $curveY) = $curve->getBasePoint();
                         if ($candidateX->toBytes() != $curveX->toBytes()) {
                             break;
                         }

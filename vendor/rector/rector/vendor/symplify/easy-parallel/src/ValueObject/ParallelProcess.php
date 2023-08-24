@@ -24,9 +24,19 @@ final class ParallelProcess
 {
     /**
      * @readonly
+     * @var string
+     */
+    private $command;
+    /**
+     * @readonly
      * @var \React\EventLoop\LoopInterface
      */
     private $loop;
+    /**
+     * @readonly
+     * @var int
+     */
+    private $timetoutInSeconds;
     /**
      * @var \React\ChildProcess\Process
      */
@@ -51,15 +61,11 @@ final class ParallelProcess
      * @var \React\EventLoop\TimerInterface|null
      */
     private $timer;
-    public function __construct(/**
-     * @readonly
-     */
-    private readonly string $command, LoopInterface $loop, /**
-     * @readonly
-     */
-    private readonly int $timetoutInSeconds)
+    public function __construct(string $command, LoopInterface $loop, int $timetoutInSeconds)
     {
+        $this->command = $command;
         $this->loop = $loop;
+        $this->timetoutInSeconds = $timetoutInSeconds;
     }
     /**
      * @param callable(mixed[] $onData) : void $onData

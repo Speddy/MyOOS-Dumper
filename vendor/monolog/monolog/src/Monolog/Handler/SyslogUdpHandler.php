@@ -24,12 +24,16 @@ use Monolog\Utils;
  */
 class SyslogUdpHandler extends AbstractSyslogHandler
 {
-    final public const RFC3164 = 0;
-    final public const RFC5424 = 1;
-    final public const RFC5424e = 2;
+    const RFC3164 = 0;
+    const RFC5424 = 1;
+    const RFC5424e = 2;
 
     /** @var array<self::RFC*, string> */
-    private array $dateFormats = [self::RFC3164 => 'M d H:i:s', self::RFC5424 => \DateTime::RFC3339, self::RFC5424e => \DateTime::RFC3339_EXTENDED];
+    private $dateFormats = array(
+        self::RFC3164 => 'M d H:i:s',
+        self::RFC5424 => \DateTime::RFC3339,
+        self::RFC5424e => \DateTime::RFC3339_EXTENDED,
+    );
 
     /** @var UdpSocket */
     protected $socket;

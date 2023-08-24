@@ -13,23 +13,28 @@ use Rector\Core\NodeManipulator\BinaryOpManipulator;
 use Rector\Core\PhpParser\Comparing\NodeComparator;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\Php71\ValueObject\TwoNodeMatch;
-final readonly class IsArrayAndDualCheckToAble
+final class IsArrayAndDualCheckToAble
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BinaryOpManipulator $binaryOpManipulator,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private NodeComparator $nodeComparator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\BinaryOpManipulator
+     */
+    private $binaryOpManipulator;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
+     */
+    private $nodeComparator;
+    public function __construct(BinaryOpManipulator $binaryOpManipulator, NodeNameResolver $nodeNameResolver, NodeComparator $nodeComparator)
     {
+        $this->binaryOpManipulator = $binaryOpManipulator;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->nodeComparator = $nodeComparator;
     }
     public function processBooleanOr(BooleanOr $booleanOr, string $type, string $newMethodName) : ?FuncCall
     {

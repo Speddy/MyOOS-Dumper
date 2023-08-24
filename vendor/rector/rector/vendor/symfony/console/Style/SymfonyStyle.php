@@ -107,7 +107,9 @@ class SymfonyStyle extends OutputStyle
     public function listing(array $elements)
     {
         $this->autoPrependText();
-        $elements = \array_map(fn($element) => \sprintf(' * %s', $element), $elements);
+        $elements = \array_map(function ($element) {
+            return \sprintf(' * %s', $element);
+        }, $elements);
         $this->writeln($elements);
         $this->newLine();
     }
@@ -324,7 +326,7 @@ class SymfonyStyle extends OutputStyle
         if ($this->input->isInteractive()) {
             $this->autoPrependBlock();
         }
-        $this->questionHelper ??= new SymfonyQuestionHelper();
+        $this->questionHelper = $this->questionHelper ?? new SymfonyQuestionHelper();
         $answer = $this->questionHelper->ask($this->input, $this, $question);
         if ($this->input->isInteractive()) {
             if ($this->output instanceof ConsoleSectionOutput) {
@@ -396,7 +398,7 @@ class SymfonyStyle extends OutputStyle
     }
     private function autoPrependBlock() : void
     {
-        $chars = \substr(\str_replace(\PHP_EOL, "\n", (string) $this->bufferedOutput->fetch()), -2);
+        $chars = \substr(\str_replace(\PHP_EOL, "\n", $this->bufferedOutput->fetch()), -2);
         if (!isset($chars[0])) {
             $this->newLine();
             // empty history, so we should start with a new line.
@@ -409,7 +411,7 @@ class SymfonyStyle extends OutputStyle
     {
         $fetched = $this->bufferedOutput->fetch();
         // Prepend new line if last char isn't EOL:
-        if ($fetched && !str_ends_with((string) $fetched, "\n")) {
+        if ($fetched && \substr_compare($fetched, "\n", -\strlen("\n")) !== 0) {
             $this->newLine();
         }
     }

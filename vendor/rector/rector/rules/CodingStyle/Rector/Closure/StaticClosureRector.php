@@ -14,13 +14,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class StaticClosureRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly StaticGuard $staticGuard
-    )
+    /**
+     * @readonly
+     * @var \Rector\CodingStyle\Guard\StaticGuard
+     */
+    private $staticGuard;
+    public function __construct(StaticGuard $staticGuard)
     {
+        $this->staticGuard = $staticGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {

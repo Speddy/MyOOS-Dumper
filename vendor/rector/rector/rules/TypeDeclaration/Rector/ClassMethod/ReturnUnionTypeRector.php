@@ -23,21 +23,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReturnUnionTypeRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ReturnTypeInferer $returnTypeInferer,
-        /**
-         * @readonly
-         */
-        private readonly ClassMethodReturnTypeOverrideGuard $classMethodReturnTypeOverrideGuard,
-        /**
-         * @readonly
-         */
-        private readonly UnionTypeMapper $unionTypeMapper
-    )
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\TypeInferer\ReturnTypeInferer
+     */
+    private $returnTypeInferer;
+    /**
+     * @readonly
+     * @var \Rector\VendorLocker\NodeVendorLocker\ClassMethodReturnTypeOverrideGuard
+     */
+    private $classMethodReturnTypeOverrideGuard;
+    /**
+     * @readonly
+     * @var \Rector\PHPStanStaticTypeMapper\TypeMapper\UnionTypeMapper
+     */
+    private $unionTypeMapper;
+    public function __construct(ReturnTypeInferer $returnTypeInferer, ClassMethodReturnTypeOverrideGuard $classMethodReturnTypeOverrideGuard, UnionTypeMapper $unionTypeMapper)
     {
+        $this->returnTypeInferer = $returnTypeInferer;
+        $this->classMethodReturnTypeOverrideGuard = $classMethodReturnTypeOverrideGuard;
+        $this->unionTypeMapper = $unionTypeMapper;
     }
     public function getRuleDefinition() : RuleDefinition
     {

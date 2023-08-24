@@ -3,19 +3,22 @@
 declare (strict_types=1);
 namespace Rector\ValueObject;
 
-final readonly class ClassMethodWillChangeReturnType
+final class ClassMethodWillChangeReturnType
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private string $className,
-        /**
-         * @readonly
-         */
-        private string $methodName
-    )
+    /**
+     * @readonly
+     * @var string
+     */
+    private $className;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $methodName;
+    public function __construct(string $className, string $methodName)
     {
+        $this->className = $className;
+        $this->methodName = $methodName;
     }
     public function getClassName() : string
     {

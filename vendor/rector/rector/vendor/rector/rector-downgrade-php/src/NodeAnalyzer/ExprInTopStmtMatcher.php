@@ -24,15 +24,16 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
  * To resolve Expr in top Stmt from early Expr attribute
  * so the usage can append code before the Stmt
  */
-final readonly class ExprInTopStmtMatcher
+final class ExprInTopStmtMatcher
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    public function __construct(BetterNodeFinder $betterNodeFinder)
     {
+        $this->betterNodeFinder = $betterNodeFinder;
     }
     /**
      * @param callable(Node $node): bool $filter

@@ -8,6 +8,7 @@ interface Translator
      * Get the translation for a given key.
      *
      * @param  string  $key
+     * @param  array  $replace
      * @param  string|null  $locale
      * @return mixed
      */
@@ -17,6 +18,7 @@ interface Translator
      *
      * @param  string  $key
      * @param  \Countable|int|array  $number
+     * @param  array  $replace
      * @param  string|null  $locale
      * @return string
      */

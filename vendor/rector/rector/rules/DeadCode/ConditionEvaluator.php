@@ -12,15 +12,16 @@ use Rector\Core\Php\PhpVersionProvider;
 use Rector\DeadCode\Contract\ConditionInterface;
 use Rector\DeadCode\ValueObject\BinaryToVersionCompareCondition;
 use Rector\DeadCode\ValueObject\VersionCompareCondition;
-final readonly class ConditionEvaluator
+final class ConditionEvaluator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpVersionProvider $phpVersionProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Php\PhpVersionProvider
+     */
+    private $phpVersionProvider;
+    public function __construct(PhpVersionProvider $phpVersionProvider)
     {
+        $this->phpVersionProvider = $phpVersionProvider;
     }
     /**
      * @return bool|int|null

@@ -49,7 +49,7 @@ abstract class MontgomeryMult extends Montgomery
         ];
 
         if (($key = array_search($m, $cache[self::VARIABLE])) === false) {
-            $key = is_countable($cache[self::VARIABLE]) ? count($cache[self::VARIABLE]) : 0;
+            $key = count($cache[self::VARIABLE]);
             $cache[self::VARIABLE][] = $m;
             $cache[self::DATA][] = self::modInverse67108864($m, $class);
         }

@@ -41,6 +41,8 @@ abstract class Barrett extends Base
      * (x >> 1) + (x >> 1) != x / 2 + x / 2.  If x is even, they're the same, but if x is odd, they're not.  See the in-line
      * comments for details.
      *
+     * @param array $n
+     * @param array $m
      * @param class-string<PHP> $class
      * @return array
      */
@@ -59,7 +61,7 @@ abstract class Barrett extends Base
             $rhs = new $class();
             $lhs->value = $n;
             $rhs->value = $m;
-            [, $temp] = $lhs->divide($rhs);
+            list(, $temp) = $lhs->divide($rhs);
             return $temp->value;
         }
 
@@ -70,7 +72,7 @@ abstract class Barrett extends Base
         // n = 2 * m.length
 
         if (($key = array_search($m, $cache[self::VARIABLE])) === false) {
-            $key = is_countable($cache[self::VARIABLE]) ? count($cache[self::VARIABLE]) : 0;
+            $key = count($cache[self::VARIABLE]);
             $cache[self::VARIABLE][] = $m;
 
             $lhs = new $class();
@@ -80,7 +82,7 @@ abstract class Barrett extends Base
             $rhs = new $class();
             $rhs->value = $m;
 
-            [$u, $m1] = $lhs->divide($rhs);
+            list($u, $m1) = $lhs->divide($rhs);
             $u = $u->value;
             $m1 = $m1->value;
 
@@ -134,6 +136,8 @@ abstract class Barrett extends Base
      * For numbers with more than four digits BigInteger::_barrett() is faster.  The difference between that and this
      * is that this function does not fold the denominator into a smaller form.
      *
+     * @param array $x
+     * @param array $n
      * @param string $class
      * @return array
      */
@@ -151,12 +155,12 @@ abstract class Barrett extends Base
             $rhs = new $class();
             $lhs->value = $x;
             $rhs->value = $n;
-            [, $temp] = $lhs->divide($rhs);
+            list(, $temp) = $lhs->divide($rhs);
             return $temp->value;
         }
 
         if (($key = array_search($n, $cache[self::VARIABLE])) === false) {
-            $key = is_countable($cache[self::VARIABLE]) ? count($cache[self::VARIABLE]) : 0;
+            $key = count($cache[self::VARIABLE]);
             $cache[self::VARIABLE][] = $n;
             $lhs = new $class();
             $lhs_value = &$lhs->value;
@@ -164,7 +168,7 @@ abstract class Barrett extends Base
             $lhs_value[] = 1;
             $rhs = new $class();
             $rhs->value = $n;
-            [$temp, ] = $lhs->divide($rhs); // m.length
+            list($temp, ) = $lhs->divide($rhs); // m.length
             $cache[self::DATA][] = $temp->value;
         }
 
@@ -203,7 +207,9 @@ abstract class Barrett extends Base
      * If you're going to be doing array_slice($product->value, 0, $stop), some cycles can be saved.
      *
      * @see self::regularBarrett()
+     * @param array $x_value
      * @param bool $x_negative
+     * @param array $y_value
      * @param bool $y_negative
      * @param int $stop
      * @param string $class

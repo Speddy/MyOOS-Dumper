@@ -8,19 +8,22 @@ use PHPStan\Type\ObjectType;
 use Rector\Naming\Naming\PropertyNaming;
 use Rector\Naming\ValueObject\ExpectedName;
 use Rector\StaticTypeMapper\StaticTypeMapper;
-final readonly class MatchParamTypeExpectedNameResolver
+final class MatchParamTypeExpectedNameResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper,
-        /**
-         * @readonly
-         */
-        private PropertyNaming $propertyNaming
-    )
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    /**
+     * @readonly
+     * @var \Rector\Naming\Naming\PropertyNaming
+     */
+    private $propertyNaming;
+    public function __construct(StaticTypeMapper $staticTypeMapper, PropertyNaming $propertyNaming)
     {
+        $this->staticTypeMapper = $staticTypeMapper;
+        $this->propertyNaming = $propertyNaming;
     }
     public function resolve(Param $param) : ?string
     {

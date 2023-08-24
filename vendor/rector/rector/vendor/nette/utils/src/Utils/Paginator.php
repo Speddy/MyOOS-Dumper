@@ -29,10 +29,12 @@ use RectorPrefix202308\Nette;
 class Paginator
 {
     use Nette\SmartObject;
-    private int $base = 1;
+    /** @var int */
+    private $base = 1;
     /** @var int */
     private $itemsPerPage = 1;
-    private int $page = 1;
+    /** @var int */
+    private $page = 1;
     /** @var int|null */
     private $itemCount;
     /**

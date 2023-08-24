@@ -28,12 +28,12 @@ abstract class Base extends BCMath
      * $cache[self::VARIABLE] tells us whether or not the cached data is still valid.
      *
      */
-    public const VARIABLE = 0;
+    const VARIABLE = 0;
     /**
      * $cache[self::DATA] contains the cached data.
      *
      */
-    public const DATA = 1;
+    const DATA = 1;
 
     /**
      * Test for engine validity
@@ -42,12 +42,15 @@ abstract class Base extends BCMath
      */
     public static function isValidEngine()
     {
-        return static::class != self::class;
+        return static::class != __CLASS__;
     }
 
     /**
      * Performs modular exponentiation.
      *
+     * @param BCMath $x
+     * @param BCMath $e
+     * @param BCMath $n
      * @param string $class
      * @return BCMath
      */

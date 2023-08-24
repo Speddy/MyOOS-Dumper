@@ -23,13 +23,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class FilesystemIteratorSkipDotsRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ClassConstFetchNameResolver $classConstFetchNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver\ClassConstFetchNameResolver
+     */
+    private $classConstFetchNameResolver;
+    public function __construct(ClassConstFetchNameResolver $classConstFetchNameResolver)
     {
+        $this->classConstFetchNameResolver = $classConstFetchNameResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

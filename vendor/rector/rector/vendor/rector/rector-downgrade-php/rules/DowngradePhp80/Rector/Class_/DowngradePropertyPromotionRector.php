@@ -29,17 +29,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradePropertyPromotionRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly PhpDocTypeChanger $phpDocTypeChanger,
-        /**
-         * @readonly
-         */
-        private readonly BetterStandardPrinter $betterStandardPrinter
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
+     */
+    private $phpDocTypeChanger;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Printer\BetterStandardPrinter
+     */
+    private $betterStandardPrinter;
+    public function __construct(PhpDocTypeChanger $phpDocTypeChanger, BetterStandardPrinter $betterStandardPrinter)
     {
+        $this->phpDocTypeChanger = $phpDocTypeChanger;
+        $this->betterStandardPrinter = $betterStandardPrinter;
     }
     public function getRuleDefinition() : RuleDefinition
     {

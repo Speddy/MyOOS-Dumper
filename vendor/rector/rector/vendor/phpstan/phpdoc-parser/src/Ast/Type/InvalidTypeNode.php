@@ -5,11 +5,11 @@ namespace PHPStan\PhpDocParser\Ast\Type;
 
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use PHPStan\PhpDocParser\Parser\ParserException;
-class InvalidTypeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode, \Stringable
+class InvalidTypeNode implements \PHPStan\PhpDocParser\Ast\Type\TypeNode
 {
     use NodeAttributes;
     /** @var mixed[] */
-    private readonly array $exceptionArgs;
+    private $exceptionArgs;
     public function __construct(ParserException $exception)
     {
         $this->exceptionArgs = [$exception->getCurrentTokenValue(), $exception->getCurrentTokenType(), $exception->getCurrentOffset(), $exception->getExpectedTokenType(), $exception->getExpectedTokenValue(), $exception->getCurrentTokenLine()];

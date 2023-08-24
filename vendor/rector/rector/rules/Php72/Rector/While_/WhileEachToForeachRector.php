@@ -23,13 +23,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class WhileEachToForeachRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly AssignManipulator $assignManipulator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\AssignManipulator
+     */
+    private $assignManipulator;
+    public function __construct(AssignManipulator $assignManipulator)
     {
+        $this->assignManipulator = $assignManipulator;
     }
     public function provideMinPhpVersion() : int
     {

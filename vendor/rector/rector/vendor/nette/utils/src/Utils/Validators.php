@@ -30,14 +30,14 @@ class Validators
         'scalar' => 'is_scalar',
         'string' => 'is_string',
         // pseudo-types
-        'callable' => self::isCallable(...),
+        'callable' => [self::class, 'isCallable'],
         'iterable' => 'is_iterable',
-        'list' => Arrays::isList(...),
-        'mixed' => self::isMixed(...),
-        'none' => self::isNone(...),
-        'number' => self::isNumber(...),
-        'numeric' => self::isNumeric(...),
-        'numericint' => self::isNumericInt(...),
+        'list' => [Arrays::class, 'isList'],
+        'mixed' => [self::class, 'isMixed'],
+        'none' => [self::class, 'isNone'],
+        'number' => [self::class, 'isNumber'],
+        'numeric' => [self::class, 'isNumeric'],
+        'numericint' => [self::class, 'isNumericInt'],
         // string patterns
         'alnum' => 'ctype_alnum',
         'alpha' => 'ctype_alpha',
@@ -45,28 +45,29 @@ class Validators
         'lower' => 'ctype_lower',
         'pattern' => null,
         'space' => 'ctype_space',
-        'unicode' => self::isUnicode(...),
+        'unicode' => [self::class, 'isUnicode'],
         'upper' => 'ctype_upper',
         'xdigit' => 'ctype_xdigit',
         // syntax validation
-        'email' => self::isEmail(...),
-        'identifier' => self::isPhpIdentifier(...),
-        'uri' => self::isUri(...),
-        'url' => self::isUrl(...),
+        'email' => [self::class, 'isEmail'],
+        'identifier' => [self::class, 'isPhpIdentifier'],
+        'uri' => [self::class, 'isUri'],
+        'url' => [self::class, 'isUrl'],
         // environment validation
         'class' => 'class_exists',
         'interface' => 'interface_exists',
         'directory' => 'is_dir',
         'file' => 'is_file',
-        'type' => self::isType(...),
+        'type' => [self::class, 'isType'],
     ];
     /** @var array<string,callable> */
-    protected static $counters = ['string' => 'strlen', 'unicode' => Strings::length(...), 'array' => 'count', 'list' => 'count', 'alnum' => 'strlen', 'alpha' => 'strlen', 'digit' => 'strlen', 'lower' => 'strlen', 'space' => 'strlen', 'upper' => 'strlen', 'xdigit' => 'strlen'];
+    protected static $counters = ['string' => 'strlen', 'unicode' => [Strings::class, 'length'], 'array' => 'count', 'list' => 'count', 'alnum' => 'strlen', 'alpha' => 'strlen', 'digit' => 'strlen', 'lower' => 'strlen', 'space' => 'strlen', 'upper' => 'strlen', 'xdigit' => 'strlen'];
     /**
      * Verifies that the value is of expected types separated by pipe.
+     * @param  mixed  $value
      * @throws AssertionException
      */
-    public static function assert(mixed $value, string $expected, string $label = 'variable') : void
+    public static function assert($value, string $expected, string $label = 'variable') : void
     {
         if (!static::is($value, $expected)) {
             $expected = \str_replace(['|', ':'], [' or ', ' in range '], $expected);
@@ -75,7 +76,7 @@ class Validators
             if (\is_int($value) || \is_float($value) || \is_string($value) && \strlen($value) < 40) {
                 $type .= ' ' . \var_export($value, \true);
             } elseif (\is_object($value)) {
-                $type .= ' ' . $value::class;
+                $type .= ' ' . \get_class($value);
             }
             throw new AssertionException("The {$label} expects to be {$expected}, {$type} given.");
         }
@@ -96,16 +97,17 @@ class Validators
     }
     /**
      * Verifies that the value is of expected types separated by pipe.
+     * @param  mixed  $value
      */
-    public static function is(mixed $value, string $expected) : bool
+    public static function is($value, string $expected) : bool
     {
         foreach (\explode('|', $expected) as $item) {
-            if (str_ends_with($item, '[]')) {
+            if (\substr($item, -2) === '[]') {
                 if (\is_iterable($value) && self::everyIs($value, \substr($item, 0, -2))) {
                     return \true;
                 }
                 continue;
-            } elseif (str_starts_with($item, '?')) {
+            } elseif (\substr($item, 0, 1) === '?') {
                 $item = \substr($item, 1);
                 if ($value === null) {
                     return \true;
@@ -117,7 +119,7 @@ class Validators
                     if (!static::$validators[$type]($value)) {
                         continue;
                     }
-                } catch (\TypeError) {
+                } catch (\TypeError $e) {
                     continue;
                 }
             } elseif ($type === 'pattern') {
@@ -160,43 +162,49 @@ class Validators
     }
     /**
      * Checks if the value is an integer or a float.
+     * @param  mixed  $value
      */
-    public static function isNumber(mixed $value) : bool
+    public static function isNumber($value) : bool
     {
         return \is_int($value) || \is_float($value);
     }
     /**
      * Checks if the value is an integer or a integer written in a string.
+     * @param  mixed  $value
      */
-    public static function isNumericInt(mixed $value) : bool
+    public static function isNumericInt($value) : bool
     {
         return \is_int($value) || \is_string($value) && \preg_match('#^[+-]?[0-9]+$#D', $value);
     }
     /**
      * Checks if the value is a number or a number written in a string.
+     * @param  mixed  $value
      */
-    public static function isNumeric(mixed $value) : bool
+    public static function isNumeric($value) : bool
     {
         return \is_float($value) || \is_int($value) || \is_string($value) && \preg_match('#^[+-]?([0-9]++\\.?[0-9]*|\\.[0-9]+)$#D', $value);
     }
     /**
      * Checks if the value is a syntactically correct callback.
+     * @param  mixed  $value
      */
-    public static function isCallable(mixed $value) : bool
+    public static function isCallable($value) : bool
     {
         return $value && \is_callable($value, \true);
     }
     /**
      * Checks if the value is a valid UTF-8 string.
+     * @param  mixed  $value
      */
-    public static function isUnicode(mixed $value) : bool
+    public static function isUnicode($value) : bool
     {
         return \is_string($value) && \preg_match('##u', $value);
     }
     /**
      * Checks if the value is 0, '', false or null.
+     * @param  mixed  $value
      */
-    public static function isNone(mixed $value) : bool
+    public static function isNone($value) : bool
     {
         return $value == null;
         // intentionally ==
@@ -208,18 +216,20 @@ class Validators
     }
     /**
      * Checks if a variable is a zero-based integer indexed array.
+     * @param  mixed  $value
      * @deprecated  use Nette\Utils\Arrays::isList
      * @return ($value is list ? true : false)
      */
-    public static function isList(mixed $value) : bool
+    public static function isList($value) : bool
     {
         return Arrays::isList($value);
     }
     /**
      * Checks if the value is in the given range [min, max], where the upper or lower limit can be omitted (null).
      * Numbers, strings and DateTime objects can be compared.
+     * @param  mixed  $value
      */
-    public static function isInRange(mixed $value, array $range) : bool
+    public static function isInRange($value, array $range) : bool
     {
         if ($value === null || !(isset($range[0]) || isset($range[1]))) {
             return \false;

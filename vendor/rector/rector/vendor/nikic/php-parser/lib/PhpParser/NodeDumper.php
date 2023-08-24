@@ -10,9 +10,9 @@ use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\UseUse;
 class NodeDumper
 {
-    private readonly bool $dumpComments;
-    private readonly bool $dumpPositions;
-    private ?string $code = null;
+    private $dumpComments;
+    private $dumpPositions;
+    private $code;
     /**
      * Constructs a NodeDumper.
      *
@@ -71,11 +71,11 @@ class NodeDumper
                         $r .= $value;
                     }
                 } else {
-                    $r .= \str_replace("\n", "\n    ", (string) $this->dumpRecursive($value));
+                    $r .= \str_replace("\n", "\n    ", $this->dumpRecursive($value));
                 }
             }
             if ($this->dumpComments && ($comments = $node->getComments())) {
-                $r .= "\n    comments: " . \str_replace("\n", "\n    ", (string) $this->dumpRecursive($comments));
+                $r .= "\n    comments: " . \str_replace("\n", "\n    ", $this->dumpRecursive($comments));
             }
         } elseif (\is_array($node)) {
             $r = 'array(';
@@ -90,7 +90,7 @@ class NodeDumper
                 } elseif (\is_scalar($value)) {
                     $r .= $value;
                 } else {
-                    $r .= \str_replace("\n", "\n    ", (string) $this->dumpRecursive($value));
+                    $r .= \str_replace("\n", "\n    ", $this->dumpRecursive($value));
                 }
             }
         } elseif ($node instanceof \PhpParser\Comment) {
@@ -169,10 +169,10 @@ class NodeDumper
     // Copied from Error class
     private function toColumn($code, $pos)
     {
-        if ($pos > \strlen((string) $code)) {
+        if ($pos > \strlen($code)) {
             throw new \RuntimeException('Invalid position information');
         }
-        $lineStartPos = \strrpos((string) $code, "\n", $pos - \strlen((string) $code));
+        $lineStartPos = \strrpos($code, "\n", $pos - \strlen($code));
         if (\false === $lineStartPos) {
             $lineStartPos = -1;
         }

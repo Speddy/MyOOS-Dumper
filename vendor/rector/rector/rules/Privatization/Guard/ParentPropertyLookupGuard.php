@@ -18,35 +18,46 @@ use Rector\Core\PhpParser\AstResolver;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\Core\Reflection\ClassReflectionAnalyzer;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class ParentPropertyLookupGuard
+final class ParentPropertyLookupGuard
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private PropertyFetchAnalyzer $propertyFetchAnalyzer,
-        /**
-         * @readonly
-         */
-        private AstResolver $astResolver,
-        /**
-         * @readonly
-         */
-        private PropertyManipulator $propertyManipulator,
-        /**
-         * @readonly
-         */
-        private ClassReflectionAnalyzer $classReflectionAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
+     */
+    private $propertyFetchAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\AstResolver
+     */
+    private $astResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\PropertyManipulator
+     */
+    private $propertyManipulator;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ClassReflectionAnalyzer
+     */
+    private $classReflectionAnalyzer;
+    public function __construct(BetterNodeFinder $betterNodeFinder, NodeNameResolver $nodeNameResolver, PropertyFetchAnalyzer $propertyFetchAnalyzer, AstResolver $astResolver, PropertyManipulator $propertyManipulator, ClassReflectionAnalyzer $classReflectionAnalyzer)
     {
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
+        $this->astResolver = $astResolver;
+        $this->propertyManipulator = $propertyManipulator;
+        $this->classReflectionAnalyzer = $classReflectionAnalyzer;
     }
     public function isLegal(Property $property, ?ClassReflection $classReflection) : bool
     {

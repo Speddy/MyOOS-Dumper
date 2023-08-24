@@ -20,25 +20,32 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class MessageHandlerInterfaceToAttributeRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly MessengerHelper $messengerHelper,
-        /**
-         * @readonly
-         */
-        private readonly ClassManipulator $classManipulator,
-        /**
-         * @readonly
-         */
-        private readonly ClassAnalyzer $classAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly PhpAttributeAnalyzer $phpAttributeAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\Helper\MessengerHelper
+     */
+    private $messengerHelper;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeManipulator\ClassManipulator
+     */
+    private $classManipulator;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\ClassAnalyzer
+     */
+    private $classAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
+     */
+    private $phpAttributeAnalyzer;
+    public function __construct(MessengerHelper $messengerHelper, ClassManipulator $classManipulator, ClassAnalyzer $classAnalyzer, PhpAttributeAnalyzer $phpAttributeAnalyzer)
     {
+        $this->messengerHelper = $messengerHelper;
+        $this->classManipulator = $classManipulator;
+        $this->classAnalyzer = $classAnalyzer;
+        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
     }
     public function provideMinPhpVersion() : int
     {

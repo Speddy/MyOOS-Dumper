@@ -20,19 +20,28 @@ use Rector\Core\Configuration\CurrentNodeProvider;
 use Rector\Core\Exception\ShouldNotHappenException;
 final class PlainValueParser
 {
-    private ?\Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser $staticDoctrineAnnotationParser = null;
-    private ?\Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\ArrayParser $arrayParser = null;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ClassAnnotationMatcher $classAnnotationMatcher,
-        /**
-         * @readonly
-         */
-        private readonly CurrentNodeProvider $currentNodeProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocParser\ClassAnnotationMatcher
+     */
+    private $classAnnotationMatcher;
+    /**
+     * @readonly
+     * @var \Rector\Core\Configuration\CurrentNodeProvider
+     */
+    private $currentNodeProvider;
+    /**
+     * @var \Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser
+     */
+    private $staticDoctrineAnnotationParser;
+    /**
+     * @var \Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\ArrayParser
+     */
+    private $arrayParser;
+    public function __construct(ClassAnnotationMatcher $classAnnotationMatcher, CurrentNodeProvider $currentNodeProvider)
     {
+        $this->classAnnotationMatcher = $classAnnotationMatcher;
+        $this->currentNodeProvider = $currentNodeProvider;
     }
     public function autowire(StaticDoctrineAnnotationParser $staticDoctrineAnnotationParser, \Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\ArrayParser $arrayParser) : void
     {
@@ -73,7 +82,7 @@ final class PlainValueParser
         if ($currentTokenValue === '"') {
             do {
                 $tokenIterator->next();
-            } while (!str_contains($tokenIterator->currentTokenValue(), '"'));
+            } while (\strpos($tokenIterator->currentTokenValue(), '"') === \false);
         }
         $end = $tokenIterator->currentPosition();
         if ($start + 1 < $end) {

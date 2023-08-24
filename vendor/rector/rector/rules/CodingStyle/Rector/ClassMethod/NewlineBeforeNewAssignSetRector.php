@@ -22,7 +22,10 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class NewlineBeforeNewAssignSetRector extends AbstractRector
 {
-    private ?string $previousStmtVariableName = null;
+    /**
+     * @var string|null
+     */
+    private $previousStmtVariableName;
     /**
      * @var string|null
      */

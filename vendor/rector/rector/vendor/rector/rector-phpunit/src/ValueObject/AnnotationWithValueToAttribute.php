@@ -3,26 +3,31 @@
 declare (strict_types=1);
 namespace Rector\PHPUnit\ValueObject;
 
-final readonly class AnnotationWithValueToAttribute
+final class AnnotationWithValueToAttribute
 {
+    /**
+     * @readonly
+     * @var string
+     */
+    private $annotationName;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $attributeClass;
+    /**
+     * @var array<mixed, mixed>
+     * @readonly
+     */
+    private $valueMap = [];
     /**
      * @param array<mixed, mixed> $valueMap
      */
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private string $annotationName,
-        /**
-         * @readonly
-         */
-        private string $attributeClass,
-        /**
-         * @readonly
-         */
-        private array $valueMap = []
-    )
+    public function __construct(string $annotationName, string $attributeClass, array $valueMap = [])
     {
+        $this->annotationName = $annotationName;
+        $this->attributeClass = $attributeClass;
+        $this->valueMap = $valueMap;
     }
     public function getAnnotationName() : string
     {

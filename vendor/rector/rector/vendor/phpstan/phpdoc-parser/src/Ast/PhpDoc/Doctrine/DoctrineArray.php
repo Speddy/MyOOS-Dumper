@@ -6,7 +6,7 @@ namespace PHPStan\PhpDocParser\Ast\PhpDoc\Doctrine;
 use PHPStan\PhpDocParser\Ast\Node;
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use function implode;
-class DoctrineArray implements Node, \Stringable
+class DoctrineArray implements Node
 {
     use NodeAttributes;
     /** @var list<DoctrineArrayItem> */

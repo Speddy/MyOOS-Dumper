@@ -27,21 +27,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveUnusedVariableAssignRector extends AbstractScopeAwareRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ReservedKeywordAnalyzer $reservedKeywordAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly SideEffectNodeDetector $sideEffectNodeDetector,
-        /**
-         * @readonly
-         */
-        private readonly VariableAnalyzer $variableAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Php\ReservedKeywordAnalyzer
+     */
+    private $reservedKeywordAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\SideEffect\SideEffectNodeDetector
+     */
+    private $sideEffectNodeDetector;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\VariableAnalyzer
+     */
+    private $variableAnalyzer;
+    public function __construct(ReservedKeywordAnalyzer $reservedKeywordAnalyzer, SideEffectNodeDetector $sideEffectNodeDetector, VariableAnalyzer $variableAnalyzer)
     {
+        $this->reservedKeywordAnalyzer = $reservedKeywordAnalyzer;
+        $this->sideEffectNodeDetector = $sideEffectNodeDetector;
+        $this->variableAnalyzer = $variableAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -120,7 +125,9 @@ CODE_SAMPLE
     }
     private function hasCallLikeInAssignExpr(Expr $expr, Scope $scope) : bool
     {
-        return (bool) $this->betterNodeFinder->findFirst($expr, fn(Node $subNode): bool => $this->sideEffectNodeDetector->detectCallExpr($subNode, $scope));
+        return (bool) $this->betterNodeFinder->findFirst($expr, function (Node $subNode) use($scope) : bool {
+            return $this->sideEffectNodeDetector->detectCallExpr($subNode, $scope);
+        });
     }
     private function isVariableUsedInFollowingStmts(ClassMethod $classMethod, int $assignStmtPosition, string $variableName) : bool
     {

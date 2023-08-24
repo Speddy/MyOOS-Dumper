@@ -38,7 +38,7 @@ final class Parser
         if (!isset($data[12 - 1])) {
             return null;
         }
-        [$id, $fields, $qdCount, $anCount, $nsCount, $arCount] = \array_values(\unpack('n*', \substr($data, 0, 12)));
+        list($id, $fields, $qdCount, $anCount, $nsCount, $arCount) = \array_values(\unpack('n*', \substr($data, 0, 12)));
         $message = new Message();
         $message->id = $id;
         $message->rcode = $fields & 0xf;
@@ -51,7 +51,7 @@ final class Parser
         $consumed += 12;
         // parse all questions
         for ($i = $qdCount; $i > 0; --$i) {
-            [$question, $consumed] = $this->parseQuestion($data, $consumed);
+            list($question, $consumed) = $this->parseQuestion($data, $consumed);
             if ($question === null) {
                 return null;
             } else {
@@ -60,7 +60,7 @@ final class Parser
         }
         // parse all answer records
         for ($i = $anCount; $i > 0; --$i) {
-            [$record, $consumed] = $this->parseRecord($data, $consumed);
+            list($record, $consumed) = $this->parseRecord($data, $consumed);
             if ($record === null) {
                 return null;
             } else {
@@ -69,7 +69,7 @@ final class Parser
         }
         // parse all authority records
         for ($i = $nsCount; $i > 0; --$i) {
-            [$record, $consumed] = $this->parseRecord($data, $consumed);
+            list($record, $consumed) = $this->parseRecord($data, $consumed);
             if ($record === null) {
                 return null;
             } else {
@@ -78,7 +78,7 @@ final class Parser
         }
         // parse all additional records
         for ($i = $arCount; $i > 0; --$i) {
-            [$record, $consumed] = $this->parseRecord($data, $consumed);
+            list($record, $consumed) = $this->parseRecord($data, $consumed);
             if ($record === null) {
                 return null;
             } else {
@@ -94,13 +94,13 @@ final class Parser
      */
     private function parseQuestion($data, $consumed)
     {
-        [$labels, $consumed] = $this->readLabels($data, $consumed);
+        list($labels, $consumed) = $this->readLabels($data, $consumed);
         if ($labels === null || !isset($data[$consumed + 4 - 1])) {
-            return [null, null];
+            return array(null, null);
         }
-        [$type, $class] = \array_values(\unpack('n*', \substr($data, $consumed, 4)));
+        list($type, $class) = \array_values(\unpack('n*', \substr($data, $consumed, 4)));
         $consumed += 4;
-        return [new Query(\implode('.', $labels), $type, $class), $consumed];
+        return array(new Query(\implode('.', $labels), $type, $class), $consumed);
     }
     /**
      * @param string $data
@@ -109,22 +109,22 @@ final class Parser
      */
     private function parseRecord($data, $consumed)
     {
-        [$name, $consumed] = $this->readDomain($data, $consumed);
+        list($name, $consumed) = $this->readDomain($data, $consumed);
         if ($name === null || !isset($data[$consumed + 10 - 1])) {
-            return [null, null];
+            return array(null, null);
         }
-        [$type, $class] = \array_values(\unpack('n*', \substr($data, $consumed, 4)));
+        list($type, $class) = \array_values(\unpack('n*', \substr($data, $consumed, 4)));
         $consumed += 4;
-        [$ttl] = \array_values(\unpack('N', \substr($data, $consumed, 4)));
+        list($ttl) = \array_values(\unpack('N', \substr($data, $consumed, 4)));
         $consumed += 4;
         // TTL is a UINT32 that must not have most significant bit set for BC reasons
         if ($ttl < 0 || $ttl >= 1 << 31) {
             $ttl = 0;
         }
-        [$rdLength] = \array_values(\unpack('n', \substr($data, $consumed, 2)));
+        list($rdLength) = \array_values(\unpack('n', \substr($data, $consumed, 2)));
         $consumed += 2;
         if (!isset($data[$consumed + $rdLength - 1])) {
-            return [null, null];
+            return array(null, null);
         }
         $rdata = null;
         $expected = $consumed + $rdLength;
@@ -139,9 +139,9 @@ final class Parser
                 $consumed += $rdLength;
             }
         } elseif (Message::TYPE_CNAME === $type || Message::TYPE_PTR === $type || Message::TYPE_NS === $type) {
-            [$rdata, $consumed] = $this->readDomain($data, $consumed);
+            list($rdata, $consumed) = $this->readDomain($data, $consumed);
         } elseif (Message::TYPE_TXT === $type || Message::TYPE_SPF === $type) {
-            $rdata = [];
+            $rdata = array();
             while ($consumed < $expected) {
                 $len = \ord($data[$consumed]);
                 $rdata[] = (string) \substr($data, $consumed + 1, $len);
@@ -149,40 +149,40 @@ final class Parser
             }
         } elseif (Message::TYPE_MX === $type) {
             if ($rdLength > 2) {
-                [$priority] = \array_values(\unpack('n', \substr($data, $consumed, 2)));
-                [$target, $consumed] = $this->readDomain($data, $consumed + 2);
-                $rdata = ['priority' => $priority, 'target' => $target];
+                list($priority) = \array_values(\unpack('n', \substr($data, $consumed, 2)));
+                list($target, $consumed) = $this->readDomain($data, $consumed + 2);
+                $rdata = array('priority' => $priority, 'target' => $target);
             }
         } elseif (Message::TYPE_SRV === $type) {
             if ($rdLength > 6) {
-                [$priority, $weight, $port] = \array_values(\unpack('n*', \substr($data, $consumed, 6)));
-                [$target, $consumed] = $this->readDomain($data, $consumed + 6);
-                $rdata = ['priority' => $priority, 'weight' => $weight, 'port' => $port, 'target' => $target];
+                list($priority, $weight, $port) = \array_values(\unpack('n*', \substr($data, $consumed, 6)));
+                list($target, $consumed) = $this->readDomain($data, $consumed + 6);
+                $rdata = array('priority' => $priority, 'weight' => $weight, 'port' => $port, 'target' => $target);
             }
         } elseif (Message::TYPE_SSHFP === $type) {
             if ($rdLength > 2) {
-                [$algorithm, $hash] = \array_values(\unpack('C*', \substr($data, $consumed, 2)));
+                list($algorithm, $hash) = \array_values(\unpack('C*', \substr($data, $consumed, 2)));
                 $fingerprint = \bin2hex(\substr($data, $consumed + 2, $rdLength - 2));
                 $consumed += $rdLength;
-                $rdata = ['algorithm' => $algorithm, 'type' => $hash, 'fingerprint' => $fingerprint];
+                $rdata = array('algorithm' => $algorithm, 'type' => $hash, 'fingerprint' => $fingerprint);
             }
         } elseif (Message::TYPE_SOA === $type) {
-            [$mname, $consumed] = $this->readDomain($data, $consumed);
-            [$rname, $consumed] = $this->readDomain($data, $consumed);
+            list($mname, $consumed) = $this->readDomain($data, $consumed);
+            list($rname, $consumed) = $this->readDomain($data, $consumed);
             if ($mname !== null && $rname !== null && isset($data[$consumed + 20 - 1])) {
-                [$serial, $refresh, $retry, $expire, $minimum] = \array_values(\unpack('N*', \substr($data, $consumed, 20)));
+                list($serial, $refresh, $retry, $expire, $minimum) = \array_values(\unpack('N*', \substr($data, $consumed, 20)));
                 $consumed += 20;
-                $rdata = ['mname' => $mname, 'rname' => $rname, 'serial' => $serial, 'refresh' => $refresh, 'retry' => $retry, 'expire' => $expire, 'minimum' => $minimum];
+                $rdata = array('mname' => $mname, 'rname' => $rname, 'serial' => $serial, 'refresh' => $refresh, 'retry' => $retry, 'expire' => $expire, 'minimum' => $minimum);
             }
         } elseif (Message::TYPE_OPT === $type) {
-            $rdata = [];
+            $rdata = array();
             while (isset($data[$consumed + 4 - 1])) {
-                [$code, $length] = \array_values(\unpack('n*', \substr($data, $consumed, 4)));
+                list($code, $length) = \array_values(\unpack('n*', \substr($data, $consumed, 4)));
                 $value = (string) \substr($data, $consumed + 4, $length);
                 if ($code === Message::OPT_TCP_KEEPALIVE && $value === '') {
                     $value = null;
                 } elseif ($code === Message::OPT_TCP_KEEPALIVE && $length === 2) {
-                    [$value] = \array_values(\unpack('n', $value));
+                    list($value) = \array_values(\unpack('n', $value));
                     $value = \round($value * 0.1, 1);
                 } elseif ($code === Message::OPT_TCP_KEEPALIVE) {
                     break;
@@ -192,12 +192,12 @@ final class Parser
             }
         } elseif (Message::TYPE_CAA === $type) {
             if ($rdLength > 3) {
-                [$flag, $tagLength] = \array_values(\unpack('C*', \substr($data, $consumed, 2)));
+                list($flag, $tagLength) = \array_values(\unpack('C*', \substr($data, $consumed, 2)));
                 if ($tagLength > 0 && $rdLength - 2 - $tagLength > 0) {
                     $tag = \substr($data, $consumed + 2, $tagLength);
                     $value = \substr($data, $consumed + 2 + $tagLength, $rdLength - 2 - $tagLength);
                     $consumed += $rdLength;
-                    $rdata = ['flag' => $flag, 'tag' => $tag, 'value' => $value];
+                    $rdata = array('flag' => $flag, 'tag' => $tag, 'value' => $value);
                 }
             }
         } else {
@@ -207,18 +207,20 @@ final class Parser
         }
         // ensure parsing record data consumes expact number of bytes indicated in record length
         if ($consumed !== $expected || $rdata === null) {
-            return [null, null];
+            return array(null, null);
         }
-        return [new Record($name, $type, $class, $ttl, $rdata), $consumed];
+        return array(new Record($name, $type, $class, $ttl, $rdata), $consumed);
     }
     private function readDomain($data, $consumed)
     {
-        [$labels, $consumed] = $this->readLabels($data, $consumed);
+        list($labels, $consumed) = $this->readLabels($data, $consumed);
         if ($labels === null) {
-            return [null, null];
+            return array(null, null);
         }
         // use escaped notation for each label part, then join using dots
-        return [\implode('.', \array_map(fn($label) => \addcslashes((string) $label, "\x00.. ."), $labels)), $consumed];
+        return array(\implode('.', \array_map(function ($label) {
+            return \addcslashes($label, "\x00.. .");
+        }, $labels)), $consumed);
     }
     /**
      * @param string $data
@@ -228,10 +230,10 @@ final class Parser
      */
     private function readLabels($data, $consumed, $compressionDepth = 127)
     {
-        $labels = [];
+        $labels = array();
         while (\true) {
             if (!isset($data[$consumed])) {
-                return [null, null];
+                return array(null, null);
             }
             $length = \ord($data[$consumed]);
             // end of labels reached
@@ -243,23 +245,23 @@ final class Parser
             if (($length & 0xc0) === 0xc0 && isset($data[$consumed + 1]) && $compressionDepth) {
                 $offset = ($length & ~0xc0) << 8 | \ord($data[$consumed + 1]);
                 if ($offset >= $consumed) {
-                    return [null, null];
+                    return array(null, null);
                 }
                 $consumed += 2;
-                [$newLabels] = $this->readLabels($data, $offset, $compressionDepth - 1);
+                list($newLabels) = $this->readLabels($data, $offset, $compressionDepth - 1);
                 if ($newLabels === null) {
-                    return [null, null];
+                    return array(null, null);
                 }
                 $labels = \array_merge($labels, $newLabels);
                 break;
             }
             // length MUST be 0-63 (6 bits only) and data has to be large enough
             if ($length & 0xc0 || !isset($data[$consumed + $length - 1])) {
-                return [null, null];
+                return array(null, null);
             }
             $labels[] = \substr($data, $consumed + 1, $length);
             $consumed += $length + 1;
         }
-        return [$labels, $consumed];
+        return array($labels, $consumed);
     }
 }

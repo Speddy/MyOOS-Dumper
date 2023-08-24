@@ -18,15 +18,16 @@ use PHPStan\Type\Type;
 use PHPStan\Type\TypeUtils;
 use PHPStan\Type\UnionType;
 use Rector\NodeTypeResolver\PHPStan\TypeHasher;
-final readonly class TypeFactory
+final class TypeFactory
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private TypeHasher $typeHasher
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\TypeHasher
+     */
+    private $typeHasher;
+    public function __construct(TypeHasher $typeHasher)
     {
+        $this->typeHasher = $typeHasher;
     }
     /**
      * @param Type[] $types

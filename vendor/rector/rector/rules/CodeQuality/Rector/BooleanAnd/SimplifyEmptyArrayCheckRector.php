@@ -21,13 +21,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class SimplifyEmptyArrayCheckRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly BinaryOpManipulator $binaryOpManipulator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\BinaryOpManipulator
+     */
+    private $binaryOpManipulator;
+    public function __construct(BinaryOpManipulator $binaryOpManipulator)
     {
+        $this->binaryOpManipulator = $binaryOpManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {

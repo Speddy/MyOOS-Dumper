@@ -22,7 +22,7 @@ use phpseclib3\File\ASN1;
  */
 abstract class FieldID
 {
-    final public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             'fieldType' => ['type' => ASN1::TYPE_OBJECT_IDENTIFIER],

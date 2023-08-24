@@ -17,19 +17,22 @@ use Rector\Arguments\Contract\ReplaceArgumentDefaultValueInterface;
 use Rector\Arguments\ValueObject\ReplaceArgumentDefaultValue;
 use Rector\Core\PhpParser\Node\NodeFactory;
 use Rector\Core\PhpParser\Node\Value\ValueResolver;
-final readonly class ArgumentDefaultValueReplacer
+final class ArgumentDefaultValueReplacer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeFactory $nodeFactory,
-        /**
-         * @readonly
-         */
-        private ValueResolver $valueResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\NodeFactory
+     */
+    private $nodeFactory;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
+    public function __construct(NodeFactory $nodeFactory, ValueResolver $valueResolver)
     {
+        $this->nodeFactory = $nodeFactory;
+        $this->valueResolver = $valueResolver;
     }
     /**
      * @param \PhpParser\Node\Expr\MethodCall|\PhpParser\Node\Expr\StaticCall|\PhpParser\Node\Stmt\ClassMethod|\PhpParser\Node\Expr\FuncCall|\PhpParser\Node\Expr\New_ $node
@@ -47,7 +50,10 @@ final readonly class ArgumentDefaultValueReplacer
         }
         return $this->processArgs($node, $replaceArgumentDefaultValue);
     }
-    private function isDefaultValueMatched(?Expr $expr, mixed $value) : bool
+    /**
+     * @param mixed $value
+     */
+    private function isDefaultValueMatched(?Expr $expr, $value) : bool
     {
         // allow any values before, also allow param without default value
         if ($value === ReplaceArgumentDefaultValue::ANY_VALUE_BEFORE) {
@@ -92,17 +98,21 @@ final readonly class ArgumentDefaultValueReplacer
         }
         return $expr;
     }
-    private function normalizeValueToArgument(mixed $value) : Arg
+    /**
+     * @param mixed $value
+     */
+    private function normalizeValueToArgument($value) : Arg
     {
         return new Arg($this->normalizeValue($value));
     }
     /**
      * @return \PhpParser\Node\Expr\ClassConstFetch|\PhpParser\Node\Expr
+     * @param mixed $value
      */
-    private function normalizeValue(mixed $value)
+    private function normalizeValue($value)
     {
         // class constants → turn string to composite
-        if (\is_string($value) && str_contains($value, '::')) {
+        if (\is_string($value) && \strpos($value, '::') !== \false) {
             [$class, $constant] = \explode('::', $value);
             return $this->nodeFactory->createClassConstFetch($class, $constant);
         }

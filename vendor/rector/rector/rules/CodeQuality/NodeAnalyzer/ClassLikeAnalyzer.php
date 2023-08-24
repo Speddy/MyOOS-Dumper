@@ -5,15 +5,16 @@ namespace Rector\CodeQuality\NodeAnalyzer;
 
 use PhpParser\Node\Stmt\Class_;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class ClassLikeAnalyzer
+final class ClassLikeAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @return string[]

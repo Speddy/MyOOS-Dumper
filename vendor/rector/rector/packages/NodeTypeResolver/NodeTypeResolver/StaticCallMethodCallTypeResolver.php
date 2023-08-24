@@ -22,14 +22,18 @@ use Rector\NodeTypeResolver\PHPStan\ParametersAcceptorSelectorVariantsWrapper;
  */
 final class StaticCallMethodCallTypeResolver implements NodeTypeResolverInterface, NodeTypeResolverAwareInterface
 {
-    private ?\Rector\NodeTypeResolver\NodeTypeResolver $nodeTypeResolver = null;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function autowire(NodeTypeResolver $nodeTypeResolver) : void
     {

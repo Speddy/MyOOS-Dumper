@@ -19,8 +19,14 @@ use RectorPrefix202308\Symfony\Component\Console\Formatter\OutputFormatterInterf
  */
 class TrimmedBufferOutput extends Output
 {
-    private readonly int $maxLength;
-    private string $buffer = '';
+    /**
+     * @var int
+     */
+    private $maxLength;
+    /**
+     * @var string
+     */
+    private $buffer = '';
     public function __construct(int $maxLength, ?int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = \false, OutputFormatterInterface $formatter = null)
     {
         if ($maxLength <= 0) {

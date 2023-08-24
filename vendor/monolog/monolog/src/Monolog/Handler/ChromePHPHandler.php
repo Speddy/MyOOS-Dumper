@@ -162,7 +162,7 @@ class ChromePHPHandler extends AbstractProcessingHandler
                 'datetime' => new \DateTimeImmutable(),
                 'extra' => [],
             ];
-            self::$json['rows'][(is_countable(self::$json['rows']) ? count(self::$json['rows']) : 0) - 1] = $this->getFormatter()->format($record);
+            self::$json['rows'][count(self::$json['rows']) - 1] = $this->getFormatter()->format($record);
             $json = Utils::jsonEncode(self::$json, Utils::DEFAULT_JSON_FLAGS & ~JSON_UNESCAPED_UNICODE, true);
             $data = base64_encode($json);
         }
@@ -191,6 +191,6 @@ class ChromePHPHandler extends AbstractProcessingHandler
             return false;
         }
 
-        return preg_match(static::USER_AGENT_REGEX, (string) $_SERVER['HTTP_USER_AGENT']) === 1;
+        return preg_match(static::USER_AGENT_REGEX, $_SERVER['HTTP_USER_AGENT']) === 1;
     }
 }

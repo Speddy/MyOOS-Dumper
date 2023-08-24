@@ -8,9 +8,9 @@ use function array_unshift;
 abstract class GenericLanguageInflectorFactory implements LanguageInflectorFactory
 {
     /** @var Ruleset[] */
-    private array $singularRulesets = [];
+    private $singularRulesets = [];
     /** @var Ruleset[] */
-    private array $pluralRulesets = [];
+    private $pluralRulesets = [];
     public final function __construct()
     {
         $this->singularRulesets[] = $this->getSingularRuleset();

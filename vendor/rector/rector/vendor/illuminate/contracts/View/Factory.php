@@ -33,9 +33,10 @@ interface Factory
      * Add a piece of shared data to the environment.
      *
      * @param  array|string  $key
+     * @param  mixed  $value
      * @return mixed
      */
-    public function share($key, mixed $value = null);
+    public function share($key, $value = null);
     /**
      * Register a view composer event.
      *

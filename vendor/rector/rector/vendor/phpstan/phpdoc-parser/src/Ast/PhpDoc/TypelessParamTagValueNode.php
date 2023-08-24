@@ -5,7 +5,7 @@ namespace PHPStan\PhpDocParser\Ast\PhpDoc;
 
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use function trim;
-class TypelessParamTagValueNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode, \Stringable
+class TypelessParamTagValueNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode
 {
     use NodeAttributes;
     /** @var bool */

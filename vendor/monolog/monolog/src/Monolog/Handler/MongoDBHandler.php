@@ -36,8 +36,9 @@ class MongoDBHandler extends AbstractProcessingHandler
     /** @var \MongoDB\Collection */
     private $collection;
     /** @var Client|Manager */
-    private ?\MongoDB\Driver\Manager $manager = null;
-    private ?string $namespace = null;
+    private $manager;
+    /** @var string */
+    private $namespace;
 
     /**
      * Constructor.

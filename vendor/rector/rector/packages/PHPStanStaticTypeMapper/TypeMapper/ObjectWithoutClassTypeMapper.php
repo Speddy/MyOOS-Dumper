@@ -16,15 +16,16 @@ use Rector\PHPStanStaticTypeMapper\Contract\TypeMapperInterface;
 /**
  * @implements TypeMapperInterface<ObjectWithoutClassType>
  */
-final readonly class ObjectWithoutClassTypeMapper implements TypeMapperInterface
+final class ObjectWithoutClassTypeMapper implements TypeMapperInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpVersionProvider $phpVersionProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Php\PhpVersionProvider
+     */
+    private $phpVersionProvider;
+    public function __construct(PhpVersionProvider $phpVersionProvider)
     {
+        $this->phpVersionProvider = $phpVersionProvider;
     }
     /**
      * @return class-string<Type>

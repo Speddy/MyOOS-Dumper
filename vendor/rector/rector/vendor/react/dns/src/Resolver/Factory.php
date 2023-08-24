@@ -70,6 +70,7 @@ final class Factory
     /**
      * Tries to load the hosts file and decorates the given executor on success
      *
+     * @param ExecutorInterface $executor
      * @return ExecutorInterface
      * @codeCoverageIgnore
      */
@@ -77,7 +78,7 @@ final class Factory
     {
         try {
             $executor = new HostsFileExecutor(HostsFile::loadFromPathBlocking(), $executor);
-        } catch (\RuntimeException) {
+        } catch (\RuntimeException $e) {
             // ignore this file if it can not be loaded
         }
         // Windows does not store localhost in hosts file by default but handles this internally
@@ -89,6 +90,7 @@ final class Factory
     }
     /**
      * @param Config|string $nameserver
+     * @param LoopInterface $loop
      * @return CoopExecutor
      * @throws \InvalidArgumentException for invalid DNS server address
      * @throws \UnderflowException when given DNS Config object has an empty list of nameservers
@@ -119,6 +121,7 @@ final class Factory
     }
     /**
      * @param string $nameserver
+     * @param LoopInterface $loop
      * @return ExecutorInterface
      * @throws \InvalidArgumentException for invalid DNS server address
      */
@@ -136,6 +139,7 @@ final class Factory
     }
     /**
      * @param string $nameserver
+     * @param LoopInterface $loop
      * @return TimeoutExecutor
      * @throws \InvalidArgumentException for invalid DNS server address
      */
@@ -145,6 +149,7 @@ final class Factory
     }
     /**
      * @param string $nameserver
+     * @param LoopInterface $loop
      * @return TimeoutExecutor
      * @throws \InvalidArgumentException for invalid DNS server address
      */

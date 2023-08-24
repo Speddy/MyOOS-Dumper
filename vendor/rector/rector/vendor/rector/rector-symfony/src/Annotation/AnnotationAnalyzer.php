@@ -9,15 +9,16 @@ use Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\Symfony\Enum\SymfonyAnnotation;
-final readonly class AnnotationAnalyzer
+final class AnnotationAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    public function __construct(PhpDocInfoFactory $phpDocInfoFactory)
     {
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
     public function hasClassMethodWithTemplateAnnotation(Class_ $class) : bool
     {

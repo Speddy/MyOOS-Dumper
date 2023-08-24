@@ -7,31 +7,40 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\FunctionLike;
 use PhpParser\Node\Param;
 use Rector\Naming\Contract\RenameParamValueObjectInterface;
-final readonly class ParamRename implements RenameParamValueObjectInterface
+final class ParamRename implements RenameParamValueObjectInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private string $currentName,
-        /**
-         * @readonly
-         */
-        private string $expectedName,
-        /**
-         * @readonly
-         */
-        private Param $param,
-        /**
-         * @readonly
-         */
-        private Variable $variable,
-        /**
-         * @readonly
-         */
-        private FunctionLike $functionLike
-    )
+    /**
+     * @readonly
+     * @var string
+     */
+    private $currentName;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $expectedName;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Param
+     */
+    private $param;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Expr\Variable
+     */
+    private $variable;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\FunctionLike
+     */
+    private $functionLike;
+    public function __construct(string $currentName, string $expectedName, Param $param, Variable $variable, FunctionLike $functionLike)
     {
+        $this->currentName = $currentName;
+        $this->expectedName = $expectedName;
+        $this->param = $param;
+        $this->variable = $variable;
+        $this->functionLike = $functionLike;
     }
     public function getCurrentName() : string
     {

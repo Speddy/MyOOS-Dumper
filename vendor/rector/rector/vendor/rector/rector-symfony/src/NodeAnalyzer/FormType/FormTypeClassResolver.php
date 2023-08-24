@@ -8,19 +8,22 @@ use PhpParser\Node\Expr\New_;
 use PHPStan\Type\TypeWithClassName;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final readonly class FormTypeClassResolver
+final class FormTypeClassResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     public function resolveFromExpr(Expr $expr) : ?string
     {

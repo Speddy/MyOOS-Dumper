@@ -13,7 +13,7 @@ namespace RectorPrefix202308\Composer\Semver\Constraint;
 /**
  * Blackhole of constraints, nothing escapes it
  */
-class MatchNoneConstraint implements ConstraintInterface, \Stringable
+class MatchNoneConstraint implements ConstraintInterface
 {
     /** @var string|null */
     protected $prettyString;
@@ -53,7 +53,7 @@ class MatchNoneConstraint implements ConstraintInterface, \Stringable
     /**
      * {@inheritDoc}
      */
-    public function __toString(): string
+    public function __toString()
     {
         return '[]';
     }

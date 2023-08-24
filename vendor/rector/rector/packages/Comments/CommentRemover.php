@@ -8,15 +8,16 @@ use Rector\Comments\NodeTraverser\CommentRemovingNodeTraverser;
 /**
  * @see \Rector\Tests\Comments\CommentRemover\CommentRemoverTest
  */
-final readonly class CommentRemover
+final class CommentRemover
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private CommentRemovingNodeTraverser $commentRemovingNodeTraverser
-    )
+    /**
+     * @readonly
+     * @var \Rector\Comments\NodeTraverser\CommentRemovingNodeTraverser
+     */
+    private $commentRemovingNodeTraverser;
+    public function __construct(CommentRemovingNodeTraverser $commentRemovingNodeTraverser)
     {
+        $this->commentRemovingNodeTraverser = $commentRemovingNodeTraverser;
     }
     /**
      * @param mixed[]|\PhpParser\Node|null $node

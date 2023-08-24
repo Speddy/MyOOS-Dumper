@@ -10,15 +10,16 @@ use PhpParser\Node\Name;
 use PhpParser\Node\NullableType;
 use PhpParser\Node\UnionType;
 use Rector\Core\PhpParser\Comparing\NodeComparator;
-final readonly class TypeNodeUnwrapper
+final class TypeNodeUnwrapper
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeComparator $nodeComparator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
+     */
+    private $nodeComparator;
+    public function __construct(NodeComparator $nodeComparator)
     {
+        $this->nodeComparator = $nodeComparator;
     }
     /**
      * @param array<UnionType|NullableType|Name|Identifier|IntersectionType> $typeNodes

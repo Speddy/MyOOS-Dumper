@@ -11,15 +11,16 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\VariadicPlaceholder;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class CompactFuncCallAnalyzer
+final class CompactFuncCallAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function isInCompact(FuncCall $funcCall, Variable $variable) : bool
     {

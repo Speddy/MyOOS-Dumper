@@ -37,7 +37,7 @@ abstract class Montgomery extends Progenitor
         $rhs = new $class();
         $rhs->value = $n;
 
-        [, $temp] = $lhs->divide($rhs);
+        list(, $temp) = $lhs->divide($rhs);
         return $temp->value;
     }
 
@@ -47,6 +47,8 @@ abstract class Montgomery extends Progenitor
      * Interleaves the montgomery reduction and long multiplication algorithms together as described in
      * {@link http://www.cacr.math.uwaterloo.ca/hac/about/chap14.pdf#page=13 HAC 14.36}
      *
+     * @param array $x
+     * @param array $n
      * @param string $class
      * @return array
      */
@@ -58,7 +60,7 @@ abstract class Montgomery extends Progenitor
         ];
 
         if (($key = array_search($n, $cache[self::VARIABLE])) === false) {
-            $key = is_countable($cache[self::VARIABLE]) ? count($cache[self::VARIABLE]) : 0;
+            $key = count($cache[self::VARIABLE]);
             $cache[self::VARIABLE][] = $x;
             $cache[self::DATA][] = self::modInverse67108864($n, $class);
         }
@@ -105,6 +107,7 @@ abstract class Montgomery extends Progenitor
      *
      * Thanks to Pedro Gimeno Fortea for input!
      *
+     * @param array $x
      * @param string $class
      * @return int
      */

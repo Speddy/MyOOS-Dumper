@@ -17,8 +17,13 @@ use Rector\Core\Contract\PHPStan\Reflection\TypeToCallReflectionResolver\TypeToC
  *
  * @implements TypeToCallReflectionResolverInterface<ConstantStringType>
  */
-final readonly class ConstantStringTypeToCallReflectionResolver implements TypeToCallReflectionResolverInterface
+final class ConstantStringTypeToCallReflectionResolver implements TypeToCallReflectionResolverInterface
 {
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
     /**
      * Took from https://github.com/phpstan/phpstan-src/blob/8376548f76e2c845ae047e3010e873015b796818/src/Type/Constant/ConstantStringType.php#L158
      *
@@ -35,13 +40,9 @@ final readonly class ConstantStringTypeToCallReflectionResolver implements TypeT
      * @var string
      */
     private const METHOD_KEY = 'method';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider
-    )
+    public function __construct(ReflectionProvider $reflectionProvider)
     {
+        $this->reflectionProvider = $reflectionProvider;
     }
     public function supports(Type $type) : bool
     {

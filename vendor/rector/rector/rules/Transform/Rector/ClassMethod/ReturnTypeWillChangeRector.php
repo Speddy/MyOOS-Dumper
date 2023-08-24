@@ -24,20 +24,29 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class ReturnTypeWillChangeRector extends AbstractRector implements MinPhpVersionInterface, ConfigurableRectorInterface
 {
     /**
+     * @readonly
+     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
+     */
+    private $phpAttributeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\PhpAttribute\NodeFactory\PhpAttributeGroupFactory
+     */
+    private $phpAttributeGroupFactory;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
      * @var ClassMethodReference[]
      */
-    private array $returnTypeChangedClassMethodReferences = [];
-    public function __construct(/**
-     * @readonly
-     */
-    private readonly PhpAttributeAnalyzer $phpAttributeAnalyzer, /**
-     * @readonly
-     */
-    private readonly PhpAttributeGroupFactory $phpAttributeGroupFactory, /**
-     * @readonly
-     */
-    private readonly ReflectionResolver $reflectionResolver)
+    private $returnTypeChangedClassMethodReferences = [];
+    public function __construct(PhpAttributeAnalyzer $phpAttributeAnalyzer, PhpAttributeGroupFactory $phpAttributeGroupFactory, ReflectionResolver $reflectionResolver)
     {
+        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
+        $this->phpAttributeGroupFactory = $phpAttributeGroupFactory;
+        $this->reflectionResolver = $reflectionResolver;
         $this->returnTypeChangedClassMethodReferences = [new ClassMethodReference('ArrayAccess', 'getIterator'), new ClassMethodReference('ArrayAccess', 'offsetGet')];
     }
     public function getRuleDefinition() : RuleDefinition

@@ -117,7 +117,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
     protected function registerShutdownFunction(): void
     {
         if (PHP_SAPI !== 'cli') {
-            register_shutdown_function([\Monolog\Handler\BrowserConsoleHandler::class, 'send']);
+            register_shutdown_function(['Monolog\Handler\BrowserConsoleHandler', 'send']);
         }
     }
 
@@ -270,7 +270,7 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         }
         $script[] = static::call('log', static::quote('%c%s'), static::quote('font-weight: bold'), static::quote($title));
         foreach ($dict as $key => $value) {
-            $value = json_encode($value, JSON_THROW_ON_ERROR);
+            $value = json_encode($value);
             if (empty($value)) {
                 $value = static::quote('');
             }
@@ -285,7 +285,10 @@ class BrowserConsoleHandler extends AbstractProcessingHandler
         return '"' . addcslashes($arg, "\"\n\\") . '"';
     }
 
-    private static function call(mixed ...$args): string
+    /**
+     * @param mixed $args
+     */
+    private static function call(...$args): string
     {
         $method = array_shift($args);
         if (!is_string($method)) {

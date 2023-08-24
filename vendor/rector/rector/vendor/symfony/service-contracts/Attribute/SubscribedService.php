@@ -25,6 +25,18 @@ use RectorPrefix202308\Symfony\Contracts\Service\ServiceSubscriberTrait;
 #[\Attribute(\Attribute::TARGET_METHOD)]
 final class SubscribedService
 {
+    /**
+     * @var string|null
+     */
+    public $key;
+    /**
+     * @var class-string|null
+     */
+    public $type;
+    /**
+     * @var bool
+     */
+    public $nullable = \false;
     /** @var object[] */
     public $attributes;
     /**
@@ -33,8 +45,11 @@ final class SubscribedService
      * @param bool              $nullable   Whether the service is optional
      * @param object|object[]   $attributes One or more dependency injection attributes to use
      */
-    public function __construct(public ?string $key = null, public ?string $type = null, public bool $nullable = \false, $attributes = [])
+    public function __construct(?string $key = null, ?string $type = null, bool $nullable = \false, $attributes = [])
     {
+        $this->key = $key;
+        $this->type = $type;
+        $this->nullable = $nullable;
         $this->attributes = \is_array($attributes) ? $attributes : [$attributes];
     }
 }

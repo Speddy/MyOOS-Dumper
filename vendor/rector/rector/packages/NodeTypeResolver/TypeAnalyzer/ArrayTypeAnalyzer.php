@@ -25,31 +25,40 @@ use Rector\Core\PhpParser\AstResolver;
 use Rector\Core\Reflection\ReflectionResolver;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final readonly class ArrayTypeAnalyzer
+final class ArrayTypeAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private AstResolver $astResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\AstResolver
+     */
+    private $astResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver, PhpDocInfoFactory $phpDocInfoFactory, ReflectionResolver $reflectionResolver, AstResolver $astResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->reflectionResolver = $reflectionResolver;
+        $this->astResolver = $astResolver;
     }
     public function isArrayType(Expr $expr) : bool
     {

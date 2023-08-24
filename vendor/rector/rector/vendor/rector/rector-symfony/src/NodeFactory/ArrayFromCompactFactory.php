@@ -9,15 +9,16 @@ use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Scalar\String_;
 use Rector\Core\NodeManipulator\FuncCallManipulator;
-final readonly class ArrayFromCompactFactory
+final class ArrayFromCompactFactory
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private FuncCallManipulator $funcCallManipulator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\FuncCallManipulator
+     */
+    private $funcCallManipulator;
+    public function __construct(FuncCallManipulator $funcCallManipulator)
     {
+        $this->funcCallManipulator = $funcCallManipulator;
     }
     public function createArrayFromCompactFuncCall(FuncCall $compactFuncCall) : Array_
     {

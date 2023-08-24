@@ -35,7 +35,7 @@ class Connection extends EventEmitter implements ConnectionInterface
     public $encryptionEnabled = \false;
     /** @internal */
     public $stream;
-    private readonly \RectorPrefix202308\React\Stream\DuplexResourceStream $input;
+    private $input;
     public function __construct($resource, LoopInterface $loop)
     {
         // PHP < 7.3.3 (and PHP < 7.2.15) suffers from a bug where feof() might
@@ -59,8 +59,8 @@ class Connection extends EventEmitter implements ConnectionInterface
         $limitWriteChunks = \PHP_VERSION_ID < 70018 || \PHP_VERSION_ID >= 70100 && \PHP_VERSION_ID < 70104;
         $this->input = new DuplexResourceStream($resource, $loop, $clearCompleteBuffer ? -1 : null, new WritableResourceStream($resource, $loop, null, $limitWriteChunks ? 8192 : null));
         $this->stream = $resource;
-        Util::forwardEvents($this->input, $this, ['data', 'end', 'error', 'close', 'pipe', 'drain']);
-        $this->input->on('close', $this->close(...));
+        Util::forwardEvents($this->input, $this, array('data', 'end', 'error', 'close', 'pipe', 'drain'));
+        $this->input->on('close', array($this, 'close'));
     }
     public function isReadable()
     {
@@ -78,7 +78,7 @@ class Connection extends EventEmitter implements ConnectionInterface
     {
         $this->input->resume();
     }
-    public function pipe(WritableStreamInterface $dest, array $options = [])
+    public function pipe(WritableStreamInterface $dest, array $options = array())
     {
         return $this->input->pipe($dest, $options);
     }
@@ -128,8 +128,8 @@ class Connection extends EventEmitter implements ConnectionInterface
         if ($this->unix) {
             // remove trailing colon from address for HHVM < 3.19: https://3v4l.org/5C1lo
             // note that technically ":" is a valid address, so keep this in place otherwise
-            if (str_ends_with((string) $address, ':') && \defined('RectorPrefix202308\\HHVM_VERSION_ID') && \RectorPrefix202308\HHVM_VERSION_ID < 31900) {
-                $address = (string) \substr((string) $address, 0, -1);
+            if (\substr($address, -1) === ':' && \defined('RectorPrefix202308\\HHVM_VERSION_ID') && \RectorPrefix202308\HHVM_VERSION_ID < 31900) {
+                $address = (string) \substr($address, 0, -1);
                 // @codeCoverageIgnore
             }
             // work around unknown addresses should return null value: https://3v4l.org/5C1lo and https://bugs.php.net/bug.php?id=74556
@@ -141,9 +141,9 @@ class Connection extends EventEmitter implements ConnectionInterface
             return 'unix://' . $address;
         }
         // check if this is an IPv6 address which includes multiple colons but no square brackets
-        $pos = \strrpos((string) $address, ':');
-        if ($pos !== \false && \strpos((string) $address, ':') < $pos && !str_starts_with((string) $address, '[')) {
-            $address = '[' . \substr((string) $address, 0, $pos) . ']:' . \substr((string) $address, $pos + 1);
+        $pos = \strrpos($address, ':');
+        if ($pos !== \false && \strpos($address, ':') < $pos && \substr($address, 0, 1) !== '[') {
+            $address = '[' . \substr($address, 0, $pos) . ']:' . \substr($address, $pos + 1);
             // @codeCoverageIgnore
         }
         return ($this->encryptionEnabled ? 'tls' : 'tcp') . '://' . $address;

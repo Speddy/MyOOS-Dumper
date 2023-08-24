@@ -7,11 +7,11 @@ use PhpParser\NodeAbstract;
 /**
  * Represents a non-namespaced name. Namespaced names are represented using Name nodes.
  */
-class Identifier extends NodeAbstract implements \Stringable
+class Identifier extends NodeAbstract
 {
     /** @var string Identifier as string */
     public $name;
-    private static array $specialClassNames = ['self' => \true, 'parent' => \true, 'static' => \true];
+    private static $specialClassNames = ['self' => \true, 'parent' => \true, 'static' => \true];
     /**
      * Constructs an identifier node.
      *

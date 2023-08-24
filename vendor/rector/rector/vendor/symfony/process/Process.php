@@ -48,31 +48,34 @@ class Process implements \IteratorAggregate
     // Use this flag to skip STDOUT while iterating
     public const ITER_SKIP_ERR = 8;
     // Use this flag to skip STDERR while iterating
-    private ?\Closure $callback = null;
-    private bool $hasCallback = \false;
-    private array $env = [];
+    private $callback;
+    private $hasCallback = \false;
+    private $commandline;
+    private $cwd;
+    private $env = [];
     private $input;
-    private string|float|null $starttime = null;
-    private string|float|null $lastOutputTime = null;
-    private ?float $timeout = null;
-    private ?float $idleTimeout = null;
+    private $starttime;
+    private $lastOutputTime;
+    private $timeout;
+    private $idleTimeout;
     private $exitcode;
-    private array $fallbackStatus = [];
-    private array|float|int|null $processInformation = null;
-    private bool $outputDisabled = \false;
+    private $fallbackStatus = [];
+    private $processInformation;
+    private $outputDisabled = \false;
     private $stdout;
     private $stderr;
     private $process;
-    private string $status = self::STATUS_READY;
-    private int|bool $incrementalOutputOffset = 0;
-    private int|bool $incrementalErrorOutputOffset = 0;
-    private bool $tty = \false;
-    private bool $pty;
-    private array $options = ['suppress_errors' => \true, 'bypass_shell' => \true];
-    private bool $useFileHandles = \false;
-    private \RectorPrefix202308\Symfony\Component\Process\Pipes\WindowsPipes|\RectorPrefix202308\Symfony\Component\Process\Pipes\UnixPipes|null $processPipes = null;
-    private ?int $latestSignal = null;
-    private static ?bool $sigchild = null;
+    private $status = self::STATUS_READY;
+    private $incrementalOutputOffset = 0;
+    private $incrementalErrorOutputOffset = 0;
+    private $tty = \false;
+    private $pty;
+    private $options = ['suppress_errors' => \true, 'bypass_shell' => \true];
+    private $useFileHandles = \false;
+    /** @var PipesInterface */
+    private $processPipes;
+    private $latestSignal;
+    private static $sigchild;
     /**
      * Exit codes translation table.
      *
@@ -119,7 +122,7 @@ class Process implements \IteratorAggregate
         159 => 'Bad syscall',
     ];
     /**
-     * @param array $commandline The command to run and its arguments listed as separate entries
+     * @param array          $command The command to run and its arguments listed as separate entries
      * @param string|null    $cwd     The working directory or null to use the working dir of the current PHP process
      * @param array|null     $env     The environment variables or null to use the same environment as the current PHP process
      * @param mixed          $input   The input as stream resource, scalar or \Traversable, or null for no input
@@ -127,11 +130,13 @@ class Process implements \IteratorAggregate
      *
      * @throws LogicException When proc_open is not installed
      */
-    public function __construct(private array $commandline, private ?string $cwd = null, array $env = null, $input = null, ?float $timeout = 60)
+    public function __construct(array $command, string $cwd = null, array $env = null, $input = null, ?float $timeout = 60)
     {
         if (!\function_exists('proc_open')) {
             throw new LogicException('The Process class relies on proc_open, which is not available on your PHP installation.');
         }
+        $this->commandline = $command;
+        $this->cwd = $cwd;
         // on Windows, if the cwd changed via chdir(), proc_open defaults to the dir where PHP was started
         // on Gnu/Linux, PHP builds with --enable-maintainer-zts are also affected
         // @see : https://bugs.php.net/51800
@@ -177,11 +182,11 @@ class Process implements \IteratorAggregate
     }
     public function __sleep() : array
     {
-        throw new \BadMethodCallException('Cannot serialize ' . self::class);
+        throw new \BadMethodCallException('Cannot serialize ' . __CLASS__);
     }
     public function __wakeup()
     {
-        throw new \BadMethodCallException('Cannot unserialize ' . self::class);
+        throw new \BadMethodCallException('Cannot unserialize ' . __CLASS__);
     }
     public function __destruct()
     {
@@ -278,7 +283,7 @@ class Process implements \IteratorAggregate
         }
         $env += '\\' === \DIRECTORY_SEPARATOR ? \array_diff_ukey($this->getDefaultEnv(), $env, 'strcasecmp') : $this->getDefaultEnv();
         if (\is_array($commandline = $this->commandline)) {
-            $commandline = \implode(' ', \array_map(\Closure::fromCallable($this->escapeArgument(...)), $commandline));
+            $commandline = \implode(' ', \array_map(\Closure::fromCallable([$this, 'escapeArgument']), $commandline));
             if ('\\' !== \DIRECTORY_SEPARATOR) {
                 // exec is mandatory to deal with sending a signal to the process
                 $commandline = 'exec ' . $commandline;
@@ -822,7 +827,7 @@ class Process implements \IteratorAggregate
      */
     public function getCommandLine() : string
     {
-        return \is_array($this->commandline) ? \implode(' ', \array_map(\Closure::fromCallable($this->escapeArgument(...)), $this->commandline)) : $this->commandline;
+        return \is_array($this->commandline) ? \implode(' ', \array_map(\Closure::fromCallable([$this, 'escapeArgument']), $this->commandline)) : $this->commandline;
     }
     /**
      * Gets the process timeout in seconds (max. runtime).
@@ -973,7 +978,7 @@ class Process implements \IteratorAggregate
      *
      * @throws LogicException In case the process is running
      */
-    public function setInput(mixed $input)
+    public function setInput($input)
     {
         if ($this->isRunning()) {
             throw new LogicException('Input cannot be set while the process is running.');
@@ -1046,7 +1051,7 @@ class Process implements \IteratorAggregate
     public static function isTtySupported() : bool
     {
         static $isTtySupported;
-        return $isTtySupported ??= '/' === \DIRECTORY_SEPARATOR && \stream_isatty(\STDOUT);
+        return $isTtySupported = $isTtySupported ?? '/' === \DIRECTORY_SEPARATOR && \stream_isatty(\STDOUT);
     }
     /**
      * Returns whether PTY is supported on the current operating system.
@@ -1088,7 +1093,9 @@ class Process implements \IteratorAggregate
     protected function buildCallback(callable $callback = null) : \Closure
     {
         if ($this->outputDisabled) {
-            return fn($type, $data): bool => null !== $callback && $callback($type, $data);
+            return function ($type, $data) use($callback) : bool {
+                return null !== $callback && $callback($type, $data);
+            };
         }
         $out = self::OUT;
         return function ($type, $data) use($callback, $out) : bool {
@@ -1135,7 +1142,7 @@ class Process implements \IteratorAggregate
         }
         \ob_start();
         \phpinfo(\INFO_GENERAL);
-        return self::$sigchild = str_contains(\ob_get_clean(), '--enable-sigchild');
+        return self::$sigchild = \strpos(\ob_get_clean(), '--enable-sigchild') !== \false;
     }
     /**
      * Reads pipes for the freshest output.
@@ -1297,7 +1304,7 @@ class Process implements \IteratorAggregate
             if (isset($varCache[$m[0]])) {
                 return $varCache[$m[0]];
             }
-            if (str_contains($value = $m[1], "\x00")) {
+            if (\strpos($value = $m[1], "\x00") !== \false) {
                 $value = \str_replace("\x00", '?', $value);
             }
             if (\false === \strpbrk($value, "\"%!\n")) {
@@ -1348,7 +1355,7 @@ class Process implements \IteratorAggregate
         if ('\\' !== \DIRECTORY_SEPARATOR) {
             return "'" . \str_replace("'", "'\\''", $argument) . "'";
         }
-        if (str_contains($argument, "\x00")) {
+        if (\strpos($argument, "\x00") !== \false) {
             $argument = \str_replace("\x00", '?', $argument);
         }
         if (!\preg_match('/[\\/()%!^"<>&|\\s]/', $argument)) {

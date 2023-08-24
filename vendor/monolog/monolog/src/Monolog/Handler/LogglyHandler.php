@@ -62,6 +62,7 @@ class LogglyHandler extends AbstractProcessingHandler
     /**
      * Loads and returns the shared curl handler for the given endpoint.
      *
+     * @param string $endpoint
      *
      * @return resource|CurlHandle
      */
@@ -77,6 +78,7 @@ class LogglyHandler extends AbstractProcessingHandler
     /**
      * Starts a fresh curl session for the given endpoint and returns its handler.
      *
+     * @param string $endpoint
      *
      * @return resource|CurlHandle
      */
@@ -126,7 +128,9 @@ class LogglyHandler extends AbstractProcessingHandler
     {
         $level = $this->level;
 
-        $records = array_filter($records, fn($record) => $record['level'] >= $level);
+        $records = array_filter($records, function ($record) use ($level) {
+            return ($record['level'] >= $level);
+        });
 
         if ($records) {
             $this->send($this->getFormatter()->formatBatch($records), static::ENDPOINT_BATCH);

@@ -14,13 +14,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeRecursiveDirectoryIteratorHasChildrenRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly FamilyRelationsAnalyzer $familyRelationsAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\FamilyTree\Reflection\FamilyRelationsAnalyzer
+     */
+    private $familyRelationsAnalyzer;
+    public function __construct(FamilyRelationsAnalyzer $familyRelationsAnalyzer)
     {
+        $this->familyRelationsAnalyzer = $familyRelationsAnalyzer;
     }
     /**
      * @return array<class-string<Node>>

@@ -21,26 +21,31 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class ExceptionAnnotationRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeFactory\ExpectExceptionMethodCallFactory
+     */
+    private $expectExceptionMethodCallFactory;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
+     */
+    private $phpDocTagRemover;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
      * In reversed order, which they should be called in code.
      *
      * @var array<string, string>
      */
     private const ANNOTATION_TO_METHOD = ['expectedExceptionMessageRegExp' => 'expectExceptionMessageRegExp', 'expectedExceptionMessage' => 'expectExceptionMessage', 'expectedExceptionCode' => 'expectExceptionCode', 'expectedException' => 'expectException'];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ExpectExceptionMethodCallFactory $expectExceptionMethodCallFactory,
-        /**
-         * @readonly
-         */
-        private readonly PhpDocTagRemover $phpDocTagRemover,
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer
-    )
+    public function __construct(ExpectExceptionMethodCallFactory $expectExceptionMethodCallFactory, PhpDocTagRemover $phpDocTagRemover, TestsNodeAnalyzer $testsNodeAnalyzer)
     {
+        $this->expectExceptionMethodCallFactory = $expectExceptionMethodCallFactory;
+        $this->phpDocTagRemover = $phpDocTagRemover;
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

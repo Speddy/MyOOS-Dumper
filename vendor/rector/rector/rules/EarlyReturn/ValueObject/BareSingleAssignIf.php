@@ -6,19 +6,22 @@ namespace Rector\EarlyReturn\ValueObject;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Stmt\If_;
-final readonly class BareSingleAssignIf
+final class BareSingleAssignIf
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private If_ $if,
-        /**
-         * @readonly
-         */
-        private Assign $assign
-    )
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Stmt\If_
+     */
+    private $if;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Expr\Assign
+     */
+    private $assign;
+    public function __construct(If_ $if, Assign $assign)
     {
+        $this->if = $if;
+        $this->assign = $assign;
     }
     public function getIfCondExpr() : Expr
     {

@@ -30,7 +30,7 @@ final class Parser
         if (!empty($lines) && $lines[count($lines) - 1] === '') {
             array_pop($lines);
         }
-        $lineCount = is_countable($lines) ? count($lines) : 0;
+        $lineCount = count($lines);
         $diffs = [];
         $diff = null;
         $collected = [];
@@ -62,13 +62,13 @@ final class Parser
         $chunk = null;
         $diffLines = [];
         foreach ($lines as $line) {
-            if (preg_match('/^@@\\s+-(?P<start>\\d+)(?:,\\s*(?P<startrange>\\d+))?\\s+\\+(?P<end>\\d+)(?:,\\s*(?P<endrange>\\d+))?\\s+@@/', (string) $line, $match, \PREG_UNMATCHED_AS_NULL)) {
+            if (preg_match('/^@@\\s+-(?P<start>\\d+)(?:,\\s*(?P<startrange>\\d+))?\\s+\\+(?P<end>\\d+)(?:,\\s*(?P<endrange>\\d+))?\\s+@@/', $line, $match, \PREG_UNMATCHED_AS_NULL)) {
                 $chunk = new Chunk((int) $match['start'], isset($match['startrange']) ? max(0, (int) $match['startrange']) : 1, (int) $match['end'], isset($match['endrange']) ? max(0, (int) $match['endrange']) : 1);
                 $chunks[] = $chunk;
                 $diffLines = [];
                 continue;
             }
-            if (preg_match('/^(?P<type>[+ -])?(?P<line>.*)/', (string) $line, $match)) {
+            if (preg_match('/^(?P<type>[+ -])?(?P<line>.*)/', $line, $match)) {
                 $type = Line::UNCHANGED;
                 if ($match['type'] === '+') {
                     $type = Line::ADDED;

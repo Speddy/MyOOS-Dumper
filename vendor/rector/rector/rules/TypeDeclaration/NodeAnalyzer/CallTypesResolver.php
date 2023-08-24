@@ -17,23 +17,28 @@ use PHPStan\Type\UnionType;
 use Rector\NodeCollector\ValueObject\ArrayCallable;
 use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\NodeTypeResolver\PHPStan\Type\TypeFactory;
-final readonly class CallTypesResolver
+final class CallTypesResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private TypeFactory $typeFactory,
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    public function __construct(NodeTypeResolver $nodeTypeResolver, TypeFactory $typeFactory, ReflectionProvider $reflectionProvider)
     {
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->typeFactory = $typeFactory;
+        $this->reflectionProvider = $reflectionProvider;
     }
     /**
      * @param MethodCall[]|StaticCall[]|ArrayCallable[] $calls

@@ -15,23 +15,28 @@ use PHPStan\Type\Type;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
-final readonly class MockedVariableAnalyzer
+final class MockedVariableAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    public function __construct(SimpleCallableNodeTraverser $simpleCallableNodeTraverser, NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver)
     {
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     public function containsMockAsUsedVariable(ClassMethod $classMethod) : bool
     {

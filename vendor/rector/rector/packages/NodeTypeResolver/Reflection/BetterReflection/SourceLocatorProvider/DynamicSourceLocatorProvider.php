@@ -18,25 +18,31 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class DynamicSourceLocatorProvider implements ResetableInterface
 {
     /**
+     * @readonly
+     * @var \PHPStan\Reflection\BetterReflection\SourceLocator\FileNodesFetcher
+     */
+    private $fileNodesFetcher;
+    /**
+     * @readonly
+     * @var \PHPStan\Php\PhpVersion
+     */
+    private $phpVersion;
+    /**
      * @var string[]
      */
-    private array $filePaths = [];
+    private $filePaths = [];
     /**
      * @var array<string, string[]>
      */
-    private array $filesByDirectory = [];
-    private ?\PHPStan\BetterReflection\SourceLocator\Type\AggregateSourceLocator $aggregateSourceLocator = null;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly FileNodesFetcher $fileNodesFetcher,
-        /**
-         * @readonly
-         */
-        private readonly PhpVersion $phpVersion
-    )
+    private $filesByDirectory = [];
+    /**
+     * @var \PHPStan\BetterReflection\SourceLocator\Type\AggregateSourceLocator|null
+     */
+    private $aggregateSourceLocator;
+    public function __construct(FileNodesFetcher $fileNodesFetcher, PhpVersion $phpVersion)
     {
+        $this->fileNodesFetcher = $fileNodesFetcher;
+        $this->phpVersion = $phpVersion;
     }
     public function setFilePath(string $filePath) : void
     {

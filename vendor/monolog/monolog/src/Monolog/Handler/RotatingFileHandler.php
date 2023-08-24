@@ -26,9 +26,9 @@ use Monolog\Utils;
  */
 class RotatingFileHandler extends StreamHandler
 {
-    final public const FILE_PER_DAY = 'Y-m-d';
-    final public const FILE_PER_MONTH = 'Y-m';
-    final public const FILE_PER_YEAR = 'Y';
+    public const FILE_PER_DAY = 'Y-m-d';
+    public const FILE_PER_MONTH = 'Y-m';
+    public const FILE_PER_YEAR = 'Y';
 
     /** @var string */
     protected $filename;
@@ -39,7 +39,7 @@ class RotatingFileHandler extends StreamHandler
     /** @var \DateTimeImmutable */
     protected $nextRotation;
     /** @var string */
-    protected $filenameFormat = '{filename}-{date}';
+    protected $filenameFormat;
     /** @var string */
     protected $dateFormat;
 
@@ -54,6 +54,7 @@ class RotatingFileHandler extends StreamHandler
         $this->filename = Utils::canonicalizePath($filename);
         $this->maxFiles = $maxFiles;
         $this->nextRotation = new \DateTimeImmutable('tomorrow');
+        $this->filenameFormat = '{filename}-{date}';
         $this->dateFormat = static::FILE_PER_DAY;
 
         parent::__construct($this->getTimedFilename(), $level, $bubble, $filePermission, $useLocking);
@@ -150,13 +151,17 @@ class RotatingFileHandler extends StreamHandler
         }
 
         // Sorting the files by name to remove the older ones
-        usort($logFiles, fn($a, $b) => strcmp((string) $b, (string) $a));
+        usort($logFiles, function ($a, $b) {
+            return strcmp($b, $a);
+        });
 
         foreach (array_slice($logFiles, $this->maxFiles) as $file) {
             if (is_writable($file)) {
                 // suppress errors here as unlink() might fail if two processes
                 // are cleaning up/rotating at the same time
-                set_error_handler(fn(int $errno, string $errstr, string $errfile, int $errline): bool => false);
+                set_error_handler(function (int $errno, string $errstr, string $errfile, int $errline): bool {
+                    return false;
+                });
                 unlink($file);
                 restore_error_handler();
             }

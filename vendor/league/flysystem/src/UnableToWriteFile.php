@@ -9,7 +9,10 @@ use Throwable;
 
 final class UnableToWriteFile extends RuntimeException implements FilesystemOperationFailed
 {
-    private string $location = '';
+    /**
+     * @var string
+     */
+    private $location = '';
 
     /**
      * @var string

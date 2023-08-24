@@ -19,21 +19,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class PrivatizeFinalClassMethodRector extends AbstractScopeAwareRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ClassMethodVisibilityGuard $classMethodVisibilityGuard,
-        /**
-         * @readonly
-         */
-        private readonly VisibilityManipulator $visibilityManipulator,
-        /**
-         * @readonly
-         */
-        private readonly OverrideByParentClassGuard $overrideByParentClassGuard
-    )
+    /**
+     * @readonly
+     * @var \Rector\Privatization\VisibilityGuard\ClassMethodVisibilityGuard
+     */
+    private $classMethodVisibilityGuard;
+    /**
+     * @readonly
+     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
+     */
+    private $visibilityManipulator;
+    /**
+     * @readonly
+     * @var \Rector\Privatization\Guard\OverrideByParentClassGuard
+     */
+    private $overrideByParentClassGuard;
+    public function __construct(ClassMethodVisibilityGuard $classMethodVisibilityGuard, VisibilityManipulator $visibilityManipulator, OverrideByParentClassGuard $overrideByParentClassGuard)
     {
+        $this->classMethodVisibilityGuard = $classMethodVisibilityGuard;
+        $this->visibilityManipulator = $visibilityManipulator;
+        $this->overrideByParentClassGuard = $overrideByParentClassGuard;
     }
     public function getRuleDefinition() : RuleDefinition
     {

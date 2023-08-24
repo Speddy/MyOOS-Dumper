@@ -25,9 +25,16 @@ use Monolog\Handler\Slack\SlackRecord;
 class SlackWebhookHandler extends AbstractProcessingHandler
 {
     /**
-     * Instance of the SlackRecord util class preparing data for Slack API.
+     * Slack Webhook token
+     * @var string
      */
-    private readonly \Monolog\Handler\Slack\SlackRecord $slackRecord;
+    private $webhookUrl;
+
+    /**
+     * Instance of the SlackRecord util class preparing data for Slack API.
+     * @var SlackRecord
+     */
+    private $slackRecord;
 
     /**
      * @param string      $webhookUrl             Slack Webhook URL
@@ -40,7 +47,7 @@ class SlackWebhookHandler extends AbstractProcessingHandler
      * @param string[]    $excludeFields          Dot separated list of fields to exclude from slack message. E.g. ['context.field1', 'extra.field2']
      */
     public function __construct(
-        private readonly string $webhookUrl,
+        string $webhookUrl,
         ?string $channel = null,
         ?string $username = null,
         bool $useAttachment = true,
@@ -49,13 +56,15 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         bool $includeContextAndExtra = false,
         $level = Logger::CRITICAL,
         bool $bubble = true,
-        array $excludeFields = []
+        array $excludeFields = array()
     ) {
         if (!extension_loaded('curl')) {
             throw new MissingExtensionException('The curl extension is needed to use the SlackWebhookHandler');
         }
 
         parent::__construct($level, $bubble);
+
+        $this->webhookUrl = $webhookUrl;
 
         $this->slackRecord = new SlackRecord(
             $channel,
@@ -87,7 +96,13 @@ class SlackWebhookHandler extends AbstractProcessingHandler
         $postString = Utils::jsonEncode($postData);
 
         $ch = curl_init();
-        $options = [CURLOPT_URL => $this->webhookUrl, CURLOPT_POST => true, CURLOPT_RETURNTRANSFER => true, CURLOPT_HTTPHEADER => ['Content-type: application/json'], CURLOPT_POSTFIELDS => $postString];
+        $options = array(
+            CURLOPT_URL => $this->webhookUrl,
+            CURLOPT_POST => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_HTTPHEADER => array('Content-type: application/json'),
+            CURLOPT_POSTFIELDS => $postString,
+        );
         if (defined('CURLOPT_SAFE_UPLOAD')) {
             $options[CURLOPT_SAFE_UPLOAD] = true;
         }

@@ -9,12 +9,15 @@ use function preg_match;
 class Patterns
 {
     /** @var Pattern[] */
-    private readonly array $patterns;
-    private readonly string $regex;
+    private $patterns;
+    /** @var string */
+    private $regex;
     public function __construct(Pattern ...$patterns)
     {
         $this->patterns = $patterns;
-        $patterns = array_map(static fn(Pattern $pattern): string => $pattern->getPattern(), $this->patterns);
+        $patterns = array_map(static function (Pattern $pattern) : string {
+            return $pattern->getPattern();
+        }, $this->patterns);
         $this->regex = '/^(?:' . implode('|', $patterns) . ')$/i';
     }
     public function matches(string $word) : bool

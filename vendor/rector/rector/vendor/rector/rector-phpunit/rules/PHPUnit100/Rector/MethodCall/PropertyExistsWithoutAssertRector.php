@@ -26,6 +26,16 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class PropertyExistsWithoutAssertRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\IdentifierManipulator
+     */
+    private $identifierManipulator;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
      * @var array<string, string>
      */
     private const RENAME_METHODS_WITH_OBJECT_MAP = ['assertObjectHasAttribute' => 'assertTrue', 'assertObjectNotHasAttribute' => 'assertFalse'];
@@ -33,17 +43,10 @@ final class PropertyExistsWithoutAssertRector extends AbstractRector
      * @var array<string, string>
      */
     private const RENAME_METHODS_WITH_CLASS_MAP = ['assertClassHasAttribute' => 'assertTrue', 'assertClassNotHasAttribute' => 'assertFalse'];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly IdentifierManipulator $identifierManipulator,
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer
-    )
+    public function __construct(IdentifierManipulator $identifierManipulator, TestsNodeAnalyzer $testsNodeAnalyzer)
     {
+        $this->identifierManipulator = $identifierManipulator;
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

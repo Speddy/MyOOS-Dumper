@@ -21,22 +21,30 @@ use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class ClassRenamingPostRector extends \Rector\PostRector\Rector\AbstractPostRector
 {
-    private null|\Rector\Core\PhpParser\Node\CustomNode\FileWithoutNamespace|\PhpParser\Node\Stmt\Namespace_ $rootNode = null;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ClassRenamer $classRenamer,
-        /**
-         * @readonly
-         */
-        private readonly RenamedClassesDataCollector $renamedClassesDataCollector,
-        /**
-         * @readonly
-         */
-        private readonly UseImportsRemover $useImportsRemover
-    )
+    /**
+     * @readonly
+     * @var \Rector\Renaming\NodeManipulator\ClassRenamer
+     */
+    private $classRenamer;
+    /**
+     * @readonly
+     * @var \Rector\Core\Configuration\RenamedClassesDataCollector
+     */
+    private $renamedClassesDataCollector;
+    /**
+     * @readonly
+     * @var \Rector\CodingStyle\Application\UseImportsRemover
+     */
+    private $useImportsRemover;
+    /**
+     * @var \Rector\Core\PhpParser\Node\CustomNode\FileWithoutNamespace|\PhpParser\Node\Stmt\Namespace_|null
+     */
+    private $rootNode = null;
+    public function __construct(ClassRenamer $classRenamer, RenamedClassesDataCollector $renamedClassesDataCollector, UseImportsRemover $useImportsRemover)
     {
+        $this->classRenamer = $classRenamer;
+        $this->renamedClassesDataCollector = $renamedClassesDataCollector;
+        $this->useImportsRemover = $useImportsRemover;
     }
     /**
      * @param Stmt[] $nodes

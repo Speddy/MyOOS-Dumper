@@ -5,10 +5,13 @@ namespace RectorPrefix202308\Doctrine\Inflector;
 
 class CachedWordInflector implements WordInflector
 {
+    /** @var WordInflector */
+    private $wordInflector;
     /** @var string[] */
-    private array $cache = [];
-    public function __construct(private readonly WordInflector $wordInflector)
+    private $cache = [];
+    public function __construct(WordInflector $wordInflector)
     {
+        $this->wordInflector = $wordInflector;
     }
     public function inflect(string $word) : string
     {

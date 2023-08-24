@@ -5,19 +5,37 @@ namespace Rector\Removing\ValueObject;
 
 use PHPStan\Type\ObjectType;
 use Rector\Core\Validation\RectorAssert;
-final readonly class ArgumentRemover
+final class ArgumentRemover
 {
-    public function __construct(/**
+    /**
      * @readonly
+     * @var string
      */
-    private string $class, /**
+    private $class;
+    /**
      * @readonly
+     * @var string
      */
-    private string $method, /**
+    private $method;
+    /**
      * @readonly
+     * @var int
      */
-    private int $position, private mixed $value)
+    private $position;
+    /**
+     * @readonly
+     * @var mixed
+     */
+    private $value;
+    /**
+     * @param mixed $value
+     */
+    public function __construct(string $class, string $method, int $position, $value)
     {
+        $this->class = $class;
+        $this->method = $method;
+        $this->position = $position;
+        $this->value = $value;
         RectorAssert::className($class);
     }
     public function getObjectType() : ObjectType

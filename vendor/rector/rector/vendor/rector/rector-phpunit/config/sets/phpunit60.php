@@ -14,7 +14,7 @@ use Rector\Renaming\ValueObject\MethodCallRename;
 return static function (RectorConfig $rectorConfig) : void {
     // handles 2nd and 3rd argument of setExpectedException
     $rectorConfig->rules([DelegateExceptionArgumentsRector::class, ExceptionAnnotationRector::class, AddDoesNotPerformAssertionToNonAssertingTestRector::class, GetMockBuilderGetMockToCreateMockRector::class]);
-    $rectorConfig->ruleWithConfiguration(RenameMethodRector::class, [new MethodCallRename('PHPUnit\\Framework\\TestClass', 'setExpectedException', 'expectedException'), new MethodCallRename('PHPUnit\\Framework\\TestClass', 'setExpectedExceptionRegExp', 'expectedException'), new MethodCallRename(\PHPUnit\Framework\TestCase::class, 'createMockBuilder', 'getMockBuilder')]);
+    $rectorConfig->ruleWithConfiguration(RenameMethodRector::class, [new MethodCallRename('PHPUnit\\Framework\\TestClass', 'setExpectedException', 'expectedException'), new MethodCallRename('PHPUnit\\Framework\\TestClass', 'setExpectedExceptionRegExp', 'expectedException'), new MethodCallRename('PHPUnit\\Framework\\TestCase', 'createMockBuilder', 'getMockBuilder')]);
     $rectorConfig->ruleWithConfiguration(RenameClassRector::class, [
         // ref. https://github.com/sebastianbergmann/phpunit/compare/5.7.9...6.0.0
         'PHPUnit_Framework_MockObject_Stub' => 'PHPUnit\\Framework\\MockObject\\Stub',
@@ -46,7 +46,7 @@ return static function (RectorConfig $rectorConfig) : void {
         'PHPUnit_Framework_SkippedTestSuiteError' => 'PHPUnit\\Framework\\SkippedTestSuiteError',
         'PHPUnit_Framework_SyntheticError' => 'PHPUnit\\Framework\\SyntheticError',
         'PHPUnit_Framework_Test' => 'PHPUnit\\Framework\\Test',
-        'PHPUnit_Framework_TestCase' => \PHPUnit\Framework\TestCase::class,
+        'PHPUnit_Framework_TestCase' => 'PHPUnit\\Framework\\TestCase',
         'PHPUnit_Framework_TestFailure' => 'PHPUnit\\Framework\\TestFailure',
         'PHPUnit_Framework_TestListener' => 'PHPUnit\\Framework\\TestListener',
         'PHPUnit_Framework_TestResult' => 'PHPUnit\\Framework\\TestResult',

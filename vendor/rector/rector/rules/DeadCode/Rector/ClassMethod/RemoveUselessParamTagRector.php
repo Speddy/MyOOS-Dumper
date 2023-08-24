@@ -15,13 +15,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveUselessParamTagRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ParamTagRemover $paramTagRemover
-    )
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\PhpDoc\TagRemover\ParamTagRemover
+     */
+    private $paramTagRemover;
+    public function __construct(ParamTagRemover $paramTagRemover)
     {
+        $this->paramTagRemover = $paramTagRemover;
     }
     public function getRuleDefinition() : RuleDefinition
     {

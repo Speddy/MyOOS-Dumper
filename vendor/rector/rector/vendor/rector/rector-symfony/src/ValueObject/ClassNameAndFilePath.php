@@ -5,17 +5,20 @@ namespace Rector\Symfony\ValueObject;
 
 class ClassNameAndFilePath
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly string $className,
-        /**
-         * @readonly
-         */
-        private readonly string $filePath
-    )
+    /**
+     * @readonly
+     * @var string
+     */
+    private $className;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $filePath;
+    public function __construct(string $className, string $filePath)
     {
+        $this->className = $className;
+        $this->filePath = $filePath;
     }
     public function getClassName() : string
     {

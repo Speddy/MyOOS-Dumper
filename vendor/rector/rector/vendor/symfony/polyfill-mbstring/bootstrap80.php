@@ -174,8 +174,10 @@ if (!function_exists('mb_convert_variables')) {
     /**
      * @param mixed[]|string|null $from_encoding
      * @return string|false
+     * @param mixed $var
+     * @param mixed ...$vars
      */
-    function mb_convert_variables(?string $to_encoding, $from_encoding, mixed &$var, mixed &...$vars) { return p\Mbstring::mb_convert_variables((string) $to_encoding, $from_encoding ?? '', $var, ...$vars); }
+    function mb_convert_variables(?string $to_encoding, $from_encoding, &$var, &...$vars) { return p\Mbstring::mb_convert_variables((string) $to_encoding, $from_encoding ?? '', $var, ...$vars); }
 }
 
 if (!function_exists('mb_ord')) {
@@ -191,7 +193,7 @@ if (!function_exists('mb_chr')) {
     function mb_chr(?int $codepoint, ?string $encoding = null) { return p\Mbstring::mb_chr((int) $codepoint, $encoding); }
 }
 if (!function_exists('mb_scrub')) {
-    function mb_scrub(?string $string, ?string $encoding = null): string { $encoding ??= mb_internal_encoding(); return mb_convert_encoding((string) $string, $encoding, $encoding); }
+    function mb_scrub(?string $string, ?string $encoding = null): string { $encoding = $encoding ?? mb_internal_encoding(); return mb_convert_encoding((string) $string, $encoding, $encoding); }
 }
 if (!function_exists('mb_str_split')) {
     function mb_str_split(?string $string, ?int $length = 1, ?string $encoding = null): array { return p\Mbstring::mb_str_split((string) $string, (int) $length, $encoding); }

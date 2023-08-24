@@ -18,21 +18,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class GetToConstructorInjectionRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly DependencyInjectionMethodCallAnalyzer $dependencyInjectionMethodCallAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ContainerAwareAnalyzer $containerAwareAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ClassDependencyManipulator $classDependencyManipulator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\DependencyInjectionMethodCallAnalyzer
+     */
+    private $dependencyInjectionMethodCallAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\TypeAnalyzer\ContainerAwareAnalyzer
+     */
+    private $containerAwareAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\ClassDependencyManipulator
+     */
+    private $classDependencyManipulator;
+    public function __construct(DependencyInjectionMethodCallAnalyzer $dependencyInjectionMethodCallAnalyzer, ContainerAwareAnalyzer $containerAwareAnalyzer, ClassDependencyManipulator $classDependencyManipulator)
     {
+        $this->dependencyInjectionMethodCallAnalyzer = $dependencyInjectionMethodCallAnalyzer;
+        $this->containerAwareAnalyzer = $containerAwareAnalyzer;
+        $this->classDependencyManipulator = $classDependencyManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {

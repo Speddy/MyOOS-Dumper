@@ -17,35 +17,46 @@ use Rector\Naming\Naming\PropertyNaming;
 use Rector\Naming\ValueObject\ExpectedName;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\StaticTypeMapper\StaticTypeMapper;
-final readonly class MatchPropertyTypeExpectedNameResolver
+final class MatchPropertyTypeExpectedNameResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PropertyNaming $propertyNaming,
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private PropertyManipulator $propertyManipulator,
-        /**
-         * @readonly
-         */
-        private ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper
-    )
+    /**
+     * @readonly
+     * @var \Rector\Naming\Naming\PropertyNaming
+     */
+    private $propertyNaming;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\PropertyManipulator
+     */
+    private $propertyManipulator;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    public function __construct(PropertyNaming $propertyNaming, PhpDocInfoFactory $phpDocInfoFactory, NodeNameResolver $nodeNameResolver, PropertyManipulator $propertyManipulator, ReflectionResolver $reflectionResolver, StaticTypeMapper $staticTypeMapper)
     {
+        $this->propertyNaming = $propertyNaming;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->propertyManipulator = $propertyManipulator;
+        $this->reflectionResolver = $reflectionResolver;
+        $this->staticTypeMapper = $staticTypeMapper;
     }
     public function resolve(Property $property, ClassLike $classLike) : ?string
     {

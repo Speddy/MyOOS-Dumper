@@ -3,30 +3,37 @@
 declare (strict_types=1);
 namespace Rector\Transform\ValueObject;
 
-final readonly class AttributeKeyToClassConstFetch
+final class AttributeKeyToClassConstFetch
 {
+    /**
+     * @readonly
+     * @var string
+     */
+    private $attributeClass;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $attributeKey;
+    /**
+     * @readonly
+     * @var string
+     */
+    private $constantClass;
+    /**
+     * @var array<string, string>
+     * @readonly
+     */
+    private $valuesToConstantsMap;
     /**
      * @param array<string, string> $valuesToConstantsMap
      */
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private string $attributeClass,
-        /**
-         * @readonly
-         */
-        private string $attributeKey,
-        /**
-         * @readonly
-         */
-        private string $constantClass,
-        /**
-         * @readonly
-         */
-        private array $valuesToConstantsMap
-    )
+    public function __construct(string $attributeClass, string $attributeKey, string $constantClass, array $valuesToConstantsMap)
     {
+        $this->attributeClass = $attributeClass;
+        $this->attributeKey = $attributeKey;
+        $this->constantClass = $constantClass;
+        $this->valuesToConstantsMap = $valuesToConstantsMap;
     }
     public function getAttributeClass() : string
     {

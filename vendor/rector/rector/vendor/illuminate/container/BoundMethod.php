@@ -14,6 +14,7 @@ class BoundMethod
      *
      * @param  \Illuminate\Container\Container  $container
      * @param  callable|string  $callback
+     * @param  array  $parameters
      * @param  string|null  $defaultMethod
      * @return mixed
      *
@@ -28,13 +29,16 @@ class BoundMethod
         if (static::isCallableWithAtSign($callback) || $defaultMethod) {
             return static::callClass($container, $callback, $parameters, $defaultMethod);
         }
-        return static::callBoundMethod($container, $callback, fn() => $callback(...\array_values(static::getMethodDependencies($container, $callback, $parameters))));
+        return static::callBoundMethod($container, $callback, function () use($container, $callback, $parameters) {
+            return $callback(...\array_values(static::getMethodDependencies($container, $callback, $parameters)));
+        });
     }
     /**
      * Call a string reference to a class using Class@method syntax.
      *
      * @param  \Illuminate\Container\Container  $container
      * @param  string  $target
+     * @param  array  $parameters
      * @param  string|null  $defaultMethod
      * @return mixed
      *
@@ -57,9 +61,10 @@ class BoundMethod
      *
      * @param  \Illuminate\Container\Container  $container
      * @param  callable  $callback
+     * @param  mixed  $default
      * @return mixed
      */
-    protected static function callBoundMethod($container, $callback, mixed $default)
+    protected static function callBoundMethod($container, $callback, $default)
     {
         if (!\is_array($callback)) {
             return Util::unwrapIfClosure($default);
@@ -81,7 +86,7 @@ class BoundMethod
      */
     protected static function normalizeMethod($callback)
     {
-        $class = \is_string($callback[0]) ? $callback[0] : $callback[0]::class;
+        $class = \is_string($callback[0]) ? $callback[0] : \get_class($callback[0]);
         return "{$class}@{$callback[1]}";
     }
     /**
@@ -89,6 +94,7 @@ class BoundMethod
      *
      * @param  \Illuminate\Container\Container  $container
      * @param  callable|string  $callback
+     * @param  array  $parameters
      * @return array
      *
      * @throws \ReflectionException
@@ -111,7 +117,7 @@ class BoundMethod
      */
     protected static function getCallReflector($callback)
     {
-        if (\is_string($callback) && str_contains($callback, '::')) {
+        if (\is_string($callback) && \strpos($callback, '::') !== \false) {
             $callback = \explode('::', $callback);
         } elseif (\is_object($callback) && !$callback instanceof Closure) {
             $callback = [$callback, '__invoke'];
@@ -123,6 +129,7 @@ class BoundMethod
      *
      * @param  \Illuminate\Container\Container  $container
      * @param  \ReflectionParameter  $parameter
+     * @param  array  $parameters
      * @param  array  $dependencies
      * @return void
      *
@@ -153,10 +160,11 @@ class BoundMethod
     /**
      * Determine if the given string is in Class@method syntax.
      *
+     * @param  mixed  $callback
      * @return bool
      */
-    protected static function isCallableWithAtSign(mixed $callback)
+    protected static function isCallableWithAtSign($callback)
     {
-        return \is_string($callback) && str_contains($callback, '@');
+        return \is_string($callback) && \strpos($callback, '@') !== \false;
     }
 }

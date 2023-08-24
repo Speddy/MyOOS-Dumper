@@ -14,14 +14,19 @@ use RectorPrefix202308\Symfony\Component\Console\Exception\InvalidArgumentExcept
 /**
  * @author Abdellatif Ait boudad <a.aitboudad@gmail.com>
  */
-class TableCell implements \Stringable
+class TableCell
 {
+    /**
+     * @var string
+     */
+    private $value;
     /**
      * @var mixed[]
      */
-    private array $options = ['rowspan' => 1, 'colspan' => 1, 'style' => null];
-    public function __construct(private readonly string $value = '', array $options = [])
+    private $options = ['rowspan' => 1, 'colspan' => 1, 'style' => null];
+    public function __construct(string $value = '', array $options = [])
     {
+        $this->value = $value;
         // check option names
         if ($diff = \array_diff(\array_keys($options), \array_keys($this->options))) {
             throw new InvalidArgumentException(\sprintf('The TableCell does not support the following options: \'%s\'.', \implode('\', \'', $diff)));

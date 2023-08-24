@@ -24,14 +24,24 @@ abstract class ServiceLocatorTestCase extends TestCase
     }
     public function testHas()
     {
-        $locator = $this->getServiceLocator(['foo' => fn() => 'bar', 'bar' => fn() => 'baz', fn() => 'dummy']);
+        $locator = $this->getServiceLocator(['foo' => function () {
+            return 'bar';
+        }, 'bar' => function () {
+            return 'baz';
+        }, function () {
+            return 'dummy';
+        }]);
         $this->assertTrue($locator->has('foo'));
         $this->assertTrue($locator->has('bar'));
         $this->assertFalse($locator->has('dummy'));
     }
     public function testGet()
     {
-        $locator = $this->getServiceLocator(['foo' => fn() => 'bar', 'bar' => fn() => 'baz']);
+        $locator = $this->getServiceLocator(['foo' => function () {
+            return 'bar';
+        }, 'bar' => function () {
+            return 'baz';
+        }]);
         $this->assertSame('bar', $locator->get('foo'));
         $this->assertSame('baz', $locator->get('bar'));
     }

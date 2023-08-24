@@ -12,15 +12,16 @@ use Rector\BetterPhpDocParser\ValueObject\Parser\BetterTokenIterator;
 /**
  * @see \Rector\Tests\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\ArrayParserTest
  */
-final readonly class ArrayParser
+final class ArrayParser
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\PlainValueParser $plainValueParser
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\PlainValueParser
+     */
+    private $plainValueParser;
+    public function __construct(\Rector\BetterPhpDocParser\PhpDocParser\StaticDoctrineAnnotationParser\PlainValueParser $plainValueParser)
     {
+        $this->plainValueParser = $plainValueParser;
     }
     /**
      * Mimics https://github.com/doctrine/annotations/blob/c66f06b7c83e9a2a7523351a9d5a4b55f885e574/lib/Doctrine/Common/Annotations/DocParser.php#L1305-L1352
@@ -130,8 +131,9 @@ final readonly class ArrayParser
     }
     /**
      * @return String_::KIND_SINGLE_QUOTED|String_::KIND_DOUBLE_QUOTED|null
+     * @param mixed $val
      */
-    private function resolveQuoteKind(mixed $val) : ?int
+    private function resolveQuoteKind($val) : ?int
     {
         if ($this->isQuotedWith($val, '"')) {
             return String_::KIND_DOUBLE_QUOTED;
@@ -141,7 +143,11 @@ final readonly class ArrayParser
         }
         return null;
     }
-    private function createArrayItemFromKeyAndValue(mixed $rawKey, mixed $rawValue) : ArrayItemNode
+    /**
+     * @param mixed $rawKey
+     * @param mixed $rawValue
+     */
+    private function createArrayItemFromKeyAndValue($rawKey, $rawValue) : ArrayItemNode
     {
         $valueQuoteKind = $this->resolveQuoteKind($rawValue);
         if (\is_string($rawValue) && $valueQuoteKind === String_::KIND_DOUBLE_QUOTED) {
@@ -162,14 +168,17 @@ final readonly class ArrayParser
         }
         return new ArrayItemNode($value);
     }
-    private function isQuotedWith(mixed $value, string $quotes) : bool
+    /**
+     * @param mixed $value
+     */
+    private function isQuotedWith($value, string $quotes) : bool
     {
         if (!\is_string($value)) {
             return \false;
         }
-        if (!str_starts_with($value, $quotes)) {
+        if (\strncmp($value, $quotes, \strlen($quotes)) !== 0) {
             return \false;
         }
-        return str_ends_with($value, $quotes);
+        return \substr_compare($value, $quotes, -\strlen($quotes)) === 0;
     }
 }

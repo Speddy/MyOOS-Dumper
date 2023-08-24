@@ -21,17 +21,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveUnusedPrivateMethodRector extends AbstractScopeAwareRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly IsClassMethodUsedAnalyzer $isClassMethodUsedAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\NodeAnalyzer\IsClassMethodUsedAnalyzer
+     */
+    private $isClassMethodUsedAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(IsClassMethodUsedAnalyzer $isClassMethodUsedAnalyzer, ReflectionResolver $reflectionResolver)
     {
+        $this->isClassMethodUsedAnalyzer = $isClassMethodUsedAnalyzer;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

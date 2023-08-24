@@ -22,8 +22,8 @@ class InputStream implements \IteratorAggregate
 {
     /** @var callable|null */
     private $onEmpty;
-    private array $input = [];
-    private bool $open = \true;
+    private $input = [];
+    private $open = \true;
     /**
      * Sets a callback that is called when the write buffer becomes empty.
      *
@@ -41,7 +41,7 @@ class InputStream implements \IteratorAggregate
     *
     * @return void
     */
-    public function write(mixed $input)
+    public function write($input)
     {
         if (null === $input) {
             return;

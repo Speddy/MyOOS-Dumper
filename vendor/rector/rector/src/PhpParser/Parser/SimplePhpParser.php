@@ -9,16 +9,18 @@ use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use Rector\NodeTypeResolver\PHPStan\Scope\NodeVisitor\AssignedToNodeVisitor;
-final readonly class SimplePhpParser
+final class SimplePhpParser
 {
     /**
      * @readonly
+     * @var \PhpParser\Parser
      */
-    private \PhpParser\Parser $phpParser;
+    private $phpParser;
     /**
      * @readonly
+     * @var \PhpParser\NodeTraverser
      */
-    private \PhpParser\NodeTraverser $nodeTraverser;
+    private $nodeTraverser;
     public function __construct()
     {
         $parserFactory = new ParserFactory();

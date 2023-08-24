@@ -29,7 +29,7 @@ class PrintableNewAnonClassNode extends Expr
     public $implements;
     /** @var Node\Stmt[] Statements */
     public $stmts;
-    public function __construct(array $attrGroups, int $flags, array $args, array $implements, array $stmts, array $attributes, Node\Name $extends = null)
+    public function __construct(array $attrGroups, int $flags, array $args, Node\Name $extends = null, array $implements, array $stmts, array $attributes)
     {
         parent::__construct($attributes);
         $this->attrGroups = $attrGroups;
@@ -45,7 +45,7 @@ class PrintableNewAnonClassNode extends Expr
         \assert($class instanceof Node\Stmt\Class_);
         // We don't assert that $class->name is null here, to allow consumers to assign unique names
         // to anonymous classes for their own purposes. We simplify ignore the name here.
-        return new self($class->attrGroups, $class->flags, $newNode->args, $class->implements, $class->stmts, $newNode->getAttributes(), $class->extends);
+        return new self($class->attrGroups, $class->flags, $newNode->args, $class->extends, $class->implements, $class->stmts, $newNode->getAttributes());
     }
     public function getType() : string
     {

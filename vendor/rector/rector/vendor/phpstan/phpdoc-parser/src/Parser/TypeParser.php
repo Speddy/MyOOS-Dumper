@@ -12,6 +12,10 @@ use function strpos;
 use function trim;
 class TypeParser
 {
+    /** @var ConstExprParser|null */
+    private $constExprParser;
+    /** @var bool */
+    private $quoteAwareConstExprString;
     /** @var bool */
     private $useLinesAttributes;
     /** @var bool */
@@ -19,8 +23,10 @@ class TypeParser
     /**
      * @param array{lines?: bool, indexes?: bool} $usedAttributes
      */
-    public function __construct(private readonly ?\PHPStan\PhpDocParser\Parser\ConstExprParser $constExprParser = null, private readonly bool $quoteAwareConstExprString = \false, array $usedAttributes = [])
+    public function __construct(?\PHPStan\PhpDocParser\Parser\ConstExprParser $constExprParser = null, bool $quoteAwareConstExprString = \false, array $usedAttributes = [])
     {
+        $this->constExprParser = $constExprParser;
+        $this->quoteAwareConstExprString = $quoteAwareConstExprString;
         $this->useLinesAttributes = $usedAttributes['lines'] ?? \false;
         $this->useIndexAttributes = $usedAttributes['indexes'] ?? \false;
     }
@@ -157,7 +163,7 @@ class TypeParser
                 throw $exception;
             }
             return $this->enrichWithAttributes($tokens, new Ast\Type\ConstTypeNode($constExpr), $startLine, $startIndex);
-        } catch (LogicException) {
+        } catch (LogicException $e) {
             throw $exception;
         }
     }
@@ -262,7 +268,7 @@ class TypeParser
             return \false;
         }
         while (!$tokens->isCurrentTokenType(Lexer::TOKEN_END)) {
-            if ($tokens->tryConsumeTokenType(Lexer::TOKEN_OPEN_ANGLE_BRACKET) && str_contains($tokens->currentTokenValue(), '/' . $htmlTagName . '>')) {
+            if ($tokens->tryConsumeTokenType(Lexer::TOKEN_OPEN_ANGLE_BRACKET) && strpos($tokens->currentTokenValue(), '/' . $htmlTagName . '>') !== \false) {
                 return \true;
             }
             $tokens->next();
@@ -434,7 +440,7 @@ class TypeParser
                 $type = $this->tryParseArrayOrOffsetAccess($tokens, $this->enrichWithAttributes($tokens, $type, $startLine, $startIndex));
             }
             return $type;
-        } catch (LogicException) {
+        } catch (LogicException $e) {
             throw $exception;
         }
     }
@@ -445,7 +451,7 @@ class TypeParser
             $tokens->pushSavePoint();
             $type = $this->parseCallable($tokens, $identifier);
             $tokens->dropSavePoint();
-        } catch (\PHPStan\PhpDocParser\Parser\ParserException) {
+        } catch (\PHPStan\PhpDocParser\Parser\ParserException $e) {
             $tokens->rollback();
             $type = $identifier;
         }
@@ -478,7 +484,7 @@ class TypeParser
                     }
                 }
             }
-        } catch (\PHPStan\PhpDocParser\Parser\ParserException) {
+        } catch (\PHPStan\PhpDocParser\Parser\ParserException $e) {
             $tokens->rollback();
         }
         return $type;
@@ -522,7 +528,7 @@ class TypeParser
             $value = $this->parse($tokens);
             $tokens->dropSavePoint();
             return $this->enrichWithAttributes($tokens, new Ast\Type\ArrayShapeItemNode($key, $optional, $value), $startLine, $startIndex);
-        } catch (\PHPStan\PhpDocParser\Parser\ParserException) {
+        } catch (\PHPStan\PhpDocParser\Parser\ParserException $e) {
             $tokens->rollback();
             $value = $this->parse($tokens);
             return $this->enrichWithAttributes($tokens, new Ast\Type\ArrayShapeItemNode(null, \false, $value), $startLine, $startIndex);

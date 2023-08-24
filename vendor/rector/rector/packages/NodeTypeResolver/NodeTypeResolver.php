@@ -44,32 +44,50 @@ use Rector\TypeDeclaration\PHPStan\ObjectTypeSpecifier;
 final class NodeTypeResolver
 {
     /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\PHPStan\ObjectTypeSpecifier
+     */
+    private $objectTypeSpecifier;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ClassAnalyzer
+     */
+    private $classAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeCorrector\GenericClassStringTypeCorrector
+     */
+    private $genericClassStringTypeCorrector;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeCorrector\AccessoryNonEmptyStringTypeCorrector
+     */
+    private $accessoryNonEmptyStringTypeCorrector;
+    /**
+     * @readonly
+     * @var \Rector\Core\Configuration\RenamedClassesDataCollector
+     */
+    private $renamedClassesDataCollector;
+    /**
      * @var array<class-string<Node>, NodeTypeResolverInterface>
      */
-    private array $nodeTypeResolvers = [];
+    private $nodeTypeResolvers = [];
     /**
      * @param NodeTypeResolverInterface[] $nodeTypeResolvers
      */
-    public function __construct(/**
-     * @readonly
-     */
-    private readonly ObjectTypeSpecifier $objectTypeSpecifier, /**
-     * @readonly
-     */
-    private readonly ClassAnalyzer $classAnalyzer, /**
-     * @readonly
-     */
-    private readonly GenericClassStringTypeCorrector $genericClassStringTypeCorrector, /**
-     * @readonly
-     */
-    private readonly ReflectionProvider $reflectionProvider, /**
-     * @readonly
-     */
-    private readonly AccessoryNonEmptyStringTypeCorrector $accessoryNonEmptyStringTypeCorrector, /**
-     * @readonly
-     */
-    private readonly RenamedClassesDataCollector $renamedClassesDataCollector, iterable $nodeTypeResolvers)
+    public function __construct(ObjectTypeSpecifier $objectTypeSpecifier, ClassAnalyzer $classAnalyzer, GenericClassStringTypeCorrector $genericClassStringTypeCorrector, ReflectionProvider $reflectionProvider, AccessoryNonEmptyStringTypeCorrector $accessoryNonEmptyStringTypeCorrector, RenamedClassesDataCollector $renamedClassesDataCollector, iterable $nodeTypeResolvers)
     {
+        $this->objectTypeSpecifier = $objectTypeSpecifier;
+        $this->classAnalyzer = $classAnalyzer;
+        $this->genericClassStringTypeCorrector = $genericClassStringTypeCorrector;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->accessoryNonEmptyStringTypeCorrector = $accessoryNonEmptyStringTypeCorrector;
+        $this->renamedClassesDataCollector = $renamedClassesDataCollector;
         foreach ($nodeTypeResolvers as $nodeTypeResolver) {
             if ($nodeTypeResolver instanceof NodeTypeResolverAwareInterface) {
                 $nodeTypeResolver->autowire($this);
@@ -107,7 +125,7 @@ final class NodeTypeResolver
         if ($resolvedType instanceof ObjectType) {
             try {
                 return $this->resolveObjectType($resolvedType, $requiredObjectType);
-            } catch (ClassAutoloadingException) {
+            } catch (ClassAutoloadingException $exception) {
                 // in some type checks, the provided type in rector.php configuration does not have to exists
                 return \false;
             }

@@ -12,23 +12,28 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
 use Rector\PostRector\Collector\UseNodesToAddCollector;
 use Rector\StaticTypeMapper\StaticTypeMapper;
 use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
-final readonly class NameImporter
+final class NameImporter
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ClassNameImportSkipper $classNameImportSkipper,
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper,
-        /**
-         * @readonly
-         */
-        private UseNodesToAddCollector $useNodesToAddCollector
-    )
+    /**
+     * @readonly
+     * @var \Rector\CodingStyle\ClassNameImport\ClassNameImportSkipper
+     */
+    private $classNameImportSkipper;
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    /**
+     * @readonly
+     * @var \Rector\PostRector\Collector\UseNodesToAddCollector
+     */
+    private $useNodesToAddCollector;
+    public function __construct(ClassNameImportSkipper $classNameImportSkipper, StaticTypeMapper $staticTypeMapper, UseNodesToAddCollector $useNodesToAddCollector)
     {
+        $this->classNameImportSkipper = $classNameImportSkipper;
+        $this->staticTypeMapper = $staticTypeMapper;
+        $this->useNodesToAddCollector = $useNodesToAddCollector;
     }
     public function importName(Name $name, File $file) : ?Name
     {

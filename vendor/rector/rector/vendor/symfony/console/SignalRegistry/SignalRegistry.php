@@ -15,7 +15,7 @@ final class SignalRegistry
     /**
      * @var mixed[]
      */
-    private array $signalHandlers = [];
+    private $signalHandlers = [];
     public function __construct()
     {
         if (\function_exists('pcntl_async_signals')) {
@@ -31,7 +31,7 @@ final class SignalRegistry
             }
         }
         $this->signalHandlers[$signal][] = $signalHandler;
-        \pcntl_signal($signal, \Closure::fromCallable($this->handle(...)));
+        \pcntl_signal($signal, \Closure::fromCallable([$this, 'handle']));
     }
     public static function isSupported() : bool
     {
@@ -42,7 +42,7 @@ final class SignalRegistry
      */
     public function handle(int $signal) : void
     {
-        $count = is_countable($this->signalHandlers[$signal]) ? \count($this->signalHandlers[$signal]) : 0;
+        $count = \count($this->signalHandlers[$signal]);
         foreach ($this->signalHandlers[$signal] as $i => $signalHandler) {
             $hasNext = $i !== $count - 1;
             $signalHandler($signal, $hasNext);

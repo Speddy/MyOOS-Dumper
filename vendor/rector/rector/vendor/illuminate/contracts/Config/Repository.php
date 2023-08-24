@@ -15,9 +15,10 @@ interface Repository
      * Get the specified configuration value.
      *
      * @param  array|string  $key
+     * @param  mixed  $default
      * @return mixed
      */
-    public function get($key, mixed $default = null);
+    public function get($key, $default = null);
     /**
      * Get all of the configuration items for the application.
      *
@@ -28,21 +29,24 @@ interface Repository
      * Set a given configuration value.
      *
      * @param  array|string  $key
+     * @param  mixed  $value
      * @return void
      */
-    public function set($key, mixed $value = null);
+    public function set($key, $value = null);
     /**
      * Prepend a value onto an array configuration value.
      *
      * @param  string  $key
+     * @param  mixed  $value
      * @return void
      */
-    public function prepend($key, mixed $value);
+    public function prepend($key, $value);
     /**
      * Push a value onto an array configuration value.
      *
      * @param  string  $key
+     * @param  mixed  $value
      * @return void
      */
-    public function push($key, mixed $value);
+    public function push($key, $value);
 }

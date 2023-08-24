@@ -5,19 +5,28 @@ namespace Rector\Visibility\ValueObject;
 
 use PHPStan\Type\ObjectType;
 use Rector\Core\Validation\RectorAssert;
-final readonly class ChangeConstantVisibility
+final class ChangeConstantVisibility
 {
-    public function __construct(/**
+    /**
      * @readonly
+     * @var string
      */
-    private string $class, /**
+    private $class;
+    /**
      * @readonly
+     * @var string
      */
-    private string $constant, /**
+    private $constant;
+    /**
      * @readonly
+     * @var int
      */
-    private int $visibility)
+    private $visibility;
+    public function __construct(string $class, string $constant, int $visibility)
     {
+        $this->class = $class;
+        $this->constant = $constant;
+        $this->visibility = $visibility;
         RectorAssert::className($class);
     }
     public function getObjectType() : ObjectType

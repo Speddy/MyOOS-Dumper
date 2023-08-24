@@ -23,8 +23,11 @@ final class ArgumentRemoverRector extends AbstractRector implements Configurable
     /**
      * @var ArgumentRemover[]
      */
-    private array $removedArguments = [];
-    private bool $hasChanged = \false;
+    private $removedArguments = [];
+    /**
+     * @var bool
+     */
+    private $hasChanged = \false;
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Removes defined arguments in defined methods and their calls.', [new ConfiguredCodeSample(<<<'CODE_SAMPLE'

@@ -22,13 +22,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ForeachItemsAssignToEmptyArrayToAssignRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ForeachAnalyzer $foreachAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\CodeQuality\NodeAnalyzer\ForeachAnalyzer
+     */
+    private $foreachAnalyzer;
+    public function __construct(ForeachAnalyzer $foreachAnalyzer)
     {
+        $this->foreachAnalyzer = $foreachAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

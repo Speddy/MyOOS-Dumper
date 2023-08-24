@@ -30,21 +30,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class AddParamBasedOnParentClassMethodRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard,
-        /**
-         * @readonly
-         */
-        private readonly AstResolver $astResolver,
-        /**
-         * @readonly
-         */
-        private readonly BetterStandardPrinter $betterStandardPrinter
-    )
+    /**
+     * @readonly
+     * @var \Rector\VendorLocker\ParentClassMethodTypeOverrideGuard
+     */
+    private $parentClassMethodTypeOverrideGuard;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\AstResolver
+     */
+    private $astResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Printer\BetterStandardPrinter
+     */
+    private $betterStandardPrinter;
+    public function __construct(ParentClassMethodTypeOverrideGuard $parentClassMethodTypeOverrideGuard, AstResolver $astResolver, BetterStandardPrinter $betterStandardPrinter)
     {
+        $this->parentClassMethodTypeOverrideGuard = $parentClassMethodTypeOverrideGuard;
+        $this->astResolver = $astResolver;
+        $this->betterStandardPrinter = $betterStandardPrinter;
     }
     public function provideMinPhpVersion() : int
     {

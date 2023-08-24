@@ -16,27 +16,34 @@ use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\Naming\PhpDoc\VarTagValueNodeRenamer;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
-final readonly class VariableRenamer
+final class VariableRenamer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private VarTagValueNodeRenamer $varTagValueNodeRenamer,
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Naming\PhpDoc\VarTagValueNodeRenamer
+     */
+    private $varTagValueNodeRenamer;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    public function __construct(SimpleCallableNodeTraverser $simpleCallableNodeTraverser, NodeNameResolver $nodeNameResolver, VarTagValueNodeRenamer $varTagValueNodeRenamer, PhpDocInfoFactory $phpDocInfoFactory)
     {
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->varTagValueNodeRenamer = $varTagValueNodeRenamer;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
     public function renameVariableInFunctionLike(FunctionLike $functionLike, string $oldName, string $expectedName, ?Assign $assign = null) : bool
     {

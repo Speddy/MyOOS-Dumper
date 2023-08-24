@@ -24,16 +24,17 @@ use Monolog\Utils;
 class CubeHandler extends AbstractProcessingHandler
 {
     /** @var resource|\Socket|null */
-    private ?\Socket $udpConnection = null;
+    private $udpConnection = null;
     /** @var resource|\CurlHandle|null */
-    private ?\CurlHandle $httpConnection = null;
+    private $httpConnection = null;
     /** @var string */
     private $scheme;
     /** @var string */
     private $host;
-    private readonly int $port;
+    /** @var int */
+    private $port;
     /** @var string[] */
-    private array $acceptedSchemes = ['http', 'udp'];
+    private $acceptedSchemes = ['http', 'udp'];
 
     /**
      * Create a Cube handler

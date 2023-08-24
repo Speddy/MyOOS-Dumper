@@ -22,16 +22,17 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class RenameAnnotationRector extends AbstractRector implements ConfigurableRectorInterface
 {
     /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PhpDoc\NodeAnalyzer\DocBlockTagReplacer
+     */
+    private $docBlockTagReplacer;
+    /**
      * @var RenameAnnotationInterface[]
      */
-    private array $renameAnnotations = [];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly DocBlockTagReplacer $docBlockTagReplacer
-    )
+    private $renameAnnotations = [];
+    public function __construct(DocBlockTagReplacer $docBlockTagReplacer)
     {
+        $this->docBlockTagReplacer = $docBlockTagReplacer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -61,7 +62,7 @@ final class SomeTest extends TestCase
     }
 }
 CODE_SAMPLE
-, [new RenameAnnotationByType(\PHPUnit\Framework\TestCase::class, 'test', 'scenario')])]);
+, [new RenameAnnotationByType('PHPUnit\\Framework\\TestCase', 'test', 'scenario')])]);
     }
     /**
      * @return array<class-string<Node>>

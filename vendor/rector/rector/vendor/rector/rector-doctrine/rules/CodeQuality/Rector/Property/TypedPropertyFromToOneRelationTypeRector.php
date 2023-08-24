@@ -27,25 +27,32 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class TypedPropertyFromToOneRelationTypeRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly PropertyTypeDecorator $propertyTypeDecorator,
-        /**
-         * @readonly
-         */
-        private readonly PhpDocTypeChanger $phpDocTypeChanger,
-        /**
-         * @readonly
-         */
-        private readonly ToOneRelationPropertyTypeResolver $toOneRelationPropertyTypeResolver,
-        /**
-         * @readonly
-         */
-        private readonly PhpVersionProvider $phpVersionProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeTypeAnalyzer\PropertyTypeDecorator
+     */
+    private $propertyTypeDecorator;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
+     */
+    private $phpDocTypeChanger;
+    /**
+     * @readonly
+     * @var \Rector\Doctrine\NodeManipulator\ToOneRelationPropertyTypeResolver
+     */
+    private $toOneRelationPropertyTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\Php\PhpVersionProvider
+     */
+    private $phpVersionProvider;
+    public function __construct(PropertyTypeDecorator $propertyTypeDecorator, PhpDocTypeChanger $phpDocTypeChanger, ToOneRelationPropertyTypeResolver $toOneRelationPropertyTypeResolver, PhpVersionProvider $phpVersionProvider)
     {
+        $this->propertyTypeDecorator = $propertyTypeDecorator;
+        $this->phpDocTypeChanger = $phpDocTypeChanger;
+        $this->toOneRelationPropertyTypeResolver = $toOneRelationPropertyTypeResolver;
+        $this->phpVersionProvider = $phpVersionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

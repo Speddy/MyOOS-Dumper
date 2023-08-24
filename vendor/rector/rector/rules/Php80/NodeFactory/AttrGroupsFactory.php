@@ -7,15 +7,16 @@ use PhpParser\Node\AttributeGroup;
 use PhpParser\Node\Stmt\Use_;
 use Rector\Php80\ValueObject\DoctrineTagAndAnnotationToAttribute;
 use Rector\PhpAttribute\NodeFactory\PhpAttributeGroupFactory;
-final readonly class AttrGroupsFactory
+final class AttrGroupsFactory
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpAttributeGroupFactory $phpAttributeGroupFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\PhpAttribute\NodeFactory\PhpAttributeGroupFactory
+     */
+    private $phpAttributeGroupFactory;
+    public function __construct(PhpAttributeGroupFactory $phpAttributeGroupFactory)
     {
+        $this->phpAttributeGroupFactory = $phpAttributeGroupFactory;
     }
     /**
      * @param DoctrineTagAndAnnotationToAttribute[] $doctrineTagAndAnnotationToAttributes

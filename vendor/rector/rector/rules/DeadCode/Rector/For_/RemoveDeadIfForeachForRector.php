@@ -21,13 +21,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveDeadIfForeachForRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ConditionInverter $conditionInverter
-    )
+    /**
+     * @readonly
+     * @var \Rector\EarlyReturn\NodeTransformer\ConditionInverter
+     */
+    private $conditionInverter;
+    public function __construct(ConditionInverter $conditionInverter)
     {
+        $this->conditionInverter = $conditionInverter;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -29,21 +29,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveTypedPropertyDeadInstanceOfRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly IfManipulator $ifManipulator,
-        /**
-         * @readonly
-         */
-        private readonly ConstructorAssignDetector $constructorAssignDetector,
-        /**
-         * @readonly
-         */
-        private readonly PromotedPropertyResolver $promotedPropertyResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\IfManipulator
+     */
+    private $ifManipulator;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\AlreadyAssignDetector\ConstructorAssignDetector
+     */
+    private $constructorAssignDetector;
+    /**
+     * @readonly
+     * @var \Rector\Php80\NodeAnalyzer\PromotedPropertyResolver
+     */
+    private $promotedPropertyResolver;
+    public function __construct(IfManipulator $ifManipulator, ConstructorAssignDetector $constructorAssignDetector, PromotedPropertyResolver $promotedPropertyResolver)
     {
+        $this->ifManipulator = $ifManipulator;
+        $this->constructorAssignDetector = $constructorAssignDetector;
+        $this->promotedPropertyResolver = $promotedPropertyResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -19,13 +19,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class FormTypeGetParentRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly FormTypeStringToTypeProvider $formTypeStringToTypeProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\FormHelper\FormTypeStringToTypeProvider
+     */
+    private $formTypeStringToTypeProvider;
+    public function __construct(FormTypeStringToTypeProvider $formTypeStringToTypeProvider)
     {
+        $this->formTypeStringToTypeProvider = $formTypeStringToTypeProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

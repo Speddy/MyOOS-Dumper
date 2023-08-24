@@ -19,12 +19,18 @@ final class Color
     private const COLORS = ['black' => 0, 'red' => 1, 'green' => 2, 'yellow' => 3, 'blue' => 4, 'magenta' => 5, 'cyan' => 6, 'white' => 7, 'default' => 9];
     private const BRIGHT_COLORS = ['gray' => 0, 'bright-red' => 1, 'bright-green' => 2, 'bright-yellow' => 3, 'bright-blue' => 4, 'bright-magenta' => 5, 'bright-cyan' => 6, 'bright-white' => 7];
     private const AVAILABLE_OPTIONS = ['bold' => ['set' => 1, 'unset' => 22], 'underscore' => ['set' => 4, 'unset' => 24], 'blink' => ['set' => 5, 'unset' => 25], 'reverse' => ['set' => 7, 'unset' => 27], 'conceal' => ['set' => 8, 'unset' => 28]];
-    private string $foreground;
-    private string $background;
+    /**
+     * @var string
+     */
+    private $foreground;
+    /**
+     * @var string
+     */
+    private $background;
     /**
      * @var mixed[]
      */
-    private array $options = [];
+    private $options = [];
     public function __construct(string $foreground = '', string $background = '', array $options = [])
     {
         $this->foreground = $this->parseColor($foreground);
@@ -88,6 +94,6 @@ final class Color
         if (isset(self::BRIGHT_COLORS[$color])) {
             return ($background ? '10' : '9') . self::BRIGHT_COLORS[$color];
         }
-        throw new InvalidArgumentException(\sprintf('Invalid "%s" color; expected one of (%s).', $color, \implode(', ', [...\array_keys(self::COLORS), ...\array_keys(self::BRIGHT_COLORS)])));
+        throw new InvalidArgumentException(\sprintf('Invalid "%s" color; expected one of (%s).', $color, \implode(', ', \array_merge(\array_keys(self::COLORS), \array_keys(self::BRIGHT_COLORS)))));
     }
 }

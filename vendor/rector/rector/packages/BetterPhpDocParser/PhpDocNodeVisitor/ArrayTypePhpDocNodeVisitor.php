@@ -11,13 +11,14 @@ use Rector\BetterPhpDocParser\ValueObject\Type\SpacingAwareArrayTypeNode;
 use Rector\PhpDocParser\PhpDocParser\PhpDocNodeVisitor\AbstractPhpDocNodeVisitor;
 final class ArrayTypePhpDocNodeVisitor extends AbstractPhpDocNodeVisitor implements BasePhpDocNodeVisitorInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly AttributeMirrorer $attributeMirrorer
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\Attributes\AttributeMirrorer
+     */
+    private $attributeMirrorer;
+    public function __construct(AttributeMirrorer $attributeMirrorer)
     {
+        $this->attributeMirrorer = $attributeMirrorer;
     }
     public function enterNode(Node $node) : ?Node
     {

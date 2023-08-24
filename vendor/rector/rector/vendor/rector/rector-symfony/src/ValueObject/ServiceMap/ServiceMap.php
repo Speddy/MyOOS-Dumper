@@ -9,15 +9,16 @@ use Rector\Symfony\ValueObject\ServiceDefinition;
 final class ServiceMap
 {
     /**
+     * @var ServiceDefinition[]
+     * @readonly
+     */
+    private $services;
+    /**
      * @param ServiceDefinition[] $services
      */
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private array $services
-    )
+    public function __construct(array $services)
     {
+        $this->services = $services;
     }
     /**
      * @api

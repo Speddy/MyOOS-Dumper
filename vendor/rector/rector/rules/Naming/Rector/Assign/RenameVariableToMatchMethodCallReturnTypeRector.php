@@ -26,37 +26,48 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class RenameVariableToMatchMethodCallReturnTypeRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\Naming\Guard\BreakingVariableRenameGuard
+     */
+    private $breakingVariableRenameGuard;
+    /**
+     * @readonly
+     * @var \Rector\Naming\Naming\ExpectedNameResolver
+     */
+    private $expectedNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Naming\NamingConvention\NamingConventionAnalyzer
+     */
+    private $namingConventionAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Naming\PhpDoc\VarTagValueNodeRenamer
+     */
+    private $varTagValueNodeRenamer;
+    /**
+     * @readonly
+     * @var \Rector\Naming\Matcher\VariableAndCallAssignMatcher
+     */
+    private $variableAndCallAssignMatcher;
+    /**
+     * @readonly
+     * @var \Rector\Naming\VariableRenamer
+     */
+    private $variableRenamer;
+    /**
      * @var string
      * @see https://regex101.com/r/JG5w9j/1
      */
     private const OR_BETWEEN_WORDS_REGEX = '#[a-z]Or[A-Z]#';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly BreakingVariableRenameGuard $breakingVariableRenameGuard,
-        /**
-         * @readonly
-         */
-        private readonly ExpectedNameResolver $expectedNameResolver,
-        /**
-         * @readonly
-         */
-        private readonly NamingConventionAnalyzer $namingConventionAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly VarTagValueNodeRenamer $varTagValueNodeRenamer,
-        /**
-         * @readonly
-         */
-        private readonly VariableAndCallAssignMatcher $variableAndCallAssignMatcher,
-        /**
-         * @readonly
-         */
-        private readonly VariableRenamer $variableRenamer
-    )
+    public function __construct(BreakingVariableRenameGuard $breakingVariableRenameGuard, ExpectedNameResolver $expectedNameResolver, NamingConventionAnalyzer $namingConventionAnalyzer, VarTagValueNodeRenamer $varTagValueNodeRenamer, VariableAndCallAssignMatcher $variableAndCallAssignMatcher, VariableRenamer $variableRenamer)
     {
+        $this->breakingVariableRenameGuard = $breakingVariableRenameGuard;
+        $this->expectedNameResolver = $expectedNameResolver;
+        $this->namingConventionAnalyzer = $namingConventionAnalyzer;
+        $this->varTagValueNodeRenamer = $varTagValueNodeRenamer;
+        $this->variableAndCallAssignMatcher = $variableAndCallAssignMatcher;
+        $this->variableRenamer = $variableRenamer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

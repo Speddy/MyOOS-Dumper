@@ -36,8 +36,11 @@ use Monolog\Formatter\FormatterInterface;
  */
 class OverflowHandler extends AbstractHandler implements FormattableHandlerInterface
 {
+    /** @var HandlerInterface */
+    private $handler;
+
     /** @var int[] */
-    private array $thresholdMap = [
+    private $thresholdMap = [
         Logger::DEBUG => 0,
         Logger::INFO => 0,
         Logger::NOTICE => 0,
@@ -53,18 +56,19 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
      *
      * @var mixed[][]
      */
-    private array $buffer = [];
+    private $buffer = [];
 
     /**
      * @param HandlerInterface $handler
      * @param int[]            $thresholdMap Dictionary of logger level => threshold
      */
     public function __construct(
-        private readonly HandlerInterface $handler,
+        HandlerInterface $handler,
         array $thresholdMap = [],
         $level = Logger::DEBUG,
         bool $bubble = true
     ) {
+        $this->handler = $handler;
         foreach ($thresholdMap as $thresholdLevel => $threshold) {
             $this->thresholdMap[$thresholdLevel] = $threshold;
         }
@@ -128,7 +132,7 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
             return $this;
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.$this->handler::class.' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.get_class($this->handler).' does not support formatters.');
     }
 
     /**
@@ -140,6 +144,6 @@ class OverflowHandler extends AbstractHandler implements FormattableHandlerInter
             return $this->handler->getFormatter();
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.$this->handler::class.' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.get_class($this->handler).' does not support formatters.');
     }
 }

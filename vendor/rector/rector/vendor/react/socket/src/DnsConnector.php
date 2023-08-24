@@ -7,13 +7,17 @@ use RectorPrefix202308\React\Promise;
 use RectorPrefix202308\React\Promise\PromiseInterface;
 final class DnsConnector implements ConnectorInterface
 {
-    public function __construct(private ConnectorInterface $connector, private readonly ResolverInterface $resolver)
+    private $connector;
+    private $resolver;
+    public function __construct(ConnectorInterface $connector, ResolverInterface $resolver)
     {
+        $this->connector = $connector;
+        $this->resolver = $resolver;
     }
     public function connect($uri)
     {
         $original = $uri;
-        if (!str_contains($uri, '://')) {
+        if (\strpos($uri, '://') === \false) {
             $uri = 'tcp://' . $uri;
             $parts = \parse_url($uri);
             if (isset($parts['scheme'])) {
@@ -52,7 +56,7 @@ final class DnsConnector implements ConnectorInterface
                             if (isset($one['args'])) {
                                 foreach ($one['args'] as $ai => $arg) {
                                     if ($arg instanceof \Closure) {
-                                        $trace[$ti]['args'][$ai] = 'Object(' . $arg::class . ')';
+                                        $trace[$ti]['args'][$ai] = 'Object(' . \get_class($arg) . ')';
                                     }
                                 }
                             }

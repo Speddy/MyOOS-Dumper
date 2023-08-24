@@ -12,20 +12,23 @@ use Rector\NodeNameResolver\NodeNameResolver;
 final class ClassMethodAssignManipulator
 {
     /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\NodeFactory
+     */
+    private $nodeFactory;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
      * @var array<string, string[]>
      */
-    private array $alreadyAddedClassMethodNames = [];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly NodeFactory $nodeFactory,
-        /**
-         * @readonly
-         */
-        private readonly NodeNameResolver $nodeNameResolver
-    )
+    private $alreadyAddedClassMethodNames = [];
+    public function __construct(NodeFactory $nodeFactory, NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeFactory = $nodeFactory;
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function addParameterAndAssignToMethod(ClassMethod $classMethod, string $name, ?Type $type, Assign $assign) : void
     {

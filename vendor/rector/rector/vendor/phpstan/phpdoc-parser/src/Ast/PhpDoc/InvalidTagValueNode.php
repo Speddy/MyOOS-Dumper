@@ -11,13 +11,13 @@ use const E_USER_WARNING;
 /**
  * @property ParserException $exception
  */
-class InvalidTagValueNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode, \Stringable
+class InvalidTagValueNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode
 {
     use NodeAttributes;
     /** @var string (may be empty) */
     public $value;
     /** @var mixed[] */
-    private readonly array $exceptionArgs;
+    private $exceptionArgs;
     public function __construct(string $value, ParserException $exception)
     {
         $this->value = $value;

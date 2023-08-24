@@ -19,20 +19,54 @@ use RectorPrefix202308\Symfony\Component\Console\Exception\LogicException;
  */
 class Question
 {
-    private ?int $attempts = null;
-    private bool $hidden = \false;
-    private bool $hiddenFallback = \true;
-    private ?\Closure $autocompleterCallback = null;
-    private ?\Closure $validator = null;
-    private ?\Closure $normalizer = null;
-    private bool $trimmable = \true;
-    private bool $multiline = \false;
+    /**
+     * @var string
+     */
+    private $question;
+    /**
+     * @var int|null
+     */
+    private $attempts;
+    /**
+     * @var bool
+     */
+    private $hidden = \false;
+    /**
+     * @var bool
+     */
+    private $hiddenFallback = \true;
+    /**
+     * @var \Closure|null
+     */
+    private $autocompleterCallback;
+    /**
+     * @var \Closure|null
+     */
+    private $validator;
+    /**
+     * @var string|int|bool|null|float
+     */
+    private $default;
+    /**
+     * @var \Closure|null
+     */
+    private $normalizer;
+    /**
+     * @var bool
+     */
+    private $trimmable = \true;
+    /**
+     * @var bool
+     */
+    private $multiline = \false;
     /**
      * @param string                     $question The question to ask to the user
      * @param string|bool|int|float $default The default answer to return if the user enters nothing
      */
-    public function __construct(private readonly string $question, private $default = null)
+    public function __construct(string $question, $default = null)
     {
+        $this->question = $question;
+        $this->default = $default;
     }
     /**
      * Returns the question.
@@ -123,12 +157,14 @@ class Question
     public function setAutocompleterValues(?iterable $values)
     {
         if (\is_array($values)) {
-            $values = $this->isAssoc($values) ? [...\array_keys($values), ...\array_values($values)] : \array_values($values);
-            $callback = static fn() => $values;
+            $values = $this->isAssoc($values) ? \array_merge(\array_keys($values), \array_values($values)) : \array_values($values);
+            $callback = static function () use($values) {
+                return $values;
+            };
         } elseif ($values instanceof \Traversable) {
             $callback = static function () use($values) {
                 static $valueCache;
-                return $valueCache ??= \iterator_to_array($values, \false);
+                return $valueCache = $valueCache ?? \iterator_to_array($values, \false);
             };
         } else {
             $callback = null;

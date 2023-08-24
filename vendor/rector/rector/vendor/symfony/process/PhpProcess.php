@@ -50,7 +50,7 @@ class PhpProcess extends Process
      * @param mixed $input
      * @return static
      */
-    public static function fromShellCommandline(string $command, string $cwd = null, array $env = null, $input = null, ?float $timeout = 60): never
+    public static function fromShellCommandline(string $command, string $cwd = null, array $env = null, $input = null, ?float $timeout = 60)
     {
         throw new LogicException(\sprintf('The "%s()" method cannot be called when using "%s".', __METHOD__, self::class));
     }

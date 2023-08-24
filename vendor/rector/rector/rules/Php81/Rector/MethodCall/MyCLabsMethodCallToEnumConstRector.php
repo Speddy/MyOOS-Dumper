@@ -138,7 +138,7 @@ CODE_SAMPLE
      */
     private function getValidEnumExpr(Node $node)
     {
-        switch ($node::class) {
+        switch (\get_class($node)) {
             case Variable::class:
             case PropertyFetch::class:
                 return $this->getPropertyFetchOrVariable($node);

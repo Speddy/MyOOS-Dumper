@@ -15,19 +15,20 @@ use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\ObjectType;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final readonly class CallAnalyzer
+final class CallAnalyzer
 {
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
     /**
      * @var array<class-string<Expr>>
      */
     private const OBJECT_CALL_TYPES = [MethodCall::class, NullsafeMethodCall::class, StaticCall::class];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider
-    )
+    public function __construct(ReflectionProvider $reflectionProvider)
     {
+        $this->reflectionProvider = $reflectionProvider;
     }
     public function isObjectCall(Expr $expr) : bool
     {

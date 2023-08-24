@@ -34,40 +34,59 @@ use TypeError;
  */
 final class ValueResolver
 {
-    private ?\PhpParser\ConstExprEvaluator $constExprEvaluator = null;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private readonly NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private readonly ConstFetchAnalyzer $constFetchAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private readonly CurrentFileProvider $currentFileProvider,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private readonly ClassReflectionAnalyzer $classReflectionAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ConstFetchAnalyzer
+     */
+    private $constFetchAnalyzer;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\Core\Provider\CurrentFileProvider
+     */
+    private $currentFileProvider;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ClassReflectionAnalyzer
+     */
+    private $classReflectionAnalyzer;
+    /**
+     * @var \PhpParser\ConstExprEvaluator|null
+     */
+    private $constExprEvaluator;
+    public function __construct(NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver, ConstFetchAnalyzer $constFetchAnalyzer, ReflectionProvider $reflectionProvider, CurrentFileProvider $currentFileProvider, ReflectionResolver $reflectionResolver, ClassReflectionAnalyzer $classReflectionAnalyzer)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->constFetchAnalyzer = $constFetchAnalyzer;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->currentFileProvider = $currentFileProvider;
+        $this->reflectionResolver = $reflectionResolver;
+        $this->classReflectionAnalyzer = $classReflectionAnalyzer;
     }
-    public function isValue(Expr $expr, mixed $value) : bool
+    /**
+     * @param mixed $value
+     */
+    public function isValue(Expr $expr, $value) : bool
     {
         return $this->getValue($expr) === $value;
     }
@@ -160,7 +179,7 @@ final class ValueResolver
         try {
             $constExprEvaluator = $this->getConstExprEvaluator();
             return $constExprEvaluator->evaluateDirectly($expr);
-        } catch (ConstExprEvaluationException|TypeError) {
+        } catch (ConstExprEvaluationException|TypeError $exception) {
         }
         return null;
     }

@@ -9,19 +9,22 @@ use PhpParser\Node\Scalar\String_;
 use PHPStan\Reflection\ReflectionProvider;
 use Rector\Core\PhpParser\Node\NodeFactory;
 use Rector\Symfony\ValueObject\EventNameToClassAndConstant;
-final readonly class EventReferenceFactory
+final class EventReferenceFactory
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeFactory $nodeFactory,
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\NodeFactory
+     */
+    private $nodeFactory;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    public function __construct(NodeFactory $nodeFactory, ReflectionProvider $reflectionProvider)
     {
+        $this->nodeFactory = $nodeFactory;
+        $this->reflectionProvider = $reflectionProvider;
     }
     /**
      * @param EventNameToClassAndConstant[] $eventNamesToClassConstants

@@ -21,35 +21,44 @@ use Rector\Doctrine\NodeAnalyzer\AttributeFinder;
 use Rector\Doctrine\NodeAnalyzer\TargetEntityResolver;
 use Rector\NodeTypeResolver\PHPStan\Type\TypeFactory;
 use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
-final readonly class ToOneRelationPropertyTypeResolver
+final class ToOneRelationPropertyTypeResolver
 {
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocParser\ClassAnnotationMatcher
+     */
+    private $classAnnotationMatcher;
+    /**
+     * @readonly
+     * @var \Rector\Doctrine\NodeAnalyzer\AttributeFinder
+     */
+    private $attributeFinder;
+    /**
+     * @readonly
+     * @var \Rector\Doctrine\NodeAnalyzer\TargetEntityResolver
+     */
+    private $targetEntityResolver;
     /**
      * @var class-string[]
      */
     private const TO_ONE_ANNOTATION_CLASSES = ['Doctrine\\ORM\\Mapping\\ManyToOne', 'Doctrine\\ORM\\Mapping\\OneToOne'];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private TypeFactory $typeFactory,
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private ClassAnnotationMatcher $classAnnotationMatcher,
-        /**
-         * @readonly
-         */
-        private AttributeFinder $attributeFinder,
-        /**
-         * @readonly
-         */
-        private TargetEntityResolver $targetEntityResolver
-    )
+    public function __construct(TypeFactory $typeFactory, PhpDocInfoFactory $phpDocInfoFactory, ClassAnnotationMatcher $classAnnotationMatcher, AttributeFinder $attributeFinder, TargetEntityResolver $targetEntityResolver)
     {
+        $this->typeFactory = $typeFactory;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->classAnnotationMatcher = $classAnnotationMatcher;
+        $this->attributeFinder = $attributeFinder;
+        $this->targetEntityResolver = $targetEntityResolver;
     }
     public function resolve(Property $property) : ?Type
     {
@@ -83,7 +92,7 @@ final readonly class ToOneRelationPropertyTypeResolver
         if (!\is_string($targetEntityClass)) {
             return new MixedType();
         }
-        if (str_ends_with($targetEntityClass, '::class')) {
+        if (\substr_compare($targetEntityClass, '::class', -\strlen('::class')) === 0) {
             $targetEntityClass = Strings::before($targetEntityClass, '::class');
         }
         // resolve to FQN

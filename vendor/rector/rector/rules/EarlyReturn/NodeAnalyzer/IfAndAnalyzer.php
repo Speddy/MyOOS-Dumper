@@ -11,19 +11,22 @@ use PhpParser\Node\Stmt\If_;
 use PhpParser\Node\Stmt\Return_;
 use Rector\Core\PhpParser\Comparing\NodeComparator;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
-final readonly class IfAndAnalyzer
+final class IfAndAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private NodeComparator $nodeComparator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
+     */
+    private $nodeComparator;
+    public function __construct(BetterNodeFinder $betterNodeFinder, NodeComparator $nodeComparator)
     {
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->nodeComparator = $nodeComparator;
     }
     public function isIfAndWithInstanceof(BooleanAnd $booleanAnd) : bool
     {
@@ -40,7 +43,9 @@ final readonly class IfAndAnalyzer
         }
         $ifExprs = $this->betterNodeFinder->findInstanceOf($if->stmts, Expr::class);
         foreach ($ifExprs as $ifExpr) {
-            $isExprFoundInReturn = (bool) $this->betterNodeFinder->findFirst($return->expr, fn(Node $node): bool => $this->nodeComparator->areNodesEqual($node, $ifExpr));
+            $isExprFoundInReturn = (bool) $this->betterNodeFinder->findFirst($return->expr, function (Node $node) use($ifExpr) : bool {
+                return $this->nodeComparator->areNodesEqual($node, $ifExpr);
+            });
             if ($isExprFoundInReturn) {
                 return \true;
             }

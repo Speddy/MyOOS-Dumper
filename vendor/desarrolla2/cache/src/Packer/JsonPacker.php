@@ -42,7 +42,7 @@ class JsonPacker implements PackerInterface
      */
     public function pack($value)
     {
-        return json_encode($value, JSON_THROW_ON_ERROR);
+        return json_encode($value);
     }
     
     /**

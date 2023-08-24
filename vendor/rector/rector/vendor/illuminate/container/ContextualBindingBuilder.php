@@ -13,6 +13,12 @@ class ContextualBindingBuilder implements ContextualBindingBuilderContract
      */
     protected $container;
     /**
+     * The concrete instance.
+     *
+     * @var string|array
+     */
+    protected $concrete;
+    /**
      * The abstract target.
      *
      * @var string
@@ -25,8 +31,9 @@ class ContextualBindingBuilder implements ContextualBindingBuilderContract
      * @param  string|array  $concrete
      * @return void
      */
-    public function __construct(Container $container, protected $concrete)
+    public function __construct(Container $container, $concrete)
     {
+        $this->concrete = $concrete;
         $this->container = $container;
     }
     /**
@@ -74,6 +81,8 @@ class ContextualBindingBuilder implements ContextualBindingBuilderContract
      */
     public function giveConfig($key, $default = null)
     {
-        $this->give(fn($container) => $container->get('config')->get($key, $default));
+        $this->give(function ($container) use($key, $default) {
+            return $container->get('config')->get($key, $default);
+        });
     }
 }

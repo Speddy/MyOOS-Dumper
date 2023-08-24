@@ -32,25 +32,32 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReadOnlyClassRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ClassAnalyzer $classAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly VisibilityManipulator $visibilityManipulator,
-        /**
-         * @readonly
-         */
-        private readonly PhpAttributeAnalyzer $phpAttributeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionProvider $reflectionProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ClassAnalyzer
+     */
+    private $classAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Privatization\NodeManipulator\VisibilityManipulator
+     */
+    private $visibilityManipulator;
+    /**
+     * @readonly
+     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
+     */
+    private $phpAttributeAnalyzer;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    public function __construct(ClassAnalyzer $classAnalyzer, VisibilityManipulator $visibilityManipulator, PhpAttributeAnalyzer $phpAttributeAnalyzer, ReflectionProvider $reflectionProvider)
     {
+        $this->classAnalyzer = $classAnalyzer;
+        $this->visibilityManipulator = $visibilityManipulator;
+        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
+        $this->reflectionProvider = $reflectionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

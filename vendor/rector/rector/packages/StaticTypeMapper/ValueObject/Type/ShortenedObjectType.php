@@ -12,13 +12,16 @@ use PHPStan\Type\Type;
 final class ShortenedObjectType extends ObjectType
 {
     /**
-     * @param class-string $fullyQualifiedName
-     */
-    public function __construct(string $shortName, /**
+     * @var class-string
      * @readonly
      */
-    private readonly string $fullyQualifiedName)
+    private $fullyQualifiedName;
+    /**
+     * @param class-string $fullyQualifiedName
+     */
+    public function __construct(string $shortName, string $fullyQualifiedName)
     {
+        $this->fullyQualifiedName = $fullyQualifiedName;
         parent::__construct($shortName);
     }
     public function isSuperTypeOf(Type $type) : TrinaryLogic

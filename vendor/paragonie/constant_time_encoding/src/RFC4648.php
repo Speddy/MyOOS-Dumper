@@ -41,6 +41,7 @@ abstract class RFC4648
      *
      * "foo" -> "Zm9v"
      *
+     * @param string $str
      * @return string
      *
      * @throws TypeError
@@ -55,6 +56,7 @@ abstract class RFC4648
      *
      * "Zm9v" -> "foo"
      *
+     * @param string $str
      * @return string
      *
      * @throws TypeError
@@ -69,6 +71,7 @@ abstract class RFC4648
      *
      * "foo" -> "Zm9v"
      *
+     * @param string $str
      * @return string
      *
      * @throws TypeError
@@ -83,6 +86,7 @@ abstract class RFC4648
      *
      * "Zm9v" -> "foo"
      *
+     * @param string $str
      * @return string
      *
      * @throws TypeError
@@ -97,6 +101,7 @@ abstract class RFC4648
      *
      * "foo" -> "MZXW6==="
      *
+     * @param string $str
      * @return string
      *
      * @throws TypeError
@@ -111,6 +116,7 @@ abstract class RFC4648
      *
      * "MZXW6===" -> "foo"
      *
+     * @param string $str
      * @return string
      *
      * @throws TypeError
@@ -125,6 +131,7 @@ abstract class RFC4648
      *
      * "foo" -> "CPNMU==="
      *
+     * @param string $str
      * @return string
      *
      * @throws TypeError
@@ -139,6 +146,7 @@ abstract class RFC4648
      *
      * "CPNMU===" -> "foo"
      *
+     * @param string $str
      * @return string
      *
      * @throws TypeError
@@ -153,6 +161,7 @@ abstract class RFC4648
      *
      * "foo" -> "666F6F"
      *
+     * @param string $str
      * @return string
      *
      * @throws TypeError
@@ -167,6 +176,7 @@ abstract class RFC4648
      *
      * "666F6F" -> "foo"
      *
+     * @param string $str
      * @return string
      */
     public static function base16Decode(string $str): string

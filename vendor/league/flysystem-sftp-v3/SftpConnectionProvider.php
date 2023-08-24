@@ -19,24 +19,30 @@ use function str_split;
 class SftpConnectionProvider implements ConnectionProvider
 {
 
-    private ?\phpseclib3\Net\SFTP $connection = null;
+    /**
+     * @var SFTP|null
+     */
+    private $connection;
 
-    private readonly \League\Flysystem\PhpseclibV3\ConnectivityChecker $connectivityChecker;
+    /**
+     * @var ConnectivityChecker
+     */
+    private $connectivityChecker;
 
     public function __construct(
-        private readonly string $host,
-        private readonly string $username,
-        private readonly ?string $password = null,
+        private string $host,
+        private string $username,
+        private ?string $password = null,
         private ?string $privateKey = null,
-        private readonly ?string $passphrase = null,
-        private readonly int $port = 22,
-        private readonly bool $useAgent = false,
-        private readonly int $timeout = 10,
-        private readonly int $maxTries = 4,
-        private readonly ?string $hostFingerprint = null,
+        private ?string $passphrase = null,
+        private int $port = 22,
+        private bool $useAgent = false,
+        private int $timeout = 10,
+        private int $maxTries = 4,
+        private ?string $hostFingerprint = null,
         ConnectivityChecker $connectivityChecker = null,
-        private readonly array $preferredAlgorithms = [],
-        private readonly bool $disableStatCache = true,
+        private array $preferredAlgorithms = [],
+        private bool $disableStatCache = true,
     ) {
         $this->connectivityChecker = $connectivityChecker ?: new SimpleConnectivityChecker();
     }
@@ -158,7 +164,7 @@ class SftpConnectionProvider implements ConnectionProvider
 
     private function loadPrivateKey(): AsymmetricKey
     {
-        if ((!str_starts_with($this->privateKey, "---") || !str_starts_with($this->privateKey, "PuTTY")) && is_file($this->privateKey)) {
+        if (("---" !== substr($this->privateKey, 0, 3) || "PuTTY" !== substr($this->privateKey, 0, 5)) && is_file($this->privateKey)) {
             $this->privateKey = file_get_contents($this->privateKey);
         }
 
@@ -168,7 +174,7 @@ class SftpConnectionProvider implements ConnectionProvider
             }
 
             return PublicKeyLoader::load($this->privateKey);
-        } catch (NoKeyLoadedException) {
+        } catch (NoKeyLoadedException $exception) {
             throw new UnableToLoadPrivateKey();
         }
     }

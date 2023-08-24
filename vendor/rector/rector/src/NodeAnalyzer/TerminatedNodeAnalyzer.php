@@ -46,13 +46,13 @@ final class TerminatedNodeAnalyzer
     private const ALLOWED_CONTINUE_CURRENT_STMTS = [InlineHTML::class, Nop::class];
     public function isAlwaysTerminated(StmtsAwareInterface $stmtsAware, Stmt $node, Stmt $currentStmt) : bool
     {
-        if (\in_array($currentStmt::class, self::ALLOWED_CONTINUE_CURRENT_STMTS, \true)) {
+        if (\in_array(\get_class($currentStmt), self::ALLOWED_CONTINUE_CURRENT_STMTS, \true)) {
             return \false;
         }
         if (($stmtsAware instanceof FileWithoutNamespace || $stmtsAware instanceof Namespace_) && ($currentStmt instanceof ClassLike || $currentStmt instanceof Function_)) {
             return \false;
         }
-        if (!\in_array($node::class, self::TERMINABLE_NODES_BY_ITS_STMTS, \true)) {
+        if (!\in_array(\get_class($node), self::TERMINABLE_NODES_BY_ITS_STMTS, \true)) {
             return $this->isTerminatedNode($node, $currentStmt);
         }
         if ($node instanceof TryCatch) {
@@ -66,7 +66,7 @@ final class TerminatedNodeAnalyzer
     }
     private function isTerminatedNode(Node $previousNode, Node $currentStmt) : bool
     {
-        if (\in_array($previousNode::class, self::TERMINABLE_NODES, \true)) {
+        if (\in_array(\get_class($previousNode), self::TERMINABLE_NODES, \true)) {
             return \true;
         }
         if ($previousNode instanceof Expression && $previousNode->expr instanceof Exit_) {
@@ -135,7 +135,8 @@ final class TerminatedNodeAnalyzer
         if ($stmts === []) {
             return \false;
         }
-        $lastKey = array_key_last($stmts);
+        \end($stmts);
+        $lastKey = \key($stmts);
         $lastNode = $stmts[$lastKey];
         if (isset($stmts[$lastKey - 1]) && $this->isTerminatedNode($stmts[$lastKey - 1], $node)) {
             return \false;
@@ -143,6 +144,6 @@ final class TerminatedNodeAnalyzer
         if ($lastNode instanceof Expression) {
             return $lastNode->expr instanceof Exit_;
         }
-        return \in_array($lastNode::class, self::TERMINATED_NODES, \true);
+        return \in_array(\get_class($lastNode), self::TERMINATED_NODES, \true);
     }
 }

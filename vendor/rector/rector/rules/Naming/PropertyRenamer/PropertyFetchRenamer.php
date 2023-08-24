@@ -11,19 +11,22 @@ use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\VarLikeIdentifier;
 use Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
-final readonly class PropertyFetchRenamer
+final class PropertyFetchRenamer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private PropertyFetchAnalyzer $propertyFetchAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
+     */
+    private $propertyFetchAnalyzer;
+    public function __construct(SimpleCallableNodeTraverser $simpleCallableNodeTraverser, PropertyFetchAnalyzer $propertyFetchAnalyzer)
     {
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
     }
     public function renamePropertyFetchesInClass(ClassLike $classLike, string $currentName, string $expectedName) : void
     {

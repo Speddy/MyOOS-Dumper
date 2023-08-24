@@ -7,11 +7,11 @@ use PhpParser\Node\Expr\Cast;
 class Double extends Cast
 {
     // For use in "kind" attribute
-    final public const KIND_DOUBLE = 1;
+    const KIND_DOUBLE = 1;
     // "double" syntax
-    final public const KIND_FLOAT = 2;
+    const KIND_FLOAT = 2;
     // "float" syntax
-    final public const KIND_REAL = 3;
+    const KIND_REAL = 3;
     // "real" syntax
     public function getType() : string
     {

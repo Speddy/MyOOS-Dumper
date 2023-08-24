@@ -12,6 +12,8 @@ class Param extends NodeAbstract
     public $byRef;
     /** @var bool Whether this is a variadic argument */
     public $variadic;
+    /** @var Expr\Variable|Expr\Error Parameter variable */
+    public $var;
     /** @var null|Expr Default value */
     public $default;
     /** @var int */
@@ -30,12 +32,13 @@ class Param extends NodeAbstract
      * @param int                                     $flags      Optional visibility flags
      * @param AttributeGroup[]                        $attrGroups PHP attribute groups
      */
-    public function __construct(public $var, \PhpParser\Node\Expr $default = null, $type = null, bool $byRef = \false, bool $variadic = \false, array $attributes = [], int $flags = 0, array $attrGroups = [])
+    public function __construct($var, \PhpParser\Node\Expr $default = null, $type = null, bool $byRef = \false, bool $variadic = \false, array $attributes = [], int $flags = 0, array $attrGroups = [])
     {
         $this->attributes = $attributes;
         $this->type = \is_string($type) ? new \PhpParser\Node\Identifier($type) : $type;
         $this->byRef = $byRef;
         $this->variadic = $variadic;
+        $this->var = $var;
         $this->default = $default;
         $this->flags = $flags;
         $this->attrGroups = $attrGroups;

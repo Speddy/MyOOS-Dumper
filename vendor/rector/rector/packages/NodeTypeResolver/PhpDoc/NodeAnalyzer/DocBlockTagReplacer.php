@@ -7,15 +7,16 @@ use PHPStan\PhpDocParser\Ast\PhpDoc\GenericTagValueNode;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagNode;
 use Rector\BetterPhpDocParser\Annotation\AnnotationNaming;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
-final readonly class DocBlockTagReplacer
+final class DocBlockTagReplacer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private AnnotationNaming $annotationNaming
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\Annotation\AnnotationNaming
+     */
+    private $annotationNaming;
+    public function __construct(AnnotationNaming $annotationNaming)
     {
+        $this->annotationNaming = $annotationNaming;
     }
     public function replaceTagByAnother(PhpDocInfo $phpDocInfo, string $oldTag, string $newTag) : bool
     {

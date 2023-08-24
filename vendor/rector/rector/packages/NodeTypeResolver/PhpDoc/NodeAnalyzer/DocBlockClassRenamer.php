@@ -7,15 +7,16 @@ use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
 use Rector\NodeTypeResolver\PhpDocNodeVisitor\ClassRenamePhpDocNodeVisitor;
 use Rector\NodeTypeResolver\ValueObject\OldToNewType;
 use Rector\PhpDocParser\PhpDocParser\PhpDocNodeTraverser;
-final readonly class DocBlockClassRenamer
+final class DocBlockClassRenamer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ClassRenamePhpDocNodeVisitor $classRenamePhpDocNodeVisitor
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PhpDocNodeVisitor\ClassRenamePhpDocNodeVisitor
+     */
+    private $classRenamePhpDocNodeVisitor;
+    public function __construct(ClassRenamePhpDocNodeVisitor $classRenamePhpDocNodeVisitor)
     {
+        $this->classRenamePhpDocNodeVisitor = $classRenamePhpDocNodeVisitor;
     }
     /**
      * @param OldToNewType[] $oldToNewTypes

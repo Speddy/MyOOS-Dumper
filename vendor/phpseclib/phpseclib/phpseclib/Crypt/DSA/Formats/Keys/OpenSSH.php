@@ -45,17 +45,17 @@ abstract class OpenSSH extends Progenitor
         $parsed = parent::load($key, $password);
 
         if (isset($parsed['paddedKey'])) {
-            [$type] = Strings::unpackSSH2('s', $parsed['paddedKey']);
+            list($type) = Strings::unpackSSH2('s', $parsed['paddedKey']);
             if ($type != $parsed['type']) {
                 throw new \RuntimeException("The public and private keys are not of the same type ($type vs $parsed[type])");
             }
 
-            [$p, $q, $g, $y, $x, $comment] = Strings::unpackSSH2('i5s', $parsed['paddedKey']);
+            list($p, $q, $g, $y, $x, $comment) = Strings::unpackSSH2('i5s', $parsed['paddedKey']);
 
             return compact('p', 'q', 'g', 'y', 'x', 'comment');
         }
 
-        [$p, $q, $g, $y] = Strings::unpackSSH2('iiii', $parsed['publicKey']);
+        list($p, $q, $g, $y) = Strings::unpackSSH2('iiii', $parsed['publicKey']);
 
         $comment = $parsed['comment'];
 
@@ -65,6 +65,10 @@ abstract class OpenSSH extends Progenitor
     /**
      * Convert a public key to the appropriate format
      *
+     * @param \phpseclib3\Math\BigInteger $p
+     * @param \phpseclib3\Math\BigInteger $q
+     * @param \phpseclib3\Math\BigInteger $g
+     * @param \phpseclib3\Math\BigInteger $y
      * @param array $options optional
      * @return string
      */
@@ -82,11 +86,11 @@ abstract class OpenSSH extends Progenitor
         // mpint     y
         $DSAPublicKey = Strings::packSSH2('siiii', 'ssh-dss', $p, $q, $g, $y);
 
-        if ($options['binary'] ?? self::$binary) {
+        if (isset($options['binary']) ? $options['binary'] : self::$binary) {
             return $DSAPublicKey;
         }
 
-        $comment = $options['comment'] ?? self::$comment;
+        $comment = isset($options['comment']) ? $options['comment'] : self::$comment;
         $DSAPublicKey = 'ssh-dss ' . base64_encode($DSAPublicKey) . ' ' . $comment;
 
         return $DSAPublicKey;
@@ -95,6 +99,11 @@ abstract class OpenSSH extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
+     * @param \phpseclib3\Math\BigInteger $p
+     * @param \phpseclib3\Math\BigInteger $q
+     * @param \phpseclib3\Math\BigInteger $g
+     * @param \phpseclib3\Math\BigInteger $y
+     * @param \phpseclib3\Math\BigInteger $x
      * @param string $password optional
      * @param array $options optional
      * @return string

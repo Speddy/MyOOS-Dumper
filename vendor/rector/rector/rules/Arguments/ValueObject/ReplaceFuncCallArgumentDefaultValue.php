@@ -4,21 +4,38 @@ declare (strict_types=1);
 namespace Rector\Arguments\ValueObject;
 
 use Rector\Arguments\Contract\ReplaceArgumentDefaultValueInterface;
-final readonly class ReplaceFuncCallArgumentDefaultValue implements ReplaceArgumentDefaultValueInterface
+final class ReplaceFuncCallArgumentDefaultValue implements ReplaceArgumentDefaultValueInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private string $function,
-        /**
-         * @readonly
-         */
-        private int $position,
-        private mixed $valueBefore,
-        private mixed $valueAfter
-    )
+    /**
+     * @readonly
+     * @var string
+     */
+    private $function;
+    /**
+     * @readonly
+     * @var int
+     */
+    private $position;
+    /**
+     * @readonly
+     * @var mixed
+     */
+    private $valueBefore;
+    /**
+     * @readonly
+     * @var mixed
+     */
+    private $valueAfter;
+    /**
+     * @param mixed $valueBefore
+     * @param mixed $valueAfter
+     */
+    public function __construct(string $function, int $position, $valueBefore, $valueAfter)
     {
+        $this->function = $function;
+        $this->position = $position;
+        $this->valueBefore = $valueBefore;
+        $this->valueAfter = $valueAfter;
     }
     public function getFunction() : string
     {

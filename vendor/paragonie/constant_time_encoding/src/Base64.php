@@ -57,6 +57,7 @@ abstract class Base64 implements EncoderInterface
      *
      * Base64 character set "[A-Z][a-z][0-9]+/"
      *
+     * @param string $src
      * @return string
      *
      * @throws TypeError
@@ -67,6 +68,7 @@ abstract class Base64 implements EncoderInterface
     }
 
     /**
+     * @param string $src
      * @param bool $pad   Include = padding?
      * @return string
      *
@@ -222,6 +224,7 @@ abstract class Base64 implements EncoderInterface
     }
 
     /**
+     * @param string $encodedString
      * @return string
      */
     public static function decodeNoPadding(string $encodedString): string
@@ -258,6 +261,7 @@ abstract class Base64 implements EncoderInterface
      * [A-Z]      [a-z]      [0-9]      +     /
      * 0x41-0x5a, 0x61-0x7a, 0x30-0x39, 0x2b, 0x2f
      *
+     * @param int $src
      * @return int
      */
     protected static function decode6Bits(int $src): int
@@ -286,6 +290,7 @@ abstract class Base64 implements EncoderInterface
      * Uses bitwise operators instead of table-lookups to turn 8-bit integers
      * into 6-bit integers.
      *
+     * @param int $src
      * @return string
      */
     protected static function encode6Bits(int $src): string

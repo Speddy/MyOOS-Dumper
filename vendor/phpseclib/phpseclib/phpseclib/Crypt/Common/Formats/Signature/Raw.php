@@ -32,18 +32,25 @@ abstract class Raw
      */
     public static function load($sig)
     {
-        return match (true) {
-            !is_array($sig), !isset($sig['r']) || !isset($sig['s']), !$sig['r'] instanceof BigInteger, !$sig['s'] instanceof BigInteger => false,
-            default => [
-                'r' => $sig['r'],
-                's' => $sig['s']
-            ],
-        };
+        switch (true) {
+            case !is_array($sig):
+            case !isset($sig['r']) || !isset($sig['s']):
+            case !$sig['r'] instanceof BigInteger:
+            case !$sig['s'] instanceof BigInteger:
+                return false;
+        }
+
+        return [
+            'r' => $sig['r'],
+            's' => $sig['s']
+        ];
     }
 
     /**
      * Returns a signature in the appropriate format
      *
+     * @param \phpseclib3\Math\BigInteger $r
+     * @param \phpseclib3\Math\BigInteger $s
      * @return string
      */
     public static function save(BigInteger $r, BigInteger $s)

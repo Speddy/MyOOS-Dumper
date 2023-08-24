@@ -16,13 +16,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveExpectAnyFromMockRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer)
     {
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

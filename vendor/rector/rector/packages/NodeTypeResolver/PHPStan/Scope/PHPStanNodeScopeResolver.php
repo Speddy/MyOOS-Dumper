@@ -66,37 +66,59 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class PHPStanNodeScopeResolver
 {
     /**
+     * @readonly
+     * @var \PHPStan\Analyser\NodeScopeResolver
+     */
+    private $nodeScopeResolver;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Scope\ScopeFactory
+     */
+    private $scopeFactory;
+    /**
+     * @readonly
+     * @var \Rector\Core\Util\Reflection\PrivatesAccessor
+     */
+    private $privatesAccessor;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ClassAnalyzer
+     */
+    private $classAnalyzer;
+    /**
      * @var string
      */
     private const CONTEXT = 'context';
     /**
      * @readonly
+     * @var \PhpParser\NodeTraverser
      */
-    private readonly \PhpParser\NodeTraverser $nodeTraverser;
-    private bool $hasUnreachableStatementNode = \false;
+    private $nodeTraverser;
+    /**
+     * @var bool
+     */
+    private $hasUnreachableStatementNode = \false;
     /**
      * @param ScopeResolverNodeVisitorInterface[] $nodeVisitors
      */
-    public function __construct(/**
-     * @readonly
-     */
-    private readonly NodeScopeResolver $nodeScopeResolver, /**
-     * @readonly
-     */
-    private readonly ReflectionProvider $reflectionProvider, iterable $nodeVisitors, /**
-     * @readonly
-     */
-    private readonly \Rector\NodeTypeResolver\PHPStan\Scope\ScopeFactory $scopeFactory, /**
-     * @readonly
-     */
-    private readonly PrivatesAccessor $privatesAccessor, /**
-     * @readonly
-     */
-    private readonly NodeNameResolver $nodeNameResolver, /**
-     * @readonly
-     */
-    private readonly ClassAnalyzer $classAnalyzer)
+    public function __construct(NodeScopeResolver $nodeScopeResolver, ReflectionProvider $reflectionProvider, iterable $nodeVisitors, \Rector\NodeTypeResolver\PHPStan\Scope\ScopeFactory $scopeFactory, PrivatesAccessor $privatesAccessor, NodeNameResolver $nodeNameResolver, ClassAnalyzer $classAnalyzer)
     {
+        $this->nodeScopeResolver = $nodeScopeResolver;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->scopeFactory = $scopeFactory;
+        $this->privatesAccessor = $privatesAccessor;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->classAnalyzer = $classAnalyzer;
         $this->nodeTraverser = new NodeTraverser();
         foreach ($nodeVisitors as $nodeVisitor) {
             $this->nodeTraverser->addVisitor($nodeVisitor);
@@ -249,7 +271,9 @@ final class PHPStanNodeScopeResolver
     {
         foreach ($tryCatch->catches as $catch) {
             $varName = $catch->var instanceof Variable ? $this->nodeNameResolver->getName($catch->var) : null;
-            $type = TypeCombinator::union(...\array_map(static fn(Name $name): ObjectType => new ObjectType((string) $name), $catch->types));
+            $type = TypeCombinator::union(...\array_map(static function (Name $name) : ObjectType {
+                return new ObjectType((string) $name);
+            }, $catch->types));
             $catchMutatingScope = $mutatingScope->enterCatchType($type, $varName);
             $this->processNodes($catch->stmts, $filePath, $catchMutatingScope);
         }
@@ -321,7 +345,7 @@ final class PHPStanNodeScopeResolver
         }
         try {
             return $mutatingScope->enterClass($classReflection);
-        } catch (\PHPStan\ShouldNotHappenException) {
+        } catch (\PHPStan\ShouldNotHappenException $exception) {
         }
         $context = $this->privatesAccessor->getPrivateProperty($mutatingScope, 'context');
         $this->privatesAccessor->setPrivateProperty($context, 'classReflection', null);

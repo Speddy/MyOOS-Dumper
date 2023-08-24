@@ -73,7 +73,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
         $this->setAcceptedLevels($minLevelOrList, $maxLevel);
 
         if (!$this->handler instanceof HandlerInterface && !is_callable($this->handler)) {
-            throw new \RuntimeException("The given handler (".json_encode($this->handler, JSON_THROW_ON_ERROR).") is not a callable nor a Monolog\Handler\HandlerInterface object");
+            throw new \RuntimeException("The given handler (".json_encode($this->handler).") is not a callable nor a Monolog\Handler\HandlerInterface object");
         }
     }
 
@@ -99,7 +99,9 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
         } else {
             $minLevelOrList = Logger::toMonologLevel($minLevelOrList);
             $maxLevel = Logger::toMonologLevel($maxLevel);
-            $acceptedLevels = array_values(array_filter(Logger::getLevels(), fn($level) => $level >= $minLevelOrList && $level <= $maxLevel));
+            $acceptedLevels = array_values(array_filter(Logger::getLevels(), function ($level) use ($minLevelOrList, $maxLevel) {
+                return $level >= $minLevelOrList && $level <= $maxLevel;
+            }));
         }
         $this->acceptedLevels = array_flip($acceptedLevels);
 
@@ -183,7 +185,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
             return $this;
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.$handler::class.' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
     }
 
     /**
@@ -196,7 +198,7 @@ class FilterHandler extends Handler implements ProcessableHandlerInterface, Rese
             return $handler->getFormatter();
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.$handler::class.' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
     }
 
     public function reset()

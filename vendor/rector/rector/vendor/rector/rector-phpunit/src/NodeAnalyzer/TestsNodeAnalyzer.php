@@ -13,31 +13,38 @@ use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\Core\Reflection\ReflectionResolver;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\NodeTypeResolver;
-final readonly class TestsNodeAnalyzer
+final class TestsNodeAnalyzer
 {
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
     /**
      * @var string[]
      */
     private const TEST_CASE_OBJECT_CLASSES = ['PHPUnit\\Framework\\TestCase', 'PHPUnit_Framework_TestCase'];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private ReflectionResolver $reflectionResolver
-    )
+    public function __construct(NodeTypeResolver $nodeTypeResolver, NodeNameResolver $nodeNameResolver, PhpDocInfoFactory $phpDocInfoFactory, ReflectionResolver $reflectionResolver)
     {
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function isInTestClass(Node $node) : bool
     {

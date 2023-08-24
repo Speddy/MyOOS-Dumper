@@ -11,17 +11,23 @@ use RectorPrefix202308\React\Stream\WritableStreamInterface;
  */
 class Decoder extends EventEmitter implements ReadableStreamInterface
 {
+    private $input;
+    private $assoc;
+    private $depth;
     private $options;
-    private string $buffer = '';
-    private bool $closed = \false;
+    /** @var int */
+    private $maxlength;
+    private $buffer = '';
+    private $closed = \false;
     /**
+     * @param ReadableStreamInterface $input
      * @param bool $assoc
      * @param int $depth
      * @param int $options (requires PHP 5.4+)
      * @param int $maxlength
      * @throws \BadMethodCallException
      */
-    public function __construct(private readonly ReadableStreamInterface $input, private $assoc = \false, private $depth = 512, $options = 0, private $maxlength = 65536)
+    public function __construct(ReadableStreamInterface $input, $assoc = \false, $depth = 512, $options = 0, $maxlength = 65536)
     {
         // @codeCoverageIgnoreStart
         if ($options !== 0 && \PHP_VERSION < 5.4) {
@@ -30,15 +36,20 @@ class Decoder extends EventEmitter implements ReadableStreamInterface
         if (\defined('JSON_THROW_ON_ERROR')) {
             $options = $options & ~\JSON_THROW_ON_ERROR;
         }
+        // @codeCoverageIgnoreEnd
+        $this->input = $input;
         if (!$input->isReadable()) {
             $this->close();
             return;
         }
+        $this->assoc = $assoc;
+        $this->depth = $depth;
         $this->options = $options;
-        $this->input->on('data', $this->handleData(...));
-        $this->input->on('end', $this->handleEnd(...));
-        $this->input->on('error', $this->handleError(...));
-        $this->input->on('close', $this->close(...));
+        $this->maxlength = $maxlength;
+        $this->input->on('data', array($this, 'handleData'));
+        $this->input->on('end', array($this, 'handleEnd'));
+        $this->input->on('error', array($this, 'handleError'));
+        $this->input->on('close', array($this, 'close'));
     }
     public function isReadable()
     {
@@ -63,7 +74,7 @@ class Decoder extends EventEmitter implements ReadableStreamInterface
     {
         $this->input->resume();
     }
-    public function pipe(WritableStreamInterface $dest, array $options = [])
+    public function pipe(WritableStreamInterface $dest, array $options = array())
     {
         Util::pipe($this, $dest, $options);
         return $dest;
@@ -84,7 +95,7 @@ class Decoder extends EventEmitter implements ReadableStreamInterface
             // decode data with options given in ctor
             // @codeCoverageIgnoreStart
             if ($this->options === 0) {
-                $data = \json_decode($data, $this->assoc, $this->depth, JSON_THROW_ON_ERROR);
+                $data = \json_decode($data, $this->assoc, $this->depth);
             } else {
                 \assert(\PHP_VERSION_ID >= 50400);
                 $data = \json_decode($data, $this->assoc, $this->depth, $this->options);
@@ -103,7 +114,7 @@ class Decoder extends EventEmitter implements ReadableStreamInterface
                 // @codeCoverageIgnoreEnd
                 return $this->handleError(new \RuntimeException('Unable to decode JSON: ' . $errstr, \json_last_error()));
             }
-            $this->emit('data', [$data]);
+            $this->emit('data', array($data));
         }
         if (isset($this->buffer[$this->maxlength])) {
             $this->handleError(new \OverflowException('Buffer size exceeded'));
@@ -121,9 +132,9 @@ class Decoder extends EventEmitter implements ReadableStreamInterface
         }
     }
     /** @internal */
-    public function handleError(\Throwable $error)
+    public function handleError(\Exception $error)
     {
-        $this->emit('error', [$error]);
+        $this->emit('error', array($error));
         $this->close();
     }
 }

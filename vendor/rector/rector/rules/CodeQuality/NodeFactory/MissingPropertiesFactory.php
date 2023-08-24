@@ -7,15 +7,16 @@ use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\Property;
 use PhpParser\Node\Stmt\PropertyProperty;
 use PHPStan\Type\Type;
-final readonly class MissingPropertiesFactory
+final class MissingPropertiesFactory
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\CodeQuality\NodeFactory\PropertyTypeDecorator $propertyTypeDecorator
-    )
+    /**
+     * @readonly
+     * @var \Rector\CodeQuality\NodeFactory\PropertyTypeDecorator
+     */
+    private $propertyTypeDecorator;
+    public function __construct(\Rector\CodeQuality\NodeFactory\PropertyTypeDecorator $propertyTypeDecorator)
     {
+        $this->propertyTypeDecorator = $propertyTypeDecorator;
     }
     /**
      * @param array<string, Type> $fetchedLocalPropertyNameToTypes

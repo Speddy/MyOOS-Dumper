@@ -28,14 +28,14 @@ class GMP extends Engine
      * @see parent::bitwise_leftRotate()
      * @see parent::bitwise_rightRotate()
      */
-    final public const FAST_BITWISE = true;
+    const FAST_BITWISE = true;
 
     /**
      * Engine Directory
      *
      * @see parent::setModExpEngine
      */
-    final public const ENGINE_DIR = 'GMP';
+    const ENGINE_DIR = 'GMP';
 
     /**
      * Test for engine validity
@@ -94,7 +94,7 @@ class GMP extends Engine
                 $this->value = gmp_init($temp);
                 break;
             case 10:
-                $this->value = gmp_init($this->value ?? '0');
+                $this->value = gmp_init(isset($this->value) ? $this->value : '0');
         }
     }
 
@@ -160,6 +160,7 @@ class GMP extends Engine
     /**
      * Adds two BigIntegers.
      *
+     * @param GMP $y
      * @return GMP
      */
     public function add(GMP $y)
@@ -173,6 +174,7 @@ class GMP extends Engine
     /**
      * Subtracts two BigIntegers.
      *
+     * @param GMP $y
      * @return GMP
      */
     public function subtract(GMP $y)
@@ -186,6 +188,7 @@ class GMP extends Engine
     /**
      * Multiplies two BigIntegers.
      *
+     * @param GMP $x
      * @return GMP
      */
     public function multiply(GMP $x)
@@ -204,6 +207,7 @@ class GMP extends Engine
      * same.  If the remainder would be negative, the "common residue" is equal to the sum of the remainder
      * and the divisor (basically, the "common residue" is the first positive modulo).
      *
+     * @param GMP $y
      * @return array{GMP, GMP}
      */
     public function divide(GMP $y)
@@ -211,7 +215,7 @@ class GMP extends Engine
         $quotient = new self();
         $remainder = new self();
 
-        [$quotient->value, $remainder->value] = gmp_div_qr($this->value, $y->value);
+        list($quotient->value, $remainder->value) = gmp_div_qr($this->value, $y->value);
 
         if (gmp_sign($remainder->value) < 0) {
             $remainder->value = $remainder->value + gmp_abs($y->value);
@@ -234,6 +238,7 @@ class GMP extends Engine
      *
      * {@internal Could return $this->subtract($x), but that's not as fast as what we do do.}
      *
+     * @param GMP $y
      * @return int in case < 0 if $this is less than $y; > 0 if $this is greater than $y, and 0 if they are equal.
      * @see self::equals()
      */
@@ -254,6 +259,7 @@ class GMP extends Engine
      *
      * If you need to see if one number is greater than or less than another number, use BigInteger::compare()
      *
+     * @param GMP $x
      * @return bool
      */
     public function equals(GMP $x)
@@ -266,6 +272,7 @@ class GMP extends Engine
      *
      * Say you have (30 mod 17 * x mod 17) mod 17 == 1.  x can be found using modular inverses.
      *
+     * @param GMP $n
      * @return false|GMP
      */
     public function modInverse(GMP $n)
@@ -284,6 +291,7 @@ class GMP extends Engine
      * combination is returned is dependent upon which mode is in use.  See
      * {@link http://en.wikipedia.org/wiki/B%C3%A9zout%27s_identity Bezout's identity - Wikipedia} for more information.
      *
+     * @param GMP $n
      * @return GMP[]
      */
     public function extendedGCD(GMP $n)
@@ -302,6 +310,7 @@ class GMP extends Engine
      *
      * Say you have 693 and 609.  The GCD is 21.
      *
+     * @param GMP $n
      * @return GMP
      */
     public function gcd(GMP $n)
@@ -326,6 +335,7 @@ class GMP extends Engine
     /**
      * Logical And
      *
+     * @param GMP $x
      * @return GMP
      */
     public function bitwise_and(GMP $x)
@@ -339,6 +349,7 @@ class GMP extends Engine
     /**
      * Logical Or
      *
+     * @param GMP $x
      * @return GMP
      */
     public function bitwise_or(GMP $x)
@@ -352,6 +363,7 @@ class GMP extends Engine
     /**
      * Logical Exclusive Or
      *
+     * @param GMP $x
      * @return GMP
      */
     public function bitwise_xor(GMP $x)
@@ -400,6 +412,8 @@ class GMP extends Engine
     /**
      * Performs modular exponentiation.
      *
+     * @param GMP $e
+     * @param GMP $n
      * @return GMP
      */
     public function modPow(GMP $e, GMP $n)
@@ -412,6 +426,8 @@ class GMP extends Engine
      *
      * Alias for modPow().
      *
+     * @param GMP $e
+     * @param GMP $n
      * @return GMP
      */
     public function powMod(GMP $e, GMP $n)
@@ -422,6 +438,8 @@ class GMP extends Engine
     /**
      * Performs modular exponentiation.
      *
+     * @param GMP $e
+     * @param GMP $n
      * @return GMP
      */
     protected function powModInner(GMP $e, GMP $n)
@@ -435,6 +453,7 @@ class GMP extends Engine
      *
      * Removes leading zeros and truncates (if necessary) to maintain the appropriate precision
      *
+     * @param GMP $result
      * @return GMP
      */
     protected function normalize(GMP $result)
@@ -484,6 +503,8 @@ class GMP extends Engine
      *
      * If there's not a prime within the given range, false will be returned.
      *
+     * @param GMP $min
+     * @param GMP $max
      * @return false|GMP
      */
     public static function randomRangePrime(GMP $min, GMP $max)
@@ -500,6 +521,8 @@ class GMP extends Engine
      * BigInteger::randomRange($min, $max)
      * BigInteger::randomRange($max, $min)
      *
+     * @param GMP $min
+     * @param GMP $max
      * @return GMP
      */
     public static function randomRange(GMP $min, GMP $max)
@@ -548,6 +571,7 @@ class GMP extends Engine
     /**
      * Performs exponentiation.
      *
+     * @param GMP $n
      * @return GMP
      */
     public function pow(GMP $n)
@@ -561,6 +585,7 @@ class GMP extends Engine
     /**
      * Return the minimum BigInteger between an arbitrary number of BigIntegers.
      *
+     * @param GMP ...$nums
      * @return GMP
      */
     public static function min(GMP ...$nums)
@@ -571,6 +596,7 @@ class GMP extends Engine
     /**
      * Return the maximum BigInteger between an arbitrary number of BigIntegers.
      *
+     * @param GMP ...$nums
      * @return GMP
      */
     public static function max(GMP ...$nums)
@@ -581,6 +607,8 @@ class GMP extends Engine
     /**
      * Tests BigInteger to see if it is between two integers, inclusive
      *
+     * @param GMP $min
+     * @param GMP $max
      * @return bool
      */
     public function between(GMP $min, GMP $max)
@@ -599,7 +627,9 @@ class GMP extends Engine
     public function createRecurringModuloFunction()
     {
         $temp = $this->value;
-        return fn(GMP $x) => new GMP($x->value % $temp);
+        return function (GMP $x) use ($temp) {
+            return new GMP($x->value % $temp);
+        };
     }
 
     /**
@@ -607,6 +637,7 @@ class GMP extends Engine
      *
      * ie. $s = gmp_scan1($n, 0) and $r = gmp_div_q($n, gmp_pow(gmp_init('2'), $s));
      *
+     * @param GMP $r
      * @return int
      */
     public static function scan1divide(GMP $r)

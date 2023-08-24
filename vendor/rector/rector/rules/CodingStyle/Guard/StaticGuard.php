@@ -11,19 +11,22 @@ use PhpParser\Node\Expr\Variable;
 use PHPStan\Reflection\MethodReflection;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\Core\Reflection\ReflectionResolver;
-final readonly class StaticGuard
+final class StaticGuard
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(BetterNodeFinder $betterNodeFinder, ReflectionResolver $reflectionResolver)
     {
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->reflectionResolver = $reflectionResolver;
     }
     /**
      * @param \PhpParser\Node\Expr\Closure|\PhpParser\Node\Expr\ArrowFunction $node

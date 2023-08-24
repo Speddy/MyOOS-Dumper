@@ -40,8 +40,11 @@ final class AddLiteralSeparatorToNumberRector extends AbstractRector implements 
     /**
      * @var int
      */
-    private const DEFAULT_LIMIT_VALUE = 1_000_000;
-    private int $limitValue = self::DEFAULT_LIMIT_VALUE;
+    private const DEFAULT_LIMIT_VALUE = 1000000;
+    /**
+     * @var int
+     */
+    private $limitValue = self::DEFAULT_LIMIT_VALUE;
     /**
      * @param mixed[] $configuration
      */
@@ -73,7 +76,7 @@ class SomeClass
     }
 }
 CODE_SAMPLE
-, [self::LIMIT_VALUE => 1_000_000])]);
+, [self::LIMIT_VALUE => 1000000])]);
     }
     /**
      * @return array<class-string<Node>>
@@ -91,7 +94,7 @@ CODE_SAMPLE
         if ($this->shouldSkip($node, $rawValue)) {
             return null;
         }
-        if (str_contains((string) $rawValue, '.')) {
+        if (\strpos((string) $rawValue, '.') !== \false) {
             [$mainPart, $decimalPart] = \explode('.', (string) $rawValue);
             $chunks = $this->strSplitNegative($mainPart, self::GROUP_SIZE);
             $literalSeparatedNumber = \implode('_', $chunks) . '.' . $decimalPart;
@@ -116,14 +119,15 @@ CODE_SAMPLE
     }
     /**
      * @param \PhpParser\Node\Scalar\LNumber|\PhpParser\Node\Scalar\DNumber $node
+     * @param mixed $rawValue
      */
-    private function shouldSkip($node, mixed $rawValue) : bool
+    private function shouldSkip($node, $rawValue) : bool
     {
         if (!\is_string($rawValue)) {
             return \true;
         }
         // already contains separator
-        if (str_contains($rawValue, '_')) {
+        if (\strpos($rawValue, '_') !== \false) {
             return \true;
         }
         if ($node->value < $this->limitValue) {

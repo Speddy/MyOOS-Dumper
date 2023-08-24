@@ -7,10 +7,13 @@ final class Util
     /**
      * Pipes all the data from the given $source into the $dest
      *
+     * @param ReadableStreamInterface $source
+     * @param WritableStreamInterface $dest
+     * @param array $options
      * @return WritableStreamInterface $dest stream as-is
      * @see ReadableStreamInterface::pipe() for more details
      */
-    public static function pipe(ReadableStreamInterface $source, WritableStreamInterface $dest, array $options = [])
+    public static function pipe(ReadableStreamInterface $source, WritableStreamInterface $dest, array $options = array())
     {
         // source not readable => NO-OP
         if (!$source->isReadable()) {
@@ -21,7 +24,7 @@ final class Util
             $source->pause();
             return $dest;
         }
-        $dest->emit('pipe', [$source]);
+        $dest->emit('pipe', array($source));
         // forward all source data events as $dest->write()
         $source->on('data', $dataer = function ($data) use($source, $dest) {
             $feedMore = $dest->write($data);
@@ -41,7 +44,7 @@ final class Util
             $dest->removeListener('drain', $drainer);
         });
         // forward end event from source as $dest->end()
-        $end = $options['end'] ?? \true;
+        $end = isset($options['end']) ? $options['end'] : \true;
         if ($end) {
             $source->on('end', $ender = function () use($dest) {
                 $dest->end();

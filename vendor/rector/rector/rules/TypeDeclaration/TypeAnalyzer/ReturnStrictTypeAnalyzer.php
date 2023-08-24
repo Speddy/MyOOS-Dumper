@@ -25,23 +25,28 @@ use Rector\Core\Reflection\ReflectionResolver;
 use Rector\PHPStanStaticTypeMapper\Enum\TypeKind;
 use Rector\StaticTypeMapper\StaticTypeMapper;
 use Rector\TypeDeclaration\NodeAnalyzer\TypeNodeUnwrapper;
-final readonly class ReturnStrictTypeAnalyzer
+final class ReturnStrictTypeAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private TypeNodeUnwrapper $typeNodeUnwrapper,
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\TypeNodeUnwrapper
+     */
+    private $typeNodeUnwrapper;
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    public function __construct(ReflectionResolver $reflectionResolver, TypeNodeUnwrapper $typeNodeUnwrapper, StaticTypeMapper $staticTypeMapper)
     {
+        $this->reflectionResolver = $reflectionResolver;
+        $this->typeNodeUnwrapper = $typeNodeUnwrapper;
+        $this->staticTypeMapper = $staticTypeMapper;
     }
     /**
      * @param Return_[] $returns

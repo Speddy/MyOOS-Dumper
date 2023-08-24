@@ -7,9 +7,13 @@ use RectorPrefix202308\React\EventLoop\LoopInterface;
 use RectorPrefix202308\React\Promise\Promise;
 final class TimeoutConnector implements ConnectorInterface
 {
+    private $connector;
+    private $timeout;
     private $loop;
-    public function __construct(private readonly ConnectorInterface $connector, private $timeout, LoopInterface $loop = null)
+    public function __construct(ConnectorInterface $connector, $timeout, LoopInterface $loop = null)
     {
+        $this->connector = $connector;
+        $this->timeout = $timeout;
         $this->loop = $loop ?: Loop::get();
     }
     public function connect($uri)

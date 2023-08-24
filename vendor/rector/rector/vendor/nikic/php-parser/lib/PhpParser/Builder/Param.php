@@ -33,7 +33,7 @@ class Param implements PhpParser\Builder
      *
      * @return $this The builder instance (for fluid interface)
      */
-    public function setDefault(mixed $value)
+    public function setDefault($value)
     {
         $this->default = BuilderHelpers::normalizeValue($value);
         return $this;

@@ -37,7 +37,7 @@ class ConstExprEvaluator
      */
     public function __construct(callable $fallbackEvaluator = null)
     {
-        $this->fallbackEvaluator = $fallbackEvaluator ?? function (Expr $expr): never {
+        $this->fallbackEvaluator = $fallbackEvaluator ?? function (Expr $expr) {
             throw new \PhpParser\ConstExprEvaluationException("Expression of type {$expr->getType()} cannot be evaluated");
         };
     }
@@ -60,7 +60,7 @@ class ConstExprEvaluator
      */
     public function evaluateSilently(Expr $expr)
     {
-        \set_error_handler(function ($num, $str, $file, $line): never {
+        \set_error_handler(function ($num, $str, $file, $line) {
             throw new \ErrorException($str, 0, $num, $file, $line);
         });
         try {
@@ -161,45 +161,75 @@ class ConstExprEvaluator
         // short-circuiting and evaluating the RHS in advance may be illegal in that case
         $l = $expr->left;
         $r = $expr->right;
-        return match ($expr->getOperatorSigil()) {
-            '&' => $this->evaluate($l) & $this->evaluate($r),
-            '|' => $this->evaluate($l) | $this->evaluate($r),
-            '^' => $this->evaluate($l) ^ $this->evaluate($r),
-            '&&' => $this->evaluate($l) && $this->evaluate($r),
-            '||' => $this->evaluate($l) || $this->evaluate($r),
-            '??' => $this->evaluate($l) ?? $this->evaluate($r),
-            '.' => $this->evaluate($l) . $this->evaluate($r),
-            '/' => $this->evaluate($l) / $this->evaluate($r),
-            '==' => $this->evaluate($l) == $this->evaluate($r),
-            '>' => $this->evaluate($l) > $this->evaluate($r),
-            '>=' => $this->evaluate($l) >= $this->evaluate($r),
-            '===' => $this->evaluate($l) === $this->evaluate($r),
-            'and' => $this->evaluate($l) and $this->evaluate($r),
-            'or' => $this->evaluate($l) or $this->evaluate($r),
-            'xor' => $this->evaluate($l) xor $this->evaluate($r),
-            '-' => $this->evaluate($l) - $this->evaluate($r),
-            '%' => $this->evaluate($l) % $this->evaluate($r),
-            '*' => $this->evaluate($l) * $this->evaluate($r),
-            '!=' => $this->evaluate($l) != $this->evaluate($r),
-            '!==' => $this->evaluate($l) !== $this->evaluate($r),
-            '+' => $this->evaluate($l) + $this->evaluate($r),
-            '**' => $this->evaluate($l) ** $this->evaluate($r),
-            '<<' => $this->evaluate($l) << $this->evaluate($r),
-            '>>' => $this->evaluate($l) >> $this->evaluate($r),
-            '<' => $this->evaluate($l) < $this->evaluate($r),
-            '<=' => $this->evaluate($l) <= $this->evaluate($r),
-            '<=>' => $this->evaluate($l) <=> $this->evaluate($r),
-            default => throw new \Exception('Should not happen'),
-        };
+        switch ($expr->getOperatorSigil()) {
+            case '&':
+                return $this->evaluate($l) & $this->evaluate($r);
+            case '|':
+                return $this->evaluate($l) | $this->evaluate($r);
+            case '^':
+                return $this->evaluate($l) ^ $this->evaluate($r);
+            case '&&':
+                return $this->evaluate($l) && $this->evaluate($r);
+            case '||':
+                return $this->evaluate($l) || $this->evaluate($r);
+            case '??':
+                return $this->evaluate($l) ?? $this->evaluate($r);
+            case '.':
+                return $this->evaluate($l) . $this->evaluate($r);
+            case '/':
+                return $this->evaluate($l) / $this->evaluate($r);
+            case '==':
+                return $this->evaluate($l) == $this->evaluate($r);
+            case '>':
+                return $this->evaluate($l) > $this->evaluate($r);
+            case '>=':
+                return $this->evaluate($l) >= $this->evaluate($r);
+            case '===':
+                return $this->evaluate($l) === $this->evaluate($r);
+            case 'and':
+                return $this->evaluate($l) and $this->evaluate($r);
+            case 'or':
+                return $this->evaluate($l) or $this->evaluate($r);
+            case 'xor':
+                return $this->evaluate($l) xor $this->evaluate($r);
+            case '-':
+                return $this->evaluate($l) - $this->evaluate($r);
+            case '%':
+                return $this->evaluate($l) % $this->evaluate($r);
+            case '*':
+                return $this->evaluate($l) * $this->evaluate($r);
+            case '!=':
+                return $this->evaluate($l) != $this->evaluate($r);
+            case '!==':
+                return $this->evaluate($l) !== $this->evaluate($r);
+            case '+':
+                return $this->evaluate($l) + $this->evaluate($r);
+            case '**':
+                return $this->evaluate($l) ** $this->evaluate($r);
+            case '<<':
+                return $this->evaluate($l) << $this->evaluate($r);
+            case '>>':
+                return $this->evaluate($l) >> $this->evaluate($r);
+            case '<':
+                return $this->evaluate($l) < $this->evaluate($r);
+            case '<=':
+                return $this->evaluate($l) <= $this->evaluate($r);
+            case '<=>':
+                return $this->evaluate($l) <=> $this->evaluate($r);
+        }
+        throw new \Exception('Should not happen');
     }
     private function evaluateConstFetch(Expr\ConstFetch $expr)
     {
         $name = $expr->name->toLowerString();
-        return match ($name) {
-            'null' => null,
-            'false' => \false,
-            'true' => \true,
-            default => ($this->fallbackEvaluator)($expr),
-        };
+        switch ($name) {
+            case 'null':
+                return null;
+            case 'false':
+                return \false;
+            case 'true':
+                return \true;
+        }
+        return ($this->fallbackEvaluator)($expr);
     }
 }

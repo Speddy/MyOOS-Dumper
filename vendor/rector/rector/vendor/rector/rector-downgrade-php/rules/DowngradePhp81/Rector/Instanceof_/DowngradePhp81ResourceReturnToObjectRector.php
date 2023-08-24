@@ -19,6 +19,11 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class DowngradePhp81ResourceReturnToObjectRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\DowngradePhp81\NodeManipulator\ObjectToResourceReturn
+     */
+    private $objectToResourceReturn;
+    /**
      * @var string[]|class-string<finfo>[]
      */
     private const COLLECTION_OBJECT_TO_RESOURCE = [
@@ -40,13 +45,9 @@ final class DowngradePhp81ResourceReturnToObjectRector extends AbstractRector
         'PgSql\\Result',
         'PgSql\\Lob',
     ];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ObjectToResourceReturn $objectToResourceReturn
-    )
+    public function __construct(ObjectToResourceReturn $objectToResourceReturn)
     {
+        $this->objectToResourceReturn = $objectToResourceReturn;
     }
     public function getRuleDefinition() : RuleDefinition
     {

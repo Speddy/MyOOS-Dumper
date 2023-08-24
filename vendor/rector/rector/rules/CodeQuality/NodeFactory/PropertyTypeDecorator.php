@@ -8,23 +8,28 @@ use PHPStan\Type\Type;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger;
 use Rector\Privatization\TypeManipulator\TypeNormalizer;
-final readonly class PropertyTypeDecorator
+final class PropertyTypeDecorator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpDocTypeChanger $phpDocTypeChanger,
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private TypeNormalizer $typeNormalizer
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
+     */
+    private $phpDocTypeChanger;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\Privatization\TypeManipulator\TypeNormalizer
+     */
+    private $typeNormalizer;
+    public function __construct(PhpDocTypeChanger $phpDocTypeChanger, PhpDocInfoFactory $phpDocInfoFactory, TypeNormalizer $typeNormalizer)
     {
+        $this->phpDocTypeChanger = $phpDocTypeChanger;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->typeNormalizer = $typeNormalizer;
     }
     public function decorateProperty(Property $property, Type $propertyType) : void
     {

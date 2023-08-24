@@ -11,17 +11,23 @@ use Rector\NodeTypeResolver\NodeTypeResolver;
 final class FormAddMethodCallAnalyzer
 {
     /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
      * @var ObjectType[]
      */
-    private array $formObjectTypes = [];
-    public function __construct(/**
-     * @readonly
-     */
-    private readonly NodeTypeResolver $nodeTypeResolver, /**
-     * @readonly
-     */
-    private readonly NodeNameResolver $nodeNameResolver)
+    private $formObjectTypes = [];
+    public function __construct(NodeTypeResolver $nodeTypeResolver, NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->nodeNameResolver = $nodeNameResolver;
         $this->formObjectTypes = [new ObjectType('Symfony\\Component\\Form\\FormBuilderInterface'), new ObjectType('Symfony\\Component\\Form\\FormInterface')];
     }
     public function isMatching(MethodCall $methodCall) : bool

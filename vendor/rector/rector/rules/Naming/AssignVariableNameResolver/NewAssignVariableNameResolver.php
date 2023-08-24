@@ -11,15 +11,16 @@ use Rector\NodeNameResolver\NodeNameResolver;
 /**
  * @implements AssignVariableNameResolverInterface<New_>
  */
-final readonly class NewAssignVariableNameResolver implements AssignVariableNameResolverInterface
+final class NewAssignVariableNameResolver implements AssignVariableNameResolverInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function match(Node $node) : bool
     {

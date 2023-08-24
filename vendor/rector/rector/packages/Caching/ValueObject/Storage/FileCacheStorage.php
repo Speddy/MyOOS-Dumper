@@ -18,14 +18,17 @@ final class FileCacheStorage implements CacheStorageInterface
 {
     /**
      * @readonly
+     * @var string
+     */
+    private $directory;
+    /**
+     * @readonly
      * @var \Symfony\Component\Filesystem\Filesystem
      */
     private $filesystem;
-    public function __construct(/**
-     * @readonly
-     */
-    private readonly string $directory, \RectorPrefix202308\Symfony\Component\Filesystem\Filesystem $filesystem)
+    public function __construct(string $directory, \RectorPrefix202308\Symfony\Component\Filesystem\Filesystem $filesystem)
     {
+        $this->directory = $directory;
         $this->filesystem = $filesystem;
     }
     /**

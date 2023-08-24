@@ -34,7 +34,7 @@ abstract class libsodium
      * Is invisible flag
      *
      */
-    final public const IS_INVISIBLE = true;
+    const IS_INVISIBLE = true;
 
     /**
      * Break a public or private key down into its constituent components
@@ -81,6 +81,7 @@ abstract class libsodium
     /**
      * Convert an EC public key to the appropriate format
      *
+     * @param \phpseclib3\Crypt\EC\Curves\Ed25519 $curve
      * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @return string
      */
@@ -92,6 +93,8 @@ abstract class libsodium
     /**
      * Convert a private key to the appropriate format.
      *
+     * @param \phpseclib3\Math\BigInteger $privateKey
+     * @param \phpseclib3\Crypt\EC\Curves\Ed25519 $curve
      * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param string $secret optional
      * @param string $password optional

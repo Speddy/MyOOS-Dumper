@@ -39,14 +39,20 @@ final class DumpCompletionCommand extends Command
     protected function configure() : void
     {
         $fullCommand = $_SERVER['PHP_SELF'];
-        $commandName = \basename((string) $fullCommand);
+        $commandName = \basename($fullCommand);
         $fullCommand = @\realpath($fullCommand) ?: $fullCommand;
-        $shell = self::guessShell();
-        [$rcFile, $completionFile] = match ($shell) {
-            'fish' => ['~/.config/fish/config.fish', "/etc/fish/completions/{$commandName}.fish"],
-            'zsh' => ['~/.zshrc', '$fpath[1]/_' . $commandName],
-            default => ['~/.bashrc', "/etc/bash_completion.d/{$commandName}"],
-        };
+        $shell = $this->guessShell();
+        switch ($shell) {
+            case 'fish':
+                [$rcFile, $completionFile] = ['~/.config/fish/config.fish', "/etc/fish/completions/{$commandName}.fish"];
+                break;
+            case 'zsh':
+                [$rcFile, $completionFile] = ['~/.zshrc', '$fpath[1]/_' . $commandName];
+                break;
+            default:
+                [$rcFile, $completionFile] = ['~/.bashrc', "/etc/bash_completion.d/{$commandName}"];
+                break;
+        }
         $supportedShells = \implode(', ', $this->getSupportedShells());
         $this->setHelp(<<<EOH
 The <info>%command.name%</> command dumps the shell completion script required
@@ -76,11 +82,11 @@ Add this to the end of your shell configuration file (e.g. <info>"{$rcFile}"</>)
 
     <info>eval "\$({$fullCommand} completion {$shell})"</>
 EOH
-)->addArgument('shell', InputArgument::OPTIONAL, 'The shell type (e.g. "bash"), the value of the "$SHELL" env var will be used if this is not given', null, \Closure::fromCallable($this->getSupportedShells(...)))->addOption('debug', null, InputOption::VALUE_NONE, 'Tail the completion debug log');
+)->addArgument('shell', InputArgument::OPTIONAL, 'The shell type (e.g. "bash"), the value of the "$SHELL" env var will be used if this is not given', null, \Closure::fromCallable([$this, 'getSupportedShells']))->addOption('debug', null, InputOption::VALUE_NONE, 'Tail the completion debug log');
     }
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        $commandName = \basename((string) $_SERVER['argv'][0]);
+        $commandName = \basename($_SERVER['argv'][0]);
         if ($input->getOption('debug')) {
             $this->tailDebugLog($commandName, $output);
             return 0;
@@ -127,7 +133,7 @@ EOH
         }
         $shells = [];
         foreach (new \DirectoryIterator(__DIR__ . '/../Resources/') as $file) {
-            if (str_starts_with($file->getBasename(), 'completion.') && $file->isFile()) {
+            if (\strncmp($file->getBasename(), 'completion.', \strlen('completion.')) === 0 && $file->isFile()) {
                 $shells[] = $file->getExtension();
             }
         }

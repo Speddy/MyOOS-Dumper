@@ -16,23 +16,28 @@ use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\Doctrine\PhpDoc\ShortClassExpander;
 use Rector\StaticTypeMapper\Naming\NameScopeFactory;
 use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
-final readonly class CollectionTypeResolver
+final class CollectionTypeResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NameScopeFactory $nameScopeFactory,
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private ShortClassExpander $shortClassExpander
-    )
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\Naming\NameScopeFactory
+     */
+    private $nameScopeFactory;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\Doctrine\PhpDoc\ShortClassExpander
+     */
+    private $shortClassExpander;
+    public function __construct(NameScopeFactory $nameScopeFactory, PhpDocInfoFactory $phpDocInfoFactory, ShortClassExpander $shortClassExpander)
     {
+        $this->nameScopeFactory = $nameScopeFactory;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->shortClassExpander = $shortClassExpander;
     }
     public function resolveFromTypeNode(TypeNode $typeNode, Node $node) : ?FullyQualifiedObjectType
     {

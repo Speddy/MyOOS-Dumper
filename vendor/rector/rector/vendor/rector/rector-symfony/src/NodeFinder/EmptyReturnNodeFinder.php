@@ -7,15 +7,16 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Return_;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
-final readonly class EmptyReturnNodeFinder
+final class EmptyReturnNodeFinder
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    public function __construct(BetterNodeFinder $betterNodeFinder)
     {
+        $this->betterNodeFinder = $betterNodeFinder;
     }
     public function hasNoOrEmptyReturns(ClassMethod $classMethod) : bool
     {

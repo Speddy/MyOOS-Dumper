@@ -7,15 +7,16 @@ use PhpParser\Node;
 use PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocNode;
 use Rector\NodeTypeResolver\PhpDocNodeVisitor\NameImportingPhpDocNodeVisitor;
 use Rector\PhpDocParser\PhpDocParser\PhpDocNodeTraverser;
-final readonly class DocBlockNameImporter
+final class DocBlockNameImporter
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NameImportingPhpDocNodeVisitor $nameImportingPhpDocNodeVisitor
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PhpDocNodeVisitor\NameImportingPhpDocNodeVisitor
+     */
+    private $nameImportingPhpDocNodeVisitor;
+    public function __construct(NameImportingPhpDocNodeVisitor $nameImportingPhpDocNodeVisitor)
     {
+        $this->nameImportingPhpDocNodeVisitor = $nameImportingPhpDocNodeVisitor;
     }
     public function importNames(PhpDocNode $phpDocNode, Node $node) : void
     {

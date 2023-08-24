@@ -22,9 +22,9 @@ final class UnixConnector implements ConnectorInterface
     }
     public function connect($path)
     {
-        if (!str_contains($path, '://')) {
+        if (\strpos($path, '://') === \false) {
             $path = 'unix://' . $path;
-        } elseif (!str_starts_with($path, 'unix://')) {
+        } elseif (\substr($path, 0, 7) !== 'unix://') {
             return Promise\reject(new \InvalidArgumentException('Given URI "' . $path . '" is invalid (EINVAL)', \defined('SOCKET_EINVAL') ? \SOCKET_EINVAL : (\defined('PCNTL_EINVAL') ? \PCNTL_EINVAL : 22)));
         }
         $resource = @\stream_socket_client($path, $errno, $errstr, 1.0);

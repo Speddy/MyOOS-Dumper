@@ -20,7 +20,7 @@ class OutputFormatterStyleStack implements ResetInterface
     /**
      * @var OutputFormatterStyleInterface[]
      */
-    private array $styles = [];
+    private $styles = [];
     /**
      * @var \Symfony\Component\Console\Formatter\OutputFormatterStyleInterface
      */

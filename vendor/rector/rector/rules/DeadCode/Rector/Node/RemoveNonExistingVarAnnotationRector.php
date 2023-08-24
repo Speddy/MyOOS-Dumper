@@ -34,16 +34,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class RemoveNonExistingVarAnnotationRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\StmtsManipulator
+     */
+    private $stmtsManipulator;
+    /**
      * @var array<class-string<Stmt>>
      */
     private const NODE_TYPES = [Foreach_::class, Static_::class, Echo_::class, Return_::class, Expression::class, Throw_::class, If_::class, While_::class, Switch_::class, Nop::class];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly StmtsManipulator $stmtsManipulator
-    )
+    public function __construct(StmtsManipulator $stmtsManipulator)
     {
+        $this->stmtsManipulator = $stmtsManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -92,7 +93,7 @@ CODE_SAMPLE
                     // nothing can do as value is dynamic
                     break;
                 }
-                $extractValues = [...$extractValues, ...\array_keys($appendExtractValues)];
+                $extractValues = \array_merge($extractValues, \array_keys($appendExtractValues));
                 continue;
             }
             if ($this->shouldSkip($node, $key, $stmt, $extractValues)) {
@@ -131,7 +132,7 @@ CODE_SAMPLE
      */
     private function shouldSkip(StmtsAwareInterface $stmtsAware, int $key, Stmt $stmt, array $extractValues) : bool
     {
-        if (!\in_array($stmt::class, self::NODE_TYPES, \true)) {
+        if (!\in_array(\get_class($stmt), self::NODE_TYPES, \true)) {
             return \true;
         }
         if (\count($stmt->getComments()) !== 1) {
@@ -165,10 +166,10 @@ CODE_SAMPLE
         if ($varTagValueNode->type->name !== 'object') {
             return \false;
         }
-        if (!str_starts_with($varTagValueNode->description, '{')) {
+        if (\strncmp($varTagValueNode->description, '{', \strlen('{')) !== 0) {
             return \false;
         }
-        return str_contains($varTagValueNode->description, '}');
+        return \strpos($varTagValueNode->description, '}') !== \false;
     }
     private function isAnnotatableReturn(Stmt $stmt) : bool
     {

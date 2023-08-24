@@ -8,15 +8,16 @@ use PhpParser\Node\Stmt\Class_;
 use PHPStan\PhpDocParser\Ast\PhpDoc\GenericTagValueNode;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\BetterPhpDocParser\ValueObject\PhpDocAttributeKey;
-final readonly class DataProviderMethodRenamer
+final class DataProviderMethodRenamer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    public function __construct(PhpDocInfoFactory $phpDocInfoFactory)
     {
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
     public function removeTestPrefix(Class_ $class) : void
     {
@@ -27,7 +28,7 @@ final readonly class DataProviderMethodRenamer
                     continue;
                 }
                 $oldMethodName = $phpDocTagNode->value->value;
-                if (!str_starts_with($oldMethodName, 'test')) {
+                if (\strncmp($oldMethodName, 'test', \strlen('test')) !== 0) {
                     continue;
                 }
                 $newMethodName = $this->createMethodNameWithoutPrefix($oldMethodName, 'test');

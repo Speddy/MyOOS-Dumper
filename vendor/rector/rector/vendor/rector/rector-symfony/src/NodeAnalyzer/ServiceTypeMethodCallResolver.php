@@ -12,19 +12,22 @@ use PHPStan\Type\ObjectType;
 use PHPStan\Type\Type;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\Symfony\DataProvider\ServiceMapProvider;
-final readonly class ServiceTypeMethodCallResolver
+final class ServiceTypeMethodCallResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ServiceMapProvider $serviceMapProvider,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\DataProvider\ServiceMapProvider
+     */
+    private $serviceMapProvider;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(ServiceMapProvider $serviceMapProvider, NodeNameResolver $nodeNameResolver)
     {
+        $this->serviceMapProvider = $serviceMapProvider;
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function resolve(MethodCall $methodCall) : ?Type
     {

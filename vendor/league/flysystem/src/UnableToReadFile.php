@@ -9,9 +9,15 @@ use Throwable;
 
 final class UnableToReadFile extends RuntimeException implements FilesystemOperationFailed
 {
-    private string $location = '';
+    /**
+     * @var string
+     */
+    private $location = '';
 
-    private string $reason = '';
+    /**
+     * @var string
+     */
+    private $reason = '';
 
     public static function fromLocation(string $location, string $reason = '', Throwable $previous = null): UnableToReadFile
     {

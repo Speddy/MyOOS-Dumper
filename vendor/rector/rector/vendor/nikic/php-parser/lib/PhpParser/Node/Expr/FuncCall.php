@@ -7,6 +7,8 @@ use PhpParser\Node;
 use PhpParser\Node\Expr;
 class FuncCall extends \PhpParser\Node\Expr\CallLike
 {
+    /** @var Node\Name|Expr Function name */
+    public $name;
     /** @var array<Node\Arg|Node\VariadicPlaceholder> Arguments */
     public $args;
     /**
@@ -16,9 +18,10 @@ class FuncCall extends \PhpParser\Node\Expr\CallLike
      * @param array<Node\Arg|Node\VariadicPlaceholder> $args       Arguments
      * @param array                                    $attributes Additional attributes
      */
-    public function __construct(public $name, array $args = [], array $attributes = [])
+    public function __construct($name, array $args = [], array $attributes = [])
     {
         $this->attributes = $attributes;
+        $this->name = $name;
         $this->args = $args;
     }
     public function getSubNodeNames() : array

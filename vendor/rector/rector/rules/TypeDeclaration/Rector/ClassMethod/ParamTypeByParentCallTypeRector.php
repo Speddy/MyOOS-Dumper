@@ -21,17 +21,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ParamTypeByParentCallTypeRector extends AbstractScopeAwareRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly CallerParamMatcher $callerParamMatcher,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\CallerParamMatcher
+     */
+    private $callerParamMatcher;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(CallerParamMatcher $callerParamMatcher, ReflectionResolver $reflectionResolver)
     {
+        $this->callerParamMatcher = $callerParamMatcher;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

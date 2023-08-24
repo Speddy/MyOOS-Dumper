@@ -8,7 +8,10 @@ trait NodeAttributes
 {
     /** @var array<string, mixed> */
     private $attributes = [];
-    public function setAttribute(string $key, mixed $value) : void
+    /**
+     * @param mixed $value
+     */
+    public function setAttribute(string $key, $value) : void
     {
         $this->attributes[$key] = $value;
     }

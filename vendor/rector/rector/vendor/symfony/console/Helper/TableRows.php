@@ -15,8 +15,13 @@ namespace RectorPrefix202308\Symfony\Component\Console\Helper;
  */
 class TableRows implements \IteratorAggregate
 {
-    public function __construct(private readonly \Closure $generator)
+    /**
+     * @var \Closure
+     */
+    private $generator;
+    public function __construct(\Closure $generator)
     {
+        $this->generator = $generator;
     }
     public function getIterator() : \Traversable
     {

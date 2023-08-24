@@ -12,7 +12,7 @@ use Exception;
  */
 final class Server extends EventEmitter implements ServerInterface
 {
-    private readonly \RectorPrefix202308\React\Socket\TcpServer|\RectorPrefix202308\React\Socket\SecureServer|\RectorPrefix202308\React\Socket\UnixServer $server;
+    private $server;
     /**
      * [Deprecated] `Server`
      *
@@ -42,18 +42,20 @@ final class Server extends EventEmitter implements ServerInterface
      * array without wrapping this in another array under the `tcp` key.
      *
      * @param string|int    $uri
+     * @param LoopInterface $loop
+     * @param array         $context
      * @deprecated 1.9.0 See `SocketServer` instead
      * @see SocketServer
      */
-    public function __construct($uri, LoopInterface $loop = null, array $context = [])
+    public function __construct($uri, LoopInterface $loop = null, array $context = array())
     {
         $loop = $loop ?: Loop::get();
         // sanitize TCP context options if not properly wrapped
         if ($context && (!isset($context['tcp']) && !isset($context['tls']) && !isset($context['unix']))) {
-            $context = ['tcp' => $context];
+            $context = array('tcp' => $context);
         }
         // apply default options if not explicitly given
-        $context += ['tcp' => [], 'tls' => [], 'unix' => []];
+        $context += array('tcp' => array(), 'tls' => array(), 'unix' => array());
         $scheme = 'tcp';
         $pos = \strpos($uri, '://');
         if ($pos !== \false) {
@@ -70,10 +72,10 @@ final class Server extends EventEmitter implements ServerInterface
         $this->server = $server;
         $that = $this;
         $server->on('connection', function (ConnectionInterface $conn) use($that) {
-            $that->emit('connection', [$conn]);
+            $that->emit('connection', array($conn));
         });
         $server->on('error', function (Exception $error) use($that) {
-            $that->emit('error', [$error]);
+            $that->emit('error', array($error));
         });
     }
     public function getAddress()

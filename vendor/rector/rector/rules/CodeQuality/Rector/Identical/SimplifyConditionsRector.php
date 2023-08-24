@@ -21,17 +21,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class SimplifyConditionsRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly AssignAndBinaryMap $assignAndBinaryMap,
-        /**
-         * @readonly
-         */
-        private readonly BinaryOpManipulator $binaryOpManipulator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\AssignAndBinaryMap
+     */
+    private $assignAndBinaryMap;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\BinaryOpManipulator
+     */
+    private $binaryOpManipulator;
+    public function __construct(AssignAndBinaryMap $assignAndBinaryMap, BinaryOpManipulator $binaryOpManipulator)
     {
+        $this->assignAndBinaryMap = $assignAndBinaryMap;
+        $this->binaryOpManipulator = $binaryOpManipulator;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -66,7 +69,11 @@ final class SimplifyConditionsRector extends AbstractRector
     }
     private function processIdenticalAndNotIdentical(Identical $identical) : ?Node
     {
-        $twoNodeMatch = $this->binaryOpManipulator->matchFirstAndSecondConditionNode($identical, static fn(Node $node): bool => $node instanceof Identical || $node instanceof NotIdentical, fn(Node $node): bool => $node instanceof Expr && $this->valueResolver->isTrueOrFalse($node));
+        $twoNodeMatch = $this->binaryOpManipulator->matchFirstAndSecondConditionNode($identical, static function (Node $node) : bool {
+            return $node instanceof Identical || $node instanceof NotIdentical;
+        }, function (Node $node) : bool {
+            return $node instanceof Expr && $this->valueResolver->isTrueOrFalse($node);
+        });
         if (!$twoNodeMatch instanceof TwoNodeMatch) {
             return $twoNodeMatch;
         }

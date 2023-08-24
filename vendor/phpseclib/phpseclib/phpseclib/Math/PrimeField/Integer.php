@@ -21,7 +21,7 @@ use phpseclib3\Math\Common\FiniteField\Integer as Base;
  *
  * @author  Jim Wigginton <terrafrost@php.net>
  */
-class Integer extends Base implements \Stringable
+class Integer extends Base
 {
     /**
      * Holds the PrimeField's value
@@ -29,6 +29,13 @@ class Integer extends Base implements \Stringable
      * @var BigInteger
      */
     protected $value;
+
+    /**
+     * Keeps track of current instance
+     *
+     * @var int
+     */
+    protected $instanceID;
 
     /**
      * Holds the PrimeField's modulo
@@ -56,8 +63,9 @@ class Integer extends Base implements \Stringable
      *
      * @param int $instanceID
      */
-    public function __construct(protected $instanceID, BigInteger $num = null)
+    public function __construct($instanceID, BigInteger $num = null)
     {
+        $this->instanceID = $instanceID;
         if (!isset($num)) {
             $this->value = clone static::$zero[static::class];
         } else {
@@ -240,7 +248,7 @@ class Integer extends Base implements \Stringable
         $p_1 = static::$modulo[$this->instanceID]->subtract($one);
         $q = clone $p_1;
         $s = BigInteger::scan1divide($q);
-        [$pow] = $p_1->divide($two);
+        list($pow) = $p_1->divide($two);
         for ($z = $one; !$z->equals(static::$modulo[$this->instanceID]); $z = $z->add($one)) {
             $temp = $z->powMod($pow, static::$modulo[$this->instanceID]);
             if ($temp->equals($p_1)) {
@@ -251,7 +259,7 @@ class Integer extends Base implements \Stringable
         $m = new BigInteger($s);
         $c = $z->powMod($q, static::$modulo[$this->instanceID]);
         $t = $this->value->powMod($q, static::$modulo[$this->instanceID]);
-        [$temp] = $q->add($one)->divide($two);
+        list($temp) = $q->add($one)->divide($two);
         $r = $this->value->powMod($temp, static::$modulo[$this->instanceID]);
 
         while (!$t->equals($one)) {
@@ -391,7 +399,7 @@ class Integer extends Base implements \Stringable
      *
      * @return string
      */
-    public function __toString(): string
+    public function __toString()
     {
         return (string) $this->value;
     }

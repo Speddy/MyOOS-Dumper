@@ -9,9 +9,9 @@ namespace Psr\Log\Test;
  *
  * @internal
  */
-class DummyTest implements \Stringable
+class DummyTest
 {
-    public function __toString(): string
+    public function __toString()
     {
         return 'DummyTest';
     }

@@ -8,7 +8,10 @@ use const PATHINFO_EXTENSION;
 
 class ExtensionMimeTypeDetector implements MimeTypeDetector, ExtensionLookup
 {
-    private readonly \League\MimeTypeDetection\ExtensionToMimeTypeMap $extensions;
+    /**
+     * @var ExtensionToMimeTypeMap
+     */
+    private $extensions;
 
     public function __construct(ExtensionToMimeTypeMap $extensions = null)
     {

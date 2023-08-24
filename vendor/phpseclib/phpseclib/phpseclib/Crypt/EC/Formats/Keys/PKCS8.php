@@ -48,14 +48,14 @@ abstract class PKCS8 extends Progenitor
      *
      * @var array
      */
-    final public const OID_NAME = ['id-ecPublicKey', 'id-Ed25519', 'id-Ed448'];
+    const OID_NAME = ['id-ecPublicKey', 'id-Ed25519', 'id-Ed448'];
 
     /**
      * OID Value
      *
      * @var string
      */
-    final public const OID_VALUE = ['1.2.840.10045.2.1', '1.3.101.112', '1.3.101.113'];
+    const OID_VALUE = ['1.2.840.10045.2.1', '1.3.101.112', '1.3.101.113'];
 
     /**
      * Break a public or private key down into its constituent components
@@ -133,10 +133,10 @@ abstract class PKCS8 extends Progenitor
 
             // 0x04 == octet string
             // 0x20 == length (32 bytes)
-            if (!str_starts_with((string) $key['privateKey'], "\x04\x20")) {
+            if (substr($key['privateKey'], 0, 2) != "\x04\x20") {
                 throw new \RuntimeException('The first two bytes of the private key field should be 0x0420');
             }
-            $arr = $components['curve']->extractSecret(substr((string) $key['privateKey'], 2));
+            $arr = $components['curve']->extractSecret(substr($key['privateKey'], 2));
             $components['dA'] = $arr['dA'];
             $components['secret'] = $arr['secret'];
         }
@@ -159,6 +159,7 @@ abstract class PKCS8 extends Progenitor
     /**
      * Convert an EC public key to the appropriate format
      *
+     * @param \phpseclib3\Crypt\EC\BaseCurves\Base $curve
      * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param array $options optional
      * @return string
@@ -189,6 +190,8 @@ abstract class PKCS8 extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
+     * @param \phpseclib3\Math\BigInteger $privateKey
+     * @param \phpseclib3\Crypt\EC\BaseCurves\Base $curve
      * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param string $secret optional
      * @param string $password optional

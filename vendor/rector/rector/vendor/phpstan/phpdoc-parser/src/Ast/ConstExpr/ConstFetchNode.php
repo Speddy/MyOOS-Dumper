@@ -4,7 +4,7 @@ declare (strict_types=1);
 namespace PHPStan\PhpDocParser\Ast\ConstExpr;
 
 use PHPStan\PhpDocParser\Ast\NodeAttributes;
-class ConstFetchNode implements \PHPStan\PhpDocParser\Ast\ConstExpr\ConstExprNode, \Stringable
+class ConstFetchNode implements \PHPStan\PhpDocParser\Ast\ConstExpr\ConstExprNode
 {
     use NodeAttributes;
     /** @var string class name for class constants or empty string for non-class constants */

@@ -16,7 +16,10 @@ use Rector\PHPStanStaticTypeMapper\PHPStanStaticTypeMapper;
  */
 final class ConditionalTypeForParameterMapper implements TypeMapperInterface
 {
-    private ?\Rector\PHPStanStaticTypeMapper\PHPStanStaticTypeMapper $phpStanStaticTypeMapper = null;
+    /**
+     * @var \Rector\PHPStanStaticTypeMapper\PHPStanStaticTypeMapper
+     */
+    private $phpStanStaticTypeMapper;
     public function autowire(PHPStanStaticTypeMapper $phpStanStaticTypeMapper) : void
     {
         $this->phpStanStaticTypeMapper = $phpStanStaticTypeMapper;

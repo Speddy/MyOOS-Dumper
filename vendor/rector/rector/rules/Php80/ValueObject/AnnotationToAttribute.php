@@ -5,16 +5,22 @@ namespace Rector\Php80\ValueObject;
 
 use Rector\Core\Validation\RectorAssert;
 use Rector\Php80\Contract\ValueObject\AnnotationToAttributeInterface;
-final readonly class AnnotationToAttribute implements AnnotationToAttributeInterface
+final class AnnotationToAttribute implements AnnotationToAttributeInterface
 {
-    public function __construct(/**
+    /**
      * @readonly
+     * @var string
      */
-    private string $tag, /**
+    private $tag;
+    /**
      * @readonly
+     * @var string|null
      */
-    private ?string $attributeClass = null)
+    private $attributeClass;
+    public function __construct(string $tag, ?string $attributeClass = null)
     {
+        $this->tag = $tag;
+        $this->attributeClass = $attributeClass;
         RectorAssert::className($tag);
         if (\is_string($attributeClass)) {
             RectorAssert::className($attributeClass);

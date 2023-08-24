@@ -53,8 +53,9 @@ class RollbarHandler extends AbstractProcessingHandler
     /**
      * Records whether any log records have been added since the last flush of the rollbar notifier
      *
+     * @var bool
      */
-    private bool $hasRecords = false;
+    private $hasRecords = false;
 
     /** @var bool */
     protected $initialized = false;
@@ -76,7 +77,7 @@ class RollbarHandler extends AbstractProcessingHandler
     {
         if (!$this->initialized) {
             // __destructor() doesn't get called on Fatal errors
-            register_shutdown_function([$this, 'close']);
+            register_shutdown_function(array($this, 'close'));
             $this->initialized = true;
         }
 

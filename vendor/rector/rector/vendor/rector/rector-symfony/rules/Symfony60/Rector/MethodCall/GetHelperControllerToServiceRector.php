@@ -25,21 +25,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class GetHelperControllerToServiceRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ControllerAnalyzer $controllerAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ClassDependencyManipulator $classDependencyManipulator,
-        /**
-         * @readonly
-         */
-        private readonly PropertyNaming $propertyNaming
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\TypeAnalyzer\ControllerAnalyzer
+     */
+    private $controllerAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\ClassDependencyManipulator
+     */
+    private $classDependencyManipulator;
+    /**
+     * @readonly
+     * @var \Rector\Naming\Naming\PropertyNaming
+     */
+    private $propertyNaming;
+    public function __construct(ControllerAnalyzer $controllerAnalyzer, ClassDependencyManipulator $classDependencyManipulator, PropertyNaming $propertyNaming)
     {
+        $this->controllerAnalyzer = $controllerAnalyzer;
+        $this->classDependencyManipulator = $classDependencyManipulator;
+        $this->propertyNaming = $propertyNaming;
     }
     public function getRuleDefinition() : RuleDefinition
     {

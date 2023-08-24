@@ -7,7 +7,7 @@ use PHPStan\PhpDocParser\Ast\NodeAttributes;
 use PHPStan\PhpDocParser\Ast\Type\TypeNode;
 use function count;
 use function implode;
-class MethodTagValueNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode, \Stringable
+class MethodTagValueNode implements \PHPStan\PhpDocParser\Ast\PhpDoc\PhpDocTagValueNode
 {
     use NodeAttributes;
     /** @var bool */

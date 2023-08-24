@@ -21,17 +21,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class GetMockRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer, ReflectionResolver $reflectionResolver)
     {
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -78,7 +81,7 @@ CODE_SAMPLE
             return null;
         }
         $classReflection = $this->reflectionResolver->resolveClassReflectionSourceObject($node);
-        if ($classReflection instanceof ClassReflection && $classReflection->getName() !== \PHPUnit\Framework\TestCase::class) {
+        if ($classReflection instanceof ClassReflection && $classReflection->getName() !== 'PHPUnit\\Framework\\TestCase') {
             return null;
         }
         if ($node->isFirstClassCallable()) {

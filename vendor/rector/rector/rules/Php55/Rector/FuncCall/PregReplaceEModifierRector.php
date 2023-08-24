@@ -22,17 +22,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class PregReplaceEModifierRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly AnonymousFunctionFactory $anonymousFunctionFactory,
-        /**
-         * @readonly
-         */
-        private readonly RegexMatcher $regexMatcher
-    )
+    /**
+     * @readonly
+     * @var \Rector\Php72\NodeFactory\AnonymousFunctionFactory
+     */
+    private $anonymousFunctionFactory;
+    /**
+     * @readonly
+     * @var \Rector\Php55\RegexMatcher
+     */
+    private $regexMatcher;
+    public function __construct(AnonymousFunctionFactory $anonymousFunctionFactory, RegexMatcher $regexMatcher)
     {
+        $this->anonymousFunctionFactory = $anonymousFunctionFactory;
+        $this->regexMatcher = $regexMatcher;
     }
     public function provideMinPhpVersion() : int
     {

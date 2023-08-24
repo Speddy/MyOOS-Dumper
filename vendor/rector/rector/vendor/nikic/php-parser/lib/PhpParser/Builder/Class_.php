@@ -91,7 +91,7 @@ class Class_ extends \PhpParser\Builder\Declaration
     {
         $stmt = BuilderHelpers::normalizeNode($stmt);
         $targets = [Stmt\TraitUse::class => &$this->uses, Stmt\ClassConst::class => &$this->constants, Stmt\Property::class => &$this->properties, Stmt\ClassMethod::class => &$this->methods];
-        $class = $stmt::class;
+        $class = \get_class($stmt);
         if (!isset($targets[$class])) {
             throw new \LogicException(\sprintf('Unexpected node of type "%s"', $stmt->getType()));
         }

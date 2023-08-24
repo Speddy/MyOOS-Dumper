@@ -11,15 +11,16 @@ use PHPStan\Type\TypeWithClassName;
 use PHPStan\Type\UnionType;
 use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\StaticTypeMapper\ValueObject\Type\NonExistingObjectType;
-final readonly class PropertyAnalyzer
+final class PropertyAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    public function __construct(NodeTypeResolver $nodeTypeResolver)
     {
+        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     public function hasForbiddenType(Property $property) : bool
     {

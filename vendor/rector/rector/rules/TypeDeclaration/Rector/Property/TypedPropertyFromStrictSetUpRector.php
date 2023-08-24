@@ -19,13 +19,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class TypedPropertyFromStrictSetUpRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TrustedClassMethodPropertyTypeInferer $trustedClassMethodPropertyTypeInferer
-    )
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\TypeInferer\PropertyTypeInferer\TrustedClassMethodPropertyTypeInferer
+     */
+    private $trustedClassMethodPropertyTypeInferer;
+    public function __construct(TrustedClassMethodPropertyTypeInferer $trustedClassMethodPropertyTypeInferer)
     {
+        $this->trustedClassMethodPropertyTypeInferer = $trustedClassMethodPropertyTypeInferer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

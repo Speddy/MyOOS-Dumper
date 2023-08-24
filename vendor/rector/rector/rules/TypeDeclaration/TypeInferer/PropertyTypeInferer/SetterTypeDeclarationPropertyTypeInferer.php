@@ -11,23 +11,28 @@ use PHPStan\Type\Type;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\StaticTypeMapper\StaticTypeMapper;
 use Rector\TypeDeclaration\NodeAnalyzer\ClassMethodAndPropertyAnalyzer;
-final readonly class SetterTypeDeclarationPropertyTypeInferer
+final class SetterTypeDeclarationPropertyTypeInferer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ClassMethodAndPropertyAnalyzer $classMethodAndPropertyAnalyzer,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper
-    )
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\ClassMethodAndPropertyAnalyzer
+     */
+    private $classMethodAndPropertyAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    public function __construct(ClassMethodAndPropertyAnalyzer $classMethodAndPropertyAnalyzer, NodeNameResolver $nodeNameResolver, StaticTypeMapper $staticTypeMapper)
     {
+        $this->classMethodAndPropertyAnalyzer = $classMethodAndPropertyAnalyzer;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->staticTypeMapper = $staticTypeMapper;
     }
     public function inferProperty(Property $property, Class_ $class) : ?Type
     {

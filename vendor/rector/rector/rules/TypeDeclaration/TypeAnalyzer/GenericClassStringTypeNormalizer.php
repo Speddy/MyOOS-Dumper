@@ -17,23 +17,28 @@ use PHPStan\Type\TypeTraverser;
 use PHPStan\Type\UnionType;
 use Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeAnalyzer;
 use Rector\TypeDeclaration\NodeTypeAnalyzer\DetailedTypeAnalyzer;
-final readonly class GenericClassStringTypeNormalizer
+final class GenericClassStringTypeNormalizer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private DetailedTypeAnalyzer $detailedTypeAnalyzer,
-        /**
-         * @readonly
-         */
-        private UnionTypeAnalyzer $unionTypeAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeTypeAnalyzer\DetailedTypeAnalyzer
+     */
+    private $detailedTypeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\PHPStanStaticTypeMapper\TypeAnalyzer\UnionTypeAnalyzer
+     */
+    private $unionTypeAnalyzer;
+    public function __construct(ReflectionProvider $reflectionProvider, DetailedTypeAnalyzer $detailedTypeAnalyzer, UnionTypeAnalyzer $unionTypeAnalyzer)
     {
+        $this->reflectionProvider = $reflectionProvider;
+        $this->detailedTypeAnalyzer = $detailedTypeAnalyzer;
+        $this->unionTypeAnalyzer = $unionTypeAnalyzer;
     }
     /**
      * @return \PHPStan\Type\ArrayType|\PHPStan\Type\UnionType|\PHPStan\Type\Type
@@ -121,7 +126,7 @@ final readonly class GenericClassStringTypeNormalizer
         if ($classReflection->isBuiltin()) {
             return new GenericClassStringType(new ObjectType($value));
         }
-        if (str_contains($value, '\\')) {
+        if (\strpos($value, '\\') !== \false) {
             return new GenericClassStringType(new ObjectType($value));
         }
         return new StringType();

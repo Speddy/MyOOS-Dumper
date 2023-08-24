@@ -50,14 +50,22 @@ abstract class OpenSSH extends Progenitor
         $parsed = parent::load($key, $password);
 
         if (isset($parsed['paddedKey'])) {
-            [$type] = Strings::unpackSSH2('s', $parsed['paddedKey']);
+            list($type) = Strings::unpackSSH2('s', $parsed['paddedKey']);
             if ($type != $parsed['type']) {
                 throw new \RuntimeException("The public and private keys are not of the same type ($type vs $parsed[type])");
             }
 
             $primes = $coefficients = [];
 
-            [$modulus, $publicExponent, $privateExponent, $coefficients[2], $primes[1], $primes[2], $comment, ] = Strings::unpackSSH2('i6s', $parsed['paddedKey']);
+            list(
+                $modulus,
+                $publicExponent,
+                $privateExponent,
+                $coefficients[2],
+                $primes[1],
+                $primes[2],
+                $comment,
+            ) = Strings::unpackSSH2('i6s', $parsed['paddedKey']);
 
             $temp = $primes[1]->subtract($one);
             $exponents = [1 => $publicExponent->modInverse($temp)];
@@ -69,7 +77,7 @@ abstract class OpenSSH extends Progenitor
             return compact('publicExponent', 'modulus', 'privateExponent', 'primes', 'coefficients', 'exponents', 'comment', 'isPublicKey');
         }
 
-        [$publicExponent, $modulus] = Strings::unpackSSH2('ii', $parsed['publicKey']);
+        list($publicExponent, $modulus) = Strings::unpackSSH2('ii', $parsed['publicKey']);
 
         return [
             'isPublicKey' => true,
@@ -82,6 +90,8 @@ abstract class OpenSSH extends Progenitor
     /**
      * Convert a public key to the appropriate format
      *
+     * @param \phpseclib3\Math\BigInteger $n
+     * @param \phpseclib3\Math\BigInteger $e
      * @param array $options optional
      * @return string
      */
@@ -89,11 +99,11 @@ abstract class OpenSSH extends Progenitor
     {
         $RSAPublicKey = Strings::packSSH2('sii', 'ssh-rsa', $e, $n);
 
-        if ($options['binary'] ?? self::$binary) {
+        if (isset($options['binary']) ? $options['binary'] : self::$binary) {
             return $RSAPublicKey;
         }
 
-        $comment = $options['comment'] ?? self::$comment;
+        $comment = isset($options['comment']) ? $options['comment'] : self::$comment;
         $RSAPublicKey = 'ssh-rsa ' . base64_encode($RSAPublicKey) . ' ' . $comment;
 
         return $RSAPublicKey;
@@ -102,6 +112,12 @@ abstract class OpenSSH extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
+     * @param \phpseclib3\Math\BigInteger $n
+     * @param \phpseclib3\Math\BigInteger $e
+     * @param \phpseclib3\Math\BigInteger $d
+     * @param array $primes
+     * @param array $exponents
+     * @param array $coefficients
      * @param string $password optional
      * @param array $options optional
      * @return string

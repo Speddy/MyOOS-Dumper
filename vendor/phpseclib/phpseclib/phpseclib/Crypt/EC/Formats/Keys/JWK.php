@@ -70,7 +70,7 @@ abstract class JWK extends Progenitor
                 throw new \Exception('Only EC and OKP JWK keys are supported');
         }
 
-        $curve = '\phpseclib3\Crypt\EC\Curves\\' . str_replace('P-', 'nistp', (string) $key->crv);
+        $curve = '\phpseclib3\Crypt\EC\Curves\\' . str_replace('P-', 'nistp', $key->crv);
         $curve = new $curve();
 
         if ($curve instanceof TwistedEdwardsCurve) {
@@ -130,6 +130,7 @@ abstract class JWK extends Progenitor
     /**
      * Return the array superstructure for an EC public key
      *
+     * @param \phpseclib3\Crypt\EC\BaseCurves\Base $curve
      * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @return array
      */
@@ -154,6 +155,7 @@ abstract class JWK extends Progenitor
     /**
      * Convert an EC public key to the appropriate format
      *
+     * @param \phpseclib3\Crypt\EC\BaseCurves\Base $curve
      * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param array $options optional
      * @return string
@@ -168,6 +170,7 @@ abstract class JWK extends Progenitor
     /**
      * Convert a private key to the appropriate format.
      *
+     * @param \phpseclib3\Math\BigInteger $privateKey
      * @param \phpseclib3\Crypt\EC\Curves\Ed25519 $curve
      * @param \phpseclib3\Math\Common\FiniteField\Integer[] $publicKey
      * @param string $secret optional

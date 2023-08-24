@@ -26,33 +26,47 @@ class InputOption
     /**
      * Do not accept input for the option (e.g. --yell). This is the default behavior of options.
      */
-    final public const VALUE_NONE = 1;
+    public const VALUE_NONE = 1;
     /**
      * A value must be passed when the option is used (e.g. --iterations=5 or -i5).
      */
-    final public const VALUE_REQUIRED = 2;
+    public const VALUE_REQUIRED = 2;
     /**
      * The option may or may not have a value (e.g. --yell or --yell=loud).
      */
-    final public const VALUE_OPTIONAL = 4;
+    public const VALUE_OPTIONAL = 4;
     /**
      * The option accepts multiple values (e.g. --dir=/foo --dir=/bar).
      */
-    final public const VALUE_IS_ARRAY = 8;
+    public const VALUE_IS_ARRAY = 8;
     /**
      * The option may have either positive or negative value (e.g. --ansi or --no-ansi).
      */
-    final public const VALUE_NEGATABLE = 16;
-    private readonly string $name;
+    public const VALUE_NEGATABLE = 16;
+    /**
+     * @var string
+     */
+    private $name;
     /**
      * @var string|mixed[]|null
      */
     private $shortcut;
-    private readonly int $mode;
+    /**
+     * @var int
+     */
+    private $mode;
     /**
      * @var string|int|bool|mixed[]|null|float
      */
     private $default;
+    /**
+     * @var mixed[]|\Closure
+     */
+    private $suggestedValues;
+    /**
+     * @var string
+     */
+    private $description;
     /**
      * @param string|mixed[] $shortcut The shortcuts, can be null, a string of shortcuts delimited by | or an array of shortcuts
      * @param int|null                                                                      $mode            The option mode: One of the VALUE_* constants
@@ -61,9 +75,9 @@ class InputOption
      *
      * @throws InvalidArgumentException If option mode is invalid or incompatible
      */
-    public function __construct(string $name, $shortcut = null, int $mode = null, private readonly string $description = '', $default = null, private $suggestedValues = [])
+    public function __construct(string $name, $shortcut = null, int $mode = null, string $description = '', $default = null, $suggestedValues = [])
     {
-        if (str_starts_with($name, '--')) {
+        if (\strncmp($name, '--', \strlen('--')) === 0) {
             $name = \substr($name, 2);
         }
         if (empty($name)) {
@@ -91,6 +105,8 @@ class InputOption
         $this->name = $name;
         $this->shortcut = $shortcut;
         $this->mode = $mode;
+        $this->description = $description;
+        $this->suggestedValues = $suggestedValues;
         if ($suggestedValues && !$this->acceptValue()) {
             throw new LogicException('Cannot set suggested values if the option does not accept a value.');
         }

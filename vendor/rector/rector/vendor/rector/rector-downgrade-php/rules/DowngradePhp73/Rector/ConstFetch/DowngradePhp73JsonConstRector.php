@@ -37,6 +37,16 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class DowngradePhp73JsonConstRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\DowngradePhp72\NodeManipulator\JsonConstCleaner
+     */
+    private $jsonConstCleaner;
+    /**
+     * @readonly
+     * @var \Rector\NodeAnalyzer\DefineFuncCallAnalyzer
+     */
+    private $defineFuncCallAnalyzer;
+    /**
      * @var string
      */
     private const PHP73_JSON_CONSTANT_IS_KNOWN = 'php73_json_constant_is_known';
@@ -48,17 +58,10 @@ final class DowngradePhp73JsonConstRector extends AbstractRector
      * @var string
      */
     private const IS_EXPRESSION_INSIDE_TRY_CATCH = 'is_expression_inside_try_catch';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly JsonConstCleaner $jsonConstCleaner,
-        /**
-         * @readonly
-         */
-        private readonly DefineFuncCallAnalyzer $defineFuncCallAnalyzer
-    )
+    public function __construct(JsonConstCleaner $jsonConstCleaner, DefineFuncCallAnalyzer $defineFuncCallAnalyzer)
     {
+        $this->jsonConstCleaner = $jsonConstCleaner;
+        $this->defineFuncCallAnalyzer = $defineFuncCallAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -212,11 +215,17 @@ CODE_SAMPLE
             if (!$subNode instanceof Node) {
                 continue;
             }
-            $found = match (\true) {
-                $subNode instanceof BitwiseOr => $this->hasConstFetchInBitwiseOr($subNode, $constName),
-                $subNode instanceof ConstFetch => $this->getName($subNode) === $constName,
-                default => \false,
-            };
+            switch (\true) {
+                case $subNode instanceof BitwiseOr:
+                    $found = $this->hasConstFetchInBitwiseOr($subNode, $constName);
+                    break;
+                case $subNode instanceof ConstFetch:
+                    $found = $this->getName($subNode) === $constName;
+                    break;
+                default:
+                    $found = \false;
+                    break;
+            }
             if ($found) {
                 break;
             }

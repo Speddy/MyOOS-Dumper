@@ -26,17 +26,26 @@ use RectorPrefix202308\Symplify\EasyParallel\Enum\ReactCommand;
  */
 final class WorkerCommand extends Command
 {
-    public function __construct(/**
+    /**
      * @readonly
+     * @var \Rector\Parallel\WorkerRunner
      */
-    private readonly WorkerRunner $workerRunner, /**
+    private $workerRunner;
+    /**
      * @readonly
+     * @var \Rector\Core\Util\MemoryLimiter
      */
-    private readonly MemoryLimiter $memoryLimiter, /**
+    private $memoryLimiter;
+    /**
      * @readonly
+     * @var \Rector\Core\Configuration\ConfigurationFactory
      */
-    private readonly ConfigurationFactory $configurationFactory)
+    private $configurationFactory;
+    public function __construct(WorkerRunner $workerRunner, MemoryLimiter $memoryLimiter, ConfigurationFactory $configurationFactory)
     {
+        $this->workerRunner = $workerRunner;
+        $this->memoryLimiter = $memoryLimiter;
+        $this->configurationFactory = $configurationFactory;
         parent::__construct();
     }
     protected function configure() : void

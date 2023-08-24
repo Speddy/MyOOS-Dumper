@@ -5,10 +5,10 @@ namespace PhpParser;
 
 class ParserFactory
 {
-    final public const PREFER_PHP7 = 1;
-    final public const PREFER_PHP5 = 2;
-    final public const ONLY_PHP7 = 3;
-    final public const ONLY_PHP5 = 4;
+    const PREFER_PHP7 = 1;
+    const PREFER_PHP5 = 2;
+    const ONLY_PHP7 = 3;
+    const ONLY_PHP5 = 4;
     /**
      * Creates a Parser instance, according to the provided kind.
      *
@@ -23,12 +23,17 @@ class ParserFactory
         if (null === $lexer) {
             $lexer = new \PhpParser\Lexer\Emulative();
         }
-        return match ($kind) {
-            self::PREFER_PHP7 => new \PhpParser\Parser\Multiple([new \PhpParser\Parser\Php7($lexer, $parserOptions), new \PhpParser\Parser\Php5($lexer, $parserOptions)]),
-            self::PREFER_PHP5 => new \PhpParser\Parser\Multiple([new \PhpParser\Parser\Php5($lexer, $parserOptions), new \PhpParser\Parser\Php7($lexer, $parserOptions)]),
-            self::ONLY_PHP7 => new \PhpParser\Parser\Php7($lexer, $parserOptions),
-            self::ONLY_PHP5 => new \PhpParser\Parser\Php5($lexer, $parserOptions),
-            default => throw new \LogicException('Kind must be one of ::PREFER_PHP7, ::PREFER_PHP5, ::ONLY_PHP7 or ::ONLY_PHP5'),
-        };
+        switch ($kind) {
+            case self::PREFER_PHP7:
+                return new \PhpParser\Parser\Multiple([new \PhpParser\Parser\Php7($lexer, $parserOptions), new \PhpParser\Parser\Php5($lexer, $parserOptions)]);
+            case self::PREFER_PHP5:
+                return new \PhpParser\Parser\Multiple([new \PhpParser\Parser\Php5($lexer, $parserOptions), new \PhpParser\Parser\Php7($lexer, $parserOptions)]);
+            case self::ONLY_PHP7:
+                return new \PhpParser\Parser\Php7($lexer, $parserOptions);
+            case self::ONLY_PHP5:
+                return new \PhpParser\Parser\Php5($lexer, $parserOptions);
+            default:
+                throw new \LogicException('Kind must be one of ::PREFER_PHP7, ::PREFER_PHP5, ::ONLY_PHP7 or ::ONLY_PHP5');
+        }
     }
 }

@@ -8,23 +8,28 @@ use PHPStan\Reflection\ReflectionProvider;
 use PHPStan\Type\ObjectType;
 use Rector\FamilyTree\NodeAnalyzer\ClassChildAnalyzer;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class ClassManipulator
+final class ClassManipulator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private ClassChildAnalyzer $classChildAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\FamilyTree\NodeAnalyzer\ClassChildAnalyzer
+     */
+    private $classChildAnalyzer;
+    public function __construct(NodeNameResolver $nodeNameResolver, ReflectionProvider $reflectionProvider, ClassChildAnalyzer $classChildAnalyzer)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->classChildAnalyzer = $classChildAnalyzer;
     }
     public function hasParentMethodOrInterface(ObjectType $objectType, string $oldMethod, string $newMethod) : bool
     {

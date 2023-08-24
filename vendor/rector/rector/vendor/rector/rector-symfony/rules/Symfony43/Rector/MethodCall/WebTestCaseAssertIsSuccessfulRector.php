@@ -22,21 +22,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class WebTestCaseAssertIsSuccessfulRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly SymfonyTestCaseAnalyzer $symfonyTestCaseAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ExprAnalyzer $exprAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\SymfonyTestCaseAnalyzer
+     */
+    private $symfonyTestCaseAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ExprAnalyzer
+     */
+    private $exprAnalyzer;
+    public function __construct(SymfonyTestCaseAnalyzer $symfonyTestCaseAnalyzer, TestsNodeAnalyzer $testsNodeAnalyzer, ExprAnalyzer $exprAnalyzer)
     {
+        $this->symfonyTestCaseAnalyzer = $symfonyTestCaseAnalyzer;
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
+        $this->exprAnalyzer = $exprAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

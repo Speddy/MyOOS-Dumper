@@ -57,7 +57,8 @@ CODE_SAMPLE
         if ($stmtsAware->stmts === null) {
             return null;
         }
-        $totalKeys = array_key_last($stmtsAware->stmts);
+        \end($stmtsAware->stmts);
+        $totalKeys = \key($stmtsAware->stmts);
         for ($key = $jumpToKey; $key < $totalKeys; ++$key) {
             if (!isset($stmtsAware->stmts[$key], $stmtsAware->stmts[$key + 1])) {
                 break;

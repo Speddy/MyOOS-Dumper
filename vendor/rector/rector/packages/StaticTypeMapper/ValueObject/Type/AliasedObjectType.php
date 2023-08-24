@@ -15,11 +15,14 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
  */
 final class AliasedObjectType extends ObjectType
 {
-    public function __construct(string $alias, /**
+    /**
      * @readonly
+     * @var string
      */
-    private readonly string $fullyQualifiedClass)
+    private $fullyQualifiedClass;
+    public function __construct(string $alias, string $fullyQualifiedClass)
     {
+        $this->fullyQualifiedClass = $fullyQualifiedClass;
         parent::__construct($alias);
     }
     public function getFullyQualifiedName() : string

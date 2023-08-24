@@ -7,8 +7,8 @@ use PhpParser\Node\Expr;
 class Exit_ extends Expr
 {
     /* For use in "kind" attribute */
-    final public const KIND_EXIT = 1;
-    final public const KIND_DIE = 2;
+    const KIND_EXIT = 1;
+    const KIND_DIE = 2;
     /** @var null|Expr Expression */
     public $expr;
     /**

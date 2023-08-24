@@ -10,7 +10,7 @@ use function substr;
 class Substitutions implements WordInflector
 {
     /** @var Substitution[] */
-    private ?array $substitutions = null;
+    private $substitutions;
     public function __construct(Substitution ...$substitutions)
     {
         foreach ($substitutions as $substitution) {

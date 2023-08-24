@@ -20,39 +20,52 @@ use Rector\Core\ValueObject\MethodName;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
-final readonly class DependencyClassMethodDecorator
+final class DependencyClassMethodDecorator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeFactory $nodeFactory,
-        /**
-         * @readonly
-         */
-        private PromotedPropertyParamCleaner $promotedPropertyParamCleaner,
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private AstResolver $astResolver,
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\NodeFactory
+     */
+    private $nodeFactory;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\PromotedPropertyParamCleaner
+     */
+    private $promotedPropertyParamCleaner;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\AstResolver
+     */
+    private $astResolver;
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    public function __construct(NodeFactory $nodeFactory, PromotedPropertyParamCleaner $promotedPropertyParamCleaner, ReflectionProvider $reflectionProvider, AstResolver $astResolver, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver)
     {
+        $this->nodeFactory = $nodeFactory;
+        $this->promotedPropertyParamCleaner = $promotedPropertyParamCleaner;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->astResolver = $astResolver;
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     /**
      * Add "parent::__construct(X, Y, Z)" where needed

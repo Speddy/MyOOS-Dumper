@@ -13,15 +13,21 @@ use PHPStan\PhpDocParser\Ast\Type\IdentifierTypeNode;
  * @phpstan-import-type ValueType from DoctrineArgument
  * @phpstan-type KeyType = ConstExprIntegerNode|ConstExprStringNode|IdentifierTypeNode|ConstFetchNode|null
  */
-class DoctrineArrayItem implements Node, \Stringable
+class DoctrineArrayItem implements Node
 {
     use NodeAttributes;
+    /** @var KeyType */
+    public $key;
+    /** @var ValueType */
+    public $value;
     /**
      * @param KeyType $key
      * @param ValueType $value
      */
-    public function __construct(public $key, public $value)
+    public function __construct($key, $value)
     {
+        $this->key = $key;
+        $this->value = $value;
     }
     public function __toString() : string
     {

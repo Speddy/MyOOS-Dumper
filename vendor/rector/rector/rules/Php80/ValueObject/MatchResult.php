@@ -4,19 +4,22 @@ declare (strict_types=1);
 namespace Rector\Php80\ValueObject;
 
 use PhpParser\Node\Expr\Match_;
-final readonly class MatchResult
+final class MatchResult
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private Match_ $match,
-        /**
-         * @readonly
-         */
-        private bool $shouldRemoveNextStmt
-    )
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Expr\Match_
+     */
+    private $match;
+    /**
+     * @readonly
+     * @var bool
+     */
+    private $shouldRemoveNextStmt;
+    public function __construct(Match_ $match, bool $shouldRemoveNextStmt)
     {
+        $this->match = $match;
+        $this->shouldRemoveNextStmt = $shouldRemoveNextStmt;
     }
     public function getMatch() : Match_
     {

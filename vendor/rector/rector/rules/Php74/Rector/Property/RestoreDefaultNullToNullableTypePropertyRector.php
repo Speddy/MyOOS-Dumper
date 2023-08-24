@@ -18,13 +18,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RestoreDefaultNullToNullableTypePropertyRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ConstructorAssignDetector $constructorAssignDetector
-    )
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\AlreadyAssignDetector\ConstructorAssignDetector
+     */
+    private $constructorAssignDetector;
+    public function __construct(ConstructorAssignDetector $constructorAssignDetector)
     {
+        $this->constructorAssignDetector = $constructorAssignDetector;
     }
     public function getRuleDefinition() : RuleDefinition
     {

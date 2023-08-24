@@ -15,13 +15,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeTrailingCommasInUnsetRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly FollowedByCommaAnalyzer $followedByCommaAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\DowngradePhp73\Tokenizer\FollowedByCommaAnalyzer
+     */
+    private $followedByCommaAnalyzer;
+    public function __construct(FollowedByCommaAnalyzer $followedByCommaAnalyzer)
     {
+        $this->followedByCommaAnalyzer = $followedByCommaAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -52,7 +53,8 @@ CODE_SAMPLE
     public function refactor(Node $node) : ?Node
     {
         if ($node->vars !== []) {
-            $lastArgumentPosition = array_key_last($node->vars);
+            \end($node->vars);
+            $lastArgumentPosition = \key($node->vars);
             $last = $node->vars[$lastArgumentPosition];
             if (!$this->followedByCommaAnalyzer->isFollowed($this->file, $last)) {
                 return null;

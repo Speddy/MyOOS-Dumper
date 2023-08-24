@@ -32,7 +32,9 @@ final class Diagnoser
      */
     public static function diagnose(array $finders) : string
     {
-        $diagnoses = array_map(static fn(CpuCoreFinder $finder): string => self::diagnoseFinder($finder), $finders);
+        $diagnoses = array_map(static function (CpuCoreFinder $finder) : string {
+            return self::diagnoseFinder($finder);
+        }, $finders);
         return implode(PHP_EOL, $diagnoses);
     }
     /**
@@ -44,7 +46,7 @@ final class Diagnoser
     {
         $diagnoses = array_map(static function (CpuCoreFinder $finder) : string {
             $coresCount = $finder->find();
-            return implode('', [$finder->toString(), ': ', $coresCount ?? 'NULL']);
+            return implode('', [$finder->toString(), ': ', null === $coresCount ? 'NULL' : $coresCount]);
         }, $finders);
         return implode(PHP_EOL, $diagnoses);
     }

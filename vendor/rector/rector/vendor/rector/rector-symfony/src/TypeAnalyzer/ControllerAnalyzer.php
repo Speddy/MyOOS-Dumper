@@ -13,15 +13,16 @@ use PHPStan\Type\ThisType;
 use PHPStan\Type\TypeWithClassName;
 use Rector\Core\Reflection\ReflectionResolver;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final readonly class ControllerAnalyzer
+final class ControllerAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(ReflectionResolver $reflectionResolver)
     {
+        $this->reflectionResolver = $reflectionResolver;
     }
     /**
      * @param \PhpParser\Node\Expr|\PhpParser\Node\Stmt\Class_ $node

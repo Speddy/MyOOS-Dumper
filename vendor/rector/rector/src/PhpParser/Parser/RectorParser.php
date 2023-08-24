@@ -7,19 +7,22 @@ use PhpParser\Lexer;
 use PhpParser\Node\Stmt;
 use PHPStan\Parser\Parser;
 use Rector\Core\PhpParser\ValueObject\StmtsAndTokens;
-final readonly class RectorParser
+final class RectorParser
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private Lexer $lexer,
-        /**
-         * @readonly
-         */
-        private Parser $parser
-    )
+    /**
+     * @readonly
+     * @var \PhpParser\Lexer
+     */
+    private $lexer;
+    /**
+     * @readonly
+     * @var \PHPStan\Parser\Parser
+     */
+    private $parser;
+    public function __construct(Lexer $lexer, Parser $parser)
     {
+        $this->lexer = $lexer;
+        $this->parser = $parser;
     }
     /**
      * @return Stmt[]

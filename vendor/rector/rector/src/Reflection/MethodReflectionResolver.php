@@ -6,15 +6,16 @@ namespace Rector\Core\Reflection;
 use PHPStan\Analyser\Scope;
 use PHPStan\Reflection\MethodReflection;
 use PHPStan\Reflection\ReflectionProvider;
-final readonly class MethodReflectionResolver
+final class MethodReflectionResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private ReflectionProvider $reflectionProvider
-    )
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    public function __construct(ReflectionProvider $reflectionProvider)
     {
+        $this->reflectionProvider = $reflectionProvider;
     }
     /**
      * @param class-string $className

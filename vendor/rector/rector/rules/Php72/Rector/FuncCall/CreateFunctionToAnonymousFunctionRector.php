@@ -32,21 +32,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class CreateFunctionToAnonymousFunctionRector extends AbstractRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly InlineCodeParser $inlineCodeParser,
-        /**
-         * @readonly
-         */
-        private readonly AnonymousFunctionFactory $anonymousFunctionFactory,
-        /**
-         * @readonly
-         */
-        private readonly ReservedKeywordAnalyzer $reservedKeywordAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Parser\InlineCodeParser
+     */
+    private $inlineCodeParser;
+    /**
+     * @readonly
+     * @var \Rector\Php72\NodeFactory\AnonymousFunctionFactory
+     */
+    private $anonymousFunctionFactory;
+    /**
+     * @readonly
+     * @var \Rector\Core\Php\ReservedKeywordAnalyzer
+     */
+    private $reservedKeywordAnalyzer;
+    public function __construct(InlineCodeParser $inlineCodeParser, AnonymousFunctionFactory $anonymousFunctionFactory, ReservedKeywordAnalyzer $reservedKeywordAnalyzer)
     {
+        $this->inlineCodeParser = $inlineCodeParser;
+        $this->anonymousFunctionFactory = $anonymousFunctionFactory;
+        $this->reservedKeywordAnalyzer = $reservedKeywordAnalyzer;
     }
     public function provideMinPhpVersion() : int
     {

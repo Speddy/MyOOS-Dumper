@@ -23,7 +23,7 @@ use phpseclib3\File\ASN1;
 abstract class TBSCertificate
 {
     // assert($TBSCertificate['children']['signature'] == $Certificate['children']['signatureAlgorithm'])
-    final public const MAP = [
+    const MAP = [
         'type' => ASN1::TYPE_SEQUENCE,
         'children' => [
             // technically, default implies optional, but we'll define it as being optional, none-the-less, just to

@@ -18,7 +18,7 @@ use RectorPrefix202308\Symfony\Component\Process\Process;
  */
 class ProcessFailedException extends RuntimeException
 {
-    private readonly \RectorPrefix202308\Symfony\Component\Process\Process $process;
+    private $process;
     public function __construct(Process $process)
     {
         if ($process->isSuccessful()) {

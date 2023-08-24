@@ -9,20 +9,26 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 /**
  * @see \Rector\Core\ValueObjectFactory\ProcessResultFactory
  */
-final readonly class ProcessResult
+final class ProcessResult
 {
+    /**
+     * @var SystemError[]
+     * @readonly
+     */
+    private $systemErrors;
+    /**
+     * @var FileDiff[]
+     * @readonly
+     */
+    private $fileDiffs;
     /**
      * @param FileDiff[] $fileDiffs
      * @param SystemError[] $systemErrors
      */
-    public function __construct(/**
-     * @readonly
-     */
-    private array $systemErrors, /**
-     * @readonly
-     */
-    private array $fileDiffs)
+    public function __construct(array $systemErrors, array $fileDiffs)
     {
+        $this->systemErrors = $systemErrors;
+        $this->fileDiffs = $fileDiffs;
         Assert::allIsAOf($fileDiffs, FileDiff::class);
         Assert::allIsAOf($systemErrors, SystemError::class);
     }

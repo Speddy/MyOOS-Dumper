@@ -55,7 +55,10 @@ class DeduplicationHandler extends BufferHandler
      */
     protected $time;
 
-    private bool $gc = false;
+    /**
+     * @var bool
+     */
+    private $gc = false;
 
     /**
      * @param HandlerInterface $handler            Handler.
@@ -70,7 +73,7 @@ class DeduplicationHandler extends BufferHandler
     {
         parent::__construct($handler, 0, Logger::DEBUG, $bubble, false);
 
-        $this->deduplicationStore = $deduplicationStore ?? sys_get_temp_dir() . '/monolog-dedup-' . substr(md5(__FILE__), 0, 20) .'.log';
+        $this->deduplicationStore = $deduplicationStore === null ? sys_get_temp_dir() . '/monolog-dedup-' . substr(md5(__FILE__), 0, 20) .'.log' : $deduplicationStore;
         $this->deduplicationLevel = Logger::toMonologLevel($deduplicationLevel);
         $this->time = $time;
     }
@@ -123,7 +126,7 @@ class DeduplicationHandler extends BufferHandler
         $expectedMessage = preg_replace('{[\r\n].*}', '', $record['message']);
 
         for ($i = count($store) - 1; $i >= 0; $i--) {
-            [$timestamp, $level, $message] = explode(':', $store[$i], 3);
+            list($timestamp, $level, $message) = explode(':', $store[$i], 3);
 
             if ($level === $record['level_name'] && $message === $expectedMessage && $timestamp > $timestampValidity) {
                 return true;

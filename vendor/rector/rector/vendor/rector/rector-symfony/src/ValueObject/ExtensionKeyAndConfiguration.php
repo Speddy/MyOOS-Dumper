@@ -4,19 +4,22 @@ declare (strict_types=1);
 namespace Rector\Symfony\ValueObject;
 
 use PhpParser\Node\Expr\Array_;
-final readonly class ExtensionKeyAndConfiguration
+final class ExtensionKeyAndConfiguration
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private string $key,
-        /**
-         * @readonly
-         */
-        private Array_ $array
-    )
+    /**
+     * @readonly
+     * @var string
+     */
+    private $key;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Expr\Array_
+     */
+    private $array;
+    public function __construct(string $key, Array_ $array)
     {
+        $this->key = $key;
+        $this->array = $array;
     }
     public function getKey() : string
     {

@@ -16,27 +16,34 @@ use PhpParser\Node\Stmt\Return_;
 use Rector\Core\PhpParser\Comparing\NodeComparator;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\Core\PhpParser\Node\Value\ValueResolver;
-final readonly class IfManipulator
+final class IfManipulator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private \Rector\Core\NodeManipulator\StmtsManipulator $stmtsManipulator,
-        /**
-         * @readonly
-         */
-        private ValueResolver $valueResolver,
-        /**
-         * @readonly
-         */
-        private NodeComparator $nodeComparator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\StmtsManipulator
+     */
+    private $stmtsManipulator;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
+     */
+    private $nodeComparator;
+    public function __construct(BetterNodeFinder $betterNodeFinder, \Rector\Core\NodeManipulator\StmtsManipulator $stmtsManipulator, ValueResolver $valueResolver, NodeComparator $nodeComparator)
     {
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->stmtsManipulator = $stmtsManipulator;
+        $this->valueResolver = $valueResolver;
+        $this->nodeComparator = $nodeComparator;
     }
     /**
      * Matches:

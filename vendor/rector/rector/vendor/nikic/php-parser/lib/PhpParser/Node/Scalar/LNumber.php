@@ -8,10 +8,10 @@ use PhpParser\Node\Scalar;
 class LNumber extends Scalar
 {
     /* For use in "kind" attribute */
-    final public const KIND_BIN = 2;
-    final public const KIND_OCT = 8;
-    final public const KIND_DEC = 10;
-    final public const KIND_HEX = 16;
+    const KIND_BIN = 2;
+    const KIND_OCT = 8;
+    const KIND_DEC = 10;
+    const KIND_HEX = 16;
     /** @var int Number value */
     public $value;
     /**

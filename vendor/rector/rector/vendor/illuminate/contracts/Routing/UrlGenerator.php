@@ -13,17 +13,19 @@ interface UrlGenerator
     /**
      * Get the URL for the previous request.
      *
+     * @param  mixed  $fallback
      * @return string
      */
-    public function previous(mixed $fallback = \false);
+    public function previous($fallback = \false);
     /**
      * Generate an absolute URL to the given path.
      *
      * @param  string  $path
+     * @param  mixed  $extra
      * @param  bool|null  $secure
      * @return string
      */
-    public function to($path, mixed $extra = [], $secure = null);
+    public function to($path, $extra = [], $secure = null);
     /**
      * Generate a secure, absolute URL to the given path.
      *
@@ -44,20 +46,22 @@ interface UrlGenerator
      * Get the URL to a named route.
      *
      * @param  string  $name
+     * @param  mixed  $parameters
      * @param  bool  $absolute
      * @return string
      *
      * @throws \InvalidArgumentException
      */
-    public function route($name, mixed $parameters = [], $absolute = \true);
+    public function route($name, $parameters = [], $absolute = \true);
     /**
      * Get the URL to a controller action.
      *
      * @param  string|array  $action
+     * @param  mixed  $parameters
      * @param  bool  $absolute
      * @return string
      */
-    public function action($action, mixed $parameters = [], $absolute = \true);
+    public function action($action, $parameters = [], $absolute = \true);
     /**
      * Get the root controller namespace.
      *

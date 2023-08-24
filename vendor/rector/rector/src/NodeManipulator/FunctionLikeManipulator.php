@@ -5,15 +5,16 @@ namespace Rector\Core\NodeManipulator;
 
 use PhpParser\Node\FunctionLike;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class FunctionLikeManipulator
+final class FunctionLikeManipulator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @return string[]

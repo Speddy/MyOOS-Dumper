@@ -26,29 +26,38 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RemoveUnusedNonEmptyArrayBeforeForeachRector extends AbstractScopeAwareRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly CountManipulator $countManipulator,
-        /**
-         * @readonly
-         */
-        private readonly IfManipulator $ifManipulator,
-        /**
-         * @readonly
-         */
-        private readonly UselessIfCondBeforeForeachDetector $uselessIfCondBeforeForeachDetector,
-        /**
-         * @readonly
-         */
-        private readonly ReservedKeywordAnalyzer $reservedKeywordAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly PropertyFetchAnalyzer $propertyFetchAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\NodeManipulator\CountManipulator
+     */
+    private $countManipulator;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\IfManipulator
+     */
+    private $ifManipulator;
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\UselessIfCondBeforeForeachDetector
+     */
+    private $uselessIfCondBeforeForeachDetector;
+    /**
+     * @readonly
+     * @var \Rector\Core\Php\ReservedKeywordAnalyzer
+     */
+    private $reservedKeywordAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\PropertyFetchAnalyzer
+     */
+    private $propertyFetchAnalyzer;
+    public function __construct(CountManipulator $countManipulator, IfManipulator $ifManipulator, UselessIfCondBeforeForeachDetector $uselessIfCondBeforeForeachDetector, ReservedKeywordAnalyzer $reservedKeywordAnalyzer, PropertyFetchAnalyzer $propertyFetchAnalyzer)
     {
+        $this->countManipulator = $countManipulator;
+        $this->ifManipulator = $ifManipulator;
+        $this->uselessIfCondBeforeForeachDetector = $uselessIfCondBeforeForeachDetector;
+        $this->reservedKeywordAnalyzer = $reservedKeywordAnalyzer;
+        $this->propertyFetchAnalyzer = $propertyFetchAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

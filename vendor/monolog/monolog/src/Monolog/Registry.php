@@ -42,7 +42,7 @@ class Registry
      *
      * @var Logger[]
      */
-    private static array $loggers = [];
+    private static $loggers = [];
 
     /**
      * Adds new logging channel to the registry

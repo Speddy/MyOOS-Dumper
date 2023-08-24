@@ -20,17 +20,20 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ContainerGetNameToTypeInTestsRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ServiceTypeMethodCallResolver $serviceTypeMethodCallResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\ServiceTypeMethodCallResolver
+     */
+    private $serviceTypeMethodCallResolver;
+    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer, ServiceTypeMethodCallResolver $serviceTypeMethodCallResolver)
     {
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
+        $this->serviceTypeMethodCallResolver = $serviceTypeMethodCallResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

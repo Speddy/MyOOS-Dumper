@@ -31,6 +31,36 @@ use ReflectionClass;
 final class ShortNameResolver
 {
     /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\CodingStyle\NodeAnalyzer\UseImportNameMatcher
+     */
+    private $useImportNameMatcher;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
      * @var string
      * @see https://regex101.com/r/KphLd2/1
      */
@@ -38,34 +68,15 @@ final class ShortNameResolver
     /**
      * @var array<string, string[]>
      */
-    private array $shortNamesByFilePath = [];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private readonly NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private readonly BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private readonly UseImportNameMatcher $useImportNameMatcher,
-        /**
-         * @readonly
-         */
-        private readonly PhpDocInfoFactory $phpDocInfoFactory
-    )
+    private $shortNamesByFilePath = [];
+    public function __construct(SimpleCallableNodeTraverser $simpleCallableNodeTraverser, NodeNameResolver $nodeNameResolver, ReflectionProvider $reflectionProvider, BetterNodeFinder $betterNodeFinder, UseImportNameMatcher $useImportNameMatcher, PhpDocInfoFactory $phpDocInfoFactory)
     {
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->useImportNameMatcher = $useImportNameMatcher;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
     /**
      * @return array<string, string>
@@ -88,7 +99,9 @@ final class ShortNameResolver
     {
         $newStmts = $file->getNewStmts();
         /** @var Namespace_[] $namespaces */
-        $namespaces = \array_filter($newStmts, static fn(Stmt $stmt): bool => $stmt instanceof Namespace_);
+        $namespaces = \array_filter($newStmts, static function (Stmt $stmt) : bool {
+            return $stmt instanceof Namespace_;
+        });
         if (\count($namespaces) !== 1) {
             // only handle single namespace nodes
             return [];
@@ -127,7 +140,7 @@ final class ShortNameResolver
                 return null;
             }
             // already short
-            if (str_contains($originalName->toString(), '\\')) {
+            if (\strpos($originalName->toString(), '\\') !== \false) {
                 return null;
             }
             $shortNamesToFullyQualifiedNames[$originalName->toString()] = $this->nodeNameResolver->getName($node);
@@ -135,7 +148,7 @@ final class ShortNameResolver
         });
         $docBlockShortNamesToFullyQualifiedNames = $this->resolveFromStmtsDocBlocks($stmts);
         /** @var array<string, string> $result */
-        $result = [...$shortNamesToFullyQualifiedNames, ...$docBlockShortNamesToFullyQualifiedNames];
+        $result = \array_merge($shortNamesToFullyQualifiedNames, $docBlockShortNamesToFullyQualifiedNames);
         return $result;
     }
     /**

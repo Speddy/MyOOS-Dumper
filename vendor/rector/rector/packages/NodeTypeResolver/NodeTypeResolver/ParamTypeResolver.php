@@ -17,7 +17,10 @@ use Rector\NodeTypeResolver\NodeTypeResolver;
  */
 final class ParamTypeResolver implements NodeTypeResolverInterface, NodeTypeResolverAwareInterface
 {
-    private ?\Rector\NodeTypeResolver\NodeTypeResolver $nodeTypeResolver = null;
+    /**
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
     public function autowire(NodeTypeResolver $nodeTypeResolver) : void
     {
         $this->nodeTypeResolver = $nodeTypeResolver;

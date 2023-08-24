@@ -13,25 +13,34 @@ use RectorPrefix202308\Symfony\Component\Console\Style\SymfonyStyle;
 final class ConfigInitializer
 {
     /**
+     * @var RectorInterface[]
+     * @readonly
+     */
+    private $rectors;
+    /**
+     * @readonly
+     * @var \Rector\Core\FileSystem\InitFilePathsResolver
+     */
+    private $initFilePathsResolver;
+    /**
      * @readonly
      * @var \Symfony\Component\Console\Style\SymfonyStyle
      */
     private $symfonyStyle;
     /**
+     * @readonly
+     * @var \Rector\Core\Php\PhpVersionProvider
+     */
+    private $phpVersionProvider;
+    /**
      * @param RectorInterface[] $rectors
      */
-    public function __construct(/**
-     * @readonly
-     */
-    private readonly array $rectors, /**
-     * @readonly
-     */
-    private readonly InitFilePathsResolver $initFilePathsResolver, SymfonyStyle $symfonyStyle, /**
-     * @readonly
-     */
-    private readonly PhpVersionProvider $phpVersionProvider)
+    public function __construct(array $rectors, InitFilePathsResolver $initFilePathsResolver, SymfonyStyle $symfonyStyle, PhpVersionProvider $phpVersionProvider)
     {
+        $this->rectors = $rectors;
+        $this->initFilePathsResolver = $initFilePathsResolver;
         $this->symfonyStyle = $symfonyStyle;
+        $this->phpVersionProvider = $phpVersionProvider;
     }
     public function createConfig(string $projectDirectory) : void
     {
@@ -62,7 +71,9 @@ final class ConfigInitializer
      */
     private function filterActiveRectors(array $rectors) : array
     {
-        return \array_filter($rectors, static fn(RectorInterface $rector): bool => !$rector instanceof PostRectorInterface);
+        return \array_filter($rectors, static function (RectorInterface $rector) : bool {
+            return !$rector instanceof PostRectorInterface;
+        });
     }
     private function replacePhpLevelContents(string $rectorPhpTemplateContents) : string
     {

@@ -15,15 +15,16 @@ use Rector\NodeTypeResolver\Node\AttributeKey;
  *
  * @implements NodeTypeResolverInterface<Property>
  */
-final readonly class PropertyTypeResolver implements NodeTypeResolverInterface
+final class PropertyTypeResolver implements NodeTypeResolverInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\NodeTypeResolver\NodeTypeResolver\PropertyFetchTypeResolver $propertyFetchTypeResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver\PropertyFetchTypeResolver
+     */
+    private $propertyFetchTypeResolver;
+    public function __construct(\Rector\NodeTypeResolver\NodeTypeResolver\PropertyFetchTypeResolver $propertyFetchTypeResolver)
     {
+        $this->propertyFetchTypeResolver = $propertyFetchTypeResolver;
     }
     /**
      * @return array<class-string<Node>>

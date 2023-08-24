@@ -7,15 +7,16 @@ use PhpParser\Node\Stmt\ClassLike;
 use PhpParser\Node\Stmt\Property;
 use Rector\Naming\ValueObject\PropertyRename;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class PropertyRenameFactory
+final class PropertyRenameFactory
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     public function createFromExpectedName(ClassLike $classLike, Property $property, string $expectedName) : ?PropertyRename
     {

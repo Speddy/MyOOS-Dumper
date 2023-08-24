@@ -7,15 +7,16 @@ use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\Variable;
 use PHPStan\Type\ObjectType;
 use Rector\Naming\Naming\PropertyNaming;
-final readonly class PropertyFetchFactory
+final class PropertyFetchFactory
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PropertyNaming $propertyNaming
-    )
+    /**
+     * @readonly
+     * @var \Rector\Naming\Naming\PropertyNaming
+     */
+    private $propertyNaming;
+    public function __construct(PropertyNaming $propertyNaming)
     {
+        $this->propertyNaming = $propertyNaming;
     }
     public function createFromType(ObjectType $objectType) : PropertyFetch
     {

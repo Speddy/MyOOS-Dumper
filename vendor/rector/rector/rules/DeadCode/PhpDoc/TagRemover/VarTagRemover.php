@@ -14,27 +14,34 @@ use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger;
 use Rector\DeadCode\PhpDoc\DeadVarTagValueNodeAnalyzer;
 use Rector\PHPStanStaticTypeMapper\DoctrineTypeAnalyzer;
-final readonly class VarTagRemover
+final class VarTagRemover
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private DoctrineTypeAnalyzer $doctrineTypeAnalyzer,
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory,
-        /**
-         * @readonly
-         */
-        private DeadVarTagValueNodeAnalyzer $deadVarTagValueNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private PhpDocTypeChanger $phpDocTypeChanger
-    )
+    /**
+     * @readonly
+     * @var \Rector\PHPStanStaticTypeMapper\DoctrineTypeAnalyzer
+     */
+    private $doctrineTypeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\PhpDoc\DeadVarTagValueNodeAnalyzer
+     */
+    private $deadVarTagValueNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTypeChanger
+     */
+    private $phpDocTypeChanger;
+    public function __construct(DoctrineTypeAnalyzer $doctrineTypeAnalyzer, PhpDocInfoFactory $phpDocInfoFactory, DeadVarTagValueNodeAnalyzer $deadVarTagValueNodeAnalyzer, PhpDocTypeChanger $phpDocTypeChanger)
     {
+        $this->doctrineTypeAnalyzer = $doctrineTypeAnalyzer;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
+        $this->deadVarTagValueNodeAnalyzer = $deadVarTagValueNodeAnalyzer;
+        $this->phpDocTypeChanger = $phpDocTypeChanger;
     }
     public function removeVarTagIfUseless(PhpDocInfo $phpDocInfo, Property $property) : void
     {

@@ -10,14 +10,24 @@
  */
 namespace RectorPrefix202308\Composer\Semver\Constraint;
 
-class Bound implements \Stringable
+class Bound
 {
+    /**
+     * @var string
+     */
+    private $version;
+    /**
+     * @var bool
+     */
+    private $isInclusive;
     /**
      * @param string $version
      * @param bool   $isInclusive
      */
-    public function __construct(private $version, private $isInclusive)
+    public function __construct($version, $isInclusive)
     {
+        $this->version = $version;
+        $this->isInclusive = $isInclusive;
     }
     /**
      * @return string
@@ -50,13 +60,14 @@ class Bound implements \Stringable
     /**
      * Compares a bound to another with a given operator.
      *
+     * @param Bound  $other
      * @param string $operator
      *
      * @return bool
      */
     public function compareTo(Bound $other, $operator)
     {
-        if (!\in_array($operator, ['<', '>'], \true)) {
+        if (!\in_array($operator, array('<', '>'), \true)) {
             throw new \InvalidArgumentException('Does not support any other operator other than > or <.');
         }
         // If they are the same it doesn't matter
@@ -71,7 +82,7 @@ class Bound implements \Stringable
         // Question we're answering here is "am I higher than $other?"
         return '>' === $operator ? $other->isInclusive() : !$other->isInclusive();
     }
-    public function __toString(): string
+    public function __toString()
     {
         return \sprintf('%s [%s]', $this->getVersion(), $this->isInclusive() ? 'inclusive' : 'exclusive');
     }

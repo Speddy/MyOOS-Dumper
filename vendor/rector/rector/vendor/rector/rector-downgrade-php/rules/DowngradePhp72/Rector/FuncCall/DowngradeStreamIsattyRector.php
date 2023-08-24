@@ -29,22 +29,30 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeStreamIsattyRector extends AbstractScopeAwareRector
 {
-    private ?\PhpParser\Node\Expr\Closure $cachedClosure = null;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly InlineCodeParser $inlineCodeParser,
-        /**
-         * @readonly
-         */
-        private readonly VariableNaming $variableNaming,
-        /**
-         * @readonly
-         */
-        private readonly ExprInTopStmtMatcher $exprInTopStmtMatcher
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Parser\InlineCodeParser
+     */
+    private $inlineCodeParser;
+    /**
+     * @readonly
+     * @var \Rector\Naming\Naming\VariableNaming
+     */
+    private $variableNaming;
+    /**
+     * @readonly
+     * @var \Rector\NodeAnalyzer\ExprInTopStmtMatcher
+     */
+    private $exprInTopStmtMatcher;
+    /**
+     * @var \PhpParser\Node\Expr\Closure|null
+     */
+    private $cachedClosure;
+    public function __construct(InlineCodeParser $inlineCodeParser, VariableNaming $variableNaming, ExprInTopStmtMatcher $exprInTopStmtMatcher)
     {
+        $this->inlineCodeParser = $inlineCodeParser;
+        $this->variableNaming = $variableNaming;
+        $this->exprInTopStmtMatcher = $exprInTopStmtMatcher;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -16,23 +16,28 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\NodeTraverser;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
-final readonly class ClassMethodPropertyFetchManipulator
+final class ClassMethodPropertyFetchManipulator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private \Rector\Core\NodeManipulator\FunctionLikeManipulator $functionLikeManipulator
-    )
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\FunctionLikeManipulator
+     */
+    private $functionLikeManipulator;
+    public function __construct(SimpleCallableNodeTraverser $simpleCallableNodeTraverser, NodeNameResolver $nodeNameResolver, \Rector\Core\NodeManipulator\FunctionLikeManipulator $functionLikeManipulator)
     {
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->functionLikeManipulator = $functionLikeManipulator;
     }
     /**
      * In case the property name is different to param name:

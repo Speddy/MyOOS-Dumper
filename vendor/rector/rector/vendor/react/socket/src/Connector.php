@@ -23,7 +23,7 @@ use RectorPrefix202308\React\EventLoop\LoopInterface;
  */
 final class Connector implements ConnectorInterface
 {
-    private array $connectors = [];
+    private $connectors = array();
     /**
      * Instantiate new `Connector`
      *
@@ -51,11 +51,11 @@ final class Connector implements ConnectorInterface
      * @param null|LoopInterface|array $loop
      * @throws \InvalidArgumentException for invalid arguments
      */
-    public function __construct($context = [], $loop = null)
+    public function __construct($context = array(), $loop = null)
     {
         // swap arguments for legacy constructor signature
         if (($context instanceof LoopInterface || $context === null) && (\func_num_args() <= 1 || \is_array($loop))) {
-            $swap = $loop ?? [];
+            $swap = $loop === null ? array() : $loop;
             $loop = $context;
             $context = $swap;
         }
@@ -63,14 +63,14 @@ final class Connector implements ConnectorInterface
             throw new \InvalidArgumentException('Expected "array $context" and "?LoopInterface $loop" arguments');
         }
         // apply default options if not explicitly given
-        $context += ['tcp' => \true, 'tls' => \true, 'unix' => \true, 'dns' => \true, 'timeout' => \true, 'happy_eyeballs' => \true];
+        $context += array('tcp' => \true, 'tls' => \true, 'unix' => \true, 'dns' => \true, 'timeout' => \true, 'happy_eyeballs' => \true);
         if ($context['timeout'] === \true) {
             $context['timeout'] = (float) \ini_get("default_socket_timeout");
         }
         if ($context['tcp'] instanceof ConnectorInterface) {
             $tcp = $context['tcp'];
         } else {
-            $tcp = new TcpConnector($loop, \is_array($context['tcp']) ? $context['tcp'] : []);
+            $tcp = new TcpConnector($loop, \is_array($context['tcp']) ? $context['tcp'] : array());
         }
         if ($context['dns'] !== \false) {
             if ($context['dns'] instanceof ResolverInterface) {
@@ -104,7 +104,7 @@ final class Connector implements ConnectorInterface
         }
         if ($context['tls'] !== \false) {
             if (!$context['tls'] instanceof ConnectorInterface) {
-                $context['tls'] = new SecureConnector($tcp, $loop, \is_array($context['tls']) ? $context['tls'] : []);
+                $context['tls'] = new SecureConnector($tcp, $loop, \is_array($context['tls']) ? $context['tls'] : array());
             }
             if ($context['timeout'] !== \false) {
                 $context['tls'] = new TimeoutConnector($context['tls'], $context['timeout'], $loop);
@@ -121,7 +121,7 @@ final class Connector implements ConnectorInterface
     public function connect($uri)
     {
         $scheme = 'tcp';
-        if (str_contains($uri, '://')) {
+        if (\strpos($uri, '://') !== \false) {
             $scheme = (string) \substr($uri, 0, \strpos($uri, '://'));
         }
         if (!isset($this->connectors[$scheme])) {
@@ -132,6 +132,7 @@ final class Connector implements ConnectorInterface
     /**
      * [internal] Builds on URI from the given URI parts and ip address with original hostname as query
      *
+     * @param array  $parts
      * @param string $host
      * @param string $ip
      * @return string
@@ -144,7 +145,7 @@ final class Connector implements ConnectorInterface
         if (isset($parts['scheme'])) {
             $uri .= $parts['scheme'] . '://';
         }
-        if (str_contains($ip, ':')) {
+        if (\strpos($ip, ':') !== \false) {
             // enclose IPv6 addresses in square brackets before appending port
             $uri .= '[' . $ip . ']';
         } else {
@@ -164,8 +165,8 @@ final class Connector implements ConnectorInterface
         }
         // append original hostname as query if resolved via DNS and if
         // destination URI does not contain "hostname" query param already
-        $args = [];
-        \parse_str($parts['query'] ?? '', $args);
+        $args = array();
+        \parse_str(isset($parts['query']) ? $parts['query'] : '', $args);
         if ($host !== $ip && !isset($args['hostname'])) {
             $uri .= (isset($parts['query']) ? '&' : '?') . 'hostname=' . \rawurlencode($host);
         }

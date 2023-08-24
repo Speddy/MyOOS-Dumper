@@ -15,13 +15,13 @@ class Lexer
     protected $tokenMap;
     protected $dropTokens;
     protected $identifierTokens;
-    private readonly bool $attributeStartLineUsed;
-    private readonly bool $attributeEndLineUsed;
-    private readonly bool $attributeStartTokenPosUsed;
-    private readonly bool $attributeEndTokenPosUsed;
-    private readonly bool $attributeStartFilePosUsed;
-    private readonly bool $attributeEndFilePosUsed;
-    private readonly bool $attributeCommentsUsed;
+    private $attributeStartLineUsed;
+    private $attributeEndLineUsed;
+    private $attributeStartTokenPosUsed;
+    private $attributeEndTokenPosUsed;
+    private $attributeStartFilePosUsed;
+    private $attributeEndFilePosUsed;
+    private $attributeCommentsUsed;
     /**
      * Creates a Lexer.
      *
@@ -104,7 +104,7 @@ class Lexer
      */
     private function isUnterminatedComment($token) : bool
     {
-        return ($token[0] === \T_COMMENT || $token[0] === \T_DOC_COMMENT) && str_starts_with((string) $token[1], '/*') && !str_ends_with((string) $token[1], '*/');
+        return ($token[0] === \T_COMMENT || $token[0] === \T_DOC_COMMENT) && \substr($token[1], 0, 2) === '/*' && \substr($token[1], -2) !== '*/';
     }
     protected function postprocessTokens(\PhpParser\ErrorHandler $errorHandler)
     {
@@ -120,7 +120,7 @@ class Lexer
         //    T_AMPERSAND_FOLLOWED_BY_VAR_OR_VARARG tokens used to disambiguate intersection types.
         $filePos = 0;
         $line = 1;
-        $numTokens = is_countable($this->tokens) ? \count($this->tokens) : 0;
+        $numTokens = \count($this->tokens);
         for ($i = 0; $i < $numTokens; $i++) {
             $token = $this->tokens[$i];
             // Since PHP 7.4 invalid characters are represented by a T_BAD_CHARACTER token.
@@ -128,9 +128,9 @@ class Lexer
             if ($token[0] === \T_BAD_CHARACTER) {
                 $this->handleInvalidCharacterRange($filePos, $filePos + 1, $line, $errorHandler);
             }
-            if ($token[0] === \T_COMMENT && !str_starts_with((string) $token[1], '/*') && \preg_match('/(\\r\\n|\\n|\\r)$/D', (string) $token[1], $matches)) {
+            if ($token[0] === \T_COMMENT && \substr($token[1], 0, 2) !== '/*' && \preg_match('/(\\r\\n|\\n|\\r)$/D', $token[1], $matches)) {
                 $trailingNewline = $matches[0];
-                $token[1] = \substr((string) $token[1], 0, -\strlen($trailingNewline));
+                $token[1] = \substr($token[1], 0, -\strlen($trailingNewline));
                 $this->tokens[$i] = $token;
                 if (isset($this->tokens[$i + 1]) && $this->tokens[$i + 1][0] === \T_WHITESPACE) {
                     // Move trailing newline into following T_WHITESPACE token, if it already exists.
@@ -164,7 +164,7 @@ class Lexer
                 if ($lastWasSeparator) {
                     // Trailing separator is not part of the name.
                     $j--;
-                    $text = \substr((string) $text, 0, -1);
+                    $text = \substr($text, 0, -1);
                 }
                 if ($j > $i + 1) {
                     if ($token[0] === \T_NS_SEPARATOR) {
@@ -190,39 +190,39 @@ class Lexer
                 $this->tokens[$i] = $token = [$followedByVarOrVarArg ? \T_AMPERSAND_FOLLOWED_BY_VAR_OR_VARARG : \T_AMPERSAND_NOT_FOLLOWED_BY_VAR_OR_VARARG, '&', $line];
             }
             $tokenValue = \is_string($token) ? $token : $token[1];
-            $tokenLen = \strlen((string) $tokenValue);
-            if (\substr((string) $this->code, $filePos, $tokenLen) !== $tokenValue) {
+            $tokenLen = \strlen($tokenValue);
+            if (\substr($this->code, $filePos, $tokenLen) !== $tokenValue) {
                 // Something is missing, must be an invalid character
-                $nextFilePos = \strpos((string) $this->code, (string) $tokenValue, $filePos);
+                $nextFilePos = \strpos($this->code, $tokenValue, $filePos);
                 $badCharTokens = $this->handleInvalidCharacterRange($filePos, $nextFilePos, $line, $errorHandler);
                 $filePos = (int) $nextFilePos;
                 \array_splice($this->tokens, $i, 0, $badCharTokens);
-                $numTokens += is_countable($badCharTokens) ? \count($badCharTokens) : 0;
-                $i += is_countable($badCharTokens) ? \count($badCharTokens) : 0;
+                $numTokens += \count($badCharTokens);
+                $i += \count($badCharTokens);
             }
             $filePos += $tokenLen;
-            $line += \substr_count((string) $tokenValue, "\n");
+            $line += \substr_count($tokenValue, "\n");
         }
-        if ($filePos !== \strlen((string) $this->code)) {
-            if (\substr((string) $this->code, $filePos, 2) === '/*') {
+        if ($filePos !== \strlen($this->code)) {
+            if (\substr($this->code, $filePos, 2) === '/*') {
                 // Unlike PHP, HHVM will drop unterminated comments entirely
-                $comment = \substr((string) $this->code, $filePos);
+                $comment = \substr($this->code, $filePos);
                 $errorHandler->handleError(new \PhpParser\Error('Unterminated comment', ['startLine' => $line, 'endLine' => $line + \substr_count($comment, "\n"), 'startFilePos' => $filePos, 'endFilePos' => $filePos + \strlen($comment)]));
                 // Emulate the PHP behavior
                 $isDocComment = isset($comment[3]) && $comment[3] === '*';
                 $this->tokens[] = [$isDocComment ? \T_DOC_COMMENT : \T_COMMENT, $comment, $line];
             } else {
                 // Invalid characters at the end of the input
-                $badCharTokens = $this->handleInvalidCharacterRange($filePos, \strlen((string) $this->code), $line, $errorHandler);
+                $badCharTokens = $this->handleInvalidCharacterRange($filePos, \strlen($this->code), $line, $errorHandler);
                 $this->tokens = \array_merge($this->tokens, $badCharTokens);
             }
             return;
         }
-        if ((is_countable($this->tokens) ? \count($this->tokens) : 0) > 0) {
+        if (\count($this->tokens) > 0) {
             // Check for unterminated comment
-            $lastToken = $this->tokens[(is_countable($this->tokens) ? \count($this->tokens) : 0) - 1];
+            $lastToken = $this->tokens[\count($this->tokens) - 1];
             if ($this->isUnterminatedComment($lastToken)) {
-                $errorHandler->handleError(new \PhpParser\Error('Unterminated comment', ['startLine' => $line - \substr_count((string) $lastToken[1], "\n"), 'endLine' => $line, 'startFilePos' => $filePos - \strlen((string) $lastToken[1]), 'endFilePos' => $filePos]));
+                $errorHandler->handleError(new \PhpParser\Error('Unterminated comment', ['startLine' => $line - \substr_count($lastToken[1], "\n"), 'endLine' => $line, 'startFilePos' => $filePos - \strlen($lastToken[1]), 'endFilePos' => $filePos]));
             }
         }
     }
@@ -248,7 +248,7 @@ class Lexer
      *
      * @return int Token id
      */
-    public function getNextToken(mixed &$value = null, mixed &$startAttributes = null, mixed &$endAttributes = null) : int
+    public function getNextToken(&$value = null, &$startAttributes = null, &$endAttributes = null) : int
     {
         $startAttributes = [];
         $endAttributes = [];
@@ -282,17 +282,17 @@ class Lexer
                 $value = $token[1];
                 $id = $this->tokenMap[$token[0]];
                 if (\T_CLOSE_TAG === $token[0]) {
-                    $this->prevCloseTagHasNewline = str_contains((string) $token[1], "\n") || str_contains((string) $token[1], "\r");
+                    $this->prevCloseTagHasNewline = \false !== \strpos($token[1], "\n") || \false !== \strpos($token[1], "\r");
                 } elseif (\T_INLINE_HTML === $token[0]) {
                     $startAttributes['hasLeadingNewline'] = $this->prevCloseTagHasNewline;
                 }
-                $this->line += \substr_count((string) $value, "\n");
-                $this->filePos += \strlen((string) $value);
+                $this->line += \substr_count($value, "\n");
+                $this->filePos += \strlen($value);
             } else {
                 $origLine = $this->line;
                 $origFilePos = $this->filePos;
-                $this->line += \substr_count((string) $token[1], "\n");
-                $this->filePos += \strlen((string) $token[1]);
+                $this->line += \substr_count($token[1], "\n");
+                $this->filePos += \strlen($token[1]);
                 if (\T_COMMENT === $token[0] || \T_DOC_COMMENT === $token[0]) {
                     if ($this->attributeCommentsUsed) {
                         $comment = \T_DOC_COMMENT === $token[0] ? new \PhpParser\Comment\Doc($token[1], $origLine, $origFilePos, $this->pos, $this->line, $this->filePos - 1, $this->pos) : new \PhpParser\Comment($token[1], $origLine, $origFilePos, $this->pos, $this->line, $this->filePos - 1, $this->pos);
@@ -336,7 +336,7 @@ class Lexer
     public function handleHaltCompiler() : string
     {
         // text after T_HALT_COMPILER, still including ();
-        $textAfter = \substr((string) $this->code, $this->filePos);
+        $textAfter = \substr($this->code, $this->filePos);
         // ensure that it is followed by ();
         // this simplifies the situation, by not allowing any comments
         // in between of the tokens.
@@ -344,7 +344,7 @@ class Lexer
             throw new \PhpParser\Error('__HALT_COMPILER must be followed by "();"');
         }
         // prevent the lexer from returning any further tokens
-        $this->pos = is_countable($this->tokens) ? \count($this->tokens) : 0;
+        $this->pos = \count($this->tokens);
         // return with (); removed
         return \substr($textAfter, \strlen($matches[0]));
     }

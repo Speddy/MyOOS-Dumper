@@ -52,17 +52,17 @@ use RectorPrefix202308\React\EventLoop\Timer\Timers;
 final class StreamSelectLoop implements LoopInterface
 {
     /** @internal */
-    public const MICROSECONDS_PER_SECOND = 1_000_000;
-    private readonly \RectorPrefix202308\React\EventLoop\Tick\FutureTickQueue $futureTickQueue;
-    private readonly \RectorPrefix202308\React\EventLoop\Timer\Timers $timers;
-    private array $readStreams = [];
-    private array $readListeners = [];
-    private array $writeStreams = [];
-    private array $writeListeners = [];
-    private ?bool $running = null;
-    private bool $pcntl = \false;
-    private bool $pcntlPoll = \false;
-    private readonly \RectorPrefix202308\React\EventLoop\SignalsHandler $signals;
+    const MICROSECONDS_PER_SECOND = 1000000;
+    private $futureTickQueue;
+    private $timers;
+    private $readStreams = array();
+    private $readListeners = array();
+    private $writeStreams = array();
+    private $writeListeners = array();
+    private $running;
+    private $pcntl = \false;
+    private $pcntlPoll = \false;
+    private $signals;
     public function __construct()
     {
         $this->futureTickQueue = new FutureTickQueue();
@@ -129,7 +129,7 @@ final class StreamSelectLoop implements LoopInterface
         $first = $this->signals->count($signal) === 0;
         $this->signals->add($signal, $listener);
         if ($first) {
-            \pcntl_signal($signal, $this->signals->call(...));
+            \pcntl_signal($signal, array($this->signals, 'call'));
         }
     }
     public function removeSignal($signal, $listener)
@@ -231,7 +231,7 @@ final class StreamSelectLoop implements LoopInterface
             // @link https://docs.microsoft.com/de-de/windows/win32/api/winsock2/nf-winsock2-select
             $except = null;
             if (\DIRECTORY_SEPARATOR === '\\') {
-                $except = [];
+                $except = array();
                 foreach ($write as $key => $socket) {
                     if (!isset($read[$key]) && @\ftell($socket) === 0) {
                         $except[$key] = $socket;
@@ -243,7 +243,7 @@ final class StreamSelectLoop implements LoopInterface
                 // suppress warnings that occur when `stream_select()` is interrupted by a signal
                 // PHP defines `EINTR` through `ext-sockets` or `ext-pcntl`, otherwise use common default (Linux & Mac)
                 $eintr = \defined('SOCKET_EINTR') ? \SOCKET_EINTR : (\defined('PCNTL_EINTR') ? \PCNTL_EINTR : 4);
-                if ($errno === \E_WARNING && str_contains($errstr, '[' . $eintr . ']: ')) {
+                if ($errno === \E_WARNING && \strpos($errstr, '[' . $eintr . ']: ') !== \false) {
                     return;
                 }
                 // forward any other error to registered error handler or print warning

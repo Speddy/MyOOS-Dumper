@@ -23,7 +23,7 @@ use Monolog\Logger;
 class CouchDBHandler extends AbstractProcessingHandler
 {
     /** @var mixed[] */
-    private array $options;
+    private $options;
 
     /**
      * @param mixed[] $options

@@ -13,6 +13,13 @@ namespace RectorPrefix202308\Composer\Pcre;
 final class MatchResult
 {
     /**
+     * An array of match group => string matched
+     *
+     * @readonly
+     * @var array<int|string, string|null>
+     */
+    public $matches;
+    /**
      * @readonly
      * @var bool
      */
@@ -21,13 +28,9 @@ final class MatchResult
      * @param 0|positive-int $count
      * @param array<string|null> $matches
      */
-    public function __construct(int $count, /**
-     * An array of match group => string matched
-     *
-     * @readonly
-     */
-    public array $matches)
+    public function __construct(int $count, array $matches)
     {
+        $this->matches = $matches;
         $this->matched = (bool) $count;
     }
 }

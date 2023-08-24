@@ -37,19 +37,19 @@ use SplObjectStorage;
 final class ExtLibeventLoop implements LoopInterface
 {
     /** @internal */
-    public const MICROSECONDS_PER_SECOND = 1_000_000;
+    const MICROSECONDS_PER_SECOND = 1000000;
     private $eventBase;
-    private readonly \RectorPrefix202308\React\EventLoop\Tick\FutureTickQueue $futureTickQueue;
-    private \Closure $timerCallback;
-    private \SplObjectStorage|array $timerEvents;
-    private \Closure $streamCallback;
-    private array $readEvents = [];
-    private array $writeEvents = [];
-    private array $readListeners = [];
-    private array $writeListeners = [];
-    private ?bool $running = null;
-    private readonly \RectorPrefix202308\React\EventLoop\SignalsHandler $signals;
-    private array $signalEvents = [];
+    private $futureTickQueue;
+    private $timerCallback;
+    private $timerEvents;
+    private $streamCallback;
+    private $readEvents = array();
+    private $writeEvents = array();
+    private $readListeners = array();
+    private $writeListeners = array();
+    private $running;
+    private $signals;
+    private $signalEvents = array();
     public function __construct()
     {
         if (!\function_exists('event_base_new')) {
@@ -138,7 +138,7 @@ final class ExtLibeventLoop implements LoopInterface
         $this->signals->add($signal, $listener);
         if (!isset($this->signalEvents[$signal])) {
             $this->signalEvents[$signal] = \event_new();
-            \event_set($this->signalEvents[$signal], $signal, \EV_PERSIST | \EV_SIGNAL, $this->signals->call(...));
+            \event_set($this->signalEvents[$signal], $signal, \EV_PERSIST | \EV_SIGNAL, array($this->signals, 'call'));
             \event_base_set($this->signalEvents[$signal], $this->eventBase);
             \event_add($this->signalEvents[$signal]);
         }
@@ -173,6 +173,7 @@ final class ExtLibeventLoop implements LoopInterface
     /**
      * Schedule a timer for execution.
      *
+     * @param TimerInterface $timer
      */
     private function scheduleTimer(TimerInterface $timer)
     {

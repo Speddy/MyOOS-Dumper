@@ -24,29 +24,38 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class RenameForeachValueVariableToMatchMethodCallReturnTypeRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly BreakingVariableRenameGuard $breakingVariableRenameGuard,
-        /**
-         * @readonly
-         */
-        private readonly ExpectedNameResolver $expectedNameResolver,
-        /**
-         * @readonly
-         */
-        private readonly NamingConventionAnalyzer $namingConventionAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly VariableRenamer $variableRenamer,
-        /**
-         * @readonly
-         */
-        private readonly ForeachMatcher $foreachMatcher
-    )
+    /**
+     * @readonly
+     * @var \Rector\Naming\Guard\BreakingVariableRenameGuard
+     */
+    private $breakingVariableRenameGuard;
+    /**
+     * @readonly
+     * @var \Rector\Naming\Naming\ExpectedNameResolver
+     */
+    private $expectedNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Naming\NamingConvention\NamingConventionAnalyzer
+     */
+    private $namingConventionAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Naming\VariableRenamer
+     */
+    private $variableRenamer;
+    /**
+     * @readonly
+     * @var \Rector\Naming\Matcher\ForeachMatcher
+     */
+    private $foreachMatcher;
+    public function __construct(BreakingVariableRenameGuard $breakingVariableRenameGuard, ExpectedNameResolver $expectedNameResolver, NamingConventionAnalyzer $namingConventionAnalyzer, VariableRenamer $variableRenamer, ForeachMatcher $foreachMatcher)
     {
+        $this->breakingVariableRenameGuard = $breakingVariableRenameGuard;
+        $this->expectedNameResolver = $expectedNameResolver;
+        $this->namingConventionAnalyzer = $namingConventionAnalyzer;
+        $this->variableRenamer = $variableRenamer;
+        $this->foreachMatcher = $foreachMatcher;
     }
     public function getRuleDefinition() : RuleDefinition
     {

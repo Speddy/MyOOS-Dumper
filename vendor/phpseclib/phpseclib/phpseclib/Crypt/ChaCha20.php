@@ -161,7 +161,7 @@ class ChaCha20 extends Salsa20
                 return $plaintext;
             }
             $newtag = $this->poly1305($ciphertext);
-            if (!str_starts_with($newtag, $this->oldtag)) {
+            if ($this->oldtag != substr($newtag, 0, strlen($this->oldtag))) {
                 $this->oldtag = false;
                 throw new BadDecryptionException('Derived authentication tag and supplied authentication tag do not match');
             }
@@ -337,7 +337,7 @@ class ChaCha20 extends Salsa20
      */
     protected static function salsa20($x)
     {
-        [, $x0, $x1, $x2, $x3, $x4, $x5, $x6, $x7, $x8, $x9, $x10, $x11, $x12, $x13, $x14, $x15] = unpack('V*', $x);
+        list(, $x0, $x1, $x2, $x3, $x4, $x5, $x6, $x7, $x8, $x9, $x10, $x11, $x12, $x13, $x14, $x15) = unpack('V*', $x);
         $z0 = $x0;
         $z1 = $x1;
         $z2 = $x2;

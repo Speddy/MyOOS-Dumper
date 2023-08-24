@@ -7,14 +7,14 @@ use PhpParser\Error;
 use PhpParser\Node;
 class Class_ extends \PhpParser\Node\Stmt\ClassLike
 {
-    final public const MODIFIER_PUBLIC = 1;
-    final public const MODIFIER_PROTECTED = 2;
-    final public const MODIFIER_PRIVATE = 4;
-    final public const MODIFIER_STATIC = 8;
-    final public const MODIFIER_ABSTRACT = 16;
-    final public const MODIFIER_FINAL = 32;
-    final public const MODIFIER_READONLY = 64;
-    final public const VISIBILITY_MODIFIER_MASK = 7;
+    const MODIFIER_PUBLIC = 1;
+    const MODIFIER_PROTECTED = 2;
+    const MODIFIER_PRIVATE = 4;
+    const MODIFIER_STATIC = 8;
+    const MODIFIER_ABSTRACT = 16;
+    const MODIFIER_FINAL = 32;
+    const MODIFIER_READONLY = 64;
+    const VISIBILITY_MODIFIER_MASK = 7;
     // 1 | 2 | 4
     /** @var int Type */
     public $flags;

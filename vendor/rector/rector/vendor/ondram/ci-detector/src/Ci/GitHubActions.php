@@ -8,7 +8,7 @@ use RectorPrefix202308\OndraM\CiDetector\Env;
 use RectorPrefix202308\OndraM\CiDetector\TrinaryLogic;
 class GitHubActions extends AbstractCi
 {
-    final public const GITHUB_BASE_URL = 'https://github.com';
+    public const GITHUB_BASE_URL = 'https://github.com';
     public static function isDetected(Env $env) : bool
     {
         return $env->get('GITHUB_ACTIONS') !== \false;

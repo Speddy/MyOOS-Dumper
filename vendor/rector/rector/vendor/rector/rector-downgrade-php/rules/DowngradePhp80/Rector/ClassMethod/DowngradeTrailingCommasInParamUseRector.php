@@ -19,13 +19,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeTrailingCommasInParamUseRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly FollowedByCommaAnalyzer $followedByCommaAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\DowngradePhp73\Tokenizer\FollowedByCommaAnalyzer
+     */
+    private $followedByCommaAnalyzer;
+    public function __construct(FollowedByCommaAnalyzer $followedByCommaAnalyzer)
     {
+        $this->followedByCommaAnalyzer = $followedByCommaAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -105,7 +106,8 @@ CODE_SAMPLE
      */
     private function cleanTrailingComma($node, array $array) : ?Node
     {
-        $lastPosition = array_key_last($array);
+        \end($array);
+        $lastPosition = \key($array);
         $last = $array[$lastPosition];
         if (!$this->followedByCommaAnalyzer->isFollowed($this->file, $last)) {
             return null;

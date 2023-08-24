@@ -30,6 +30,31 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class TypedPropertyFromAssignsRector extends AbstractRector implements MinPhpVersionInterface, ConfigurableRectorInterface
 {
     /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\TypeInferer\PropertyTypeInferer\AllAssignNodePropertyTypeInferer
+     */
+    private $allAssignNodePropertyTypeInferer;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeTypeAnalyzer\PropertyTypeDecorator
+     */
+    private $propertyTypeDecorator;
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\PhpDoc\TagRemover\VarTagRemover
+     */
+    private $varTagRemover;
+    /**
+     * @readonly
+     * @var \Rector\Php74\Guard\MakePropertyTypedGuard
+     */
+    private $makePropertyTypedGuard;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
      * @api
      * @var string
      */
@@ -44,29 +69,13 @@ final class TypedPropertyFromAssignsRector extends AbstractRector implements Min
      * @var bool
      */
     private $inlinePublic = \false;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly AllAssignNodePropertyTypeInferer $allAssignNodePropertyTypeInferer,
-        /**
-         * @readonly
-         */
-        private readonly PropertyTypeDecorator $propertyTypeDecorator,
-        /**
-         * @readonly
-         */
-        private readonly VarTagRemover $varTagRemover,
-        /**
-         * @readonly
-         */
-        private readonly MakePropertyTypedGuard $makePropertyTypedGuard,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver
-    )
+    public function __construct(AllAssignNodePropertyTypeInferer $allAssignNodePropertyTypeInferer, PropertyTypeDecorator $propertyTypeDecorator, VarTagRemover $varTagRemover, MakePropertyTypedGuard $makePropertyTypedGuard, ReflectionResolver $reflectionResolver)
     {
+        $this->allAssignNodePropertyTypeInferer = $allAssignNodePropertyTypeInferer;
+        $this->propertyTypeDecorator = $propertyTypeDecorator;
+        $this->varTagRemover = $varTagRemover;
+        $this->makePropertyTypedGuard = $makePropertyTypedGuard;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function configure(array $configuration) : void
     {

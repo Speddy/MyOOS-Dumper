@@ -30,21 +30,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class SimplifyIfNullableReturnRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly IfManipulator $ifManipulator,
-        /**
-         * @readonly
-         */
-        private readonly AssignVariableTypeResolver $assignVariableTypeResolver,
-        /**
-         * @readonly
-         */
-        private readonly VarTagRemover $varTagRemover
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeManipulator\IfManipulator
+     */
+    private $ifManipulator;
+    /**
+     * @readonly
+     * @var \Rector\CodeQuality\TypeResolver\AssignVariableTypeResolver
+     */
+    private $assignVariableTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\DeadCode\PhpDoc\TagRemover\VarTagRemover
+     */
+    private $varTagRemover;
+    public function __construct(IfManipulator $ifManipulator, AssignVariableTypeResolver $assignVariableTypeResolver, VarTagRemover $varTagRemover)
     {
+        $this->ifManipulator = $ifManipulator;
+        $this->assignVariableTypeResolver = $assignVariableTypeResolver;
+        $this->varTagRemover = $varTagRemover;
     }
     public function getRuleDefinition() : RuleDefinition
     {

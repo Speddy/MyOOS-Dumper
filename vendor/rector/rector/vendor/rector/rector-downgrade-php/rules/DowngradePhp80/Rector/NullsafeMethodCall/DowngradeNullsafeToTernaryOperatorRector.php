@@ -21,19 +21,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class DowngradeNullsafeToTernaryOperatorRector extends AbstractRector
 {
-    private int $counter = 0;
+    /**
+     * @readonly
+     * @var \Rector\Core\Provider\CurrentFileProvider
+     */
+    private $currentFileProvider;
+    /**
+     * @var int
+     */
+    private $counter = 0;
     /**
      * @var string|null
      */
     private $previousFileName;
-    private ?string $currentFileName = null;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly CurrentFileProvider $currentFileProvider
-    )
+    /**
+     * @var string|null
+     */
+    private $currentFileName;
+    public function __construct(CurrentFileProvider $currentFileProvider)
     {
+        $this->currentFileProvider = $currentFileProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {

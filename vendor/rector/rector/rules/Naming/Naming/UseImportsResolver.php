@@ -11,15 +11,16 @@ use PhpParser\Node\Stmt\Use_;
 use Rector\Core\PhpParser\Node\CustomNode\FileWithoutNamespace;
 use Rector\Core\Provider\CurrentFileProvider;
 use Rector\Core\ValueObject\Application\File;
-final readonly class UseImportsResolver
+final class UseImportsResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private CurrentFileProvider $currentFileProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Provider\CurrentFileProvider
+     */
+    private $currentFileProvider;
+    public function __construct(CurrentFileProvider $currentFileProvider)
     {
+        $this->currentFileProvider = $currentFileProvider;
     }
     /**
      * @return Use_[]|GroupUse[]
@@ -30,7 +31,9 @@ final readonly class UseImportsResolver
         if (!$namespace instanceof Node) {
             return [];
         }
-        return \array_filter($namespace->stmts, static fn(Stmt $stmt): bool => $stmt instanceof Use_ || $stmt instanceof GroupUse);
+        return \array_filter($namespace->stmts, static function (Stmt $stmt) : bool {
+            return $stmt instanceof Use_ || $stmt instanceof GroupUse;
+        });
     }
     /**
      * @api
@@ -42,7 +45,9 @@ final readonly class UseImportsResolver
         if (!$namespace instanceof Node) {
             return [];
         }
-        return \array_filter($namespace->stmts, static fn(Stmt $stmt): bool => $stmt instanceof Use_);
+        return \array_filter($namespace->stmts, static function (Stmt $stmt) : bool {
+            return $stmt instanceof Use_;
+        });
     }
     /**
      * @param \PhpParser\Node\Stmt\Use_|\PhpParser\Node\Stmt\GroupUse $use
@@ -65,7 +70,9 @@ final readonly class UseImportsResolver
         if ($newStmts === []) {
             return null;
         }
-        $namespaces = \array_filter($newStmts, static fn(Stmt $stmt): bool => $stmt instanceof Namespace_);
+        $namespaces = \array_filter($newStmts, static function (Stmt $stmt) : bool {
+            return $stmt instanceof Namespace_;
+        });
         // multiple namespaces is not supported
         if (\count($namespaces) > 1) {
             return null;

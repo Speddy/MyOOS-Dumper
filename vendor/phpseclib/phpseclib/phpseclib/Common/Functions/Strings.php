@@ -87,7 +87,7 @@ abstract class Strings
             switch ($format[$i]) {
                 case 'C':
                 case 'b':
-                    if (!strlen((string) $data)) {
+                    if (!strlen($data)) {
                         throw new \LengthException('At least one byte needs to be present for successful C / b decodes');
                     }
                     break;
@@ -95,12 +95,12 @@ abstract class Strings
                 case 'i':
                 case 's':
                 case 'L':
-                    if (strlen((string) $data) < 4) {
+                    if (strlen($data) < 4) {
                         throw new \LengthException('At least four byte needs to be present for successful N / i / s / L decodes');
                     }
                     break;
                 case 'Q':
-                    if (strlen((string) $data) < 8) {
+                    if (strlen($data) < 8) {
                         throw new \LengthException('At least eight byte needs to be present for successful N / i / s / L decodes');
                     }
                     break;
@@ -116,7 +116,7 @@ abstract class Strings
                     $result[] = ord(self::shift($data)) != 0;
                     continue 2;
                 case 'N':
-                    [, $temp] = unpack('N', self::shift($data, 4));
+                    list(, $temp) = unpack('N', self::shift($data, 4));
                     $result[] = $temp;
                     continue 2;
                 case 'Q':
@@ -127,15 +127,15 @@ abstract class Strings
                     // for. sure, you're not gonna get the full precision of 64-bit numbers but just because
                     // you need > 32-bit precision doesn't mean you need the full 64-bit precision
                     extract(unpack('Nupper/Nlower', self::shift($data, 8)));
-                    $temp = $upper ? 4_294_967_296 * $upper : 0;
+                    $temp = $upper ? 4294967296 * $upper : 0;
                     $temp += $lower < 0 ? ($lower & 0x7FFFFFFFF) + 0x80000000 : $lower;
                     // $temp = hexdec(bin2hex(self::shift($data, 8)));
                     $result[] = $temp;
                     continue 2;
             }
-            [, $length] = unpack('N', self::shift($data, 4));
-            if (strlen((string) $data) < $length) {
-                throw new \LengthException("$length bytes needed; " . strlen((string) $data) . ' bytes available');
+            list(, $length) = unpack('N', self::shift($data, 4));
+            if (strlen($data) < $length) {
+                throw new \LengthException("$length bytes needed; " . strlen($data) . ' bytes available');
             }
             $temp = self::shift($data, $length);
             switch ($format[$i]) {
@@ -187,7 +187,7 @@ abstract class Strings
                         throw new \InvalidArgumentException('An integer was expected.');
                     }
                     // 4294967296 == 1 << 32
-                    $result .= pack('NN', $element / 4_294_967_296, $element);
+                    $result .= pack('NN', $element / 4294967296, $element);
                     break;
                 case 'N':
                     if (is_float($element)) {
@@ -237,7 +237,7 @@ abstract class Strings
     {
         $parts = preg_split('#(\d+)#', $format, -1, PREG_SPLIT_DELIM_CAPTURE);
         $format = '';
-        for ($i = 1; $i < (is_countable($parts) ? count($parts) : 0); $i += 2) {
+        for ($i = 1; $i < count($parts); $i += 2) {
             $format .= substr($parts[$i - 1], 0, -1) . str_repeat(substr($parts[$i - 1], -1), $parts[$i]);
         }
         $format .= $parts[$i - 1];
@@ -373,7 +373,7 @@ abstract class Strings
         if (function_exists('sodium_increment')) {
             $var = strrev($var);
             sodium_increment($var);
-            $var = strrev((string) $var);
+            $var = strrev($var);
             return $var;
         }
 
@@ -409,10 +409,11 @@ abstract class Strings
     /**
      * Find whether the type of a variable is string (or could be converted to one)
      *
+     * @param mixed $var
      * @return bool
      * @psalm-assert-if-true string|\Stringable $var
      */
-    public static function is_stringable(mixed $var)
+    public static function is_stringable($var)
     {
         return is_string($var) || (is_object($var) && method_exists($var, '__toString'));
     }

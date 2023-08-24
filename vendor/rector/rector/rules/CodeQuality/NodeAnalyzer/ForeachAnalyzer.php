@@ -9,15 +9,16 @@ use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\Foreach_;
 use Rector\Core\PhpParser\Comparing\NodeComparator;
-final readonly class ForeachAnalyzer
+final class ForeachAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeComparator $nodeComparator
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Comparing\NodeComparator
+     */
+    private $nodeComparator;
+    public function __construct(NodeComparator $nodeComparator)
     {
+        $this->nodeComparator = $nodeComparator;
     }
     /**
      * Matches$

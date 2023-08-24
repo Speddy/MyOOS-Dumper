@@ -41,41 +41,56 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class ReturnTypeFromReturnNewRector extends AbstractScopeAwareRector implements MinPhpVersionInterface
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TypeFactory $typeFactory,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionProvider $reflectionProvider,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private readonly StrictReturnNewAnalyzer $strictReturnNewAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ClassMethodReturnTypeOverrideGuard $classMethodReturnTypeOverrideGuard,
-        /**
-         * @readonly
-         */
-        private readonly ReturnTypeInferer $returnTypeInferer,
-        /**
-         * @readonly
-         */
-        private readonly ClassAnalyzer $classAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly NewTypeResolver $newTypeResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
+    /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\NodeAnalyzer\ReturnTypeAnalyzer\StrictReturnNewAnalyzer
+     */
+    private $strictReturnNewAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\VendorLocker\NodeVendorLocker\ClassMethodReturnTypeOverrideGuard
+     */
+    private $classMethodReturnTypeOverrideGuard;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\TypeInferer\ReturnTypeInferer
+     */
+    private $returnTypeInferer;
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ClassAnalyzer
+     */
+    private $classAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver\NewTypeResolver
+     */
+    private $newTypeResolver;
+    public function __construct(TypeFactory $typeFactory, ReflectionProvider $reflectionProvider, ReflectionResolver $reflectionResolver, StrictReturnNewAnalyzer $strictReturnNewAnalyzer, ClassMethodReturnTypeOverrideGuard $classMethodReturnTypeOverrideGuard, ReturnTypeInferer $returnTypeInferer, ClassAnalyzer $classAnalyzer, NewTypeResolver $newTypeResolver)
     {
+        $this->typeFactory = $typeFactory;
+        $this->reflectionProvider = $reflectionProvider;
+        $this->reflectionResolver = $reflectionResolver;
+        $this->strictReturnNewAnalyzer = $strictReturnNewAnalyzer;
+        $this->classMethodReturnTypeOverrideGuard = $classMethodReturnTypeOverrideGuard;
+        $this->returnTypeInferer = $returnTypeInferer;
+        $this->classAnalyzer = $classAnalyzer;
+        $this->newTypeResolver = $newTypeResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

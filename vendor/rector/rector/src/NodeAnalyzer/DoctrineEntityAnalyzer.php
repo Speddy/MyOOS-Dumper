@@ -8,19 +8,20 @@ use PHPStan\BetterReflection\Reflection\Adapter\ReflectionClass;
 use PHPStan\Reflection\ClassReflection;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfo;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
-final readonly class DoctrineEntityAnalyzer
+final class DoctrineEntityAnalyzer
 {
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
     /**
      * @var string[]
      */
     private const DOCTRINE_MAPPING_CLASSES = ['Doctrine\\ORM\\Mapping\\Entity', 'Doctrine\\ORM\\Mapping\\Embeddable', 'Doctrine\\ODM\\MongoDB\\Mapping\\Annotations\\Document', 'Doctrine\\ODM\\MongoDB\\Mapping\\Annotations\\EmbeddedDocument'];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpDocInfoFactory $phpDocInfoFactory
-    )
+    public function __construct(PhpDocInfoFactory $phpDocInfoFactory)
     {
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
     public function hasClassAnnotation(Class_ $class) : bool
     {

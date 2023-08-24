@@ -15,31 +15,40 @@ use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
 use Rector\Symfony\Enum\SymfonyAnnotation;
-final readonly class SetAliasesMethodCallExtractor
+final class SetAliasesMethodCallExtractor
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private PhpAttributeAnalyzer $phpAttributeAnalyzer,
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private SimpleCallableNodeTraverser $simpleCallableNodeTraverser,
-        /**
-         * @readonly
-         */
-        private \Rector\Symfony\NodeAnalyzer\Command\AttributeValueResolver $attributeValueResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
+     */
+    private $phpAttributeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser
+     */
+    private $simpleCallableNodeTraverser;
+    /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\Command\AttributeValueResolver
+     */
+    private $attributeValueResolver;
+    public function __construct(PhpAttributeAnalyzer $phpAttributeAnalyzer, NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, \Rector\Symfony\NodeAnalyzer\Command\AttributeValueResolver $attributeValueResolver)
     {
+        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
+        $this->attributeValueResolver = $attributeValueResolver;
     }
     public function resolveCommandAliasesFromAttributeOrSetter(Class_ $class) : ?Array_
     {

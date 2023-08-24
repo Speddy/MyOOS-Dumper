@@ -19,29 +19,38 @@ use RectorPrefix202308\Psr\Log\LogLevel;
  */
 class Status
 {
-    final public const ENV_RESTART = 'XDEBUG_HANDLER_RESTART';
-    final public const CHECK = 'Check';
-    final public const ERROR = 'Error';
-    final public const INFO = 'Info';
-    final public const NORESTART = 'NoRestart';
-    final public const RESTART = 'Restart';
-    final public const RESTARTING = 'Restarting';
-    final public const RESTARTED = 'Restarted';
-    private readonly bool $debug;
-    private ?string $loaded = null;
-    private ?\RectorPrefix202308\Psr\Log\LoggerInterface $logger = null;
-    private bool $modeOff = \false;
-    private readonly float|int $time;
+    const ENV_RESTART = 'XDEBUG_HANDLER_RESTART';
+    const CHECK = 'Check';
+    const ERROR = 'Error';
+    const INFO = 'Info';
+    const NORESTART = 'NoRestart';
+    const RESTART = 'Restart';
+    const RESTARTING = 'Restarting';
+    const RESTARTED = 'Restarted';
+    /** @var bool */
+    private $debug;
+    /** @var string */
+    private $envAllowXdebug;
+    /** @var string|null */
+    private $loaded;
+    /** @var LoggerInterface|null */
+    private $logger;
+    /** @var bool */
+    private $modeOff;
+    /** @var float */
+    private $time;
     /**
      * @param string $envAllowXdebug Prefixed _ALLOW_XDEBUG name
      * @param bool $debug Whether debug output is required
      */
-    public function __construct(private readonly string $envAllowXdebug, bool $debug)
+    public function __construct(string $envAllowXdebug, bool $debug)
     {
         $start = \getenv(self::ENV_RESTART);
         Process::setEnv(self::ENV_RESTART);
         $this->time = \is_numeric($start) ? \round((\microtime(\true) - $start) * 1000) : 0;
+        $this->envAllowXdebug = $envAllowXdebug;
         $this->debug = $debug && \defined('STDERR');
+        $this->modeOff = \false;
     }
     /**
      * Activates status message output to a PSR3 logger
@@ -74,7 +83,7 @@ class Status
     private function output(string $text, ?string $level = null) : void
     {
         if ($this->logger !== null) {
-            $this->logger->log($level ?? LogLevel::DEBUG, $text);
+            $this->logger->log($level !== null ? $level : LogLevel::DEBUG, $text);
         }
         if ($this->debug) {
             \fwrite(\STDERR, \sprintf('xdebug-handler[%d] %s', \getmypid(), $text . \PHP_EOL));
@@ -85,7 +94,7 @@ class Status
      */
     private function reportCheck(string $loaded) : void
     {
-        [$version, $mode] = \explode('|', $loaded);
+        list($version, $mode) = \explode('|', $loaded);
         if ($version !== '') {
             $this->loaded = '(' . $version . ')' . ($mode !== '' ? ' xdebug.mode=' . $mode : '');
         }

@@ -9,19 +9,22 @@ use PHPStan\Reflection\FunctionVariantWithPhpDocs;
 use PHPStan\Type\MixedType;
 use Rector\Core\Reflection\ReflectionResolver;
 use Rector\NodeNameResolver\NodeNameResolver;
-final readonly class ClassMethodReturnVendorLockResolver
+final class ClassMethodReturnVendorLockResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver, ReflectionResolver $reflectionResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function isVendorLocked(ClassMethod $classMethod) : bool
     {

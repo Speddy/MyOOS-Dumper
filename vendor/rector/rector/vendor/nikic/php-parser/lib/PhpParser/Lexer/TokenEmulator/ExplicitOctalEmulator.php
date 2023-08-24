@@ -12,12 +12,12 @@ class ExplicitOctalEmulator extends \PhpParser\Lexer\TokenEmulator\TokenEmulator
     }
     public function isEmulationNeeded(string $code) : bool
     {
-        return str_contains($code, '0o') || str_contains($code, '0O');
+        return \strpos($code, '0o') !== \false || \strpos($code, '0O') !== \false;
     }
     public function emulate(string $code, array $tokens) : array
     {
         for ($i = 0, $c = \count($tokens); $i < $c; ++$i) {
-            if ($tokens[$i][0] == \T_LNUMBER && $tokens[$i][1] === '0' && isset($tokens[$i + 1]) && $tokens[$i + 1][0] == \T_STRING && \preg_match('/[oO][0-7]+(?:_[0-7]+)*/', (string) $tokens[$i + 1][1])) {
+            if ($tokens[$i][0] == \T_LNUMBER && $tokens[$i][1] === '0' && isset($tokens[$i + 1]) && $tokens[$i + 1][0] == \T_STRING && \preg_match('/[oO][0-7]+(?:_[0-7]+)*/', $tokens[$i + 1][1])) {
                 $tokenKind = $this->resolveIntegerOrFloatToken($tokens[$i + 1][1]);
                 \array_splice($tokens, $i, 2, [[$tokenKind, '0' . $tokens[$i + 1][1], $tokens[$i][2]]]);
                 $c--;

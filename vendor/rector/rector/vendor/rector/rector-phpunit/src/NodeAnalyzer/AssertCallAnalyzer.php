@@ -17,40 +17,50 @@ use Rector\StaticTypeMapper\ValueObject\Type\FullyQualifiedObjectType;
 final class AssertCallAnalyzer
 {
     /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\AstResolver
+     */
+    private $astResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Printer\BetterStandardPrinter
+     */
+    private $betterStandardPrinter;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
      * @var int
      */
     private const MAX_NESTED_METHOD_CALL_LEVEL = 5;
     /**
      * @var array<string, bool>
      */
-    private array $containsAssertCallByClassMethod = [];
+    private $containsAssertCallByClassMethod = [];
     /**
      * This should prevent segfaults while going too deep into to parsed code. Without it, it might end-up with segfault
+     * @var int
      */
-    private int $classMethodNestingLevel = 0;
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly AstResolver $astResolver,
-        /**
-         * @readonly
-         */
-        private readonly BetterStandardPrinter $betterStandardPrinter,
-        /**
-         * @readonly
-         */
-        private readonly BetterNodeFinder $betterNodeFinder,
-        /**
-         * @readonly
-         */
-        private readonly NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private readonly NodeTypeResolver $nodeTypeResolver
-    )
+    private $classMethodNestingLevel = 0;
+    public function __construct(AstResolver $astResolver, BetterStandardPrinter $betterStandardPrinter, BetterNodeFinder $betterNodeFinder, NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver)
     {
+        $this->astResolver = $astResolver;
+        $this->betterStandardPrinter = $betterStandardPrinter;
+        $this->betterNodeFinder = $betterNodeFinder;
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->nodeTypeResolver = $nodeTypeResolver;
     }
     public function resetNesting() : void
     {

@@ -19,7 +19,7 @@ final class NewToStaticCallRector extends AbstractRector implements Configurable
     /**
      * @var NewToStaticCall[]
      */
-    private array $typeToStaticCalls = [];
+    private $typeToStaticCalls = [];
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Change new Object to static call', [new ConfiguredCodeSample(<<<'CODE_SAMPLE'

@@ -22,25 +22,32 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class AddDoesNotPerformAssertionToNonAssertingTestRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly AssertCallAnalyzer $assertCallAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly MockedVariableAnalyzer $mockedVariableAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly PhpAttributeAnalyzer $phpAttributeAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\AssertCallAnalyzer
+     */
+    private $assertCallAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\MockedVariableAnalyzer
+     */
+    private $mockedVariableAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Php80\NodeAnalyzer\PhpAttributeAnalyzer
+     */
+    private $phpAttributeAnalyzer;
+    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer, AssertCallAnalyzer $assertCallAnalyzer, MockedVariableAnalyzer $mockedVariableAnalyzer, PhpAttributeAnalyzer $phpAttributeAnalyzer)
     {
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
+        $this->assertCallAnalyzer = $assertCallAnalyzer;
+        $this->mockedVariableAnalyzer = $mockedVariableAnalyzer;
+        $this->phpAttributeAnalyzer = $phpAttributeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

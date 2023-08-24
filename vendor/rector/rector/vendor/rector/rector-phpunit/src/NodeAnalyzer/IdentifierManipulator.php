@@ -16,15 +16,16 @@ use Rector\NodeNameResolver\NodeNameResolver;
  * -public function someMethod()
  * +public function newMethod()
  */
-final readonly class IdentifierManipulator
+final class IdentifierManipulator
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @param array<string, string> $renameMethodMap

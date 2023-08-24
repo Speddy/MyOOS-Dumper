@@ -255,9 +255,12 @@ final class RectorConfig extends Container
     {
         \trigger_error('The services() method is deprecated. Use $rectorConfig->singleton(ServiceType::class) instead', \E_USER_ERROR);
     }
-    private function isRuleNoLongerExists(mixed $skipRule) : bool
+    /**
+     * @param mixed $skipRule
+     */
+    private function isRuleNoLongerExists($skipRule) : bool
     {
-        return \is_string($skipRule) && !str_contains($skipRule, '*') && \realpath($skipRule) === \false && str_ends_with($skipRule, 'Rector') && !\class_exists($skipRule);
+        return \is_string($skipRule) && \strpos($skipRule, '*') === \false && \realpath($skipRule) === \false && \substr_compare($skipRule, 'Rector', -\strlen('Rector')) === 0 && !\class_exists($skipRule);
     }
     /**
      * @param string[] $values

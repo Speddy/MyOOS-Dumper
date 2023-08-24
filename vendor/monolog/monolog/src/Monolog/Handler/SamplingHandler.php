@@ -58,7 +58,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
         $this->factor = $factor;
 
         if (!$this->handler instanceof HandlerInterface && !is_callable($this->handler)) {
-            throw new \RuntimeException("The given handler (".json_encode($this->handler, JSON_THROW_ON_ERROR).") is not a callable nor a Monolog\Handler\HandlerInterface object");
+            throw new \RuntimeException("The given handler (".json_encode($this->handler).") is not a callable nor a Monolog\Handler\HandlerInterface object");
         }
     }
 
@@ -69,7 +69,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
 
     public function handle(array $record): bool
     {
-        if ($this->isHandling($record) && random_int(1, $this->factor) === 1) {
+        if ($this->isHandling($record) && mt_rand(1, $this->factor) === 1) {
             if ($this->processors) {
                 /** @var Record $record */
                 $record = $this->processRecord($record);
@@ -114,7 +114,7 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
             return $this;
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.$handler::class.' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
     }
 
     /**
@@ -127,6 +127,6 @@ class SamplingHandler extends AbstractHandler implements ProcessableHandlerInter
             return $handler->getFormatter();
         }
 
-        throw new \UnexpectedValueException('The nested handler of type '.$handler::class.' does not support formatters.');
+        throw new \UnexpectedValueException('The nested handler of type '.get_class($handler).' does not support formatters.');
     }
 }

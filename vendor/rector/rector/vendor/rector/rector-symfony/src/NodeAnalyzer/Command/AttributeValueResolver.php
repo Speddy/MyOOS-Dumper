@@ -9,15 +9,16 @@ use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Class_;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\Symfony\Enum\SymfonyAnnotation;
-final readonly class AttributeValueResolver
+final class AttributeValueResolver
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    public function __construct(NodeNameResolver $nodeNameResolver)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
     }
     /**
      * @return string|\PhpParser\Node\Expr\ConstFetch|\PhpParser\Node\Expr\Array_|null

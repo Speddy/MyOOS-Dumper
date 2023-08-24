@@ -17,25 +17,32 @@ use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class UseAddingPostRector extends \Rector\PostRector\Rector\AbstractPostRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TypeFactory $typeFactory,
-        /**
-         * @readonly
-         */
-        private readonly UseImportsAdder $useImportsAdder,
-        /**
-         * @readonly
-         */
-        private readonly UseNodesToAddCollector $useNodesToAddCollector,
-        /**
-         * @readonly
-         */
-        private readonly CurrentFileProvider $currentFileProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
+    /**
+     * @readonly
+     * @var \Rector\CodingStyle\Application\UseImportsAdder
+     */
+    private $useImportsAdder;
+    /**
+     * @readonly
+     * @var \Rector\PostRector\Collector\UseNodesToAddCollector
+     */
+    private $useNodesToAddCollector;
+    /**
+     * @readonly
+     * @var \Rector\Core\Provider\CurrentFileProvider
+     */
+    private $currentFileProvider;
+    public function __construct(TypeFactory $typeFactory, UseImportsAdder $useImportsAdder, UseNodesToAddCollector $useNodesToAddCollector, CurrentFileProvider $currentFileProvider)
     {
+        $this->typeFactory = $typeFactory;
+        $this->useImportsAdder = $useImportsAdder;
+        $this->useNodesToAddCollector = $useNodesToAddCollector;
+        $this->currentFileProvider = $currentFileProvider;
     }
     /**
      * @param Stmt[] $nodes
@@ -126,7 +133,7 @@ CODE_SAMPLE
     {
         $namespacedUseImportTypes = [];
         foreach ($useImportTypes as $useImportType) {
-            if (!str_contains($useImportType->getClassName(), '\\')) {
+            if (\strpos($useImportType->getClassName(), '\\') === \false) {
                 continue;
             }
             $namespacedUseImportTypes[] = $useImportType;

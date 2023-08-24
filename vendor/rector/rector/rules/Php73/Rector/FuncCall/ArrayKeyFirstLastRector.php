@@ -26,6 +26,11 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class ArrayKeyFirstLastRector extends AbstractRector implements MinPhpVersionInterface
 {
     /**
+     * @readonly
+     * @var \PHPStan\Reflection\ReflectionProvider
+     */
+    private $reflectionProvider;
+    /**
      * @var string
      */
     private const ARRAY_KEY_FIRST = 'array_key_first';
@@ -37,13 +42,9 @@ final class ArrayKeyFirstLastRector extends AbstractRector implements MinPhpVers
      * @var array<string, string>
      */
     private const PREVIOUS_TO_NEW_FUNCTIONS = ['reset' => self::ARRAY_KEY_FIRST, 'end' => self::ARRAY_KEY_LAST];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ReflectionProvider $reflectionProvider
-    )
+    public function __construct(ReflectionProvider $reflectionProvider)
     {
+        $this->reflectionProvider = $reflectionProvider;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -87,7 +88,9 @@ CODE_SAMPLE
             return null;
         }
         /** @var int $totalKeys */
-        $totalKeys = array_key_last($stmtsAware->stmts);
+        \end($stmtsAware->stmts);
+        /** @var int $totalKeys */
+        $totalKeys = \key($stmtsAware->stmts);
         for ($key = $jumpToKey; $key < $totalKeys; ++$key) {
             if (!isset($stmtsAware->stmts[$key], $stmtsAware->stmts[$key + 1])) {
                 break;

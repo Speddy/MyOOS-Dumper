@@ -18,13 +18,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class UnnecessaryTernaryExpressionRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly AssignAndBinaryMap $assignAndBinaryMap
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\AssignAndBinaryMap
+     */
+    private $assignAndBinaryMap;
+    public function __construct(AssignAndBinaryMap $assignAndBinaryMap)
     {
+        $this->assignAndBinaryMap = $assignAndBinaryMap;
     }
     public function getRuleDefinition() : RuleDefinition
     {

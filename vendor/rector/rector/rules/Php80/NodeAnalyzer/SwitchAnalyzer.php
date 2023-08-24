@@ -12,19 +12,22 @@ use PhpParser\Node\Stmt\Switch_;
 use PHPStan\Type\MixedType;
 use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\NodeTypeResolver\PHPStan\Type\TypeFactory;
-final readonly class SwitchAnalyzer
+final class SwitchAnalyzer
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeTypeResolver $nodeTypeResolver,
-        /**
-         * @readonly
-         */
-        private TypeFactory $typeFactory
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\NodeTypeResolver
+     */
+    private $nodeTypeResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
+    public function __construct(NodeTypeResolver $nodeTypeResolver, TypeFactory $typeFactory)
     {
+        $this->nodeTypeResolver = $nodeTypeResolver;
+        $this->typeFactory = $typeFactory;
     }
     /**
      * @param Case_[] $cases
@@ -73,7 +76,9 @@ final readonly class SwitchAnalyzer
             if (!$case->cond instanceof Expr) {
                 continue;
             }
-            $stmtsWithoutBreak = \array_filter($case->stmts, static fn(Node $node): bool => !$node instanceof Break_);
+            $stmtsWithoutBreak = \array_filter($case->stmts, static function (Node $node) : bool {
+                return !$node instanceof Break_;
+            });
             if (\count($stmtsWithoutBreak) !== 1) {
                 return \false;
             }
@@ -84,7 +89,9 @@ final readonly class SwitchAnalyzer
     {
         foreach ($switch->cases as $case) {
             if (!$case->cond instanceof Expr) {
-                $stmtsWithoutBreak = \array_filter($case->stmts, static fn(Node $node): bool => !$node instanceof Break_);
+                $stmtsWithoutBreak = \array_filter($case->stmts, static function (Node $node) : bool {
+                    return !$node instanceof Break_;
+                });
                 return \count($stmtsWithoutBreak) === 1;
             }
         }

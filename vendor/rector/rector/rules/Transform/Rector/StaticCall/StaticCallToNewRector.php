@@ -23,7 +23,7 @@ final class StaticCallToNewRector extends AbstractRector implements Configurable
     /**
      * @var StaticCallToNew[]
      */
-    private array $staticCallsToNews = [];
+    private $staticCallsToNews = [];
     public function getRuleDefinition() : RuleDefinition
     {
         return new RuleDefinition('Change static call to new instance', [new ConfiguredCodeSample(<<<'CODE_SAMPLE'

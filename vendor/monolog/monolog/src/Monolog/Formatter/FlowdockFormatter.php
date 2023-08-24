@@ -19,8 +19,20 @@ namespace Monolog\Formatter;
  */
 class FlowdockFormatter implements FormatterInterface
 {
-    public function __construct(private readonly string $source, private readonly string $sourceEmail)
+    /**
+     * @var string
+     */
+    private $source;
+
+    /**
+     * @var string
+     */
+    private $sourceEmail;
+
+    public function __construct(string $source, string $sourceEmail)
     {
+        $this->source = $source;
+        $this->sourceEmail = $sourceEmail;
     }
 
     /**

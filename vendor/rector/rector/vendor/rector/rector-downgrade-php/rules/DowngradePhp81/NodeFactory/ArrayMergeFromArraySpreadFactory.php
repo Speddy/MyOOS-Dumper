@@ -21,19 +21,22 @@ use Rector\Core\ValueObject\Application\File;
 use Rector\DowngradePhp81\NodeAnalyzer\ArraySpreadAnalyzer;
 use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\Node\AttributeKey;
-final readonly class ArrayMergeFromArraySpreadFactory
+final class ArrayMergeFromArraySpreadFactory
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private ArraySpreadAnalyzer $arraySpreadAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\DowngradePhp81\NodeAnalyzer\ArraySpreadAnalyzer
+     */
+    private $arraySpreadAnalyzer;
+    public function __construct(NodeNameResolver $nodeNameResolver, ArraySpreadAnalyzer $arraySpreadAnalyzer)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->arraySpreadAnalyzer = $arraySpreadAnalyzer;
     }
     public function createFromArray(Array_ $array, MutatingScope $mutatingScope, File $file) : ?Node
     {

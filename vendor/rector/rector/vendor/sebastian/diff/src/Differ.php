@@ -169,7 +169,7 @@ final class Differ
         if ("\n" !== $lc) {
             return '';
         }
-        if (str_ends_with($line, "\r\n")) {
+        if (\substr_compare($line, "\r\n", -\strlen("\r\n")) === 0) {
             return "\r\n";
         }
         return "\n";
@@ -189,9 +189,10 @@ final class Differ
             }
         }
         end($from);
+        end($to);
         do {
             $fromK = key($from);
-            $toK = array_key_last($to);
+            $toK = key($to);
             if (null === $fromK || null === $toK || current($from) !== current($to)) {
                 break;
             }

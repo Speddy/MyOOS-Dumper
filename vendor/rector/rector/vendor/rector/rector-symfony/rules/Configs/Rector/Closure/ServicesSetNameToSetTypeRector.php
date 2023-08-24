@@ -22,21 +22,25 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class ServicesSetNameToSetTypeRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\Symfony\NodeAnalyzer\SymfonyPhpClosureDetector
+     */
+    private $symfonyPhpClosureDetector;
+    /**
      * @var array<string, string>
      */
-    private array $alreadyChangedServiceNamesToTypes = [];
-    private bool $hasChanged = \false;
+    private $alreadyChangedServiceNamesToTypes = [];
+    /**
+     * @var bool
+     */
+    private $hasChanged = \false;
     /**
      * @var array<string, string[]>
      */
-    private array $servicesNamesByType = [];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly SymfonyPhpClosureDetector $symfonyPhpClosureDetector
-    )
+    private $servicesNamesByType = [];
+    public function __construct(SymfonyPhpClosureDetector $symfonyPhpClosureDetector)
     {
+        $this->symfonyPhpClosureDetector = $symfonyPhpClosureDetector;
     }
     public function getRuleDefinition() : RuleDefinition
     {

@@ -21,8 +21,9 @@ final class ConsoleExceptionToErrorEventConstantRector extends AbstractRector
 {
     /**
      * @readonly
+     * @var \PHPStan\Type\ObjectType
      */
-    private readonly \PHPStan\Type\ObjectType $consoleEventsObjectType;
+    private $consoleEventsObjectType;
     public function __construct()
     {
         $this->consoleEventsObjectType = new ObjectType('Symfony\\Component\\Console\\ConsoleEvents');

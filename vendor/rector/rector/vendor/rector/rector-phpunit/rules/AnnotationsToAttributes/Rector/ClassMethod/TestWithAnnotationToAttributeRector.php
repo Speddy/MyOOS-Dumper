@@ -26,21 +26,26 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class TestWithAnnotationToAttributeRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly PhpAttributeGroupFactory $phpAttributeGroupFactory,
-        /**
-         * @readonly
-         */
-        private readonly PhpDocTagRemover $phpDocTagRemover
-    )
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\PhpAttribute\NodeFactory\PhpAttributeGroupFactory
+     */
+    private $phpAttributeGroupFactory;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover
+     */
+    private $phpDocTagRemover;
+    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer, PhpAttributeGroupFactory $phpAttributeGroupFactory, PhpDocTagRemover $phpDocTagRemover)
     {
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
+        $this->phpAttributeGroupFactory = $phpAttributeGroupFactory;
+        $this->phpDocTagRemover = $phpDocTagRemover;
     }
     public function getRuleDefinition() : RuleDefinition
     {

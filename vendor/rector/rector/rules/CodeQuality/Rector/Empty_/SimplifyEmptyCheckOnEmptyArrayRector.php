@@ -31,25 +31,32 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class SimplifyEmptyCheckOnEmptyArrayRector extends AbstractScopeAwareRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ExprAnalyzer $exprAnalyzer,
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private readonly AstResolver $astResolver,
-        /**
-         * @readonly
-         */
-        private readonly AllAssignNodePropertyTypeInferer $allAssignNodePropertyTypeInferer
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\NodeAnalyzer\ExprAnalyzer
+     */
+    private $exprAnalyzer;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\AstResolver
+     */
+    private $astResolver;
+    /**
+     * @readonly
+     * @var \Rector\TypeDeclaration\TypeInferer\PropertyTypeInferer\AllAssignNodePropertyTypeInferer
+     */
+    private $allAssignNodePropertyTypeInferer;
+    public function __construct(ExprAnalyzer $exprAnalyzer, ReflectionResolver $reflectionResolver, AstResolver $astResolver, AllAssignNodePropertyTypeInferer $allAssignNodePropertyTypeInferer)
     {
+        $this->exprAnalyzer = $exprAnalyzer;
+        $this->reflectionResolver = $reflectionResolver;
+        $this->astResolver = $astResolver;
+        $this->allAssignNodePropertyTypeInferer = $allAssignNodePropertyTypeInferer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

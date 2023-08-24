@@ -12,7 +12,7 @@ final class NullsafeTokenEmulator extends \PhpParser\Lexer\TokenEmulator\TokenEm
     }
     public function isEmulationNeeded(string $code) : bool
     {
-        return str_contains($code, '?->');
+        return \strpos($code, '?->') !== \false;
     }
     public function emulate(string $code, array $tokens) : array
     {
@@ -26,17 +26,17 @@ final class NullsafeTokenEmulator extends \PhpParser\Lexer\TokenEmulator\TokenEm
                 continue;
             }
             // Handle ?-> inside encapsed string.
-            if ($tokens[$i][0] === \T_ENCAPSED_AND_WHITESPACE && isset($tokens[$i - 1]) && $tokens[$i - 1][0] === \T_VARIABLE && \preg_match('/^\\?->([a-zA-Z_\\x80-\\xff][a-zA-Z0-9_\\x80-\\xff]*)/', (string) $tokens[$i][1], $matches)) {
+            if ($tokens[$i][0] === \T_ENCAPSED_AND_WHITESPACE && isset($tokens[$i - 1]) && $tokens[$i - 1][0] === \T_VARIABLE && \preg_match('/^\\?->([a-zA-Z_\\x80-\\xff][a-zA-Z0-9_\\x80-\\xff]*)/', $tokens[$i][1], $matches)) {
                 $replacement = [[\T_NULLSAFE_OBJECT_OPERATOR, '?->', $line], [\T_STRING, $matches[1], $line]];
-                if (\strlen($matches[0]) !== \strlen((string) $tokens[$i][1])) {
-                    $replacement[] = [\T_ENCAPSED_AND_WHITESPACE, \substr((string) $tokens[$i][1], \strlen($matches[0])), $line];
+                if (\strlen($matches[0]) !== \strlen($tokens[$i][1])) {
+                    $replacement[] = [\T_ENCAPSED_AND_WHITESPACE, \substr($tokens[$i][1], \strlen($matches[0])), $line];
                 }
                 \array_splice($tokens, $i, 1, $replacement);
                 $c += \count($replacement) - 1;
                 continue;
             }
             if (\is_array($tokens[$i])) {
-                $line += \substr_count((string) $tokens[$i][1], "\n");
+                $line += \substr_count($tokens[$i][1], "\n");
             }
         }
         return $tokens;

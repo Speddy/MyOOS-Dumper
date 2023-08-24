@@ -9,6 +9,11 @@ use RectorPrefix202308\Webmozart\Assert\Assert;
 final class RectorWithLineChange implements SerializableInterface
 {
     /**
+     * @readonly
+     * @var int
+     */
+    private $line;
+    /**
      * @var string
      */
     private const KEY_RECTOR_CLASS = 'rector_class';
@@ -24,13 +29,11 @@ final class RectorWithLineChange implements SerializableInterface
     /**
      * @param string|\Rector\Core\Contract\Rector\RectorInterface $rectorClass
      */
-    public function __construct($rectorClass, /**
-     * @readonly
-     */
-    private readonly int $line)
+    public function __construct($rectorClass, int $line)
     {
+        $this->line = $line;
         if ($rectorClass instanceof RectorInterface) {
-            $rectorClass = $rectorClass::class;
+            $rectorClass = \get_class($rectorClass);
         }
         $this->rectorClass = $rectorClass;
     }

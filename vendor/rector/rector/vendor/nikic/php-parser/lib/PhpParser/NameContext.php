@@ -146,7 +146,7 @@ class NameContext
         // Check for relevant namespace use statements
         foreach ($this->origAliases[Stmt\Use_::TYPE_NORMAL] as $alias => $orig) {
             $lcOrig = $orig->toLowerString();
-            if (str_starts_with($lcName, $lcOrig . '\\')) {
+            if (0 === \strpos($lcName, $lcOrig . '\\')) {
                 $possibleNames[] = new Name($alias . \substr($name, \strlen($lcOrig)));
             }
         }
@@ -224,7 +224,7 @@ class NameContext
             }
         }
         $namespacePrefix = \strtolower($this->namespace . '\\');
-        if (str_starts_with($lcName, $namespacePrefix)) {
+        if (0 === \strpos($lcName, $namespacePrefix)) {
             return new Name(\substr($name, \strlen($namespacePrefix)));
         }
         return null;

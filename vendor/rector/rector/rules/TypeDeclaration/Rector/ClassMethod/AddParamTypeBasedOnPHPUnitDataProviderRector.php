@@ -32,6 +32,16 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class AddParamTypeBasedOnPHPUnitDataProviderRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\PHPStan\Type\TypeFactory
+     */
+    private $typeFactory;
+    /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
      * @var string
      */
     private const ERROR_MESSAGE = 'Adds param type declaration based on PHPUnit provider return type declaration';
@@ -40,17 +50,10 @@ final class AddParamTypeBasedOnPHPUnitDataProviderRector extends AbstractRector
      * @var string
      */
     private const METHOD_NAME_REGEX = '#^(?<method_name>\\w+)(\\(\\))?#';
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TypeFactory $typeFactory,
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer
-    )
+    public function __construct(TypeFactory $typeFactory, TestsNodeAnalyzer $testsNodeAnalyzer)
     {
+        $this->typeFactory = $typeFactory;
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

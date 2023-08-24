@@ -11,19 +11,22 @@ use PhpParser\Node\Stmt\ClassMethod;
 use Rector\Core\Php\PhpVersionProvider;
 use Rector\Core\PhpParser\Node\NodeFactory;
 use Rector\Core\ValueObject\PhpVersionFeature;
-final readonly class BareLogoutClassMethodFactory
+final class BareLogoutClassMethodFactory
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeFactory $nodeFactory,
-        /**
-         * @readonly
-         */
-        private PhpVersionProvider $phpVersionProvider
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\NodeFactory
+     */
+    private $nodeFactory;
+    /**
+     * @readonly
+     * @var \Rector\Core\Php\PhpVersionProvider
+     */
+    private $phpVersionProvider;
+    public function __construct(NodeFactory $nodeFactory, PhpVersionProvider $phpVersionProvider)
     {
+        $this->nodeFactory = $nodeFactory;
+        $this->phpVersionProvider = $phpVersionProvider;
     }
     public function create() : ClassMethod
     {

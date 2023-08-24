@@ -4,19 +4,22 @@ declare (strict_types=1);
 namespace Rector\Php70\ValueObject;
 
 use PhpParser\Node\Expr;
-final readonly class ComparedExprs
+final class ComparedExprs
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private Expr $firstExpr,
-        /**
-         * @readonly
-         */
-        private Expr $secondExpr
-    )
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Expr
+     */
+    private $firstExpr;
+    /**
+     * @readonly
+     * @var \PhpParser\Node\Expr
+     */
+    private $secondExpr;
+    public function __construct(Expr $firstExpr, Expr $secondExpr)
     {
+        $this->firstExpr = $firstExpr;
+        $this->secondExpr = $secondExpr;
     }
     public function getFirstExpr() : Expr
     {

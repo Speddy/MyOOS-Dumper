@@ -31,6 +31,9 @@ class Memcached extends AbstractCache
      */
     protected $server;
 
+    /**
+     * @param MemcachedServer $server
+     */
     public function __construct(MemcachedServer $server)
     {
         $this->server = $server;
@@ -149,7 +152,7 @@ class Memcached extends AbstractCache
     {
         $this->assertIterable($keys, 'keys not iterable');
         $keysArr = is_array($keys) ? $keys : iterator_to_array($keys, false);
-        array_walk($keysArr, $this->assertKey(...));
+        array_walk($keysArr, [$this, 'assertKey']);
 
         $result = $this->server->getMulti($keysArr);
 
@@ -210,6 +213,6 @@ class Memcached extends AbstractCache
         }
 
         /* 2592000 seconds = 30 days */
-        return $seconds <= 2_592_000 ? $seconds : $this->ttlToTimestamp($ttl);
+        return $seconds <= 2592000 ? $seconds : $this->ttlToTimestamp($ttl);
     }
 }

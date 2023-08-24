@@ -21,21 +21,39 @@ use RectorPrefix202308\Symfony\Component\String\UnicodeString;
 class ReStructuredTextDescriptor extends Descriptor
 {
     // <h1>
-    private string $partChar = '=';
+    /**
+     * @var string
+     */
+    private $partChar = '=';
     // <h2>
-    private string $chapterChar = '-';
+    /**
+     * @var string
+     */
+    private $chapterChar = '-';
     // <h3>
-    private string $sectionChar = '~';
+    /**
+     * @var string
+     */
+    private $sectionChar = '~';
     // <h4>
-    private string $subsectionChar = '.';
+    /**
+     * @var string
+     */
+    private $subsectionChar = '.';
     // <h5>
-    private string $subsubsectionChar = '^';
+    /**
+     * @var string
+     */
+    private $subsubsectionChar = '^';
     // <h6>
-    private string $paragraphsChar = '"';
+    /**
+     * @var string
+     */
+    private $paragraphsChar = '"';
     /**
      * @var mixed[]
      */
-    private array $visibleNamespaces = [];
+    private $visibleNamespaces = [];
     public function describe(OutputInterface $output, object $object, array $options = []) : void
     {
         $decorated = $output->isDecorated();
@@ -90,14 +108,18 @@ class ReStructuredTextDescriptor extends Descriptor
     protected function describeCommand(Command $command, array $options = []) : void
     {
         if ($options['short'] ?? \false) {
-            $this->write('``' . $command->getName() . "``\n" . \str_repeat($this->subsectionChar, Helper::width($command->getName())) . "\n\n" . ($command->getDescription() ? $command->getDescription() . "\n\n" : '') . "Usage\n" . \str_repeat($this->paragraphsChar, 5) . "\n\n" . \array_reduce($command->getAliases(), static fn($carry, $usage) => $carry . '- ``' . $usage . '``' . "\n"));
+            $this->write('``' . $command->getName() . "``\n" . \str_repeat($this->subsectionChar, Helper::width($command->getName())) . "\n\n" . ($command->getDescription() ? $command->getDescription() . "\n\n" : '') . "Usage\n" . \str_repeat($this->paragraphsChar, 5) . "\n\n" . \array_reduce($command->getAliases(), static function ($carry, $usage) {
+                return $carry . '- ``' . $usage . '``' . "\n";
+            }));
             return;
         }
         $command->mergeApplicationDefinition(\false);
         foreach ($command->getAliases() as $alias) {
             $this->write('.. _' . $alias . ":\n\n");
         }
-        $this->write($command->getName() . "\n" . \str_repeat($this->subsectionChar, Helper::width($command->getName())) . "\n\n" . ($command->getDescription() ? $command->getDescription() . "\n\n" : '') . "Usage\n" . \str_repeat($this->subsubsectionChar, 5) . "\n\n" . \array_reduce(\array_merge([$command->getSynopsis()], $command->getAliases(), $command->getUsages()), static fn($carry, $usage) => $carry . '- ``' . $usage . '``' . "\n"));
+        $this->write($command->getName() . "\n" . \str_repeat($this->subsectionChar, Helper::width($command->getName())) . "\n\n" . ($command->getDescription() ? $command->getDescription() . "\n\n" : '') . "Usage\n" . \str_repeat($this->subsubsectionChar, 5) . "\n\n" . \array_reduce(\array_merge([$command->getSynopsis()], $command->getAliases(), $command->getUsages()), static function ($carry, $usage) {
+            return $carry . '- ``' . $usage . '``' . "\n";
+        }));
         if ($help = $command->getProcessedHelp()) {
             $this->write("\n");
             $this->write($help);
@@ -159,7 +181,9 @@ class ReStructuredTextDescriptor extends Descriptor
             }
             $commands = $this->removeAliasesAndHiddenCommands($commands);
             $this->write("\n\n");
-            $this->write(\implode("\n", \array_map(static fn($commandName) => \sprintf('- `%s`_', $commandName), \array_keys($commands))));
+            $this->write(\implode("\n", \array_map(static function ($commandName) {
+                return \sprintf('- `%s`_', $commandName);
+            }, \array_keys($commands))));
         }
     }
     private function getNonDefaultOptions(InputDefinition $definition) : array
@@ -192,7 +216,7 @@ class ReStructuredTextDescriptor extends Descriptor
                     // If the namespace contained only aliases or hidden commands, skip the namespace.
                     continue;
                 }
-            } catch (\Exception) {
+            } catch (\Exception $exception) {
             }
             $this->visibleNamespaces[] = $namespace['id'];
         }

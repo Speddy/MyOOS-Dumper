@@ -13,31 +13,40 @@ use Rector\NodeNameResolver\NodeNameResolver;
 use Rector\NodeTypeResolver\TypeComparator\TypeComparator;
 use Rector\StaticTypeMapper\StaticTypeMapper;
 use Rector\VendorLocker\Exception\UnresolvableClassException;
-final readonly class ParentClassMethodTypeOverrideGuard
+final class ParentClassMethodTypeOverrideGuard
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NodeNameResolver $nodeNameResolver,
-        /**
-         * @readonly
-         */
-        private ReflectionResolver $reflectionResolver,
-        /**
-         * @readonly
-         */
-        private TypeComparator $typeComparator,
-        /**
-         * @readonly
-         */
-        private StaticTypeMapper $staticTypeMapper,
-        /**
-         * @readonly
-         */
-        private ClassReflectionAnalyzer $classReflectionAnalyzer
-    )
+    /**
+     * @readonly
+     * @var \Rector\NodeNameResolver\NodeNameResolver
+     */
+    private $nodeNameResolver;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    /**
+     * @readonly
+     * @var \Rector\NodeTypeResolver\TypeComparator\TypeComparator
+     */
+    private $typeComparator;
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\StaticTypeMapper
+     */
+    private $staticTypeMapper;
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ClassReflectionAnalyzer
+     */
+    private $classReflectionAnalyzer;
+    public function __construct(NodeNameResolver $nodeNameResolver, ReflectionResolver $reflectionResolver, TypeComparator $typeComparator, StaticTypeMapper $staticTypeMapper, ClassReflectionAnalyzer $classReflectionAnalyzer)
     {
+        $this->nodeNameResolver = $nodeNameResolver;
+        $this->reflectionResolver = $reflectionResolver;
+        $this->typeComparator = $typeComparator;
+        $this->staticTypeMapper = $staticTypeMapper;
+        $this->classReflectionAnalyzer = $classReflectionAnalyzer;
     }
     /**
      * @param \PhpParser\Node\Stmt\ClassMethod|\PHPStan\Reflection\MethodReflection $classMethod
@@ -47,7 +56,7 @@ final readonly class ParentClassMethodTypeOverrideGuard
         try {
             $parentClassMethod = $this->resolveParentClassMethod($classMethod);
             return $parentClassMethod instanceof MethodReflection;
-        } catch (UnresolvableClassException) {
+        } catch (UnresolvableClassException $exception) {
             // we don't know all involved parents,
             // marking as parent exists which usually means the method is guarded against overrides.
             return \true;
@@ -60,7 +69,7 @@ final readonly class ParentClassMethodTypeOverrideGuard
     {
         try {
             return $this->resolveParentClassMethod($classMethod);
-        } catch (UnresolvableClassException) {
+        } catch (UnresolvableClassException $exception) {
             return null;
         }
     }

@@ -13,9 +13,10 @@ namespace RectorPrefix202308\Composer\Semver;
 use RectorPrefix202308\Composer\Semver\Constraint\Constraint;
 class Semver
 {
-    final public const SORT_ASC = 1;
-    final public const SORT_DESC = -1;
-    private static ?\RectorPrefix202308\Composer\Semver\VersionParser $versionParser = null;
+    const SORT_ASC = 1;
+    const SORT_DESC = -1;
+    /** @var VersionParser */
+    private static $versionParser;
     /**
      * Determine if given version satisfies given constraints.
      *
@@ -44,7 +45,9 @@ class Semver
      */
     public static function satisfiedBy(array $versions, $constraints)
     {
-        $versions = \array_filter($versions, fn($version) => Semver::satisfies($version, $constraints));
+        $versions = \array_filter($versions, function ($version) use($constraints) {
+            return Semver::satisfies($version, $constraints);
+        });
         return \array_values($versions);
     }
     /**
@@ -81,13 +84,13 @@ class Semver
             self::$versionParser = new VersionParser();
         }
         $versionParser = self::$versionParser;
-        $normalized = [];
+        $normalized = array();
         // Normalize outside of usort() scope for minor performance increase.
         // Creates an array of arrays: [[normalized, key], ...]
         foreach ($versions as $key => $version) {
             $normalizedVersion = $versionParser->normalize($version);
             $normalizedVersion = $versionParser->normalizeDefaultBranch($normalizedVersion);
-            $normalized[] = [$normalizedVersion, $key];
+            $normalized[] = array($normalizedVersion, $key);
         }
         \usort($normalized, function (array $left, array $right) use($direction) {
             if ($left[0] === $right[0]) {
@@ -99,7 +102,7 @@ class Semver
             return $direction;
         });
         // Recreate input array, using the original indexes which are now in sorted order.
-        $sorted = [];
+        $sorted = array();
         foreach ($normalized as $item) {
             $sorted[] = $versions[$item[1]];
         }

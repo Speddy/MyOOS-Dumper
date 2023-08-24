@@ -11,7 +11,7 @@ final class SkippedClassResolver
     /**
      * @var array<string, string[]|null>
      */
-    private array $skippedClasses = [];
+    private $skippedClasses = [];
     /**
      * @return array<string, string[]|null>
      */

@@ -26,27 +26,34 @@ use Rector\StaticTypeMapper\PhpDoc\PhpDocTypeMapper;
  * Maps PhpParser <=> PHPStan <=> PHPStan doc <=> string type nodes between all possible formats
  * @see \Rector\Tests\NodeTypeResolver\StaticTypeMapper\StaticTypeMapperTest
  */
-final readonly class StaticTypeMapper
+final class StaticTypeMapper
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private NameScopeFactory $nameScopeFactory,
-        /**
-         * @readonly
-         */
-        private PHPStanStaticTypeMapper $phpStanStaticTypeMapper,
-        /**
-         * @readonly
-         */
-        private PhpDocTypeMapper $phpDocTypeMapper,
-        /**
-         * @readonly
-         */
-        private PhpParserNodeMapper $phpParserNodeMapper
-    )
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\Naming\NameScopeFactory
+     */
+    private $nameScopeFactory;
+    /**
+     * @readonly
+     * @var \Rector\PHPStanStaticTypeMapper\PHPStanStaticTypeMapper
+     */
+    private $phpStanStaticTypeMapper;
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\PhpDoc\PhpDocTypeMapper
+     */
+    private $phpDocTypeMapper;
+    /**
+     * @readonly
+     * @var \Rector\StaticTypeMapper\Mapper\PhpParserNodeMapper
+     */
+    private $phpParserNodeMapper;
+    public function __construct(NameScopeFactory $nameScopeFactory, PHPStanStaticTypeMapper $phpStanStaticTypeMapper, PhpDocTypeMapper $phpDocTypeMapper, PhpParserNodeMapper $phpParserNodeMapper)
     {
+        $this->nameScopeFactory = $nameScopeFactory;
+        $this->phpStanStaticTypeMapper = $phpStanStaticTypeMapper;
+        $this->phpDocTypeMapper = $phpDocTypeMapper;
+        $this->phpParserNodeMapper = $phpParserNodeMapper;
     }
     public function mapPHPStanTypeToPHPStanPhpDocTypeNode(Type $phpStanType) : TypeNode
     {
@@ -77,7 +84,7 @@ final readonly class StaticTypeMapper
         if ($phpDocTagValueNode instanceof ReturnTagValueNode || $phpDocTagValueNode instanceof ParamTagValueNode || $phpDocTagValueNode instanceof VarTagValueNode || $phpDocTagValueNode instanceof ThrowsTagValueNode) {
             return $this->mapPHPStanPhpDocTypeNodeToPHPStanType($phpDocTagValueNode->type, $node);
         }
-        throw new NotImplementedYetException(__METHOD__ . ' for ' . $phpDocTagValueNode::class);
+        throw new NotImplementedYetException(__METHOD__ . ' for ' . \get_class($phpDocTagValueNode));
     }
     public function mapPHPStanPhpDocTypeNodeToPHPStanType(TypeNode $typeNode, Node $node) : Type
     {

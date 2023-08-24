@@ -21,13 +21,14 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
  */
 final class CommandConstantReturnCodeRector extends AbstractRector
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly ReflectionResolver $reflectionResolver
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\Reflection\ReflectionResolver
+     */
+    private $reflectionResolver;
+    public function __construct(ReflectionResolver $reflectionResolver)
     {
+        $this->reflectionResolver = $reflectionResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {

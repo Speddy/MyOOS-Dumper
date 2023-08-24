@@ -21,16 +21,17 @@ use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 final class SpecificAssertInternalTypeRector extends AbstractRector
 {
     /**
+     * @readonly
+     * @var \Rector\PHPUnit\NodeAnalyzer\TestsNodeAnalyzer
+     */
+    private $testsNodeAnalyzer;
+    /**
      * @var array<string, string[]>
      */
     private const TYPE_TO_METHOD = ['array' => ['assertIsArray', 'assertIsNotArray'], 'bool' => ['assertIsBool', 'assertIsNotBool'], 'boolean' => ['assertIsBool', 'assertIsNotBool'], 'float' => ['assertIsFloat', 'assertIsNotFloat'], 'int' => ['assertIsInt', 'assertIsNotInt'], 'integer' => ['assertIsInt', 'assertIsNotInt'], 'numeric' => ['assertIsNumeric', 'assertIsNotNumeric'], 'object' => ['assertIsObject', 'assertIsNotObject'], 'resource' => ['assertIsResource', 'assertIsNotResource'], 'string' => ['assertIsString', 'assertIsNotString'], 'scalar' => ['assertIsScalar', 'assertIsNotScalar'], 'callable' => ['assertIsCallable', 'assertIsNotCallable'], 'iterable' => ['assertIsIterable', 'assertIsNotIterable'], 'null' => ['assertNull', 'assertNotNull']];
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private readonly TestsNodeAnalyzer $testsNodeAnalyzer
-    )
+    public function __construct(TestsNodeAnalyzer $testsNodeAnalyzer)
     {
+        $this->testsNodeAnalyzer = $testsNodeAnalyzer;
     }
     public function getRuleDefinition() : RuleDefinition
     {

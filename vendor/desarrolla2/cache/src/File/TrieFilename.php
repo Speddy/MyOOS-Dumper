@@ -41,6 +41,7 @@ class TrieFilename
     /**
      * TrieFilename constructor.
      *
+     * @param string $format
      * @param int    $levels  The depth of the structure
      * @param bool   $hash    MD5 hash the key to get a better spread
      */
@@ -85,6 +86,7 @@ class TrieFilename
     /**
      * Create the path for a key
      *
+     * @param string $key
      * @return string
      */
     public function __invoke(string $key): string

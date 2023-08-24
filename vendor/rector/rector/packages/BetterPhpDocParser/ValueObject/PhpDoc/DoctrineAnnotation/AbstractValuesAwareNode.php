@@ -103,7 +103,8 @@ abstract class AbstractValuesAwareNode implements PhpDocTagValueNode
     protected function printValuesContent(array $values) : string
     {
         $itemContents = '';
-        $lastItemKey = array_key_last($values);
+        \end($values);
+        $lastItemKey = \key($values);
         foreach ($values as $key => $value) {
             if (\is_int($key)) {
                 $itemContents .= $this->stringifyValue($value);
@@ -123,7 +124,10 @@ abstract class AbstractValuesAwareNode implements PhpDocTagValueNode
         }
         return $arrayItemNode->key === $desiredKey;
     }
-    private function stringifyValue(mixed $value) : string
+    /**
+     * @param mixed $value
+     */
+    private function stringifyValue($value) : string
     {
         // @todo resolve original casing
         if ($value === \false) {

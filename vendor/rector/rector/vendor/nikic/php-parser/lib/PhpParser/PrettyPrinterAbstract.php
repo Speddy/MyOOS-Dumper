@@ -14,23 +14,23 @@ use PhpParser\Node\Scalar;
 use PhpParser\Node\Stmt;
 abstract class PrettyPrinterAbstract
 {
-    public const FIXUP_PREC_LEFT = 0;
+    const FIXUP_PREC_LEFT = 0;
     // LHS operand affected by precedence
-    public const FIXUP_PREC_RIGHT = 1;
+    const FIXUP_PREC_RIGHT = 1;
     // RHS operand affected by precedence
-    public const FIXUP_CALL_LHS = 2;
+    const FIXUP_CALL_LHS = 2;
     // LHS of call
-    public const FIXUP_DEREF_LHS = 3;
+    const FIXUP_DEREF_LHS = 3;
     // LHS of dereferencing operation
-    public const FIXUP_BRACED_NAME = 4;
+    const FIXUP_BRACED_NAME = 4;
     // Name operand that may require bracing
-    public const FIXUP_VAR_BRACED_NAME = 5;
+    const FIXUP_VAR_BRACED_NAME = 5;
     // Name operand that may require ${} bracing
-    public const FIXUP_ENCAPSED = 6;
+    const FIXUP_ENCAPSED = 6;
     // Encapsed string part
-    public const FIXUP_NEW = 7;
+    const FIXUP_NEW = 7;
     // New/instanceof operand
-    public const FIXUP_STATIC_DEREF_LHS = 8;
+    const FIXUP_STATIC_DEREF_LHS = 8;
     // LHS of static dereferencing operation
     protected $precedenceMap = [
         // [precedence, associativity]
@@ -153,7 +153,7 @@ abstract class PrettyPrinterAbstract
      */
     public function __construct(array $options = [])
     {
-        $this->docStringEndToken = '_DOC_STRING_END_' . random_int(0, mt_getrandmax());
+        $this->docStringEndToken = '_DOC_STRING_END_' . \mt_rand();
         $defaultOptions = ['shortArraySyntax' => \false];
         $this->options = $options + $defaultOptions;
     }
@@ -258,6 +258,7 @@ abstract class PrettyPrinterAbstract
     /**
      * Handles (and removes) no-indent and doc-string-end tokens.
      *
+     * @param string $str
      * @return string
      */
     protected function handleMagicTokens(string $str) : string
@@ -308,7 +309,7 @@ abstract class PrettyPrinterAbstract
      */
     protected function pInfixOp(string $class, \PhpParser\Node $leftNode, string $operatorString, \PhpParser\Node $rightNode) : string
     {
-        [$precedence, $associativity] = $this->precedenceMap[$class];
+        list($precedence, $associativity) = $this->precedenceMap[$class];
         return $this->pPrec($leftNode, $precedence, $associativity, -1) . $operatorString . $this->pPrec($rightNode, $precedence, $associativity, 1);
     }
     /**
@@ -322,7 +323,7 @@ abstract class PrettyPrinterAbstract
      */
     protected function pPrefixOp(string $class, string $operatorString, \PhpParser\Node $node) : string
     {
-        [$precedence, $associativity] = $this->precedenceMap[$class];
+        list($precedence, $associativity) = $this->precedenceMap[$class];
         return $operatorString . $this->pPrec($node, $precedence, $associativity, 1);
     }
     /**
@@ -336,7 +337,7 @@ abstract class PrettyPrinterAbstract
      */
     protected function pPostfixOp(string $class, \PhpParser\Node $node, string $operatorString) : string
     {
-        [$precedence, $associativity] = $this->precedenceMap[$class];
+        list($precedence, $associativity) = $this->precedenceMap[$class];
         return $this->pPrec($node, $precedence, $associativity, -1) . $operatorString;
     }
     /**
@@ -353,7 +354,7 @@ abstract class PrettyPrinterAbstract
      */
     protected function pPrec(\PhpParser\Node $node, int $parentPrecedence, int $parentAssociativity, int $childPosition) : string
     {
-        $class = $node::class;
+        $class = \get_class($node);
         if (isset($this->precedenceMap[$class])) {
             $childPrecedence = $this->precedenceMap[$class][0];
             if ($childPrecedence > $parentPrecedence || $parentPrecedence === $childPrecedence && $parentAssociativity !== $childPosition) {
@@ -436,7 +437,7 @@ abstract class PrettyPrinterAbstract
     {
         $formattedComments = [];
         foreach ($comments as $comment) {
-            $formattedComments[] = \str_replace("\n", $this->nl, (string) $comment->getReformattedText());
+            $formattedComments[] = \str_replace("\n", $this->nl, $comment->getReformattedText());
         }
         return \implode($this->nl, $formattedComments);
     }
@@ -506,8 +507,8 @@ abstract class PrettyPrinterAbstract
         if (null === $origNode) {
             return $this->pFallback($node);
         }
-        $class = $node::class;
-        \assert($class === $origNode::class);
+        $class = \get_class($node);
+        \assert($class === \get_class($origNode));
         $startPos = $origNode->getStartTokenPos();
         $endPos = $origNode->getEndTokenPos();
         \assert($startPos >= 0 && $endPos >= 0);
@@ -577,7 +578,7 @@ abstract class PrettyPrinterAbstract
                 if (!isset($this->insertionMap[$key])) {
                     return $this->pFallback($fallbackNode);
                 }
-                [$findToken, $beforeToken, $extraLeft, $extraRight] = $this->insertionMap[$key];
+                list($findToken, $beforeToken, $extraLeft, $extraRight) = $this->insertionMap[$key];
                 if (null !== $findToken) {
                     $subStartPos = $this->origTokens->findRight($pos, $findToken) + (int) (!$beforeToken);
                 } else {
@@ -815,7 +816,7 @@ abstract class PrettyPrinterAbstract
             if (!isset($this->emptyListInsertionMap[$mapKey])) {
                 return null;
             }
-            [$findToken, $extraLeft, $extraRight] = $this->emptyListInsertionMap[$mapKey];
+            list($findToken, $extraLeft, $extraRight) = $this->emptyListInsertionMap[$mapKey];
             if (null !== $findToken) {
                 $insertPos = $this->origTokens->findRight($pos, $findToken) + 1;
                 $result .= $this->origTokens->getTokenCode($pos, $insertPos, $indentAdjustment);
@@ -858,7 +859,7 @@ abstract class PrettyPrinterAbstract
             case self::FIXUP_PREC_LEFT:
             case self::FIXUP_PREC_RIGHT:
                 if (!$this->origTokens->haveParens($subStartPos, $subEndPos)) {
-                    [$precedence, $associativity] = $this->precedenceMap[$parentClass];
+                    list($precedence, $associativity) = $this->precedenceMap[$parentClass];
                     return $this->pPrec($subNode, $precedence, $associativity, $fixup === self::FIXUP_PREC_LEFT ? -1 : 1);
                 }
                 break;
@@ -905,6 +906,8 @@ abstract class PrettyPrinterAbstract
      * Example: "echo" and "$x" result in "echo$x", but "echo" and "x" result in "echo x".
      * Without safeAppend the result would be "echox", which does not preserve semantics.
      *
+     * @param string $str
+     * @param string $append
      */
     protected function safeAppend(string &$str, string $append)
     {
@@ -1006,7 +1009,7 @@ abstract class PrettyPrinterAbstract
             $endPos = $node->getEndTokenPos() + 1;
             if ($pos >= 0) {
                 $text = $this->origTokens->getTokenCode($pos, $endPos, 0);
-                if (!str_contains($text, "\n")) {
+                if (\false === \strpos($text, "\n")) {
                     // We require that a newline is present between *every* item. If the formatting
                     // is inconsistent, with only some items having newlines, we don't consider it
                     // as multiline

@@ -14,14 +14,14 @@ final class ScalarTypeComparator
     {
         if ($firstType->isString()->yes() && $secondType->isString()->yes()) {
             // prevents "class-string" vs "string"
-            $firstTypeClass = $firstType::class;
-            $secondTypeClass = $secondType::class;
+            $firstTypeClass = \get_class($firstType);
+            $secondTypeClass = \get_class($secondType);
             return $firstTypeClass === $secondTypeClass;
         }
         if ($firstType->isInteger()->yes() && $secondType->isInteger()->yes()) {
             // prevents "int<min, max>" vs "int"
-            $firstTypeClass = $firstType::class;
-            $secondTypeClass = $secondType::class;
+            $firstTypeClass = \get_class($firstType);
+            $secondTypeClass = \get_class($secondType);
             return $firstTypeClass === $secondTypeClass;
         }
         if ($firstType->isFloat()->yes() && $secondType->isFloat()->yes()) {
@@ -51,10 +51,10 @@ final class ScalarTypeComparator
             return \false;
         }
         if (!$firstType->isString()->yes()) {
-            return $firstType::class !== $secondType::class;
+            return \get_class($firstType) !== \get_class($secondType);
         }
         if (!$secondType instanceof ClassStringType) {
-            return $firstType::class !== $secondType::class;
+            return \get_class($firstType) !== \get_class($secondType);
         }
         return \false;
     }

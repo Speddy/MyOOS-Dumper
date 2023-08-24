@@ -20,7 +20,7 @@ use RectorPrefix202308\Symfony\Component\Filesystem\Exception\IOException;
  */
 class Filesystem
 {
-    private static ?string $lastError = null;
+    private static $lastError;
     /**
      * Copies a file.
      *
@@ -96,7 +96,7 @@ class Filesystem
     {
         $maxPathLength = \PHP_MAXPATHLEN - 2;
         foreach ($this->toIterable($files) as $file) {
-            if (\strlen((string) $file) > $maxPathLength) {
+            if (\strlen($file) > $maxPathLength) {
                 throw new IOException(\sprintf('Could not check if file exist because path length exceeds %d characters.', $maxPathLength), 0, null, $file);
             }
             if (!\file_exists($file)) {
@@ -156,7 +156,7 @@ class Filesystem
                     if (\file_exists($tmpName)) {
                         try {
                             self::doRemove([$tmpName], \true);
-                        } catch (IOException) {
+                        } catch (IOException $exception) {
                         }
                     }
                     if (!\file_exists($tmpName) && self::box('rename', $file, $tmpName)) {
@@ -175,7 +175,7 @@ class Filesystem
                     }
                     throw new IOException(\sprintf('Failed to remove directory "%s": ', $file) . $lastError);
                 }
-            } elseif (!self::box('unlink', $file) && (str_contains((string) self::$lastError, 'Permission denied') || \file_exists($file))) {
+            } elseif (!self::box('unlink', $file) && (\strpos(self::$lastError, 'Permission denied') !== \false || \file_exists($file))) {
                 throw new IOException(\sprintf('Failed to remove file "%s": ', $file) . self::$lastError);
             }
         }
@@ -363,7 +363,7 @@ class Filesystem
     private function linkException(string $origin, string $target, string $linkType)
     {
         if (self::$lastError) {
-            if ('\\' === \DIRECTORY_SEPARATOR && str_contains((string) self::$lastError, 'error code(1314)')) {
+            if ('\\' === \DIRECTORY_SEPARATOR && \strpos(self::$lastError, 'error code(1314)') !== \false) {
                 throw new IOException(\sprintf('Unable to create "%s" link due to error code 1314: \'A required privilege is not held by the client\'. Do you have the required Administrator-rights?', $linkType), 0, null, $target);
             }
         }
@@ -409,7 +409,9 @@ class Filesystem
             $endPath = \str_replace('\\', '/', $endPath);
             $startPath = \str_replace('\\', '/', $startPath);
         }
-        $splitDriveLetter = fn($path) => \strlen((string) $path) > 2 && ':' === $path[1] && '/' === $path[2] && \ctype_alpha((string) $path[0]) ? [\substr((string) $path, 2), \strtoupper((string) $path[0])] : [$path, null];
+        $splitDriveLetter = function ($path) {
+            return \strlen($path) > 2 && ':' === $path[1] && '/' === $path[2] && \ctype_alpha($path[0]) ? [\substr($path, 2), \strtoupper($path[0])] : [$path, null];
+        };
         $splitPath = function ($path) {
             $result = [];
             foreach (\explode('/', \trim($path, '/')) as $segment) {
@@ -483,7 +485,7 @@ class Filesystem
             }
             $targetDirLen = \strlen($targetDir);
             foreach ($deleteIterator as $file) {
-                $origin = $originDir . \substr((string) $file->getPathname(), $targetDirLen);
+                $origin = $originDir . \substr($file->getPathname(), $targetDirLen);
                 if (!$this->exists($origin)) {
                     $this->remove($file);
                 }
@@ -500,7 +502,7 @@ class Filesystem
             if ($file->getPathname() === $targetDir || $file->getRealPath() === $targetDir || isset($filesCreatedWhileMirroring[$file->getRealPath()])) {
                 continue;
             }
-            $target = $targetDir . \substr((string) $file->getPathname(), $originDirLen);
+            $target = $targetDir . \substr($file->getPathname(), $originDirLen);
             $filesCreatedWhileMirroring[$target] = \true;
             if (!$copyOnWindows && \is_link($file)) {
                 $this->symlink($file->getLinkTarget(), $target);
@@ -546,7 +548,7 @@ class Filesystem
         // Loop until we create a valid temp file or have reached 10 attempts
         for ($i = 0; $i < 10; ++$i) {
             // Create a unique filename
-            $tmpFile = $dir . '/' . $prefix . \uniqid(random_int(0, mt_getrandmax()), \true) . $suffix;
+            $tmpFile = $dir . '/' . $prefix . \uniqid(\mt_rand(), \true) . $suffix;
             // Use fopen instead of file_exists as some streams do not support stat
             // Use mode 'x+' to atomically check existence and create to avoid a TOCTOU vulnerability
             if (!($handle = self::box('fopen', $tmpFile, 'x+'))) {
@@ -641,13 +643,14 @@ class Filesystem
         }
     }
     /**
+     * @param mixed ...$args
      * @return mixed
      */
-    private static function box(string $func, mixed ...$args)
+    private static function box(string $func, ...$args)
     {
         self::assertFunctionExists($func);
         self::$lastError = null;
-        \set_error_handler(self::class . '::handleError');
+        \set_error_handler(__CLASS__ . '::handleError');
         try {
             return $func(...$args);
         } finally {

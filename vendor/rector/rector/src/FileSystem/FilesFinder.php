@@ -11,27 +11,34 @@ use RectorPrefix202308\Symfony\Component\Finder\SplFileInfo;
 /**
  * @see \Rector\Core\Tests\FileSystem\FilesFinder\FilesFinderTest
  */
-final readonly class FilesFinder
+final class FilesFinder
 {
-    public function __construct(
-        /**
-         * @readonly
-         */
-        private \Rector\Core\FileSystem\FilesystemTweaker $filesystemTweaker,
-        /**
-         * @readonly
-         */
-        private SkippedPathsResolver $skippedPathsResolver,
-        /**
-         * @readonly
-         */
-        private UnchangedFilesFilter $unchangedFilesFilter,
-        /**
-         * @readonly
-         */
-        private \Rector\Core\FileSystem\FileAndDirectoryFilter $fileAndDirectoryFilter
-    )
+    /**
+     * @readonly
+     * @var \Rector\Core\FileSystem\FilesystemTweaker
+     */
+    private $filesystemTweaker;
+    /**
+     * @readonly
+     * @var \Rector\Skipper\SkipCriteriaResolver\SkippedPathsResolver
+     */
+    private $skippedPathsResolver;
+    /**
+     * @readonly
+     * @var \Rector\Caching\UnchangedFilesFilter
+     */
+    private $unchangedFilesFilter;
+    /**
+     * @readonly
+     * @var \Rector\Core\FileSystem\FileAndDirectoryFilter
+     */
+    private $fileAndDirectoryFilter;
+    public function __construct(\Rector\Core\FileSystem\FilesystemTweaker $filesystemTweaker, SkippedPathsResolver $skippedPathsResolver, UnchangedFilesFilter $unchangedFilesFilter, \Rector\Core\FileSystem\FileAndDirectoryFilter $fileAndDirectoryFilter)
     {
+        $this->filesystemTweaker = $filesystemTweaker;
+        $this->skippedPathsResolver = $skippedPathsResolver;
+        $this->unchangedFilesFilter = $unchangedFilesFilter;
+        $this->fileAndDirectoryFilter = $fileAndDirectoryFilter;
     }
     /**
      * @param string[] $source
@@ -107,7 +114,7 @@ final readonly class FilesFinder
                 if (\fnmatch($this->normalizeForFnmatch($excludePath), $realPath)) {
                     return \false;
                 }
-                if (str_contains($excludePath, '**')) {
+                if (\strpos($excludePath, '**') !== \false) {
                     // prevent matching a fnmatch pattern as a regex
                     // which is a waste of resources
                     continue;
@@ -125,7 +132,7 @@ final readonly class FilesFinder
      */
     private function normalizeForFnmatch(string $path) : string
     {
-        if (str_ends_with($path, '*') || str_starts_with($path, '*')) {
+        if (\substr_compare($path, '*', -\strlen('*')) === 0 || \strncmp($path, '*', \strlen('*')) === 0) {
             return '*' . \trim($path, '*') . '*';
         }
         return $path;

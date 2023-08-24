@@ -18,7 +18,7 @@ class ArrayList implements \ArrayAccess, \Countable, \IteratorAggregate
 {
     use Nette\SmartObject;
     /** @var mixed[] */
-    private array $list = [];
+    private $list = [];
     /**
      * Transforms array to ArrayList.
      * @param  list<T>  $array
