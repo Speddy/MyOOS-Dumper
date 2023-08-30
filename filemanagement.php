@@ -319,9 +319,9 @@ switch ($action) {
         }
         $cext = (isset($config['cron_extender']) && (0 == $config['cron_extender'])) ? 'pl' : 'cgi';
 		
-		$document_root = filter_input(INPUT_SERVER, 'DOCUMENT_ROOT', FILTER_SANITIZE_URL);
-		$script_name = filter_input(INPUT_SERVER, 'SCRIPT_NAME', FILTER_SANITIZE_URL);			
-		$server_name = filter_input(INPUT_SERVER, 'SERVER_NAME', FILTER_SANITIZE_URL);
+		$document_root = (isset($_SERVER['DOCUMENT_ROOT'])) ? filter_string_polyfill($_SERVER['DOCUMENT_ROOT']) : '';
+		$script_name = (isset($_SERVER['SCRIPT_NAME'])) ? filter_string_polyfill($_SERVER['SCRIPT_NAME']) : '';
+		$server_name = (isset($_SERVER['SERVER_NAME'])) ? filter_string_polyfill($_SERVER['SERVER_NAME']) : '';
 		
         $actualUrl = substr($script_name, 0, strrpos($script_name, '/') + 1);
         if (!str_ends_with($actualUrl, '/')) {
