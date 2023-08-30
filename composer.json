@@ -1,5 +1,10 @@
 {
+
+	"config": {
+        "platform-check": false
+    },
     "require": {
+        "php": "~7.4.0 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0",
 		"ext-ftp": "*",	
 		"ext-mysqli": "*",
 		"ext-openssl": "*",
@@ -7,6 +12,7 @@
 		"ext-json": "*",
 		"ext-zip": "*",
 		"ext-zlib": "*",
+		"phpmailer/phpmailer": "^6.8",		
 		"visualappeal/php-auto-update": "^1.0.2",
         "league/flysystem-sftp-v3": "^3.10",
         "paragonie/random_compat": "2.*"
