@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '712dd093e3389a0e5c3d350e8ffc5b55a18c449a',
+        'reference' => '2c27e5b5ba2137257acb83c11ff01e77975d426e',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '712dd093e3389a0e5c3d350e8ffc5b55a18c449a',
+            'reference' => '2c27e5b5ba2137257acb83c11ff01e77975d426e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -100,6 +100,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'phpmailer/phpmailer' => array(
+            'pretty_version' => 'v6.8.1',
+            'version' => '6.8.1.0',
+            'reference' => 'e88da8d679acc3824ff231fdc553565b802ac016',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../phpmailer/phpmailer',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.21',
             'version' => '3.0.21.0',
@@ -160,7 +169,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'c16c8b67835bc384c40b9f282b3a49a6f4cb5124',
+            'reference' => '05cbd34d3f34203a5be403e69e1fc9fef70d546a',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
