@@ -323,7 +323,7 @@ switch ($action) {
 		$script_name = (isset($_SERVER['SCRIPT_NAME'])) ? filter_string_polyfill($_SERVER['SCRIPT_NAME']) : '';
 		$server_name = (isset($_SERVER['SERVER_NAME'])) ? filter_string_polyfill($_SERVER['SERVER_NAME']) : '';
 		
-        $actualUrl = substr($script_name, 0, strrpos($script_name, '/') + 1);
+        $actualUrl = substr((string) $script_name, 0, strrpos((string) $script_name, '/') + 1);
         if (!str_ends_with($actualUrl, '/')) {
             $actualUrl .= '/';
         }
