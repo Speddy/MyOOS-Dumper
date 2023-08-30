@@ -41,7 +41,13 @@ use League\Flysystem\PhpseclibV3\SftpConnectionProvider;
 use League\Flysystem\PhpseclibV3\SftpAdapter;
 use League\Flysystem\UnixVisibility\PortableVisibilityConverter;
 
-$autoloader = require_once './vendor/autoload.php';
+//Import PHPMailer classes into the global namespace
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+//Load Composer's autoloader
+$autoloader = require_once MOD_PATH .'vendor/autoload.php';
 
 // places all Page Parameters in hidden-fields (needed fpr backup and restore in PHP)
 function get_page_parameter($parameter, $ziel = 'dump')
