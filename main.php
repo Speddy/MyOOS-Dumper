@@ -29,9 +29,9 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
+$autoloader = require_once './vendor/autoload.php';
 use VisualAppeal\AutoUpdate;
 
-$autoloader = require_once './vendor/autoload.php';
 
 include_once './inc/header.php';
 include_once './inc/runtime.php';

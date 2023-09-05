@@ -16,6 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------- */
 
+use VisualAppeal\AutoUpdate;
+
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
@@ -71,7 +73,7 @@ if ($update->newVersionAvailable() && $check_update === true) {
     } else {
         echo $lang['L_UPDATE_FAILED'] . ': ' . $result . '!<br>';
 
-        if ($result = AutoUpdate::ERROR_SIMULATE) {
+        if ($result == AutoUpdate::ERROR_SIMULATE) {
             echo '<pre>';
             var_dump($update->getSimulationResults());
             echo '</pre>';
