@@ -40,7 +40,10 @@ function get_sqlbefehl()
         if (DEBUG) {
             echo '<br><br>Zeile: '.htmlspecialchars($zeile);
         }
-        /******************* Setzen des Parserstatus *******************/
+        /*******************
+* 
+ * Setzen des Parserstatus 
+*******************/
         // herausfinden um was für einen Befehl es sich handelt
         if (0 == $sqlparser_status) {
             //Vergleichszeile, um nicht bei jedem Vergleich strtoupper ausführen zu müssen
@@ -137,7 +140,10 @@ function get_sqlbefehl()
                 echo '<br>Erweiterte Inserts: '.$restore['erweiterte_inserts'];
                 exit('<br>'.$lang['L_UNKNOWN_SQLCOMMAND'].': '.$zeile.'<br><br>'.$complete_sql);
             }
-            /******************* Ende von Setzen des Parserstatus *******************/
+            /*******************
+* 
+ * Ende von Setzen des Parserstatus 
+*******************/
         }
 
         $last_char = substr(rtrim($zeile), -1);
@@ -215,29 +221,30 @@ function get_sqlbefehl()
         }
 
         // Index
-                elseif (4 == $sqlparser_status) { //Createindex
-                        if (';' == $last_char) {
-                            if ($config['minspeed'] > 0) {
-                                $restore['anzahl_zeilen'] = $config['minspeed'];
-                            }
-                            $complete_sql = del_inline_comments($complete_sql);
-                            $sqlparser_status = 100;
-                        }
+        elseif (4 == $sqlparser_status) { //Createindex
+            if (';' == $last_char) {
+                if ($config['minspeed'] > 0) {
+                    $restore['anzahl_zeilen'] = $config['minspeed'];
                 }
+                    $complete_sql = del_inline_comments($complete_sql);
+                    $sqlparser_status = 100;
+            }
+        }
 
         // Kommentar oder Condition
-                    elseif (5 == $sqlparser_status) { //Anweisung
-                            $t = strrpos($zeile, '*/;');
-                        if (false === !$t) {
-                            $restore['anzahl_zeilen'] = $config['minspeed'];
-                            $sqlparser_status = 100;
-                            if ($config['ignore_enable_keys'] &&
-                                    false !== strrpos($zeile, 'ENABLE KEYS ')) {
-                                $sqlparser_status = 100;
-                                $complete_sql = '';
-                            }
-                        }
-                    }
+        elseif (5 == $sqlparser_status) { //Anweisung
+                $t = strrpos($zeile, '*/;');
+            if (false === !$t) {
+                $restore['anzahl_zeilen'] = $config['minspeed'];
+                $sqlparser_status = 100;
+                if ($config['ignore_enable_keys'] 
+                    && false !== strrpos($zeile, 'ENABLE KEYS ')
+                ) {
+                    $sqlparser_status = 100;
+                    $complete_sql = '';
+                }
+            }
+        }
 
         // Mehrzeiliger oder Inline-Kommentar
         elseif (6 == $sqlparser_status) {
@@ -249,15 +256,15 @@ function get_sqlbefehl()
         }
 
         // Befehle, die verworfen werden sollen
-                            elseif (7 == $sqlparser_status) { //Anweisung
-                                    if (';' == $last_char) {
-                                        if ($config['minspeed'] > 0) {
-                                            $restore['anzahl_zeilen'] = $config['minspeed'];
-                                        }
-                                        $complete_sql = '';
-                                        $sqlparser_status = 0;
-                                    }
-                            }
+        elseif (7 == $sqlparser_status) { //Anweisung
+            if (';' == $last_char) {
+                if ($config['minspeed'] > 0) {
+                    $restore['anzahl_zeilen'] = $config['minspeed'];
+                }
+                                $complete_sql = '';
+                                $sqlparser_status = 0;
+            }
+        }
 
         if (($restore['compressed']) && (gzeof($restore['filehandle']))) {
             $restore['fileEOF'] = true;

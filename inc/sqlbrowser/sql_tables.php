@@ -411,7 +411,7 @@ if ('' != $table_edit_name) {
         $cl = ($i % 2) ? 'dbrow' : 'dbrow1';
         if (0 == $i) {
             echo '<tr class="thead"><th colspan="2">&nbsp;</th><th>Field</th><th>Type</th><th>Size</th><th>NULL</th><th>Key</th><th>Attribute</th><th>Default</th><th>Extra</th><th>'.
-        $lang['L_COLLATION'].'</th><th>'.$lang['L_COMMENT'].'</th></tr>';
+            $lang['L_COLLATION'].'</th><th>'.$lang['L_COMMENT'].'</th></tr>';
         }
         echo '<tr class="'.$cl.'">';
         echo '<td nowrap="nowrap">';
@@ -502,23 +502,23 @@ if ('' != $table_edit_name) {
 
     if ((isset($_GET['sql_createindex'])) && ('1' == $_GET['sql_createindex'])) { ?>
 <script>
-	function toggleIndexLength(id)
-	{
-		var mysqlStrings = ['<?php echo implode("','", $mysql_string_types); ?>'];
-		var field = 'setNewKey'+id;
-		var sel = document.getElementById(field).selectedIndex;
-		var val = document.getElementById(field).options[sel].innerHTML;
-		document.getElementById('indexSize'+id).disabled = true;
-		for (i=0;i<mysqlStrings.length;i++)
-		{
-			if (val.indexOf("["+mysqlStrings[i]) != -1)
-			{
-				document.getElementById('indexSize'+id).disabled = false;
-			}
-		}
-	}
+    function toggleIndexLength(id)
+    {
+        var mysqlStrings = ['<?php echo implode("','", $mysql_string_types); ?>'];
+        var field = 'setNewKey'+id;
+        var sel = document.getElementById(field).selectedIndex;
+        var val = document.getElementById(field).options[sel].innerHTML;
+        document.getElementById('indexSize'+id).disabled = true;
+        for (i=0;i<mysqlStrings.length;i++)
+        {
+            if (val.indexOf("["+mysqlStrings[i]) != -1)
+            {
+                document.getElementById('indexSize'+id).disabled = false;
+            }
+        }
+    }
 </script>
-    <?php
+        <?php
         echo '<br><a name="setnewkeys"></a>';
         echo '<form action="'.$p.'" method="POST">';
         echo '<h6>'.$lang['L_SETKEYSFOR'].' `'.$table_edit_name.'`</h6>';

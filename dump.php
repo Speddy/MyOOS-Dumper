@@ -27,7 +27,7 @@ define('MOD_INCLUDE_PATH', __DIR__=='/' ? '' : __DIR__);
 session_name('MyOOSDumperID');
 session_start();
 $aus2 = $page_parameter = $a = $out = '';
-include_once './inc/functions_dump.php';
+require_once './inc/functions_dump.php';
 
 // read configuration file on first call and save it in session
 if (isset($_GET['config'])) {
@@ -51,11 +51,11 @@ if (isset($_GET['config'])) {
 }
 $config = $_SESSION['config'];
 
-include './'.$config['files']['parameter'];
+require './'.$config['files']['parameter'];
 $config['files']['iconpath'] = './css/'.$config['theme'].'/icons/';
-include './inc/mysqli.php';
-include './language/'.$config['language'].'/lang.php';
-include './language/'.$config['language'].'/lang_dump.php';
+require './inc/mysqli.php';
+require './language/'.$config['language'].'/lang.php';
+require './language/'.$config['language'].'/lang_dump.php';
 
 $pageheader = MODHeader();
 $DumpFertig = 0;

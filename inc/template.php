@@ -28,17 +28,13 @@ define('TPL_DEBUG', 0); // used if evaluationg of template fails
  *   email                : support@phpbb.com
  *
  *   $Id: template.php 1330 2011-01-07 17:51:25Z dsb1971 $
- *
- *
  ***************************************************************************/
 
 /***************************************************************************
- *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
  *   the Free Software Foundation; either version 2 of the License, or
  *   (at your option) any later version.
- *
  ***************************************************************************/
 
 /**

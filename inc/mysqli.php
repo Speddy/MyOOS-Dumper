@@ -404,22 +404,22 @@ function Highlight_SQL($sql)
                 $end .= $token[1];
             } else {
                 switch (token_name($token[0])) {
-                    case 'T_STRING':
-                    case 'T_AS':
-                    case 'T_FOR':
-                        $end .= (in_array(strtoupper($token[1]), $sql_keywords)) ? '<span style="color:#990099;font-weight:bold;">'.$token[1].'</span>' : $token[1];
-                        break;
-                    case 'T_IF':
-                    case 'T_LOGICAL_AND':
-                    case 'T_LOGICAL_OR':
-                    case 'T_LOGICAL_XOR':
-                        $end .= (in_array(strtoupper($token[1]), $sql_keywords)) ? '<span style="color:#0000ff;font-weight:bold;">'.$token[1].'</span>' : $token[1];
-                        break;
-                    case 'T_CLOSE_TAG':
-                    case 'T_OPEN_TAG':
-                        break;
-                    default:
-                        $end .= $token[1];
+                case 'T_STRING':
+                case 'T_AS':
+                case 'T_FOR':
+                    $end .= (in_array(strtoupper($token[1]), $sql_keywords)) ? '<span style="color:#990099;font-weight:bold;">'.$token[1].'</span>' : $token[1];
+                    break;
+                case 'T_IF':
+                case 'T_LOGICAL_AND':
+                case 'T_LOGICAL_OR':
+                case 'T_LOGICAL_XOR':
+                    $end .= (in_array(strtoupper($token[1]), $sql_keywords)) ? '<span style="color:#0000ff;font-weight:bold;">'.$token[1].'</span>' : $token[1];
+                    break;
+                case 'T_CLOSE_TAG':
+                case 'T_OPEN_TAG':
+                    break;
+                default:
+                    $end .= $token[1];
                 }
             }
         }
@@ -464,13 +464,17 @@ function getDBInfos()
                     $dump['table_types'][] = strtoupper((string) $row['Engine']);
                 }
                 // check if data needs to be backed up
-                if ('VIEW' == strtoupper((string) $row['Comment']) || (isset($row['Engine']) && in_array(strtoupper((string) $row['Engine']), [
+                if ('VIEW' == strtoupper((string) $row['Comment']) || (isset($row['Engine']) && in_array(
+                    strtoupper((string) $row['Engine']), [
                     'MEMORY',
-                ]))) {
+                    ]
+                ))
+                ) {
                     $dump['skip_data'][] = $databases['Name'][$dump['dbindex']].'|'.$row['Name'];
                 }
                 if ((isset($config['optimize_tables_beforedump']) && (1 == $config['optimize_tables_beforedump'])) && -1 == $dump['table_offset']
-                        && 'information_schema' != $databases['Name'][$dump['dbindex']]) {
+                    && 'information_schema' != $databases['Name'][$dump['dbindex']]
+                ) {
                     mysqli_select_db($config['dbconnection'], $databases['Name'][$dump['dbindex']]);
                     $opt = 'OPTIMIZE TABLE `'.$row['Name'].'`';
                     $res = mysqli_query($config['dbconnection'], 'OPTIMIZE TABLE `'.$row['Name'].'`');

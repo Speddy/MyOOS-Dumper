@@ -125,4 +125,4 @@ $lang['L_TOOLS4']['el'] = 'Μεταφόρτωση αποθηκευμένης ρ�
 if (!in_array($config['language'], $lang['languages'])) {
     $config['language'] = 'en';
 }
-include_once './language/'.$config['language'].'/lang.php';
+require_once './language/'.$config['language'].'/lang.php';

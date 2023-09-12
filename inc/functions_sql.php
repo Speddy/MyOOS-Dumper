@@ -21,7 +21,7 @@ if (!defined('MOD_VERSION')) {
 }
 
 //SQL-Library laden
-include './inc/sqllib.php';
+require './inc/sqllib.php';
 
 if (!isset($config['sql_limit'])) {
     $config['sql_limit'] = 30;
@@ -800,8 +800,8 @@ function ExtractTablenameFromSQL($q)
         //echo "<br>" . $db;
         $tablename = $p[1];
     }
-    //	if (Table_Exists($databases['db_actual'], $tablename)) return $tablename;
-    //	else return '';
+    //    if (Table_Exists($databases['db_actual'], $tablename)) return $tablename;
+    //    else return '';
     return $tablename;
 }
 
@@ -1114,7 +1114,7 @@ function build_where_from_record($data)
             $ret .= '`'.$key.'`="'.addslashes((string) $val).'" AND ';
         }
     }
-	
+    
     $ret = substr($ret, 0, -5);
 
     return $ret;

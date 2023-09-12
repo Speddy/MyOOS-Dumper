@@ -22,8 +22,8 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
-include './inc/header.php';
-include_once './language/'.$config['language'].'/lang_log.php';
+require './inc/header.php';
+require_once './language/'.$config['language'].'/lang_log.php';
 echo MODHeader();
 
 if (isset($_POST['r'])) {

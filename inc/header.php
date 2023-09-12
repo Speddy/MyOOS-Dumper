@@ -29,8 +29,8 @@ if (!isset($download)) {
     header('Cache-Control: post-check=0, pre-check=0', false);
     header('Pragma: no-cache');
 }
-include MOD_PATH.'inc/functions.php';
-include MOD_PATH.'inc/mysqli.php';
+require MOD_PATH.'inc/functions.php';
+require MOD_PATH.'inc/mysqli.php';
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
@@ -38,7 +38,7 @@ if (!file_exists($config['files']['parameter'])) {
     $error = TestWorkDir();
 }
 read_config($config['config_file']);
-include MOD_PATH.'language/lang_list.php';
+require MOD_PATH.'language/lang_list.php';
 if (!isset($databases['db_selected_index'])) {
     $databases['db_selected_index'] = 0;
 }

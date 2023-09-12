@@ -40,11 +40,11 @@ if (isset($_POST['save']) && $_POST['language'] != $_POST['lang_old']) {
 } else {
     include_once './inc/header.php'; // language not changed, go on as usual
 }
-include_once './inc/runtime.php';
-include_once './inc/functions_sql.php';
-include_once './language/'.$config['language'].'/lang_help.php';
-include_once './language/'.$config['language'].'/lang_config_overview.php';
-include_once './language/'.$config['language'].'/lang_sql.php';
+require_once './inc/runtime.php';
+require_once './inc/functions_sql.php';
+require_once './language/'.$config['language'].'/lang_help.php';
+require_once './language/'.$config['language'].'/lang_config_overview.php';
+require_once './language/'.$config['language'].'/lang_sql.php';
 
 $msg = '';
 $sel = $_POST['sel'] ?? 'db';
@@ -92,7 +92,7 @@ if (isset($_GET['config_delete'])) {
     $sel = 'configs';
 }
 
-include_once './inc/define_icons.php';
+require_once './inc/define_icons.php';
 
 $config['files']['parameter'] = $config['paths']['config'].$config['config_file'].'.php';
 $config['theme'] = (!isset($config['theme'])) ? 'mod' : $config['theme'];
@@ -305,10 +305,10 @@ if (isset($_POST['save'])) {
     if (isset($_POST['stop_with_error'])) {
         $config['stop_with_error'] = $_POST['stop_with_error'];
     }
-	
+    
 
     $config['ignore_enable_keys'] = isset($_POST['ignore_enable_keys']) ? (int) $_POST['ignore_enable_keys'] : 0;
-	$config['update_core'] = isset($_POST['update_core']) ? (int) $_POST['update_core'] : 0;
+    $config['update_core'] = isset($_POST['update_core']) ? (int) $_POST['update_core'] : 0;
 
 
     $config['multi_part'] = $_POST['multi_part'] ?? 0;
@@ -389,13 +389,13 @@ if (isset($_POST['save'])) {
     $config['cron_smtp'] = $_POST['cron_smtp'] ?? 'localhost';
 
 
-	$config['other_smtp_host'] = $_POST['other_smtp_host'] ?? '';
-	$config['other_smtp_encryption'] = $_POST['other_smtp_encryption'] ?? '2';
-	$config['other_smtp_host'] = $_POST['other_smtp_host'] ?? '';
-	$config['other_smtp_port'] = $_POST['other_smtp_port'] ?? '587';
-	$config['other_smtp_username'] = $_POST['other_smtp_username'] ?? '';
-	$config['other_smtp_password'] = $_POST['other_smtp_password'] ?? '';
-	$config['other_smtp_auth'] = $_POST['other_smtp_auth'] ?? '';
+    $config['other_smtp_host'] = $_POST['other_smtp_host'] ?? '';
+    $config['other_smtp_encryption'] = $_POST['other_smtp_encryption'] ?? '2';
+    $config['other_smtp_host'] = $_POST['other_smtp_host'] ?? '';
+    $config['other_smtp_port'] = $_POST['other_smtp_port'] ?? '587';
+    $config['other_smtp_username'] = $_POST['other_smtp_username'] ?? '';
+    $config['other_smtp_password'] = $_POST['other_smtp_password'] ?? '';
+    $config['other_smtp_auth'] = $_POST['other_smtp_auth'] ?? '';
 
     $config['cron_printout'] = $_POST['cron_printout'] ?? 0;
     $config['cron_completelog'] = $_POST['cron_completelog'] ?? 0;
@@ -612,100 +612,100 @@ if (isset($_POST['save'])) {
 ReadSQL();
 ?>
 <script>
-	function hide_pardivs() {
-		document.getElementById("db").style.display = 'none';
-		document.getElementById("global1").style.display = 'none';
-		document.getElementById("global2").style.display = 'none';
-		document.getElementById("global3").style.display = 'none';
-		document.getElementById("transfer1").style.display = 'none';
-		document.getElementById("transfer2").style.display = 'none';
-		document.getElementById("transfer3").style.display = 'none';
-		document.getElementById("cron").style.display = 'none';
-		document.getElementById("configs").style.display = 'none';
-		for(i = 0; i < 8; i++) {
-			document.getElementById("command"+i).className  ='ConfigButton';
-		}
-	}
+    function hide_pardivs() {
+        document.getElementById("db").style.display = 'none';
+        document.getElementById("global1").style.display = 'none';
+        document.getElementById("global2").style.display = 'none';
+        document.getElementById("global3").style.display = 'none';
+        document.getElementById("transfer1").style.display = 'none';
+        document.getElementById("transfer2").style.display = 'none';
+        document.getElementById("transfer3").style.display = 'none';
+        document.getElementById("cron").style.display = 'none';
+        document.getElementById("configs").style.display = 'none';
+        for(i = 0; i < 8; i++) {
+            document.getElementById("command"+i).className  ='ConfigButton';
+        }
+    }
 
-	function SwitchVP(objid) {
-		if (!document.getElementById(objid)) objid = 'VP';
-		if(document.getElementById(objid).style.display == 'none')
-			document.getElementById(objid).style.display = 'block';
-		else
-			document.getElementById(objid).style.display = 'none'
-	}
+    function SwitchVP(objid) {
+        if (!document.getElementById(objid)) objid = 'VP';
+        if(document.getElementById(objid).style.display == 'none')
+            document.getElementById(objid).style.display = 'block';
+        else
+            document.getElementById(objid).style.display = 'none'
+    }
 
-	function show_pardivs(lab) {
-		hide_pardivs();
-		switch(lab) {
-				case "db":
-						document.getElementById("db").style.display = 'block';
-						document.getElementById("command1").className ='ConfigButtonSelected';
-						break;
-				case "global1":
-						document.getElementById("global1").style.display = 'block';
-						document.getElementById("command2").className ='ConfigButtonSelected';
-						break;
-				case "global2":
-						document.getElementById("global3").style.display = 'block';
-						document.getElementById("command3").className ='ConfigButtonSelected';
-						break;
-				case "global3":
-						document.getElementById("global2").style.display = 'block';
-						document.getElementById("command4").className ='ConfigButtonSelected';
-						break;
-				case "transfer1":
-						document.getElementById("transfer1").style.display = 'block';
-						document.getElementById("command5").className ='ConfigButtonSelected';
-						break;
-				case "transfer2":
-						document.getElementById("transfer2").style.display = 'block';
-						document.getElementById("command6").className ='ConfigButtonSelected';
-						break;
-				case "transfer3":
-						document.getElementById("transfer3").style.display = 'block';
-						document.getElementById("command11").className ='ConfigButtonSelected';
-						break;			
-			
-			
-				case "cron":
-						document.getElementById("cron").style.display = 'block';
-						document.getElementById("command7").className ='ConfigButtonSelected';
-						break;
-				case "configs":
-						document.getElementById("configs").style.display = 'block';
-						document.getElementById("command0").className ='ConfigButtonSelected';
-						break;
-				case "all":
-						document.getElementById("db").style.display = 'block';
-						document.getElementById("global1").style.display = 'block';
-						document.getElementById("global2").style.display = 'block';
-						document.getElementById("global3").style.display = 'block';
-						document.getElementById("transfer1").style.display = 'block';
-						document.getElementById("transfer2").style.display = 'block';
-						document.getElementById("transfer3").style.display = 'block';
-						document.getElementById("cron").style.display = 'block';
-						document.getElementById("configs").style.display = 'block';
-						document.getElementById("command8").className ='ConfigButtonSelected';
-						break;
-				default:
-						document.getElementById("db").style.display = 'block';
-						document.getElementById("command1").className ='ConfigButtonSelected';
-						break;
-			}
-			document.getElementById("sel").value=lab;
-	}
+    function show_pardivs(lab) {
+        hide_pardivs();
+        switch(lab) {
+                case "db":
+                        document.getElementById("db").style.display = 'block';
+                        document.getElementById("command1").className ='ConfigButtonSelected';
+                        break;
+                case "global1":
+                        document.getElementById("global1").style.display = 'block';
+                        document.getElementById("command2").className ='ConfigButtonSelected';
+                        break;
+                case "global2":
+                        document.getElementById("global3").style.display = 'block';
+                        document.getElementById("command3").className ='ConfigButtonSelected';
+                        break;
+                case "global3":
+                        document.getElementById("global2").style.display = 'block';
+                        document.getElementById("command4").className ='ConfigButtonSelected';
+                        break;
+                case "transfer1":
+                        document.getElementById("transfer1").style.display = 'block';
+                        document.getElementById("command5").className ='ConfigButtonSelected';
+                        break;
+                case "transfer2":
+                        document.getElementById("transfer2").style.display = 'block';
+                        document.getElementById("command6").className ='ConfigButtonSelected';
+                        break;
+                case "transfer3":
+                        document.getElementById("transfer3").style.display = 'block';
+                        document.getElementById("command11").className ='ConfigButtonSelected';
+                        break;            
+            
+            
+                case "cron":
+                        document.getElementById("cron").style.display = 'block';
+                        document.getElementById("command7").className ='ConfigButtonSelected';
+                        break;
+                case "configs":
+                        document.getElementById("configs").style.display = 'block';
+                        document.getElementById("command0").className ='ConfigButtonSelected';
+                        break;
+                case "all":
+                        document.getElementById("db").style.display = 'block';
+                        document.getElementById("global1").style.display = 'block';
+                        document.getElementById("global2").style.display = 'block';
+                        document.getElementById("global3").style.display = 'block';
+                        document.getElementById("transfer1").style.display = 'block';
+                        document.getElementById("transfer2").style.display = 'block';
+                        document.getElementById("transfer3").style.display = 'block';
+                        document.getElementById("cron").style.display = 'block';
+                        document.getElementById("configs").style.display = 'block';
+                        document.getElementById("command8").className ='ConfigButtonSelected';
+                        break;
+                default:
+                        document.getElementById("db").style.display = 'block';
+                        document.getElementById("command1").className ='ConfigButtonSelected';
+                        break;
+            }
+            document.getElementById("sel").value=lab;
+    }
 
-	function WriteMem() {
-		document.getElementById("mlimit").value=<?php
+    function WriteMem() {
+        document.getElementById("mlimit").value=<?php
         echo round($config['php_ram'] * 1024 * 1024 * 0.9, 0);
         ?>;
-	}
+    }
 </script>
 <?php
 if (!isset($config['email_maxsize1'])) {
             $config['email_maxsize1'] = 0;
-        }
+}
 if (!isset($config['email_maxsize2'])) {
     $config['email_maxsize2'] = 1;
 }

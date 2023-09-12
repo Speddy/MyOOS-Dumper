@@ -29,7 +29,7 @@ $configurationfiles = [
 define('OOS_VALID_MOD', true);
 
 define('APPLICATION_PATH', '/' == __DIR__ ? '' : __DIR__);
-include_once APPLICATION_PATH.'/inc/functions.php';
+require_once APPLICATION_PATH.'/inc/functions.php';
 
 $config['language'] = 'en';
 $config['theme'] = 'mod';

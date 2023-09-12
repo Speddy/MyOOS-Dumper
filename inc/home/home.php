@@ -68,9 +68,12 @@ if ($is_new_version_available) {
 }
 
 $tpl = new MODTemplate();
-$tpl->set_filenames([
-    'show' => 'tpl/home/home.tpl', ]);
-$tpl->assign_vars([
+$tpl->set_filenames(
+    [
+    'show' => 'tpl/home/home.tpl', ]
+);
+$tpl->assign_vars(
+    [
     'THEME' => $config['theme'],
     'MOD_VERSION' => MOD_VERSION,
     'OS' => MOD_OS,
@@ -86,7 +89,8 @@ $tpl->assign_vars([
     'NR_OF_BACKUP_FILES' => $Sum_Files,
     'SIZE_BACKUPS' => byte_output($Sum_Size),
     'FREE_DISKSPACE' => MD_FreeDiskSpace(),
-]);
+    ]
+);
 
 
 
@@ -95,19 +99,25 @@ if ($is_new_version_available) {
 }
 
 if (isset($update_info)) {
-    $tpl->assign_block_vars('UPDATE_INFO', [
-    'MSG' => $update_info, ]);
+    $tpl->assign_block_vars(
+        'UPDATE_INFO', [
+        'MSG' => $update_info, ]
+    );
 }
 
 
 if ($directory_warnings > '') {
-    $tpl->assign_block_vars('DIRECTORY_WARNINGS', [
-    'MSG' => $directory_warnings, ]);
+    $tpl->assign_block_vars(
+        'DIRECTORY_WARNINGS', [
+        'MSG' => $directory_warnings, ]
+    );
 }
 
 if ($config['disabled'] > '') {
-    $tpl->assign_block_vars('DISABLED_FUNCTIONS', [
-    'PHP_DISABLED_FUNCTIONS' => str_replace(',', ', ', (string) $config['disabled']), ]);
+    $tpl->assign_block_vars(
+        'DISABLED_FUNCTIONS', [
+        'PHP_DISABLED_FUNCTIONS' => str_replace(',', ', ', (string) $config['disabled']), ]
+    );
 }
 
 if (!extension_loaded('ftp')) {
@@ -136,9 +146,11 @@ if ($is_htaccess) {
 }
 
 if ($Sum_Files > 0 && isset($Last_BU[1])) {
-    $tpl->assign_block_vars('LAST_BACKUP', [
-    'LAST_BACKUP_INFO' => $Last_BU[1],
-    'LAST_BACKUP_LINK' => $config['paths']['backup'].urlencode($Last_BU[0]),
-    'LAST_BACKUP_NAME' => $Last_BU[0], ]);
+    $tpl->assign_block_vars(
+        'LAST_BACKUP', [
+        'LAST_BACKUP_INFO' => $Last_BU[1],
+        'LAST_BACKUP_LINK' => $config['paths']['backup'].urlencode($Last_BU[0]),
+        'LAST_BACKUP_NAME' => $Last_BU[0], ]
+    );
 }
 $tpl->pparse('show');

@@ -23,13 +23,13 @@ if (!@ob_start('ob_gzhandler')) {
 }
 
 $download = (isset($_POST['f_export_submit']) && (isset($_POST['f_export_sendresult']) && 1 == $_POST['f_export_sendresult']));
-include './inc/header.php';
-include 'language/'.$config['language'].'/lang.php';
-include 'language/'.$config['language'].'/lang_sql.php';
-include './inc/functions_sql.php';
-include './'.$config['files']['parameter'];
-include './inc/template.php';
-include './inc/define_icons.php';
+require './inc/header.php';
+require 'language/'.$config['language'].'/lang.php';
+require 'language/'.$config['language'].'/lang_sql.php';
+require './inc/functions_sql.php';
+require './'.$config['files']['parameter'];
+require './inc/template.php';
+require './inc/define_icons.php';
 $key = '';
 // stripslashes and trimming is done in runtime.php which is included and executet above
 if (isset($_GET['rk'])) {
@@ -325,14 +325,14 @@ if (!$download) {
 <script>
 function BrowseInput(el)
 {
-	var txt = document.getElementsByName('imexta')[0].value;
-	var win = window.open('about:blank','MOD_Output','resizable = 1,scrollbars = yes');
-	win.document.write(txt);
-	win.document.close();
-	win.focus();
+    var txt = document.getElementsByName('imexta')[0].value;
+    var win = window.open('about:blank','MOD_Output','resizable = 1,scrollbars = yes');
+    win.document.write(txt);
+    win.document.close();
+    win.focus();
 }
 </script>
-<?php
+    <?php
 
     echo '<br><br><br>';
     echo MODFooter();

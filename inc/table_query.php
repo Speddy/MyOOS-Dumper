@@ -19,9 +19,9 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
-include './language/'.$config['language'].'/lang.php';
-include './language/'.$config['language'].'/lang_dump.php';
-include './inc/template.php';
+require './language/'.$config['language'].'/lang.php';
+require './language/'.$config['language'].'/lang_dump.php';
+require './inc/template.php';
 $tblr = ('dump' == $tblfrage_refer) ? 'Backup' : 'Restore';
 
 $filename = filter_string_polyfill(filter_input(INPUT_GET, 'filename'));
@@ -36,9 +36,11 @@ $tpl = new MODtemplate();
 
 //Informationen zusammenstellen
 if ('Backup' == $tblr) {
-    $tpl->set_filenames([
+    $tpl->set_filenames(
+        [
                             'show' => './tpl/dump_select_tables.tpl',
-    ]);
+        ]
+    );
     $button_name = 'dump_tbl';
     //Info aus der Datenbank lesen
     mod_mysqli_connect();
@@ -66,7 +68,8 @@ if ('Backup' == $tblr) {
             $table_type = 'View';
             $table_size = '-';
         }
-        $tpl->assign_block_vars('ROW', [
+        $tpl->assign_block_vars(
+            'ROW', [
                                             'CLASS' => 'dbrow'.$klasse,
                                             'ID' => $i,
                                             'NR' => $i + 1,
@@ -75,12 +78,15 @@ if ('Backup' == $tblr) {
                                             'RECORDS' => 'View' == $table_type ? '<i>'.$row['Rows'].'</i>' : '<strong>'.$row['Rows'].'</strong>',
                                             'SIZE' => is_int($table_size) ? byte_output($table_size) : $table_size,
                                             'LAST_UPDATE' => $row['Update_time'],
-        ]);
+            ]
+        );
     }
 } else {
-    $tpl->set_filenames([
+    $tpl->set_filenames(
+        [
                             'show' => './tpl/restore_select_tables.tpl',
-    ]);
+        ]
+    );
     //Restore - Header aus Backupfile lesen
     $button_name = 'restore_tbl';
     $gz = str_ends_with((string) $filename, '.gz') ? 1 : 0;
@@ -130,7 +136,8 @@ if ('Backup' == $tblr) {
         }
         for ($i = 0; $i < sizeof($tabledata); ++$i) {
             $klasse = ($i % 2) ? 1 : '';
-            $tpl->assign_block_vars('ROW', [
+            $tpl->assign_block_vars(
+                'ROW', [
                                                 'CLASS' => 'dbrow'.$klasse,
                                                 'ID' => $i,
                                                 'NR' => $i + 1,
@@ -139,7 +146,8 @@ if ('Backup' == $tblr) {
                                                 'SIZE' => byte_output($tabledata[$i]['size']),
                                                 'LAST_UPDATE' => $tabledata[$i]['update'],
                                                 'TABLETYPE' => $tabledata[$i]['engine'],
-            ]);
+                ]
+            );
         }
     }
     if ($gz) {
@@ -155,7 +163,8 @@ if (!isset($dk)) {
 
 $confirm_restore = $lang['L_FM_ALERTRESTORE1'].' `'.$databases['db_actual'].'`  '.$lang['L_FM_ALERTRESTORE2'].' '.$filename.' '.$lang['L_FM_ALERTRESTORE3'];
 
-$tpl->assign_vars([
+$tpl->assign_vars(
+    [
                         'PAGETITLE' => $tblr.' -'.$lang['L_TABLESELECTION'],
                         'L_NAME' => $lang['L_NAME'],
                         'L_DATABASE' => $lang['L_DB'],
@@ -175,7 +184,8 @@ $tpl->assign_vars([
                         'L_RESTORE' => $lang['L_RESTORE'],
                         'L_NO_MOD_BACKUP' => $lang['L_NOT_SUPPORTED'],
                         'L_CONFIRM_RESTORE' => $confirm_restore,
-]);
+    ]
+);
 
 $tpl->pparse('show');
 ob_end_flush();

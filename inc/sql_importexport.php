@@ -19,7 +19,7 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
-include './inc/functions_imexport.php';
+require './inc/functions_imexport.php';
 //Im-/Export
 $import = (isset($_GET['import'])) ? 1 : 0;
 if (1 == $import) {

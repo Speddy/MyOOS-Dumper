@@ -19,7 +19,7 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
-include './language/'.$config['language'].'/lang_sql.php';
+require './language/'.$config['language'].'/lang_sql.php';
 $checkit = (isset($_GET['checkit'])) ? urldecode((string) $_GET['checkit']) : '';
 $repair = $_GET['repair'] ?? 0;
 $enableKeys = $_GET['enableKeys'] ?? '';
@@ -65,10 +65,14 @@ for ($i = 0; $i < (is_countable($databases['Name']) ? count($databases['Name']) 
 
 //list databases
 $tpl = new MODTemplate();
-$tpl->set_filenames([
-    'show' => './tpl/home/databases_list_dbs.tpl', ]);
-$tpl->assign_vars([
-    'ICONPATH' => $config['files']['iconpath'], ]);
+$tpl->set_filenames(
+    [
+    'show' => './tpl/home/databases_list_dbs.tpl', ]
+);
+$tpl->assign_vars(
+    [
+    'ICONPATH' => $config['files']['iconpath'], ]
+);
 
 if (!isset($config['dbconnection'])) {
     mod_mysqli_connect();
@@ -81,21 +85,25 @@ for ($i = 0; $i < (is_countable($databases['Name']) ? count($databases['Name']) 
 
     //gibts die Datenbank überhaupt?
     if (!mysqli_select_db($config['dbconnection'], $databases['Name'][$i])) {
-        $tpl->assign_block_vars('DB_NOT_FOUND', [
+        $tpl->assign_block_vars(
+            'DB_NOT_FOUND', [
             'ROWCLASS' => $rowclass,
             'NR' => ($i + 1),
             'DB_NAME' => $databases['Name'][$i],
-            'DB_ID' => $i, ]);
+            'DB_ID' => $i, ]
+        );
     } else {
         mysqli_select_db($config['dbconnection'], $databases['Name'][$i]);
         $tabellen = mysqli_query($config['dbconnection'], 'SHOW TABLES FROM `'.$databases['Name'][$i].'`');
         $num_tables = mysqli_num_rows($tabellen);
-        $tpl->assign_block_vars('ROW', [
+        $tpl->assign_block_vars(
+            'ROW', [
             'ROWCLASS' => $rowclass,
             'NR' => ($i + 1),
             'DB_NAME' => $databases['Name'][$i],
             'DB_ID' => $i,
-            'TABLE_COUNT' => $num_tables, ]);
+            'TABLE_COUNT' => $num_tables, ]
+        );
         if (1 == $num_tables) {
             $tpl->assign_block_vars('ROW.TABLE', []);
         } else {
@@ -111,8 +119,10 @@ if (isset($_GET['dbid'])) {
 
     // Output list of tables of the selected database
     $tpl = new MODTemplate();
-    $tpl->set_filenames([
-        'show' => 'tpl/home/databases_list_tables.tpl', ]);
+    $tpl->set_filenames(
+        [
+        'show' => 'tpl/home/databases_list_tables.tpl', ]
+    );
     $dbid = $_GET['dbid'];
 
     $numrows = 0;
@@ -121,12 +131,14 @@ if (isset($_GET['dbid'])) {
     if ($res) {
         $numrows = mysqli_num_rows($res);
     }
-    $tpl->assign_vars([
+    $tpl->assign_vars(
+        [
         'DB_NAME' => $databases['Name'][$dbid],
         'DB_NAME_URLENCODED' => urlencode((string) $databases['Name'][$dbid]),
         'DB_ID' => $dbid,
         'TABLE_COUNT' => $numrows,
-        'ICONPATH' => $config['files']['iconpath'], ]);
+        'ICONPATH' => $config['files']['iconpath'], ]
+    );
     $numrows = intval($numrows);
     if ($numrows > 1) {
         $tpl->assign_block_vars('MORE_TABLES', []);
@@ -161,7 +173,8 @@ if (isset($_GET['dbid'])) {
             $keys_disabled = false;
             if ('MyIsam' == $row['Engine']) {
             }
-            $tpl->assign_block_vars('ROW', [
+            $tpl->assign_block_vars(
+                'ROW', [
                 'ROWCLASS' => $rowclass,
                 'NR' => ($i + 1),
                 'TABLE_NAME' => $row['Name'],
@@ -170,7 +183,8 @@ if (isset($_GET['dbid'])) {
                 'SIZE' => byte_output($row['Data_length'] + $row['Index_length']),
                 'LAST_UPDATE' => $row['Update_time'],
                 'ENGINE' => $row['Engine'],
-            ]);
+                ]
+            );
 
             // Otimize & Repair - only for MyISAM-Tables
             if ('MyISAM' == $row['Engine']) {
@@ -218,10 +232,12 @@ if (isset($_GET['dbid'])) {
             }
         }
         // Output sum-row
-        $tpl->assign_block_vars('SUM', [
+        $tpl->assign_block_vars(
+            'SUM', [
             'RECORDS' => number_format($sum_records, 0, ',', '.'),
             'SIZE' => byte_output($sum_data_length),
-            'LAST_UPDATE' => $last_update, ]);
+            'LAST_UPDATE' => $last_update, ]
+        );
         if ($disabled_keys_found) {
             $tpl->assign_block_vars('DISABLED_KEYS_FOUND', []);
         }

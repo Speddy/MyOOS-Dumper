@@ -22,22 +22,26 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
-include_once './inc/header.php';
-include './inc/template.php';
+require_once './inc/header.php';
+require './inc/template.php';
 $lang_old = $config['language'];
 $config_refresh = '';
 
 // define template
 $tpl = new MODTemplate();
-$tpl->set_filenames([
+$tpl->set_filenames(
+    [
     'header' => 'tpl/menu/header.tpl',
     'footer' => 'tpl/menu/footer.tpl',
-    'content' => 'tpl/menu/content.tpl', ]);
+    'content' => 'tpl/menu/content.tpl', ]
+);
 
-$tpl->assign_vars([
+$tpl->assign_vars(
+    [
     'MOD_VERSION' => MOD_VERSION,
     'CONFIG_HOMEPAGE' => $config['homepage'],
-    'CONFIG_THEME' => $config['theme'], ]);
+    'CONFIG_THEME' => $config['theme'], ]
+);
 
 if (isset($_POST['selected_config']) || isset($_GET['config'])) {
     if (isset($_POST['selected_config'])) {
@@ -116,9 +120,11 @@ if (isset($_GET['dbindex'])) {
 
 if (isset($databases['Name']) && (is_countable($databases['Name']) ? count($databases['Name']) : 0) > 0) {
     $tpl->assign_block_vars('MAINTENANCE', []);
-    $tpl->assign_vars([
+    $tpl->assign_vars(
+        [
         'DB_ACTUAL' => $databases['db_actual'],
-        'DB_SELECTED_INDEX' => $databases['db_selected_index'], ]);
+        'DB_SELECTED_INDEX' => $databases['db_selected_index'], ]
+    );
 }
 $tpl->assign_var('GET_FILELIST', get_config_filelist());
 
@@ -127,10 +133,12 @@ if (isset($databases['Name']) && (is_countable($databases['Name']) ? count($data
     $datenbanken = is_countable($databases['Name']) ? count($databases['Name']) : 0;
     for ($i = 0; $i < $datenbanken; ++$i) {
         $selected = ($i == $databases['db_selected_index']) ? ' selected' : '';
-        $tpl->assign_block_vars('DB_LIST.DB_ROW', [
+        $tpl->assign_block_vars(
+            'DB_LIST.DB_ROW', [
             'ID' => $i,
             'NAME' => $databases['Name'][$i],
-            'SELECTED' => $selected, ]);
+            'SELECTED' => $selected, ]
+        );
     }
 } else {
     $tpl->assign_block_vars('NO_DB_FOUND', []);

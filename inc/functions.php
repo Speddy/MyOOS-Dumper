@@ -29,13 +29,13 @@ if (!function_exists('str_ireplace')) { // borrowed from http://www.dscripts.net
         if (!is_array($find)) {
             $find = [
                                             $find,
-        ];
+            ];
         }
         if (!is_array($replace)) {
             if (!is_array($find)) {
                 $replace = [
                                                     $replace,
-            ];
+                ];
             } else {
                 // this will duplicate the string into an array the size of $find
                 $c = count($find);
@@ -76,44 +76,48 @@ if (!function_exists('stripos')) { // borrowed from php.net comments
  * and was therefore deprecated as of PHP 8.1.0. It is recommended to use 
  * htmlspecialchars () instead.
  *
- * @param mixed $string The value to be filtered. If it is not a string, null is returned.
+ * @param  mixed $string The value to be filtered. If it is not a string, null is returned.
  * @return mixed The filtered value as a string, or null if the input is not a string.
- * @see https://www.php.net/manual/en/filter.filters.sanitize.php
- * @see https://www.php.net/manual/en/function.htmlspecialchars.php
+ * @see    https://www.php.net/manual/en/filter.filters.sanitize.php
+ * @see    https://www.php.net/manual/en/function.htmlspecialchars.php
  */
-function filter_string_polyfill (mixed $string): mixed {
-	// Check if the input is a valid string value
-	if (!is_string($string)) {
-		// If not, return null
-		return null;
-	}
-	// Otherwise, perform the filtering as usual
-	$str = preg_replace ('/\\x00|< [^>]*>?/', '', $string);
-	return str_replace(["'", '"'], ['&#39;', '&#34;'], $str);
+function filter_string_polyfill(mixed $string): mixed
+{
+    // Check if the input is a valid string value
+    if (!is_string($string)) {
+        // If not, return null
+        return null;
+    }
+    // Otherwise, perform the filtering as usual
+    $str = preg_replace('/\\x00|< [^>]*>?/', '', $string);
+    return str_replace(["'", '"'], ['&#39;', '&#34;'], $str);
 }
 
 
 function Help($ToolTip, $Anker, $imgsize = 12)
-{/*
+{
+    /*
     global $config;
     if($Anker!=""){
     return '<a href="language/'.$config['language'].'/help.html#'.$Anker.'" title="'.$ToolTip.'"><img src="'.$config['files']['iconpath'].'help16.gif" width="'.$imgsize.'" height="'.$imgsize.'" hspace="'.(round($imgsize/4,0)).'" vspace="0" border="0" alt="Help"></a>';
     } else {
     return '<img src="'.$config['files']['iconpath'].'help16.gif" width="'.$imgsize.'" height="'.$imgsize.'" alt="Help" title="'.$ToolTip.'" border="0" hspace="'.(round($imgsize/4,0)).'" vspace="0" >';
     }
-*/
+    */
 }
 
 function DeleteFilesM($dir, $pattern = '*.*')
 {
     $deleted = [];
-    $pattern = str_replace([
+    $pattern = str_replace(
+        [
                                 "\*",
                                 "\?",
-    ], [
+        ], [
             '.*',
             '.',
-    ], preg_quote((string) $pattern));
+        ], preg_quote((string) $pattern)
+    );
     if (!str_ends_with((string) $dir, '/')) {
         $dir .= '/';
     }
@@ -449,7 +453,8 @@ function WriteCronScript($restore_values = false)
     // and from cron (cron_db_array has different length to newDbNames: at least mysql and information_schema are missing)
     foreach ($cron_db_array as $k=>$v) {
         if (in_array($v, $dontBackupDatabases)) {
-            unset($cron_db_array[$k],
+            unset(
+                $cron_db_array[$k],
                 $cron_dbpraefix_array[$k],
                 $cron_command_before_dump[$k],
                 $cron_command_after_dump[$k]
@@ -549,20 +554,20 @@ function WriteCronScript($restore_values = false)
     $cronscript .= '$nl="\n";'.$nl;
     $cronscript .= '$cron_dbindex='.$cronDbIndex.';'.$nl;
     $cronscript .= '$cron_printout='.$config['cron_printout'].';'.$nl;
-	
-if ( (2 == $config['cron_use_mail']) || (3 == $config['cron_use_mail']) ) {
-	$cronscript .= '$cronmail=0;'.$nl;
-	$cronscript .= '$cronmail_dump=0;'.$nl;	
-} else {
-    $cronscript .= '$cronmail='.$config['send_mail'].';'.$nl;
-    $cronscript .= '$cronmail_dump='.$config['send_mail_dump'].';'.$nl;
-    $cronscript .= '$cronmailto="'.escape_specialchars($config['email_recipient']).'";'.$nl;
-    $cronscript .= '$cronmailto_cc="'.escape_specialchars($config['email_recipient_cc']).'";'.$nl;
-    $cronscript .= '$cronmailfrom="'.escape_specialchars($config['email_sender']).'";'.$nl;
-    $cronscript .= '$cron_use_mail='.$config['cron_use_mail'].';'.$nl;
-    $cronscript .= '$cron_smtp="'.escape_specialchars($config['cron_smtp']).'";'.$nl;
-    $cronscript .= '$cron_smtp_port="'.$config['cron_smtp_port'].'";'.$nl;
-} 
+    
+    if ((2 == $config['cron_use_mail']) || (3 == $config['cron_use_mail']) ) {
+        $cronscript .= '$cronmail=0;'.$nl;
+        $cronscript .= '$cronmail_dump=0;'.$nl;    
+    } else {
+        $cronscript .= '$cronmail='.$config['send_mail'].';'.$nl;
+        $cronscript .= '$cronmail_dump='.$config['send_mail_dump'].';'.$nl;
+        $cronscript .= '$cronmailto="'.escape_specialchars($config['email_recipient']).'";'.$nl;
+        $cronscript .= '$cronmailto_cc="'.escape_specialchars($config['email_recipient_cc']).'";'.$nl;
+        $cronscript .= '$cronmailfrom="'.escape_specialchars($config['email_sender']).'";'.$nl;
+        $cronscript .= '$cron_use_mail='.$config['cron_use_mail'].';'.$nl;
+        $cronscript .= '$cron_smtp="'.escape_specialchars($config['cron_smtp']).'";'.$nl;
+        $cronscript .= '$cron_smtp_port="'.$config['cron_smtp_port'].'";'.$nl;
+    } 
     $cronscript .= '@cron_db_array='.my_implode($cron_db_array);
     $cronscript .= '@cron_dbpraefix_array='.my_implode($cron_dbpraefix_array);
     $cronscript .= '@cron_command_before_dump='.my_implode($cron_command_before_dump);
@@ -754,13 +759,13 @@ function IsAccessProtected()
 {
     $rc = false;
 
-	if (isset($_SERVER['HTTPS']) && (strtolower((string) $_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == 1)) {
-		$scheme = 'https';
-	} elseif (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
-		$scheme = 'https';
-	} else {
-		$scheme = 'http';
-	}
+    if (isset($_SERVER['HTTPS']) && (strtolower((string) $_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == 1)) {
+        $scheme = 'https';
+    } elseif (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
+        $scheme = 'https';
+    } else {
+        $scheme = 'http';
+    }
 
     $url = sprintf('%s://%s%s', $scheme, $_SERVER['HTTP_HOST'], dirname((string) $_SERVER['PHP_SELF']));
     $headers = @get_headers($url);

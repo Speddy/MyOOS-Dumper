@@ -24,9 +24,9 @@ if (!@ob_start('ob_gzhandler')) {
 
 session_name('MyOOSDumperID');
 session_start();
-include './inc/functions.php';
-include './inc/functions_restore.php';
-include './inc/mysqli.php';
+require './inc/functions.php';
+require './inc/functions_restore.php';
+require './inc/mysqli.php';
 if (isset($_GET['filename'])) {
     // Arrays uebernehmen
     foreach ($_POST as $key => $val) {
@@ -93,8 +93,8 @@ if (isset($_GET['filename'])) {
         include './'.$config['files']['parameter'];
     }
 }
-include './language/'.$config['language'].'/lang.php';
-include './language/'.$config['language'].'/lang_restore.php';
+require './language/'.$config['language'].'/lang.php';
+require './language/'.$config['language'].'/lang_restore.php';
 $config['files']['iconpath'] = './css/'.$config['theme'].'/icons/';
 $aus = [];
 $pageheader = MODheader().headline($lang['L_RESTORE']);
@@ -146,9 +146,10 @@ if ($restore['filehandle']) {
         // Disable Keys of actual table to speed up restoring
         if (is_array($restore['tables_to_restore']) && sizeof($restore['tables_to_restore']) > 0 && in_array($restore['actual_table'], $restore['tables_to_restore'])) {
             @mysqli_query($config['dbconnection'], '/*!40000 ALTER TABLE `'.$restore['actual_table'].'` DISABLE KEYS */;');
-        } elseif (!is_array($restore['tables_to_restore']) &&
-            (is_array($restore['tables_to_restore']) && 0 == sizeof($restore['tables_to_restore'])) &&
-            ($restore['actual_table'] > '' && 'unbekannt' != $restore['actual_table'])) {
+        } elseif (!is_array($restore['tables_to_restore']) 
+            && (is_array($restore['tables_to_restore']) && 0 == sizeof($restore['tables_to_restore'])) 
+            && ($restore['actual_table'] > '' && 'unbekannt' != $restore['actual_table'])
+        ) {
             @mysqli_query($config['dbconnection'], '/*!40000 ALTER TABLE `'.$restore['actual_table'].'` DISABLE KEYS */;');
         }
 

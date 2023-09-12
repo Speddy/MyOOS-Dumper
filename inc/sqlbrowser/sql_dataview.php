@@ -176,7 +176,7 @@ if ($numrowsabs > 0 && $Anzahl_SQLs <= 1) {
         $temp = [];
 
         for ($x = 0; $x < ($row === null ? 0 : count($row)); ++$x) {
-            //	$temp[$x]['data'] =mysqli_fetch_field($res, $x);
+            //    $temp[$x]['data'] =mysqli_fetch_field($res, $x);
             $temp[$x]['data'] = mysqli_fetch_field($res);
             $temp[$x]['sort'] = add_sortkey($temp[$x]['data']->name);
         }

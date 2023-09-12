@@ -21,16 +21,20 @@ if (!defined('MOD_VERSION')) {
 }
 //Start SQL-Box
 $tpl = new MODTemplate();
-$tpl->set_filenames([
-    'show' => $config['paths']['root'].'./tpl/sqlbrowser/sqlbox.tpl', ]);
+$tpl->set_filenames(
+    [
+    'show' => $config['paths']['root'].'./tpl/sqlbrowser/sqlbox.tpl', ]
+);
 
 if (isset($_GET['readfile']) && 1 == $_GET['readfile']) {
-    $tpl->assign_block_vars('SQLUPLOAD', [
+    $tpl->assign_block_vars(
+        'SQLUPLOAD', [
         'POSTTARGET' => $params,
         'LANG_OPENSQLFILE' => $lang['L_SQL_OPENFILE'],
         'LANG_OPENSQLFILE_BUTTON' => $lang['L_SQL_OPENFILE_BUTTON'],
         'LANG_SQL_MAXSIZE' => $lang['L_MAX_UPLOAD_SIZE'],
-        'MAX_FILESIZE' => $config['upload_max_filesize'], ]);
+        'MAX_FILESIZE' => $config['upload_max_filesize'], ]
+    );
 }
 
 if (isset($_POST['submit_openfile'])) {
@@ -52,11 +56,14 @@ if (isset($_POST['submit_openfile'])) {
 // Sind SQL-Befehle in der SQLLib vorhanden?
 $sqlcombo = SQL_ComboBox();
 if ($sqlcombo > '') {
-    $tpl->assign_block_vars('SQLCOMBO', [
-    'SQL_COMBOBOX' => $sqlcombo, ]);
+    $tpl->assign_block_vars(
+        'SQLCOMBO', [
+        'SQL_COMBOBOX' => $sqlcombo, ]
+    );
 }
 
-$tpl->assign_vars([
+$tpl->assign_vars(
+    [
     'LANG_SQL_WARNING' => $lang['L_SQL_WARNING'],
     'ICONPATH' => $config['files']['iconpath'],
     'MYSQL_REF' => $mysql_help_ref,
@@ -80,7 +87,8 @@ $tpl->assign_vars([
     'LANG_DB' => $lang['L_DB'],
     'LANG_TABLE' => $lang['L_TABLE'],
     'LANG_SQL_TABLEVIEW' => $lang['L_SQL_TABLEVIEW'],
-    'LANG_BACK_TO_DB_OVERVIEW' => $lang['L_SQL_BACKDBOVERVIEW'], ]);
+    'LANG_BACK_TO_DB_OVERVIEW' => $lang['L_SQL_BACKDBOVERVIEW'], ]
+);
 if ($tablename > '') {
     $tpl->assign_block_vars('TABLE_SELECTED', []);
 }

@@ -24,7 +24,7 @@ use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 
-include './inc/functions_global.php';
+require './inc/functions_global.php';
 
 //Buffer fuer Multipart-Filesizepruefung
 $buffer = 10 * 1024;
@@ -111,7 +111,7 @@ function GetStatusLine($kind = 'php')
                 exit($read_create_error);
             }
             ++$dump['errors'];
-        //$i++; // skip corrupted table
+            //$i++; // skip corrupted table
         } else {
             $row2 = mysqli_fetch_array($res2);
             $erg['Rows'] = $row2['count_records'];
@@ -288,7 +288,7 @@ function ExecuteCommand($when)
     }
     if ('b' == $when) { // before dump
         $cd = $databases['command_before_dump'][$dump['dbindex']];
-    //WriteLog('DbIndex: '.$dump['dbindex'].' Before: '.$databases['command_before_dump'][$dump['dbindex']]);
+        //WriteLog('DbIndex: '.$dump['dbindex'].' Before: '.$databases['command_before_dump'][$dump['dbindex']]);
     } else {
         $cd = $databases['command_after_dump'][$dump['dbindex']];
         //WriteLog('DbIndex: '.$dump['dbindex'].' After: '.$databases['command_after_dump'][$dump['dbindex']]);
@@ -342,14 +342,14 @@ function DoEmail()
 
     // (Re)create it, if it's gone missing
     if (! ($phpmailer instanceof PHPMailer)) {
-		require_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/Exception.php';
-		require_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/PHPMailer.php';
-		require_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/SMTP.php';	
+        include_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/Exception.php';
+        include_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/PHPMailer.php';
+        include_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/SMTP.php';    
         $phpmailer = new PHPMailer(true);
     }
 
     // load the appropriate language version
-	$sLang = ($config['language'] ?? 'en');
+    $sLang = ($config['language'] ?? 'en');
     $phpmailer->setLanguage($sLang, MOD_INCLUDE_PATH . '/inc/lib/phpmailer/language/');
 
     // Empty out the values that may be set.
@@ -362,44 +362,44 @@ function DoEmail()
     $phpmailer->CharSet   = 'UTF-8';
     $phpmailer->Encoding  = 'base64';
 
-	$phpmailer->setFrom($config['email_sender'], '');
-	if (isset($config['email_recipient_cc']) && trim((string) $config['email_recipient_cc']) > '') {
-		$phpmailer->addCC($config['email_recipient_cc']);
-	}	
-	$phpmailer->AddAddress($config['email_recipient'], '');
+    $phpmailer->setFrom($config['email_sender'], '');
+    if (isset($config['email_recipient_cc']) && trim((string) $config['email_recipient_cc']) > '') {
+        $phpmailer->addCC($config['email_recipient_cc']);
+    }    
+    $phpmailer->AddAddress($config['email_recipient'], '');
 
 
-	// SMTP for Perl
-	if (0 == $config['cron_use_mail']) {
-			$phpmailer->IsSMTP();
-			$phpmailer->Host  = $config['cron_smtp'];
-			$phpmailer->Port  = '25';
-	} elseif (1 == $config['cron_use_mail']) {
-			$phpmailer->isSendmail();
-			$phpmailer->Sendmail = $config['cron_sendmail'];
-	} elseif (2 == $config['cron_use_mail']) {
+    // SMTP for Perl
+    if (0 == $config['cron_use_mail']) {
+        $phpmailer->IsSMTP();
+        $phpmailer->Host  = $config['cron_smtp'];
+        $phpmailer->Port  = '25';
+    } elseif (1 == $config['cron_use_mail']) {
+        $phpmailer->isSendmail();
+        $phpmailer->Sendmail = $config['cron_sendmail'];
+    } elseif (2 == $config['cron_use_mail']) {
         $phpmailer->IsSMTP(); // set mailer to use SMTP
 
-		// SMTP Debug
-		//	$phpmailer->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
-		
-		$phpmailer->Host       = $config['other_smtp_host'];	//Set the SMTP server to send through
-		$phpmailer->SMTPAuth   = isset($config['other_smtp_username']) || isset($config['other_smtp_password']);   //Enable SMTP authentication
-		$phpmailer->Username   = $config['other_smtp_username'];	//SMTP username
-		$phpmailer->Password   = $config['other_smtp_password'];	//SMTP password
+        // SMTP Debug
+        //    $phpmailer->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+        
+        $phpmailer->Host       = $config['other_smtp_host'];    //Set the SMTP server to send through
+        $phpmailer->SMTPAuth   = isset($config['other_smtp_username']) || isset($config['other_smtp_password']);   //Enable SMTP authentication
+        $phpmailer->Username   = $config['other_smtp_username'];    //SMTP username
+        $phpmailer->Password   = $config['other_smtp_password'];    //SMTP password
 
-		// Set the encryption mechanism to use:
-		// - SMTPS (implicit TLS on port 465) or
-		// - STARTTLS (explicit TLS on port 587)
-		$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-		$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-		
-		// Set the SMTP port number:
-		// - 465 for SMTP with implicit TLS, a.k.a. RFC8314 SMTPS or
-		// - 587 for SMTP+STARTTLS
-		$phpmailer->Port       = $config['other_smtp_port']; 
-  		
-		
+        // Set the encryption mechanism to use:
+        // - SMTPS (implicit TLS on port 465) or
+        // - STARTTLS (explicit TLS on port 587)
+        $phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+        $phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        
+        // Set the SMTP port number:
+        // - 465 for SMTP with implicit TLS, a.k.a. RFC8314 SMTPS or
+        // - 587 for SMTP+STARTTLS
+        $phpmailer->Port       = $config['other_smtp_port']; 
+          
+        
     } elseif (3 == $config['cron_use_mail']) { 
         $phpmailer->IsMail();
     }
@@ -412,7 +412,7 @@ function DoEmail()
         if (($config['email_maxsize'] > 0 && $file_size > $config['email_maxsize']) || 0 == $config['send_mail_dump']) {
             //anhang zu gross
             $subject = "Backup '".$databases['Name'][$dump['dbindex']]."' - ".date("d\.m\.Y H:i", time());
-			$phpmailer->Subject = $subject;
+            $phpmailer->Subject = $subject;
 
             if (0 != $config['send_mail_dump']) {
                 $msg_body = sprintf(addslashes((string) $lang['L_EMAILBODY_TOOBIG']), byte_output($config['email_maxsize']), $databases['Name'][$dump['dbindex']], "$file (".byte_output(filesize($config['paths']['backup'].$file)).')<br>');
@@ -422,30 +422,30 @@ function DoEmail()
             include_once './inc/functions.php';
             $msg_body .= '<a href="'.getServerProtocol().$_SERVER['HTTP_HOST'].substr((string) $_SERVER['PHP_SELF'], 0, strrpos((string) $_SERVER['PHP_SELF'], '/')).'/'.$config['paths']['backup'].$file.'">'.$file.'</a>';
 
-			// Build the text version
-			$text = strip_tags($msg_body);
-			$phpmailer->IsHTML(true);
-			$phpmailer->Body = $msg_body;;
-			$phpmailer->AltBody = $text;			
+            // Build the text version
+            $text = strip_tags($msg_body);
+            $phpmailer->IsHTML(true);
+            $phpmailer->Body = $msg_body;;
+            $phpmailer->AltBody = $text;            
 
-		
+        
             $email_log = "Email sent to '".$config['email_recipient']."'";
             $email_out = $lang['L_EMAIL_WAS_SEND'].'`'.$config['email_recipient'].'`<br>';
         } else {
             //alles ok, anhang generieren
             $msg_body = sprintf(addslashes((string) $lang['L_EMAILBODY_ATTACH']), $databases['Name'][$dump['dbindex']], "$file (".byte_output(filesize($config['paths']['backup'].$file)).')');
             $subject = "Backup '".$databases['Name'][$dump['dbindex']]."' - ".date("d\.m\.Y", time());
-			$phpmailer->Subject = $subject;
-			
-			// Build the text version
-			$text = strip_tags($msg_body);
-			$phpmailer->IsHTML(true);
-			$phpmailer->Body = $msg_body;;
-			$phpmailer->AltBody = $text;
-			
-			$filename = $config['paths']['backup'].$file;	
-			$phpmailer->addAttachment ($filename);			
-			
+            $phpmailer->Subject = $subject;
+            
+            // Build the text version
+            $text = strip_tags($msg_body);
+            $phpmailer->IsHTML(true);
+            $phpmailer->Body = $msg_body;;
+            $phpmailer->AltBody = $text;
+            
+            $filename = $config['paths']['backup'].$file;    
+            $phpmailer->addAttachment($filename);            
+            
             $email_log = "Email was sent to '".$config['email_recipient']."' with '".$dump['backupdatei']."'.";
             $email_out = $lang['L_EMAIL_WAS_SEND'].'`'.$config['email_recipient'].'`'.$lang['L_WITH'].'`'.$dump['backupdatei'].'`.<br>';
         }
@@ -453,8 +453,8 @@ function DoEmail()
         //Multipart
         $mp_sub = "Backup '".$databases['Name'][$dump['dbindex']]."' - ".date("d\.m\.Y", time());
         $subject = $mp_sub;
-		$phpmailer->Subject = $subject;
-		
+        $phpmailer->Subject = $subject;
+        
         $dateistamm = substr((string) $dump['backupdatei'], 0, strrpos((string) $dump['backupdatei'], 'part_')).'part_';
         $dateiendung = (1 == $config['compression']) ? '.sql.gz' : '.sql';
         $mpdatei = [];
@@ -463,38 +463,38 @@ function DoEmail()
             $mpdatei[$i - 1] = $dateistamm.$i.$dateiendung;
             $sz = byte_output(@filesize($config['paths']['backup'].$mpdatei[$i - 1]));
             $mpfiles .= $mpdatei[$i - 1].' ('.$sz.')<br>';
-	
-			
+    
+            
         }
         $msg_body = (1 == $config['send_mail_dump']) ? sprintf(addslashes((string) $lang['L_EMAILBODY_MP_ATTACH']), $databases['Name'][$dump['dbindex']], $mpfiles) : sprintf(addslashes((string) $lang['L_EMAILBODY_MP_NOATTACH']), $databases['Name'][$dump['dbindex']], $mpfiles);
 
 
-		// Build the text version
-		$text = strip_tags($msg_body);
-		$phpmailer->IsHTML(true);
-		$phpmailer->Body = $msg_body;;
-		$phpmailer->AltBody = $text;
+        // Build the text version
+        $text = strip_tags($msg_body);
+        $phpmailer->IsHTML(true);
+        $phpmailer->Body = $msg_body;;
+        $phpmailer->AltBody = $text;
 
-			
-		$filename = $config['paths']['backup'].$mpdatei[$i - 1];
-		$phpmailer->addAttachment ($filename);		
+            
+        $filename = $config['paths']['backup'].$mpdatei[$i - 1];
+        $phpmailer->addAttachment($filename);        
 
-		$email_log = "Email was sent to '".$config['email_recipient']."'";
+        $email_log = "Email was sent to '".$config['email_recipient']."'";
         $email_out = $lang['L_EMAIL_WAS_SEND'].'`'.$config['email_recipient'].'`<br>';
     }
-	
+    
 
-	// Send message
-	if(!$phpmailer->Send()) {		
-		$out .= '<span class="error">'.$lang['L_MAILERROR'].'</span><br>';
-		WriteLog("Email to '".$config['email_recipient']."' failed !");
-		ErrorLog('Email ', $databases['Name'][$dump['dbindex']], 'Subject: '.stripslashes($subject), $lang['L_MAILERROR']);
-		ErrorLog('Mailer Error: ' . $phpmailer->ErrorInfo);
-		++$dump['errors'];
+    // Send message
+    if(!$phpmailer->Send()) {        
+        $out .= '<span class="error">'.$lang['L_MAILERROR'].'</span><br>';
+        WriteLog("Email to '".$config['email_recipient']."' failed !");
+        ErrorLog('Email ', $databases['Name'][$dump['dbindex']], 'Subject: '.stripslashes($subject), $lang['L_MAILERROR']);
+        ErrorLog('Mailer Error: ' . $phpmailer->ErrorInfo);
+        ++$dump['errors'];
     } else {
-		$out .= '<span class="success">'.$email_out.'</span>';
-		WriteLog("$email_log");
-    }	
+        $out .= '<span class="success">'.$email_out.'</span>';
+        WriteLog("$email_log");
+    }    
 
 
     if (isset($mpdatei) && 1 == $config['send_mail_dump']) { // && ($config['email_maxsize'] ==0 || ($config['email_maxsize']>0 && $config['multipartgroesse2']<= $config['email_maxsize']))) {
@@ -507,33 +507,33 @@ function DoEmail()
             $encoded_file = chunk_split(base64_encode($contents));
             fclose($fp);
             $subject = $mp_sub.'  [Part '.($i + 1).' / '.count($mpdatei).']';
-			$phpmailer->Subject = $subject;
-			
+            $phpmailer->Subject = $subject;
+            
             $msg_body =  addslashes($lang['L_EMAIL_ONLY_ATTACHMENT'].$lang['L_EMAILBODY_FOOTER']);
-			// Build the text version
-			$text = strip_tags($msg_body);
-			$phpmailer->IsHTML(true);
-			$phpmailer->Body = $msg_body;;
-			$phpmailer->AltBody = $text;
-			
-			$filename = $config['paths']['backup'].$mpdatei[$i];
-			$phpmailer->addAttachment ($filename);	
-			
+            // Build the text version
+            $text = strip_tags($msg_body);
+            $phpmailer->IsHTML(true);
+            $phpmailer->Body = $msg_body;;
+            $phpmailer->AltBody = $text;
+            
+            $filename = $config['paths']['backup'].$mpdatei[$i];
+            $phpmailer->addAttachment($filename);    
+            
             $email_log = "Email with $mpdatei[$i] was sent to '".$config['email_recipient']."'";
             $email_out = $lang['L_EMAIL_WAS_SEND'].'`'.$config['email_recipient'].'`'.$lang['L_WITH'].'`'.$mpdatei[$i].'`.<br>';
 
 
-			// Send message
-			if(!$phpmailer->Send()) {		
+            // Send message
+            if(!$phpmailer->Send()) {        
                 $out .= '<span class="error">'.$lang['L_MAILERROR'].'</span><br>';
                 WriteLog("Email to '".$config['email_recipient']."' failed !");
                 ErrorLog('Email ', $databases['Name'][$dump['dbindex']], 'Subject: '.stripslashes($subject), $lang['L_MAILERROR']);
-				ErrorLog('Mailer Error: ' . $phpmailer->ErrorInfo);
-				++$dump['errors'];
-			} else {
-				$out .= '<span class="success">'.$email_out.'</span>';
-				WriteLog("$email_log");
-			}
+                ErrorLog('Mailer Error: ' . $phpmailer->ErrorInfo);
+                ++$dump['errors'];
+            } else {
+                $out .= '<span class="success">'.$email_out.'</span>';
+                WriteLog("$email_log");
+            }
         }
     }
 }

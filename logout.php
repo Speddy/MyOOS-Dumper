@@ -18,11 +18,11 @@
 
 
 if (isset($_SERVER['HTTPS']) && (strtolower((string) $_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == 1)) {
-	$scheme = 'https';
+    $scheme = 'https';
 } elseif (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
-	$scheme = 'https';
+    $scheme = 'https';
 } else {
-	$scheme = 'http';
+    $scheme = 'http';
 }
 
 // Set the URL to redirect to

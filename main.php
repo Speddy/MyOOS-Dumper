@@ -29,14 +29,14 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
-$autoloader = require_once './vendor/autoload.php';
+$autoloader = include_once './vendor/autoload.php';
 use VisualAppeal\AutoUpdate;
 
 
-include_once './inc/header.php';
-include_once './inc/runtime.php';
-include_once './language/'.$config['language'].'/lang_main.php';
-include './inc/template.php';
+require_once './inc/header.php';
+require_once './inc/runtime.php';
+require_once './language/'.$config['language'].'/lang_main.php';
+require './inc/template.php';
 
 $action = $_GET['action'] ?? 'status';
 
@@ -62,47 +62,51 @@ $check_update = false;
 
 $config['update_core'] ??= 0;
 if ((isset($config['update_core']) && 1 == $config['update_core'])) {
-	if (extension_loaded('zlib')) {
-		$update = new AutoUpdate($config['paths']['temp'], $config['paths']['root'], 60);
-		$update->setCurrentVersion(MOD_VERSION);
+    if (extension_loaded('zlib')) {
+        $update = new AutoUpdate($config['paths']['temp'], $config['paths']['root'], 60);
+        $update->setCurrentVersion(MOD_VERSION);
 
-		// Replace with your server update directory
-		$update->setUpdateUrl('https://oos-shop.de/modserver');
-	
-		// Custom logger (optional)
-		$logger = new \Monolog\Logger("default");
-		$logger->pushHandler(new Monolog\Handler\StreamHandler($config['paths']['log'] . 'update.log'));
-		$update->setLogger($logger);
+        // Replace with your server update directory
+        $update->setUpdateUrl('https://oos-shop.de/modserver');
+    
+        // Custom logger (optional)
+        $logger = new \Monolog\Logger("default");
+        $logger->pushHandler(new Monolog\Handler\StreamHandler($config['paths']['log'] . 'update.log'));
+        $update->setLogger($logger);
 
 
-		// Cache (optional but recommended)
-		$cache = new Desarrolla2\Cache\File($config['paths']['cache']);
-		$update->setCache($cache, 3600);
+        // Cache (optional but recommended)
+        $cache = new Desarrolla2\Cache\File($config['paths']['cache']);
+        $update->setCache($cache, 3600);
 
-		// Check for a new update
-		if ($update->checkUpdate() === false) {
-			// die('Could not check for updates! See log file for details.');
-			$check_update = false;
-		} else {
-			$check_update = true;
-		}
+        // Check for a new update
+        if ($update->checkUpdate() === false) {
+            // die('Could not check for updates! See log file for details.');
+            $check_update = false;
+        } else {
+            $check_update = true;
+        }
 
-		if ('update' == $action) {
-			echo MODHeader();
-			require_once './inc/home/update.php';
-			echo MODFooter();
-			exit;
-		}
-	}
+        if ('update' == $action) {
+            echo MODHeader();
+            include_once './inc/home/update.php';
+            echo MODFooter();
+            exit;
+        }
+    }
 }
 
 // Output headnavi
 $tpl = new MODTemplate();
-$tpl->set_filenames([
-    'show' => 'tpl/home/headnavi.tpl', ]);
-$tpl->assign_vars([
+$tpl->set_filenames(
+    [
+    'show' => 'tpl/home/headnavi.tpl', ]
+);
+$tpl->assign_vars(
+    [
     'HEADER' => MODHeader(),
-    'HEADLINE' => headline($lang['L_HOME']), ]);
+    'HEADLINE' => headline($lang['L_HOME']), ]
+);
 $tpl->pparse('show');
 
 mod_mysqli_connect();

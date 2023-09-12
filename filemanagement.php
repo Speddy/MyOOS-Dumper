@@ -21,14 +21,14 @@ define('OOS_VALID_MOD', true);
 if (isset($_GET['action']) && 'dl' == $_GET['action']) {
     $download = true;
 }
-include './inc/header.php';
-include_once './language/'.$config['language'].'/lang.php';
-include_once './language/'.$config['language'].'/lang_dump.php';
-include_once './language/'.$config['language'].'/lang_filemanagement.php';
-include_once './language/'.$config['language'].'/lang_config_overview.php';
-include_once './language/'.$config['language'].'/lang_main.php';
-include_once './inc/functions_files.php';
-include_once './inc/functions_sql.php';
+require './inc/header.php';
+require_once './language/'.$config['language'].'/lang.php';
+require_once './language/'.$config['language'].'/lang_dump.php';
+require_once './language/'.$config['language'].'/lang_filemanagement.php';
+require_once './language/'.$config['language'].'/lang_config_overview.php';
+require_once './language/'.$config['language'].'/lang_main.php';
+require_once './inc/functions_files.php';
+require_once './inc/functions_sql.php';
 
 $msg = '';
 $dump = [];
@@ -48,7 +48,7 @@ $dk = filter_string_polyfill(filter_input(INPUT_POST, 'dk'));
 
 
 if ($dk === null) {
-  $dk = '';
+    $dk = '';
 }
 $dk = str_replace(':', '|', (string) $dk); // remove : because of statusline
 $dump['sel_dump_encoding'] = $_POST['sel_dump_encoding'] ?? get_index($config['mysql_possible_character_sets'], $config['mysql_standard_character_set']);
@@ -307,260 +307,260 @@ $autodel .= '</p>';
 
 //Fallunterscheidung
 switch ($action) {
-    case 'dump':
-        $dbName = $databases['Name'][$databases['db_selected_index']];
-        if ((isset($config['multi_dump']) && (0 == $config['multi_dump'])) && in_array($dbName, $dontBackupDatabases)) {
-            echo headline($lang['L_FM_DUMP_HEADER'].' <span class="small">("'.$lang['L_CONFIG_HEADLINE'].': '.$config['config_file'].'")</span>');
-            echo '<span class="error">'.sprintf($lang['L_BACKUP_NOT_POSSIBLE'], $dbName).'</span>';
-            break;
-        }
-        if (isset($config['multi_dump']) && (0 == $config['multi_dump'])) {
-            DBDetailInfo($databases['db_selected_index']);
-        }
-        $cext = (isset($config['cron_extender']) && (0 == $config['cron_extender'])) ? 'pl' : 'cgi';
-		
-		$document_root = (isset($_SERVER['DOCUMENT_ROOT'])) ? filter_string_polyfill($_SERVER['DOCUMENT_ROOT']) : '';
-		$script_name = (isset($_SERVER['SCRIPT_NAME'])) ? filter_string_polyfill($_SERVER['SCRIPT_NAME']) : '';
-		$server_name = (isset($_SERVER['SERVER_NAME'])) ? filter_string_polyfill($_SERVER['SERVER_NAME']) : '';
-		
-        $actualUrl = substr((string) $script_name, 0, strrpos((string) $script_name, '/') + 1);
-        if (!str_ends_with($actualUrl, '/')) {
-            $actualUrl .= '/';
-        }
-        if (!str_starts_with($actualUrl, '/')) {
-            $actualUrl = "/$actualUrl";
-        }
-        $refdir = (str_starts_with((string) $config['cron_execution_path'], '/')) ? '' : $actualUrl;
-        $scriptdir = $config['cron_execution_path'].'crondump.'.$cext;
-        $sfile = $config['cron_execution_path']."perltest.$cext";
-        $simplefile = $config['cron_execution_path']."simpletest.$cext";
-        $scriptentry = Realpfad('./').$config['paths']['config'];
-        $cronabsolute = (str_starts_with((string) $config['cron_execution_path'], '/')) ? $document_root.$scriptdir : Realpfad('./').$scriptdir;
-        $confabsolute = $config['config_file'];
-		
-
-        $scriptref = getServerProtocol().$server_name.$refdir.$config['cron_execution_path'].'crondump.'.$cext.'?config='.$confabsolute;
-        $cronref = 'perl '.$cronabsolute.' -config='.$confabsolute.' -html_output=0';
-
-        //Ausgabe
+case 'dump':
+    $dbName = $databases['Name'][$databases['db_selected_index']];
+    if ((isset($config['multi_dump']) && (0 == $config['multi_dump'])) && in_array($dbName, $dontBackupDatabases)) {
         echo headline($lang['L_FM_DUMP_HEADER'].' <span class="small">("'.$lang['L_CONFIG_HEADLINE'].': '.$config['config_file'].'")</span>');
-        if (!is_writable($config['paths']['backup'])) {
-            exit('<span class="error">'.sprintf($lang['L_WRONG_RIGHTS'], 'work/backup', '777').'</span>');
-        }
-        echo ($msg > '') ? $msg.'<br>' : '';
-        echo $autodel;
+        echo '<span class="error">'.sprintf($lang['L_BACKUP_NOT_POSSIBLE'], $dbName).'</span>';
+        break;
+    }
+    if (isset($config['multi_dump']) && (0 == $config['multi_dump'])) {
+        DBDetailInfo($databases['db_selected_index']);
+    }
+    $cext = (isset($config['cron_extender']) && (0 == $config['cron_extender'])) ? 'pl' : 'cgi';
+        
+    $document_root = (isset($_SERVER['DOCUMENT_ROOT'])) ? filter_string_polyfill($_SERVER['DOCUMENT_ROOT']) : '';
+    $script_name = (isset($_SERVER['SCRIPT_NAME'])) ? filter_string_polyfill($_SERVER['SCRIPT_NAME']) : '';
+    $server_name = (isset($_SERVER['SERVER_NAME'])) ? filter_string_polyfill($_SERVER['SERVER_NAME']) : '';
+        
+    $actualUrl = substr((string) $script_name, 0, strrpos((string) $script_name, '/') + 1);
+    if (!str_ends_with($actualUrl, '/')) {
+        $actualUrl .= '/';
+    }
+    if (!str_starts_with($actualUrl, '/')) {
+        $actualUrl = "/$actualUrl";
+    }
+    $refdir = (str_starts_with((string) $config['cron_execution_path'], '/')) ? '' : $actualUrl;
+    $scriptdir = $config['cron_execution_path'].'crondump.'.$cext;
+    $sfile = $config['cron_execution_path']."perltest.$cext";
+    $simplefile = $config['cron_execution_path']."simpletest.$cext";
+    $scriptentry = Realpfad('./').$config['paths']['config'];
+    $cronabsolute = (str_starts_with((string) $config['cron_execution_path'], '/')) ? $document_root.$scriptdir : Realpfad('./').$scriptdir;
+    $confabsolute = $config['config_file'];
+        
 
-        //Auswahl
-        echo '<div>
+    $scriptref = getServerProtocol().$server_name.$refdir.$config['cron_execution_path'].'crondump.'.$cext.'?config='.$confabsolute;
+    $cronref = 'perl '.$cronabsolute.' -config='.$confabsolute.' -html_output=0';
+
+    //Ausgabe
+    echo headline($lang['L_FM_DUMP_HEADER'].' <span class="small">("'.$lang['L_CONFIG_HEADLINE'].': '.$config['config_file'].'")</span>');
+    if (!is_writable($config['paths']['backup'])) {
+        exit('<span class="error">'.sprintf($lang['L_WRONG_RIGHTS'], 'work/backup', '777').'</span>');
+    }
+    echo ($msg > '') ? $msg.'<br>' : '';
+    echo $autodel;
+
+    //Auswahl
+    echo '<div>
 		<input type="button" value=" '.$lang['L_DUMP'].' PHP " class="Formbutton" onclick="document.getElementById(\'buperl\').style.display=\'none\';document.getElementById(\'buphp\').style.display=\'block\';">
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<input type="button" value=" '.$lang['L_DUMP'].' PERL " class="Formbutton" onclick="document.getElementById(\'buphp\').style.display=\'none\';document.getElementById(\'buperl\').style.display=\'block\';">
 		</div>';
-        echo '<div id="buphp">';
+    echo '<div id="buphp">';
 
-        //Dumpsettings
-        echo '<h6>'.$lang['L_DUMP'].' (PHP)</h6>';
+    //Dumpsettings
+    echo '<h6>'.$lang['L_DUMP'].' (PHP)</h6>';
 
-        echo '<div><form name="fm" id="fm" method="post" action="'.$href.'">';
-        echo '<input class="Formbutton" name="dump" type="submit" value="';
-        echo $lang['L_FM_STARTDUMP'].'"><br>';
+    echo '<div><form name="fm" id="fm" method="post" action="'.$href.'">';
+    echo '<input class="Formbutton" name="dump" type="submit" value="';
+    echo $lang['L_FM_STARTDUMP'].'"><br>';
 
-        echo '<br><table>';
-        echo $tbl_abfrage;
-        echo '<tr><td><label for="sel_dump_encoding">'.$lang['L_FM_CHOOSE_ENCODING'].'</label></td>';
-        echo '<td><select name="sel_dump_encoding" id="sel_dump_encoding">';
-        echo make_options($config['mysql_possible_character_sets'], $dump['sel_dump_encoding']);
-        echo '</select></td></tr>';
-        echo '<tr><td>'.$lang['L_MYSQL_CONNECTION_ENCODING'].':</td><td><strong>'.$config['mysql_standard_character_set'].'</strong></td></tr>';
-        echo '</table>';
-        echo '</form><br></div>';
+    echo '<br><table>';
+    echo $tbl_abfrage;
+    echo '<tr><td><label for="sel_dump_encoding">'.$lang['L_FM_CHOOSE_ENCODING'].'</label></td>';
+    echo '<td><select name="sel_dump_encoding" id="sel_dump_encoding">';
+    echo make_options($config['mysql_possible_character_sets'], $dump['sel_dump_encoding']);
+    echo '</select></td></tr>';
+    echo '<tr><td>'.$lang['L_MYSQL_CONNECTION_ENCODING'].':</td><td><strong>'.$config['mysql_standard_character_set'].'</strong></td></tr>';
+    echo '</table>';
+    echo '</form><br></div>';
 
-        echo '<h6>'.$lang['L_FM_DUMPSETTINGS'].' (PHP)</h6>';
+    echo '<h6>'.$lang['L_FM_DUMPSETTINGS'].' (PHP)</h6>';
 
-        echo '<table>';
-        echo '<tr><td>'.$lang['L_DB'].':</td><td><strong>';
-        if (isset($config['multi_dump']) && (1 == $config['multi_dump'])) {
-            echo 'Multidump ('.(is_countable($databases['multi']) ? count($databases['multi']) : 0).' '.$lang['L_DBS'].')</strong>';
-            echo '<span class="small">'.$toolboxstring.'</span>';
-        } else {
-            echo $databases['db_actual'];
-            if (isset($databases['Detailinfo'])) {
-                echo '&nbsp;&nbsp;<span> ('.$databases['Detailinfo']['tables'].' Tables, '.$databases['Detailinfo']['records'].' Records, '.byte_output($databases['Detailinfo']['size']).')</span>';
-            }
-            echo '</strong>';
+    echo '<table>';
+    echo '<tr><td>'.$lang['L_DB'].':</td><td><strong>';
+    if (isset($config['multi_dump']) && (1 == $config['multi_dump'])) {
+        echo 'Multidump ('.(is_countable($databases['multi']) ? count($databases['multi']) : 0).' '.$lang['L_DBS'].')</strong>';
+        echo '<span class="small">'.$toolboxstring.'</span>';
+    } else {
+        echo $databases['db_actual'];
+        if (isset($databases['Detailinfo'])) {
+            echo '&nbsp;&nbsp;<span> ('.$databases['Detailinfo']['tables'].' Tables, '.$databases['Detailinfo']['records'].' Records, '.byte_output($databases['Detailinfo']['size']).')</span>';
         }
-        echo '</td></tr>';
+        echo '</strong>';
+    }
+    echo '</td></tr>';
 
-        if ((isset($config['multi_dump']) && (0 == $config['multi_dump'])) && $databases['praefix'][$databases['db_selected_index']] > '') {
-            echo '<tr><td>'.$lang['L_PRAEFIX'].':</td><td><strong>';
-            echo $databases['praefix'][$databases['db_selected_index']];
-            echo '</strong></td></tr>';
-        }
-
-        echo '<tr><td>'.$lang['L_GZIP'].':</td><td><strong>'.((isset($config['compression']) && (1 == $config['compression'])) ? $lang['L_ACTIVATED'] : $lang['L_NOT_ACTIVATED']);
+    if ((isset($config['multi_dump']) && (0 == $config['multi_dump'])) && $databases['praefix'][$databases['db_selected_index']] > '') {
+        echo '<tr><td>'.$lang['L_PRAEFIX'].':</td><td><strong>';
+        echo $databases['praefix'][$databases['db_selected_index']];
         echo '</strong></td></tr>';
+    }
 
-        echo '<tr><td>'.$lang['L_MULTI_PART'].':</td><td><strong>'.((isset($config['multi_part']) && (1 == $config['multi_part'])) ? $lang['L_YES'] : $lang['L_NO']);
-        echo '</strong></td></tr>';
+    echo '<tr><td>'.$lang['L_GZIP'].':</td><td><strong>'.((isset($config['compression']) && (1 == $config['compression'])) ? $lang['L_ACTIVATED'] : $lang['L_NOT_ACTIVATED']);
+    echo '</strong></td></tr>';
 
-        if (isset($config['multi_part']) && (1 == $config['multi_part'])) {
-            echo '<tr><td>'.$lang['L_MULTI_PART_GROESSE'].':</td><td><strong>'.byte_output($config['multipart_groesse']).'</strong></td></tr>';
+    echo '<tr><td>'.$lang['L_MULTI_PART'].':</td><td><strong>'.((isset($config['multi_part']) && (1 == $config['multi_part'])) ? $lang['L_YES'] : $lang['L_NO']);
+    echo '</strong></td></tr>';
+
+    if (isset($config['multi_part']) && (1 == $config['multi_part'])) {
+        echo '<tr><td>'.$lang['L_MULTI_PART_GROESSE'].':</td><td><strong>'.byte_output($config['multipart_groesse']).'</strong></td></tr>';
+    }
+
+    if (isset($config['send_mail']) && (1 == $config['send_mail'])) {
+        $t = $config['email_recipient'].((1 == $config['send_mail_dump']) ? $lang['L_WITHATTACH'] : $lang['L_WITHOUTATTACH']);
+    }
+    echo '<tr><td>'.$lang['L_SEND_MAIL_FORM'].':</td><td><strong>'.((isset($config['send_mail']) && (1 == $config['send_mail'])) ? $t : $lang['L_NOT_ACTIVATED']);
+    echo '</strong></td></tr>';
+
+    for ($x = 0; $x < 3; ++$x) {
+        if (isset($config['ftp_transfer'][$x]) && $config['ftp_transfer'][$x] > 0) {
+            echo table_output($lang['L_FTP_TRANSFER'], sprintf(str_replace('<br>', ' ', (string) $lang['L_FTP_SEND_TO']), $config['ftp_server'][$x], $config['ftp_dir'][$x]), 1, 2);
         }
+        if (isset($config['sftp_transfer'][$x]) && $config['sftp_transfer'][$x] > 0) {
+            echo table_output($lang['L_SFTP_TRANSFER'], sprintf(str_replace('<br>', ' ', (string) $lang['L_SFTP_SEND_TO']), $config['sftp_server'][$x], $config['sftp_dir'][$x]), 1, 2);
+        }
+    }
+    //echo '</td></tr>';
+    echo '</table>';
 
-        if (isset($config['send_mail']) && (1 == $config['send_mail'])) {
+    echo '<div style="display:none"><img src="'.$config['files']['iconpath'].'progressbar_dump.gif" alt=""><br><img src="'.$config['files']['iconpath'].'progressbar_speed.gif" alt=""></div>';
+
+    echo '</div><div id="buperl" style="display:none;">';
+
+    //crondumpsettings
+    echo '<h6>'.$lang['L_DUMP'].' (PERL)</h6>';
+
+    echo '<p><input class="Formbutton" type="Button" name="DoCronscript" value="'.$lang['L_DOCRONBUTTON'].'" onclick="self.location.href=\''.$scriptref.'\'">&nbsp;&nbsp;';
+    echo '<input class="Formbutton" type="Button" name="DoPerlTest" value="'.$lang['L_DOPERLTEST'].'" onclick="self.location.href=\''.$sfile.'\'">&nbsp;&nbsp;';
+    echo '<input class="Formbutton" type="Button" name="DoSimpleTest" value="'.$lang['L_DOSIMPLETEST'].'" onclick="self.location.href=\''.$simplefile.'\'"></p>';
+
+    echo '<h6>'.$lang['L_FM_DUMPSETTINGS'].' (PERL)</h6>';
+
+    if (-3 == $config['cron_dbindex']) {
+        $cron_dbname = $lang['L_MULTIDUMPALL'];
+        $cron_dbpraefix = '';
+    } elseif (-2 == $config['cron_dbindex']) {
+        //$cron_dbname='Multidump ('.count($databases['multi']).' '.$lang['L_DBS'].')';
+        $cron_dbname = 'Multidump ('.(is_countable($databases['multi']) ? count($databases['multi']) : 0).' '.$lang['L_DBS'].')</strong>';
+        $cron_dbname .= '<span class="small">'.$toolboxstring.'</span>';
+        $cron_dbpraefix = '';
+    } else {
+        $cron_dbname = $databases['Name'][$config['cron_dbindex']];
+        $cron_dbpraefix = $databases['praefix'][$config['cron_dbindex']];
+    }
+
+    echo '<table>';
+    echo '<tr><td>'.$lang['L_DB'].':</td><td><strong>'.$cron_dbname.'</strong></td></tr>';
+
+    if ($cron_dbpraefix > '') {
+        echo '<tr><td>'.$lang['L_PRAEFIX'].':</td><td><strong>';
+        echo $cron_dbpraefix.'</strong></td></tr>';
+    }
+
+    echo '<tr><td>'.$lang['L_GZIP'].':</td><td><strong>'.((isset($config['cron_compression']) && (1 == $config['cron_compression'])) ? $lang['L_ACTIVATED'] : $lang['L_NOT_ACTIVATED']);
+    echo '</strong></td></tr>';
+
+    echo '<tr><td>'.$lang['L_MULTI_PART'].':</td><td><strong>'.((isset($config['multi_part']) && (1 == $config['multi_part'])) ? $lang['L_YES'] : $lang['L_NO']);
+    echo '</strong></td></tr>';
+
+    if (isset($config['multi_part']) && (1 == $config['multi_part'])) {
+        echo '<tr><td>'.$lang['L_MULTI_PART_GROESSE'].':</td><td><strong>'.byte_output($config['multipart_groesse']).'</td></tr>';
+    }
+    echo '<tr><td>'.$lang['L_CRON_PRINTOUT'].':</td><td><strong>'.((isset($config['cron_printout']) && (1 == $config['cron_printout'])) ? $lang['L_ACTIVATED'] : $lang['L_NOT_ACTIVATED']).'</strong></td></tr>';
+
+    if ((isset($config['send_mail']) && (1 == $config['send_mail'])) && (isset($config['cron_use_mail']) && (2 > $config['cron_use_mail']))) { 
+        if (isset($config['cron_use_mail']) && (2 > $config['cron_use_mail'])) {
             $t = $config['email_recipient'].((1 == $config['send_mail_dump']) ? $lang['L_WITHATTACH'] : $lang['L_WITHOUTATTACH']);
         }
-        echo '<tr><td>'.$lang['L_SEND_MAIL_FORM'].':</td><td><strong>'.((isset($config['send_mail']) && (1 == $config['send_mail'])) ? $t : $lang['L_NOT_ACTIVATED']);
-        echo '</strong></td></tr>';
+        echo '<tr><td>'.$lang['L_SEND_MAIL_FORM'].':</td><td><strong>'.((isset($config['cron_use_mail']) && (2 > $config['cron_use_mail'])) ? $t : $lang['L_NOT_ACTIVATED']).'</strong></td></tr>';
+    } else {
+        echo '<tr><td>'.$lang['L_SEND_MAIL_FORM'].':</td><td><strong>'. $lang['L_NOT_ACTIVATED'].'</strong></td></tr>';
+    }
 
-        for ($x = 0; $x < 3; ++$x) {
-            if (isset($config['ftp_transfer'][$x]) && $config['ftp_transfer'][$x] > 0) {
-                echo table_output($lang['L_FTP_TRANSFER'], sprintf(str_replace('<br>', ' ', (string) $lang['L_FTP_SEND_TO']), $config['ftp_server'][$x], $config['ftp_dir'][$x]), 1, 2);
-            }
-            if (isset($config['sftp_transfer'][$x]) && $config['sftp_transfer'][$x] > 0) {
-                echo table_output($lang['L_SFTP_TRANSFER'], sprintf(str_replace('<br>', ' ', (string) $lang['L_SFTP_SEND_TO']), $config['sftp_server'][$x], $config['sftp_dir'][$x]), 1, 2);
-            }
+
+
+    for ($x = 0; $x < 3; ++$x) {
+        if (isset($config['ftp_transfer'][$x]) && $config['ftp_transfer'][$x] > 0) {
+            echo table_output($lang['L_FTP_TRANSFER'], sprintf(str_replace('<br>', ' ', (string) $lang['L_FTP_SEND_TO']), $config['ftp_server'][$x], $config['ftp_dir'][$x]), 1, 2);
         }
-        //echo '</td></tr>';
-        echo '</table>';
+        if (isset($config['sftp_transfer'][$x]) && $config['sftp_transfer'][$x] > 0) {
+            echo table_output($lang['L_SFTP_TRANSFER'], sprintf(str_replace('<br>', ' ', (string) $lang['L_SFTP_SEND_TO']), $config['sftp_server'][$x], $config['sftp_dir'][$x]), 1, 2);
+        }
+    }
+    //echo '</td></tr>';
+    echo '</table>';
 
-        echo '<div style="display:none"><img src="'.$config['files']['iconpath'].'progressbar_dump.gif" alt=""><br><img src="'.$config['files']['iconpath'].'progressbar_speed.gif" alt=""></div>';
+    //    Eintraege fuer Perl
+    echo '<br><p class="small">'.$lang['L_PERLOUTPUT1'].':<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>'.$scriptentry.'</strong><br>';
+    echo $lang['L_PERLOUTPUT2'].':<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>'.$scriptref.'</strong><br>';
+    echo $lang['L_PERLOUTPUT3'].':<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>'.$cronref.'</strong></p>';
 
-        echo '</div><div id="buperl" style="display:none;">';
+    echo '</div>';
 
-        //crondumpsettings
-        echo '<h6>'.$lang['L_DUMP'].' (PERL)</h6>';
+    break;
 
-        echo '<p><input class="Formbutton" type="Button" name="DoCronscript" value="'.$lang['L_DOCRONBUTTON'].'" onclick="self.location.href=\''.$scriptref.'\'">&nbsp;&nbsp;';
-        echo '<input class="Formbutton" type="Button" name="DoPerlTest" value="'.$lang['L_DOPERLTEST'].'" onclick="self.location.href=\''.$sfile.'\'">&nbsp;&nbsp;';
-        echo '<input class="Formbutton" type="Button" name="DoSimpleTest" value="'.$lang['L_DOSIMPLETEST'].'" onclick="self.location.href=\''.$simplefile.'\'"></p>';
+case 'restore':
+    echo headline(sprintf($lang['L_FM_RESTORE_HEADER'], $databases['db_actual']));
+    echo ($msg > '') ? $msg : '';
+    echo $autodel;
+    echo '<form name="fm" id="fm" method="post" action="'.$href.'">';
+    echo '<div>';
+    echo '<input class="Formbutton" name="restore" type="submit" value="'.$lang['L_FM_RESTORE'].'" onclick="if (!confirm(\''.$lang['L_FM_ALERTRESTORE1'].' `'.$databases['db_actual'].'`  '.$lang['L_FM_ALERTRESTORE2'].' `\' + GetSelectedFilename() + \'` '.$lang['L_FM_ALERTRESTORE3'].'\')) return false;">';
+    echo '<input class="Formbutton" name="restore" type="submit" value="'.$lang['L_RESTORE_OF_TABLES'].'" onclick="document.forms[0].tblfrage.value=1;">';
 
-        echo '<h6>'.$lang['L_FM_DUMPSETTINGS'].' (PERL)</h6>';
 
-        if (-3 == $config['cron_dbindex']) {
-            $cron_dbname = $lang['L_MULTIDUMPALL'];
-            $cron_dbpraefix = '';
-        } elseif (-2 == $config['cron_dbindex']) {
-            //$cron_dbname='Multidump ('.count($databases['multi']).' '.$lang['L_DBS'].')';
-            $cron_dbname = 'Multidump ('.(is_countable($databases['multi']) ? count($databases['multi']) : 0).' '.$lang['L_DBS'].')</strong>';
-            $cron_dbname .= '<span class="small">'.$toolboxstring.'</span>';
-            $cron_dbpraefix = '';
+    echo FileList();
+    echo '<input type="hidden" name="tblfrage" value="0">';
+    echo '</div></form>';
+    break;
+case 'files':
+    $sysfedit = (isset($_POST['sysfedit'])) ? 1 : 0;
+    $sysfedit = $_GET['sysfedit'] ?? $sysfedit;
+    echo headline($lang['L_FILE_MANAGE']);
+    echo ($msg > '') ? $msg.'<br>' : '';
+    echo $autodel;
+    echo '<form name="fm" id="fm" method="post" action="'.$href.'">';
+    echo '<input class="Formbutton" name="delete" type="submit" value="'.$lang['L_FM_DELETE'].'"	onclick="if (!confirm(\''.$lang['L_FM_ASKDELETE1'].'\n\' + GetSelectedFilename() + \'\n\n'.$lang['L_FM_ASKDELETE2'].'\')) return false;">';
+    echo '<input class="Formbutton" name="deleteauto" type="submit" value="'.$lang['L_FM_DELETEAUTO'].'"	onclick="if (!confirm(\''.$lang['L_FM_ASKDELETE3'].'\')) return false;">';
+    echo '<input class="Formbutton" name="deleteall" type="submit" value="'.$lang['L_FM_DELETEALL'].'"	onclick="if (!confirm(\''.$lang['L_FM_ASKDELETE4'].'\')) return false;">';
+    echo '<input class="Formbutton" name="deleteallfilter" type="submit" value="'.$lang['L_FM_DELETEALLFILTER'].$databases['db_actual'].$lang['L_FM_DELETEALLFILTER2'].'"	onclick="if (!confirm(\''.$lang['L_FM_ASKDELETE5'].$databases['db_actual'].$lang['L_FM_ASKDELETE5_2'].'\')) return false;">';
+    echo FileList().'</form>';
+
+    echo '<h6>'.$lang['L_FM_FILEUPLOAD'].'</h6>';
+    echo '<div align="left"><form action="'.$href.'" method="POST" enctype="multipart/form-data">';
+    echo '<input type="file" name="upfile" class="Formtext" size="60">';
+    echo '<input type="submit" name="upload" value="'.$lang['L_FM_FILEUPLOAD'].'" class="Formbutton">';
+    echo '<br>'.$lang['L_MAX_UPLOAD_SIZE'].': <strong>'.$config['upload_max_filesize'].'</strong>';
+    echo '<br>'.$lang['L_MAX_UPLOAD_SIZE_INFO'];
+
+    echo '</form></div>';
+
+    echo '<h6>Tools</h6><div align="left">';
+    echo '<input type="Button" onclick="document.location=\'filemanagement.php?action=convert\'" class="Formbutton" value="'.$lang['L_CONVERTER'].'">';
+    echo '</div>';
+
+    break;
+case 'convert':
+    // Konverter
+    echo headline($lang['L_CONVERTER']);
+    echo '<br><br><form action="filemanagement.php?action=convert" method="post">';
+    echo '<table class="bdr"><tr><th colspan="2">'.$lang['L_CONVERT_TITLE'].'</th></tr>';
+    echo '<tr><td>'.$lang['L_CONVERT_FILE'].'</td><td>'.FilelisteCombo($config['paths']['backup'], $selectfile).'</td></tr>';
+    echo '<tr><td>'.$lang['L_CONVERT_FILENAME'].':</td><td><input type="text" name="destfile" size="50" value="'.$destfile.'"></td></tr>';
+    echo '<tr><td><input type="checkbox" name="compressed" value="1" '.((1 == $compressed) ? 'checked' : '').'>&nbsp;'.$lang['L_COMPRESSED'].'</td>';
+    echo '<td><input type="submit" name="startconvert" value=" '.$lang['L_CONVERT_START'].' " class="Formbutton"></td></tr>';
+    echo '</table></form><br>';
+    if (isset($_POST['startconvert'])) {
+        //$destfile.=($compressed==1) ? ".sql.gz" : ".sql";
+        echo $lang['L_CONVERTING']." $selectfile ==&gt; $destfile<br>";
+
+        if ('' != $selectfile && file_exists($config['paths']['backup'].$selectfile) && strlen($destfile ?? '') > 2) {
+            Converter($selectfile, $destfile, $compressed);
         } else {
-            $cron_dbname = $databases['Name'][$config['cron_dbindex']];
-            $cron_dbpraefix = $databases['praefix'][$config['cron_dbindex']];
+            echo $lang['L_CONVERT_WRONG_PARAMETERS'];
         }
-
-        echo '<table>';
-        echo '<tr><td>'.$lang['L_DB'].':</td><td><strong>'.$cron_dbname.'</strong></td></tr>';
-
-        if ($cron_dbpraefix > '') {
-            echo '<tr><td>'.$lang['L_PRAEFIX'].':</td><td><strong>';
-            echo $cron_dbpraefix.'</strong></td></tr>';
-        }
-
-        echo '<tr><td>'.$lang['L_GZIP'].':</td><td><strong>'.((isset($config['cron_compression']) && (1 == $config['cron_compression'])) ? $lang['L_ACTIVATED'] : $lang['L_NOT_ACTIVATED']);
-        echo '</strong></td></tr>';
-
-        echo '<tr><td>'.$lang['L_MULTI_PART'].':</td><td><strong>'.((isset($config['multi_part']) && (1 == $config['multi_part'])) ? $lang['L_YES'] : $lang['L_NO']);
-        echo '</strong></td></tr>';
-
-        if (isset($config['multi_part']) && (1 == $config['multi_part'])) {
-            echo '<tr><td>'.$lang['L_MULTI_PART_GROESSE'].':</td><td><strong>'.byte_output($config['multipart_groesse']).'</td></tr>';
-        }
-        echo '<tr><td>'.$lang['L_CRON_PRINTOUT'].':</td><td><strong>'.((isset($config['cron_printout']) && (1 == $config['cron_printout'])) ? $lang['L_ACTIVATED'] : $lang['L_NOT_ACTIVATED']).'</strong></td></tr>';
-
-		if ( (isset($config['send_mail']) && (1 == $config['send_mail'])) && (isset($config['cron_use_mail']) && (2 > $config['cron_use_mail']))) { 
-			if (isset($config['cron_use_mail']) && (2 > $config['cron_use_mail'])) {
-				$t = $config['email_recipient'].((1 == $config['send_mail_dump']) ? $lang['L_WITHATTACH'] : $lang['L_WITHOUTATTACH']);
-			}
-			echo '<tr><td>'.$lang['L_SEND_MAIL_FORM'].':</td><td><strong>'.((isset($config['cron_use_mail']) && (2 > $config['cron_use_mail'])) ? $t : $lang['L_NOT_ACTIVATED']).'</strong></td></tr>';
-		} else {
-			echo '<tr><td>'.$lang['L_SEND_MAIL_FORM'].':</td><td><strong>'. $lang['L_NOT_ACTIVATED'].'</strong></td></tr>';
-		}
-
-
-
-        for ($x = 0; $x < 3; ++$x) {
-            if (isset($config['ftp_transfer'][$x]) && $config['ftp_transfer'][$x] > 0) {
-                echo table_output($lang['L_FTP_TRANSFER'], sprintf(str_replace('<br>', ' ', (string) $lang['L_FTP_SEND_TO']), $config['ftp_server'][$x], $config['ftp_dir'][$x]), 1, 2);
-            }
-            if (isset($config['sftp_transfer'][$x]) && $config['sftp_transfer'][$x] > 0) {
-                echo table_output($lang['L_SFTP_TRANSFER'], sprintf(str_replace('<br>', ' ', (string) $lang['L_SFTP_SEND_TO']), $config['sftp_server'][$x], $config['sftp_dir'][$x]), 1, 2);
-            }
-        }
-        //echo '</td></tr>';
-        echo '</table>';
-
-        //	Eintraege fuer Perl
-        echo '<br><p class="small">'.$lang['L_PERLOUTPUT1'].':<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>'.$scriptentry.'</strong><br>';
-        echo $lang['L_PERLOUTPUT2'].':<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>'.$scriptref.'</strong><br>';
-        echo $lang['L_PERLOUTPUT3'].':<br>&nbsp;&nbsp;&nbsp;&nbsp;<strong>'.$cronref.'</strong></p>';
-
-        echo '</div>';
-
-        break;
-
-    case 'restore':
-        echo headline(sprintf($lang['L_FM_RESTORE_HEADER'], $databases['db_actual']));
-        echo ($msg > '') ? $msg : '';
-        echo $autodel;
-        echo '<form name="fm" id="fm" method="post" action="'.$href.'">';
-        echo '<div>';
-        echo '<input class="Formbutton" name="restore" type="submit" value="'.$lang['L_FM_RESTORE'].'" onclick="if (!confirm(\''.$lang['L_FM_ALERTRESTORE1'].' `'.$databases['db_actual'].'`  '.$lang['L_FM_ALERTRESTORE2'].' `\' + GetSelectedFilename() + \'` '.$lang['L_FM_ALERTRESTORE3'].'\')) return false;">';
-        echo '<input class="Formbutton" name="restore" type="submit" value="'.$lang['L_RESTORE_OF_TABLES'].'" onclick="document.forms[0].tblfrage.value=1;">';
-
-
-        echo FileList();
-        echo '<input type="hidden" name="tblfrage" value="0">';
-        echo '</div></form>';
-        break;
-    case 'files':
-        $sysfedit = (isset($_POST['sysfedit'])) ? 1 : 0;
-        $sysfedit = $_GET['sysfedit'] ?? $sysfedit;
-        echo headline($lang['L_FILE_MANAGE']);
-        echo ($msg > '') ? $msg.'<br>' : '';
-        echo $autodel;
-        echo '<form name="fm" id="fm" method="post" action="'.$href.'">';
-        echo '<input class="Formbutton" name="delete" type="submit" value="'.$lang['L_FM_DELETE'].'"	onclick="if (!confirm(\''.$lang['L_FM_ASKDELETE1'].'\n\' + GetSelectedFilename() + \'\n\n'.$lang['L_FM_ASKDELETE2'].'\')) return false;">';
-        echo '<input class="Formbutton" name="deleteauto" type="submit" value="'.$lang['L_FM_DELETEAUTO'].'"	onclick="if (!confirm(\''.$lang['L_FM_ASKDELETE3'].'\')) return false;">';
-        echo '<input class="Formbutton" name="deleteall" type="submit" value="'.$lang['L_FM_DELETEALL'].'"	onclick="if (!confirm(\''.$lang['L_FM_ASKDELETE4'].'\')) return false;">';
-        echo '<input class="Formbutton" name="deleteallfilter" type="submit" value="'.$lang['L_FM_DELETEALLFILTER'].$databases['db_actual'].$lang['L_FM_DELETEALLFILTER2'].'"	onclick="if (!confirm(\''.$lang['L_FM_ASKDELETE5'].$databases['db_actual'].$lang['L_FM_ASKDELETE5_2'].'\')) return false;">';
-        echo FileList().'</form>';
-
-        echo '<h6>'.$lang['L_FM_FILEUPLOAD'].'</h6>';
-        echo '<div align="left"><form action="'.$href.'" method="POST" enctype="multipart/form-data">';
-        echo '<input type="file" name="upfile" class="Formtext" size="60">';
-        echo '<input type="submit" name="upload" value="'.$lang['L_FM_FILEUPLOAD'].'" class="Formbutton">';
-        echo '<br>'.$lang['L_MAX_UPLOAD_SIZE'].': <strong>'.$config['upload_max_filesize'].'</strong>';
-        echo '<br>'.$lang['L_MAX_UPLOAD_SIZE_INFO'];
-
-        echo '</form></div>';
-
-        echo '<h6>Tools</h6><div align="left">';
-        echo '<input type="Button" onclick="document.location=\'filemanagement.php?action=convert\'" class="Formbutton" value="'.$lang['L_CONVERTER'].'">';
-        echo '</div>';
-
-        break;
-    case 'convert':
-        // Konverter
-        echo headline($lang['L_CONVERTER']);
-        echo '<br><br><form action="filemanagement.php?action=convert" method="post">';
-        echo '<table class="bdr"><tr><th colspan="2">'.$lang['L_CONVERT_TITLE'].'</th></tr>';
-        echo '<tr><td>'.$lang['L_CONVERT_FILE'].'</td><td>'.FilelisteCombo($config['paths']['backup'], $selectfile).'</td></tr>';
-        echo '<tr><td>'.$lang['L_CONVERT_FILENAME'].':</td><td><input type="text" name="destfile" size="50" value="'.$destfile.'"></td></tr>';
-        echo '<tr><td><input type="checkbox" name="compressed" value="1" '.((1 == $compressed) ? 'checked' : '').'>&nbsp;'.$lang['L_COMPRESSED'].'</td>';
-        echo '<td><input type="submit" name="startconvert" value=" '.$lang['L_CONVERT_START'].' " class="Formbutton"></td></tr>';
-        echo '</table></form><br>';
-        if (isset($_POST['startconvert'])) {
-            //$destfile.=($compressed==1) ? ".sql.gz" : ".sql";
-            echo $lang['L_CONVERTING']." $selectfile ==&gt; $destfile<br>";
-
-            if ('' != $selectfile && file_exists($config['paths']['backup'].$selectfile) && strlen($destfile ?? '') > 2) {
-                Converter($selectfile, $destfile, $compressed);
-            } else {
-                echo $lang['L_CONVERT_WRONG_PARAMETERS'];
-            }
-        }
+    }
 }
 echo MODFooter();
 ob_end_flush();

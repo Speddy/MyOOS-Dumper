@@ -20,7 +20,7 @@ if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
 //SQL-Library
-include './language/'.$config['language'].'/lang_sql.php';
+require './language/'.$config['language'].'/lang_sql.php';
 /*
 Template
 if $sqllib[$i]['sql'] =trenn, Then it is a Heading
@@ -39,7 +39,10 @@ $sqllib[$i]['name'] = $lang['L_SQLLIB_RESETAUTO'];
 $sqllib[$i]['sql'] = 'ALTER TABLE `table` AUTO_INCREMENT=1;';
 ++$i;
 
-/********* phpBB-Boards *********************************/
+/*********
+* 
+ * phpBB-Boards 
+*********************************/
 $sqllib[$i]['name'] = 'phpBB-'.$lang['L_SQLLIB_BOARDS'];
 $sqllib[$i]['sql'] = 'trenn';
 ++$i;
