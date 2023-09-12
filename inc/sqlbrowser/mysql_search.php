@@ -77,7 +77,7 @@ if (isset($_GET['mode']) && 'kill' == $_GET['mode'] && $rk > '') {
     $aus .= '<p class="success">'.$lang['L_SQL_RECORDDELETED'].'</p>';
 }
 
-function mysqli_search($db, $tabelle, $suchbegriffe, $suchart, $offset = 0, $anzahl_ergebnisse = 20, $auszuschliessende_tabellen = '')
+function mod_mysqli_search($db, $tabelle, $suchbegriffe, $suchart, $offset = 0, $anzahl_ergebnisse = 20, $auszuschliessende_tabellen = '')
 {
     global $tables, $config, $lang;
 
@@ -304,7 +304,7 @@ $tpl->assign_vars(
 );
 
 $max_treffer = 20;
-$treffer = mysqli_search($db, $table_selected, $suchbegriffe, $suchart, $offset, $max_treffer + 1);
+$treffer = mod_mysqli_search($db, $table_selected, $suchbegriffe, $suchart, $offset, $max_treffer + 1);
 if (is_array($treffer) && isset($treffer[0])) {
     $search_message = sprintf($lang['L_SEARCH_RESULTS'], $suchbegriffe, $tables[$table_selected]);
     $anzahl_treffer = count($treffer);
