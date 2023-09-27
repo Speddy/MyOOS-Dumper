@@ -4,17 +4,19 @@ declare (strict_types=1);
 namespace Rector\Config;
 
 use RectorPrefix202309\Illuminate\Container\Container;
+use PHPStan\Collectors\Collector;
 use Rector\Caching\Contract\ValueObject\Storage\CacheStorageInterface;
 use Rector\Core\Configuration\Option;
 use Rector\Core\Configuration\Parameter\SimpleParameterProvider;
+use Rector\Core\Contract\Rector\CollectorRectorInterface;
 use Rector\Core\Contract\Rector\ConfigurableRectorInterface;
-use Rector\Core\Contract\Rector\NonPhpRectorInterface;
 use Rector\Core\Contract\Rector\RectorInterface;
+use Rector\Core\DependencyInjection\Laravel\ContainerMemento;
 use Rector\Core\Exception\ShouldNotHappenException;
-use Rector\Core\FileSystem\FilesystemTweaker;
 use Rector\Core\NodeAnalyzer\ScopeAnalyzer;
 use Rector\Core\Rector\AbstractScopeAwareRector;
 use Rector\Core\ValueObject\PhpVersion;
+use Rector\Skipper\SkipCriteriaResolver\SkippedClassResolver;
 use RectorPrefix202309\Webmozart\Assert\Assert;
 /**
  * @api
@@ -31,6 +33,12 @@ final class RectorConfig extends Container
     public function paths(array $paths) : void
     {
         Assert::allString($paths);
+        foreach ($paths as $path) {
+            if (\strpos($path, '*') !== \false) {
+                continue;
+            }
+            Assert::fileExists($path);
+        }
         SimpleParameterProvider::setParameter(Option::PATHS, $paths);
     }
     /**
@@ -50,7 +58,14 @@ final class RectorConfig extends Container
     {
         SimpleParameterProvider::setParameter(Option::PARALLEL, \false);
     }
-    public function parallel(int $seconds = 120, int $maxNumberOfProcess = 16, int $jobSize = 20) : void
+    /**
+     * @experimental since Rector 0.18.x
+     */
+    public function enableCollectors() : void
+    {
+        SimpleParameterProvider::setParameter(Option::COLLECTORS, \true);
+    }
+    public function parallel(int $seconds = 120, int $maxNumberOfProcess = 16, int $jobSize = 15) : void
     {
         SimpleParameterProvider::setParameter(Option::PARALLEL, \true);
         SimpleParameterProvider::setParameter(Option::PARALLEL_JOB_TIMEOUT_IN_SECONDS, $seconds);
@@ -99,7 +114,7 @@ final class RectorConfig extends Container
             }
         }
         if ($notExistsRules !== []) {
-            throw new ShouldNotHappenException('Following skipped rules on $rectorConfig->skip() are no longer exists or changed to different namespace: ' . \implode(', ', $notExistsRules));
+            throw new ShouldNotHappenException('Following rules on $rectorConfig->skip() do no longer exist or changed to different namespace: ' . \implode(', ', $notExistsRules));
         }
         SimpleParameterProvider::addParameter(Option::SKIP, $criteria);
     }
@@ -147,7 +162,7 @@ final class RectorConfig extends Container
         // store configuration to cache
         $this->ruleConfigurations[$rectorClass] = \array_merge($this->ruleConfigurations[$rectorClass] ?? [], $configuration);
         $this->singleton($rectorClass);
-        $this->tagRectorService($rectorClass);
+        $this->tag($rectorClass, RectorInterface::class);
         $this->afterResolving($rectorClass, function (ConfigurableRectorInterface $configurableRector) use($rectorClass) : void {
             $ruleConfiguration = $this->ruleConfigurations[$rectorClass];
             $configurableRector->configure($ruleConfiguration);
@@ -163,7 +178,10 @@ final class RectorConfig extends Container
         Assert::classExists($rectorClass);
         Assert::isAOf($rectorClass, RectorInterface::class);
         $this->singleton($rectorClass);
-        $this->tagRectorService($rectorClass);
+        $this->tag($rectorClass, RectorInterface::class);
+        if (\is_a($rectorClass, CollectorRectorInterface::class, \true)) {
+            $this->tag($rectorClass, CollectorRectorInterface::class);
+        }
         if (\is_a($rectorClass, AbstractScopeAwareRector::class, \true)) {
             $this->extend($rectorClass, static function (AbstractScopeAwareRector $scopeAwareRector, Container $container) : AbstractScopeAwareRector {
                 $scopeAnalyzer = $container->make(ScopeAnalyzer::class);
@@ -174,16 +192,25 @@ final class RectorConfig extends Container
         // for cache invalidation in case of change
         SimpleParameterProvider::addParameter(Option::REGISTERED_RECTOR_RULES, $rectorClass);
     }
+    /**
+     * @param class-string<Collector> $collectorClass
+     */
+    public function collector(string $collectorClass) : void
+    {
+        $this->singleton($collectorClass);
+        $this->tag($collectorClass, Collector::class);
+    }
     public function import(string $filePath) : void
     {
-        $paths = [$filePath];
         if (\strpos($filePath, '*') !== \false) {
-            $filesystemTweaker = new FilesystemTweaker();
-            $paths = $filesystemTweaker->resolveWithFnmatch($paths);
+            throw new ShouldNotHappenException('Matching file paths by using glob-patterns is no longer supported. Use specific file path instead.');
         }
-        foreach ($paths as $path) {
-            $this->importFile($path);
-        }
+        Assert::fileExists($filePath);
+        $self = $this;
+        $callable = (require $filePath);
+        Assert::isCallable($callable);
+        /** @var callable(Container $container): void $callable */
+        $callable($self);
     }
     /**
      * @param array<class-string<RectorInterface>> $rectorClasses
@@ -274,21 +301,34 @@ final class RectorConfig extends Container
     {
         $this->ruleConfigurations = [];
     }
-    private function importFile(string $filePath) : void
+    /**
+     * Compiler passes-like method
+     */
+    public function boot() : void
     {
-        Assert::fileExists($filePath);
-        $self = $this;
-        $callable = (require $filePath);
-        Assert::isCallable($callable);
-        /** @var callable(Container $container): void $callable */
-        $callable($self);
+        $skippedClassResolver = new SkippedClassResolver();
+        $skippedElements = $skippedClassResolver->resolve();
+        foreach ($skippedElements as $skippedClass => $path) {
+            if ($path !== null) {
+                continue;
+            }
+            // completely forget the Rector rule only when no path specified
+            ContainerMemento::forgetService($this, $skippedClass);
+        }
+    }
+    /**
+     * @experimental since Rector 0.18.x
+     */
+    public function disableCollectors() : void
+    {
+        SimpleParameterProvider::setParameter(Option::COLLECTORS, \false);
     }
     /**
      * @param mixed $skipRule
      */
     private function isRuleNoLongerExists($skipRule) : bool
     {
-        return \is_string($skipRule) && \strpos($skipRule, '*') === \false && \realpath($skipRule) === \false && \substr_compare($skipRule, 'Rector', -\strlen('Rector')) === 0 && !\class_exists($skipRule);
+        return \is_string($skipRule) && \strpos($skipRule, '*') === \false && \substr_compare($skipRule, 'Rector', -\strlen('Rector')) === 0 && !\is_dir($skipRule) && !\is_file($skipRule) && !\class_exists($skipRule);
     }
     /**
      * @param string[] $values
@@ -304,17 +344,6 @@ final class RectorConfig extends Container
             }
         }
         return \array_unique($duplicates);
-    }
-    /**
-     * @param class-string<RectorInterface> $rectorClass
-     */
-    private function tagRectorService(string $rectorClass) : void
-    {
-        $this->tag($rectorClass, RectorInterface::class);
-        if (\is_a($rectorClass, NonPhpRectorInterface::class, \true)) {
-            \trigger_error(\sprintf('The "%s" interface of "%s" rule is deprecated. Rector will process only PHP code, as designed to with AST. For another file format, use custom tooling.', NonPhpRectorInterface::class, $rectorClass));
-            exit;
-        }
     }
     /**
      * @param string[] $rectorClasses

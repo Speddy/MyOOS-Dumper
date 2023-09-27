@@ -8,9 +8,10 @@ use PhpParser\Node\Stmt\ClassLike;
 use Rector\BetterPhpDocParser\PhpDoc\ArrayItemNode;
 use Rector\BetterPhpDocParser\PhpDoc\DoctrineAnnotationTagValueNode;
 use Rector\BetterPhpDocParser\PhpDoc\StringNode;
+use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\BetterPhpDocParser\PhpDocManipulator\PhpDocTagRemover;
-use Rector\BetterPhpDocParser\Printer\PhpDocInfoPrinter;
 use Rector\BetterPhpDocParser\ValueObject\PhpDoc\DoctrineAnnotation\CurlyListNode;
+use Rector\Comments\NodeDocBlock\DocBlockUpdater;
 use Rector\Core\Rector\AbstractRector;
 use Rector\Symfony\Enum\SensioAttribute;
 use Rector\Symfony\Enum\SymfonyAnnotation;
@@ -31,13 +32,19 @@ final class MergeMethodAnnotationToRouteAnnotationRector extends AbstractRector
     private $phpDocTagRemover;
     /**
      * @readonly
-     * @var \Rector\BetterPhpDocParser\Printer\PhpDocInfoPrinter
+     * @var \Rector\Comments\NodeDocBlock\DocBlockUpdater
      */
-    private $phpDocInfoPrinter;
-    public function __construct(PhpDocTagRemover $phpDocTagRemover, PhpDocInfoPrinter $phpDocInfoPrinter)
+    private $docBlockUpdater;
+    /**
+     * @readonly
+     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
+     */
+    private $phpDocInfoFactory;
+    public function __construct(PhpDocTagRemover $phpDocTagRemover, DocBlockUpdater $docBlockUpdater, PhpDocInfoFactory $phpDocInfoFactory)
     {
         $this->phpDocTagRemover = $phpDocTagRemover;
-        $this->phpDocInfoPrinter = $phpDocInfoPrinter;
+        $this->docBlockUpdater = $docBlockUpdater;
+        $this->phpDocInfoFactory = $phpDocInfoFactory;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -111,7 +118,7 @@ CODE_SAMPLE
             }
             $symfonyDoctrineAnnotationTagValueNode->values[] = new ArrayItemNode($sensioMethods, 'methods');
             $this->phpDocTagRemover->removeTagValueFromNode($phpDocInfo, $sensioDoctrineAnnotationTagValueNode);
-            $this->phpDocInfoPrinter->printFormatPreserving($phpDocInfo);
+            $this->docBlockUpdater->updateRefactoredNodeWithPhpDocInfo($classMethod);
             $hasChanged = \true;
         }
         if ($hasChanged) {

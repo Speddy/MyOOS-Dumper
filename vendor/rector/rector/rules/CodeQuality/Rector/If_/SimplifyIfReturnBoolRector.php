@@ -14,6 +14,7 @@ use PhpParser\Node\Stmt\Return_;
 use Rector\BetterPhpDocParser\Comment\CommentsMerger;
 use Rector\CodeQuality\NodeManipulator\ExprBoolCaster;
 use Rector\Core\Contract\PhpParser\Node\StmtsAwareInterface;
+use Rector\Core\PhpParser\Node\Value\ValueResolver;
 use Rector\Core\PhpParser\Printer\BetterStandardPrinter;
 use Rector\Core\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
@@ -38,11 +39,17 @@ final class SimplifyIfReturnBoolRector extends AbstractRector
      * @var \Rector\Core\PhpParser\Printer\BetterStandardPrinter
      */
     private $betterStandardPrinter;
-    public function __construct(CommentsMerger $commentsMerger, ExprBoolCaster $exprBoolCaster, BetterStandardPrinter $betterStandardPrinter)
+    /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
+     */
+    private $valueResolver;
+    public function __construct(CommentsMerger $commentsMerger, ExprBoolCaster $exprBoolCaster, BetterStandardPrinter $betterStandardPrinter, ValueResolver $valueResolver)
     {
         $this->commentsMerger = $commentsMerger;
         $this->exprBoolCaster = $exprBoolCaster;
         $this->betterStandardPrinter = $betterStandardPrinter;
+        $this->valueResolver = $valueResolver;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -135,23 +142,23 @@ CODE_SAMPLE
         }
         return !$if->cond instanceof NotIdentical;
     }
-    private function processReturnTrue(If_ $if, Return_ $nextReturnNode) : Return_
+    private function processReturnTrue(If_ $if, Return_ $nextReturn) : Return_
     {
-        if ($if->cond instanceof BooleanNot && $nextReturnNode->expr instanceof Expr && $this->valueResolver->isTrue($nextReturnNode->expr)) {
+        if ($if->cond instanceof BooleanNot && $nextReturn->expr instanceof Expr && $this->valueResolver->isTrue($nextReturn->expr)) {
             return new Return_($this->exprBoolCaster->boolCastOrNullCompareIfNeeded($if->cond->expr));
         }
         return new Return_($this->exprBoolCaster->boolCastOrNullCompareIfNeeded($if->cond));
     }
-    private function processReturnFalse(If_ $if, Return_ $nextReturnNode) : ?Return_
+    private function processReturnFalse(If_ $if, Return_ $nextReturn) : ?Return_
     {
         if ($if->cond instanceof Identical) {
             $notIdentical = new NotIdentical($if->cond->left, $if->cond->right);
             return new Return_($this->exprBoolCaster->boolCastOrNullCompareIfNeeded($notIdentical));
         }
-        if (!$nextReturnNode->expr instanceof Expr) {
+        if (!$nextReturn->expr instanceof Expr) {
             return null;
         }
-        if (!$this->valueResolver->isTrue($nextReturnNode->expr)) {
+        if (!$this->valueResolver->isTrue($nextReturn->expr)) {
             return null;
         }
         if ($if->cond instanceof BooleanNot) {

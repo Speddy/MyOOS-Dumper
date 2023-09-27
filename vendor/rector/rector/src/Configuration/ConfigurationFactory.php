@@ -8,6 +8,9 @@ use Rector\Core\Configuration\Parameter\SimpleParameterProvider;
 use Rector\Core\ValueObject\Configuration;
 use RectorPrefix202309\Symfony\Component\Console\Input\InputInterface;
 use RectorPrefix202309\Symfony\Component\Console\Style\SymfonyStyle;
+/**
+ * @see \Rector\Core\Tests\Configuration\ConfigurationFactoryTest
+ */
 final class ConfigurationFactory
 {
     /**
@@ -26,7 +29,8 @@ final class ConfigurationFactory
     public function createForTests(array $paths) : Configuration
     {
         $fileExtensions = SimpleParameterProvider::provideArrayParameter(\Rector\Core\Configuration\Option::FILE_EXTENSIONS);
-        return new Configuration(\false, \true, \false, ConsoleOutputFormatter::NAME, $fileExtensions, $paths);
+        $isCollectors = SimpleParameterProvider::provideBoolParameter(\Rector\Core\Configuration\Option::COLLECTORS, \false);
+        return new Configuration(\false, \true, \false, ConsoleOutputFormatter::NAME, $fileExtensions, $paths, \true, null, null, \false, null, \false, $isCollectors);
     }
     /**
      * Needs to run in the start of the life cycle, since the rest of workflow uses it.
@@ -43,8 +47,10 @@ final class ConfigurationFactory
         $isParallel = SimpleParameterProvider::provideBoolParameter(\Rector\Core\Configuration\Option::PARALLEL);
         $parallelPort = (string) $input->getOption(\Rector\Core\Configuration\Option::PARALLEL_PORT);
         $parallelIdentifier = (string) $input->getOption(\Rector\Core\Configuration\Option::PARALLEL_IDENTIFIER);
+        $isDebug = (bool) $input->getOption(\Rector\Core\Configuration\Option::DEBUG);
         $memoryLimit = $this->resolveMemoryLimit($input);
-        return new Configuration($isDryRun, $showProgressBar, $shouldClearCache, $outputFormat, $fileExtensions, $paths, $showDiffs, $parallelPort, $parallelIdentifier, $isParallel, $memoryLimit);
+        $isCollectors = SimpleParameterProvider::provideBoolParameter(\Rector\Core\Configuration\Option::COLLECTORS);
+        return new Configuration($isDryRun, $showProgressBar, $shouldClearCache, $outputFormat, $fileExtensions, $paths, $showDiffs, $parallelPort, $parallelIdentifier, $isParallel, $memoryLimit, $isDebug, $isCollectors);
     }
     private function shouldShowProgressBar(InputInterface $input, string $outputFormat) : bool
     {

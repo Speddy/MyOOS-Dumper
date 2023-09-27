@@ -14,11 +14,8 @@ use PHPStan\Type\Type;
 use Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory;
 use Rector\ChangesReporting\ValueObject\RectorWithLineChange;
 use Rector\Core\Application\ChangedNodeScopeRefresher;
-use Rector\Core\Configuration\CurrentNodeProvider;
 use Rector\Core\Contract\Rector\RectorInterface;
 use Rector\Core\Exception\ShouldNotHappenException;
-use Rector\Core\Logging\CurrentRectorProvider;
-use Rector\Core\Logging\RectorOutput;
 use Rector\Core\NodeDecorator\CreatedByRuleDecorator;
 use Rector\Core\PhpParser\Comparing\NodeComparator;
 use Rector\Core\PhpParser\Node\BetterNodeFinder;
@@ -32,6 +29,13 @@ use Rector\NodeTypeResolver\NodeTypeResolver;
 use Rector\PhpDocParser\NodeTraverser\SimpleCallableNodeTraverser;
 use Rector\Skipper\Skipper\Skipper;
 use Rector\StaticTypeMapper\StaticTypeMapper;
+/**
+ * @property-read PhpDocInfoFactory $phpDocInfoFactory; @deprecated The parent AbstractRector dependency is deprecated and will be removed. Use dependency injection in your own rule instead.
+ *
+ * @property-read ValueResolver $valueResolver; @deprecated The parent AbstractRector dependency is deprecated and will be removed. Use dependency injection in your own rule instead.
+ *
+ * @property-read BetterNodeFinder $betterNodeFinder; @deprecated The parent AbstractRector dependency is deprecated and will be removed. Use dependency injection in your own rule instead.
+ */
 abstract class AbstractRector extends NodeVisitorAbstract implements RectorInterface
 {
     /**
@@ -61,21 +65,9 @@ CODE_SAMPLE;
      */
     protected $staticTypeMapper;
     /**
-     * @var \Rector\BetterPhpDocParser\PhpDocInfo\PhpDocInfoFactory
-     */
-    protected $phpDocInfoFactory;
-    /**
      * @var \Rector\Core\PhpParser\Node\NodeFactory
      */
     protected $nodeFactory;
-    /**
-     * @var \Rector\Core\PhpParser\Node\Value\ValueResolver
-     */
-    protected $valueResolver;
-    /**
-     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
-     */
-    protected $betterNodeFinder;
     /**
      * @var \Rector\Core\PhpParser\Comparing\NodeComparator
      */
@@ -93,14 +85,6 @@ CODE_SAMPLE;
      */
     private $simpleCallableNodeTraverser;
     /**
-     * @var \Rector\Core\Logging\CurrentRectorProvider
-     */
-    private $currentRectorProvider;
-    /**
-     * @var \Rector\Core\Configuration\CurrentNodeProvider
-     */
-    private $currentNodeProvider;
-    /**
      * @var \Rector\Skipper\Skipper\Skipper
      */
     private $skipper;
@@ -117,31 +101,45 @@ CODE_SAMPLE;
      */
     private $createdByRuleDecorator;
     /**
-     * @var \Rector\Core\Logging\RectorOutput
-     */
-    private $rectorOutput;
-    /**
      * @var int|null
      */
     private $toBeRemovedNodeId;
-    public function autowire(NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, NodeFactory $nodeFactory, PhpDocInfoFactory $phpDocInfoFactory, StaticTypeMapper $staticTypeMapper, CurrentRectorProvider $currentRectorProvider, CurrentNodeProvider $currentNodeProvider, Skipper $skipper, ValueResolver $valueResolver, BetterNodeFinder $betterNodeFinder, NodeComparator $nodeComparator, CurrentFileProvider $currentFileProvider, CreatedByRuleDecorator $createdByRuleDecorator, ChangedNodeScopeRefresher $changedNodeScopeRefresher, RectorOutput $rectorOutput) : void
+    /**
+     * @var array<string, object>
+     */
+    private $deprecatedDependencies = [];
+    /**
+     * @var array<class-string, array<string, bool>>
+     */
+    private $cachedDeprecatedDependenciesWarning = [];
+    /**
+     * Handle deprecated dependencies compatbility
+     * @return mixed
+     */
+    public function __get(string $name)
+    {
+        if (!isset($this->cachedDeprecatedDependenciesWarning[static::class][$name])) {
+            echo \sprintf('Get %s property from AbstractRector on %s is deprecated, inject via __construct() instead', $name, static::class);
+            echo \PHP_EOL;
+            $this->cachedDeprecatedDependenciesWarning[static::class][$name] = \true;
+        }
+        return $this->deprecatedDependencies[$name] ?? null;
+    }
+    public function autowire(NodeNameResolver $nodeNameResolver, NodeTypeResolver $nodeTypeResolver, SimpleCallableNodeTraverser $simpleCallableNodeTraverser, NodeFactory $nodeFactory, PhpDocInfoFactory $phpDocInfoFactory, StaticTypeMapper $staticTypeMapper, Skipper $skipper, ValueResolver $valueResolver, BetterNodeFinder $betterNodeFinder, NodeComparator $nodeComparator, CurrentFileProvider $currentFileProvider, CreatedByRuleDecorator $createdByRuleDecorator, ChangedNodeScopeRefresher $changedNodeScopeRefresher) : void
     {
         $this->nodeNameResolver = $nodeNameResolver;
         $this->nodeTypeResolver = $nodeTypeResolver;
         $this->simpleCallableNodeTraverser = $simpleCallableNodeTraverser;
         $this->nodeFactory = $nodeFactory;
-        $this->phpDocInfoFactory = $phpDocInfoFactory;
         $this->staticTypeMapper = $staticTypeMapper;
-        $this->currentRectorProvider = $currentRectorProvider;
-        $this->currentNodeProvider = $currentNodeProvider;
         $this->skipper = $skipper;
-        $this->valueResolver = $valueResolver;
-        $this->betterNodeFinder = $betterNodeFinder;
         $this->nodeComparator = $nodeComparator;
         $this->currentFileProvider = $currentFileProvider;
         $this->createdByRuleDecorator = $createdByRuleDecorator;
         $this->changedNodeScopeRefresher = $changedNodeScopeRefresher;
-        $this->rectorOutput = $rectorOutput;
+        $this->deprecatedDependencies['phpDocInfoFactory'] = $phpDocInfoFactory;
+        $this->deprecatedDependencies['valueResolver'] = $valueResolver;
+        $this->deprecatedDependencies['betterNodeFinder'] = $betterNodeFinder;
     }
     /**
      * @return Node[]|null
@@ -168,23 +166,10 @@ CODE_SAMPLE;
         if ($this->skipper->shouldSkipCurrentNode($this, $filePath, static::class, $node)) {
             return null;
         }
-        $isDebug = $this->rectorOutput->isDebug();
-        $this->currentRectorProvider->changeCurrentRector($this);
-        // for PHP doc info factory and change notifier
-        $this->currentNodeProvider->setNode($node);
-        if ($isDebug) {
-            $this->rectorOutput->printCurrentFileAndRule($filePath, static::class);
-        }
         $this->changedNodeScopeRefresher->reIndexNodeAttributes($node);
-        if ($isDebug) {
-            $this->rectorOutput->startConsumptions();
-        }
         // ensure origNode pulled before refactor to avoid changed during refactor, ref https://3v4l.org/YMEGN
         $originalNode = $node->getAttribute(AttributeKey::ORIGINAL_NODE) ?? $node;
         $refactoredNode = $this->refactor($node);
-        if ($isDebug) {
-            $this->rectorOutput->printConsumptions();
-        }
         // @see NodeTraverser::* codes, e.g. removal of node of stopping the traversing
         if ($refactoredNode === NodeTraverser::REMOVE_NODE) {
             $this->toBeRemovedNodeId = \spl_object_id($originalNode);
@@ -258,7 +243,7 @@ CODE_SAMPLE;
         return $this->nodeTypeResolver->getType($node);
     }
     /**
-     * @param \PhpParser\Node|mixed[] $nodes
+     * @param Node|Node[] $nodes
      * @param callable(Node $node): (Node|null|int) $callable
      */
     protected function traverseNodesWithCallable($nodes, callable $callable) : void
@@ -298,7 +283,7 @@ CODE_SAMPLE;
         });
     }
     /**
-     * @param \PhpParser\Node|mixed[]|int $refactoredNode
+     * @param Node|Node[] $refactoredNode
      */
     private function postRefactorProcess(Node $originalNode, Node $node, $refactoredNode, string $filePath) : Node
     {
@@ -322,7 +307,7 @@ CODE_SAMPLE;
         return $refactoredNode;
     }
     /**
-     * @param mixed[]|\PhpParser\Node $node
+     * @param Node[]|Node $node
      */
     private function refreshScopeNodes($node, string $filePath, ?MutatingScope $mutatingScope) : void
     {

@@ -8,7 +8,7 @@
     },
     "require-dev": {
         "phpstan\/extension-installer": "^1.3",
-        "phpstan\/phpstan": "^1.9",
+        "phpstan\/phpstan": "^1.10",
         "phpstan\/phpstan-deprecation-rules": "^1.1",
         "phpstan\/phpstan-webmozart-assert": "^1.2",
         "phpunit\/phpunit": "^10.3",
@@ -55,12 +55,7 @@
         ]
     },
     "extra": {
-        "enable-patching": true,
-        "rector": {
-            "includes": [
-                "config\/config.php"
-            ]
-        }
+        "enable-patching": true
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

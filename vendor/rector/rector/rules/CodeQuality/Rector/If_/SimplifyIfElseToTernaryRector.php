@@ -3,7 +3,6 @@
 declare (strict_types=1);
 namespace Rector\CodeQuality\Rector\If_;
 
-use RectorPrefix202309\Nette\Utils\Strings;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Assign;
@@ -12,6 +11,7 @@ use PhpParser\Node\Stmt;
 use PhpParser\Node\Stmt\Else_;
 use PhpParser\Node\Stmt\Expression;
 use PhpParser\Node\Stmt\If_;
+use Rector\Core\PhpParser\Node\BetterNodeFinder;
 use Rector\Core\PhpParser\Printer\BetterStandardPrinter;
 use Rector\Core\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\CodeSample\CodeSample;
@@ -27,12 +27,18 @@ final class SimplifyIfElseToTernaryRector extends AbstractRector
      */
     private $betterStandardPrinter;
     /**
+     * @readonly
+     * @var \Rector\Core\PhpParser\Node\BetterNodeFinder
+     */
+    private $betterNodeFinder;
+    /**
      * @var int
      */
     private const LINE_LENGTH_LIMIT = 120;
-    public function __construct(BetterStandardPrinter $betterStandardPrinter)
+    public function __construct(BetterStandardPrinter $betterStandardPrinter, BetterNodeFinder $betterNodeFinder)
     {
         $this->betterStandardPrinter = $betterStandardPrinter;
+        $this->betterNodeFinder = $betterNodeFinder;
     }
     public function getRuleDefinition() : RuleDefinition
     {
@@ -163,6 +169,6 @@ CODE_SAMPLE
     private function isNodeTooLong(Assign $assign) : bool
     {
         $assignContent = $this->betterStandardPrinter->print($assign);
-        return Strings::length($assignContent) > self::LINE_LENGTH_LIMIT;
+        return \strlen($assignContent) > self::LINE_LENGTH_LIMIT;
     }
 }
