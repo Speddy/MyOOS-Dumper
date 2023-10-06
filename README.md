@@ -74,3 +74,4 @@ Released under the GNU General Public License. You can find the whole license te
 
 * [MyOOS](https://www.oos-shop.de) - Homepage of MyOOS 
 * [MyOOS Forum](https://foren.myoos.de/viewforum.php?f=40) - Community forum
+* [MyOOS Blog](https://blog.myoos.de) - Community blog
