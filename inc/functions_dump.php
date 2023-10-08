@@ -391,9 +391,12 @@ function DoEmail()
         // Set the encryption mechanism to use:
         // - SMTPS (implicit TLS on port 465) or
         // - STARTTLS (explicit TLS on port 587)
-        $phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        $phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        
+		if (465 == $config['other_smtp_port']) {
+			$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+		} elseif (587 == $config['other_smtp_port']) { 
+			$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        }
+
         // Set the SMTP port number:
         // - 465 for SMTP with implicit TLS, a.k.a. RFC8314 SMTPS or
         // - 587 for SMTP+STARTTLS
