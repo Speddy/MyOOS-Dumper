@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '884553c4985eae8a1011954c051557f6d4f62b4a',
+        'reference' => '15ccede64bb0d0bab560a74e297ca469f22a6fb6',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '884553c4985eae8a1011954c051557f6d4f62b4a',
+            'reference' => '15ccede64bb0d0bab560a74e297ca469f22a6fb6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -38,9 +38,9 @@
             'dev_requirement' => false,
         ),
         'league/flysystem' => array(
-            'pretty_version' => '3.16.0',
-            'version' => '3.16.0.0',
-            'reference' => '4fdf372ca6b63c6e281b1c01a624349ccb757729',
+            'pretty_version' => '3.17.0',
+            'version' => '3.17.0.0',
+            'reference' => 'bd4c9b26849d82364119c68429541f1631fba94b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/flysystem',
             'aliases' => array(),
@@ -119,9 +119,9 @@
             'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.10.37',
-            'version' => '1.10.37.0',
-            'reference' => '058ba07e92f744d4dcf6061ae75283d0c6456f2e',
+            'pretty_version' => '1.10.38',
+            'version' => '1.10.38.0',
+            'reference' => '5302bb402c57f00fb3c2c015bac86e0827e4b691',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
@@ -169,7 +169,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'bfb87b7907dac95bb71d398ff3e225d5362f768e',
+            'reference' => '85afa852eeecec97cec35d987dcfbc602c025620',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
