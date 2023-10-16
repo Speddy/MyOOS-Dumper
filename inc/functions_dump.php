@@ -19,11 +19,6 @@
 /* ensure this file is being included by a parent file */
 defined('OOS_VALID_MOD') or exit('Direct Access to this location is not allowed.');
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-
-
 require './inc/functions_global.php';
 
 //Buffer fuer Multipart-Filesizepruefung
@@ -339,18 +334,24 @@ function DoEmail()
 {
     global $phpmailer, $config, $dump, $databases, $email, $lang, $out, $REMOTE_ADDR;
 
-
-    // (Re)create it, if it's gone missing
-    if (! ($phpmailer instanceof PHPMailer)) {
-        include_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/Exception.php';
-        include_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/PHPMailer.php';
-        include_once MOD_INCLUDE_PATH . '/inc/lib/phpmailer/src/SMTP.php';    
-        $phpmailer = new PHPMailer(true);
+    if (empty($config['email_recipient'])) {
+        return false;
     }
+    if (empty($config['email_sender'])) {
+        return false;
+    }
+
+	// (Re)create it, if it's gone missing.
+	if ( ! ( $phpmailer instanceof PHPMailer\PHPMailer\PHPMailer ) ) {
+		require_once MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/src/Exception.php';
+		require_once MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/src/PHPMailer.php';
+		require_once MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/src/SMTP.php';	
+		$phpmailer = new PHPMailer\PHPMailer\PHPMailer( true );
+	}
 
     // load the appropriate language version
     $sLang = ($config['language'] ?? 'en');
-    $phpmailer->setLanguage($sLang, MOD_INCLUDE_PATH . '/inc/lib/phpmailer/language/');
+    $phpmailer->setLanguage($sLang, MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/language/');
 
     // Empty out the values that may be set.
     $phpmailer->clearAllRecipients();
@@ -381,7 +382,7 @@ function DoEmail()
         $phpmailer->IsSMTP(); // set mailer to use SMTP
 
         // SMTP Debug
-        //    $phpmailer->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
+        // $phpmailer->SMTPDebug = PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
         
         $phpmailer->Host       = $config['other_smtp_host'];    //Set the SMTP server to send through
         $phpmailer->SMTPAuth   = isset($config['other_smtp_username']) || isset($config['other_smtp_password']);   //Enable SMTP authentication
@@ -392,9 +393,9 @@ function DoEmail()
         // - SMTPS (implicit TLS on port 465) or
         // - STARTTLS (explicit TLS on port 587)
 		if (465 == $config['other_smtp_port']) {
-			$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+			$phpmailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
 		} elseif (587 == $config['other_smtp_port']) { 
-			$phpmailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+			$phpmailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
         }
 
         // Set the SMTP port number:
