@@ -1,5 +1,6 @@
 <?php
-/** ---------------------------------------------------------------------
+/**
+ * ---------------------------------------------------------------------
 
    MyOOS [Dumper]
    http://www.oos-shop.de/
@@ -14,7 +15,8 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- */
+   ---------------------------------------------------------------------- 
+ */
 
 /* ensure this file is being included by a parent file */
 defined('OOS_VALID_MOD') or exit('Direct Access to this location is not allowed.');
@@ -341,13 +343,13 @@ function DoEmail()
         return false;
     }
 
-	// (Re)create it, if it's gone missing.
-	if ( ! ( $phpmailer instanceof PHPMailer\PHPMailer\PHPMailer ) ) {
-		require_once MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/src/Exception.php';
-		require_once MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/src/PHPMailer.php';
-		require_once MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/src/SMTP.php';	
-		$phpmailer = new PHPMailer\PHPMailer\PHPMailer( true );
-	}
+    // (Re)create it, if it's gone missing.
+    if (! ( $phpmailer instanceof PHPMailer\PHPMailer\PHPMailer ) ) {
+        include_once MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/src/Exception.php';
+        include_once MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/src/PHPMailer.php';
+        include_once MOD_INCLUDE_PATH . '/vendor/phpmailer/phpmailer/src/SMTP.php';    
+        $phpmailer = new PHPMailer\PHPMailer\PHPMailer(true);
+    }
 
     // load the appropriate language version
     $sLang = ($config['language'] ?? 'en');
@@ -392,10 +394,10 @@ function DoEmail()
         // Set the encryption mechanism to use:
         // - SMTPS (implicit TLS on port 465) or
         // - STARTTLS (explicit TLS on port 587)
-		if (465 == $config['other_smtp_port']) {
-			$phpmailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
-		} elseif (587 == $config['other_smtp_port']) { 
-			$phpmailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        if (465 == $config['other_smtp_port']) {
+            $phpmailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_SMTPS;
+        } elseif (587 == $config['other_smtp_port']) { 
+            $phpmailer->SMTPSecure = PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
         }
 
         // Set the SMTP port number:

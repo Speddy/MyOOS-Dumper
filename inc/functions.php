@@ -1,5 +1,6 @@
 <?php
-/** ---------------------------------------------------------------------
+/**
+ * ---------------------------------------------------------------------
 
    MyOOS [Dumper]
    http://www.oos-shop.de/
@@ -14,7 +15,8 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- */
+   ---------------------------------------------------------------------- 
+ */
 
 /* ensure this file is being included by a parent file */
 defined('OOS_VALID_MOD') or exit('Direct Access to this location is not allowed.');
