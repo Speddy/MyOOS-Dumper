@@ -133,7 +133,13 @@ $sqltmp = $sql['sql_statement'].$sql['order_statement'].(strpos(strtolower($sql[
 if (!$skip_mysql_execution) {
     $res = mod_query($sqltmp);
 }
-$numrows = mysqli_num_rows($res);
+
+if (isset($res) && $res) {
+    $numrows = mysqli_num_rows($res);
+} else {
+    $numrows = 0; 
+}
+
 
 if (-1 == $numrowsabs) {
     $numrowsabs = $numrows;
