@@ -25,7 +25,7 @@ if (function_exists('date_default_timezone_set')) {
 }
 //Konstanten
 if (!defined('MOD_VERSION')) {
-    define('MOD_VERSION', '5.0.22');
+    define('MOD_VERSION', '5.0.23');
 }
 if (!defined('MOD_OS')) {
     define('MOD_OS', PHP_OS);
