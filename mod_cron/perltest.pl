@@ -35,6 +35,7 @@ my $mod_ff=0;
 my $mod_fb=0;
 my $mod_gz=0;
 my $mod_ftp=0;
+my $mod_sftp=0;
 my $mod_mime=0;
 my $mod_ftpssl=0;
 my $dbi_driver;
@@ -133,6 +134,21 @@ if($mod_ftp!=1){
 } else {
     print $ok."Found modul Net::FTP. OK - crondump.pl can send backups via FTP.</font><br>\n";
 }
+
+
+print "<br><strong>testing Net::sFTP (needed if you want to transfer backups to another server)...</strong><br>\n";
+eval { $eval_in_died = 1; require Net::sFTP; };
+       if(!$@){
+            $mod_sftp = 1;
+            import Net::sFTP;
+            }
+if($mod_sftp!=1){
+    print $err."Error: modul Net::sFTP not found! crondump.pl can't transfer data via sFTP.</font><br>\n";
+} else {
+    print $ok."Found modul Net::sFTP. OK - crondump.pl can send backups via sFTP.</font><br>\n";
+}
+
+
 
 print "<br><strong>testing Net::FTPSSL (needed if you want to transfer backups to another server with ssl encryption)...</strong><br>\n";
 eval { $eval_in_died = 1; require Net::FTPSSL; };
