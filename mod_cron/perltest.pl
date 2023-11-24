@@ -136,16 +136,16 @@ if($mod_ftp!=1){
 }
 
 
-print "<br><strong>testing Net::sFTP (needed if you want to transfer backups to another server)...</strong><br>\n";
-eval { $eval_in_died = 1; require Net::sFTP; };
+print "<br><strong>testing Net::SFTP (needed if you want to transfer backups to another server)...</strong><br>\n";
+eval { $eval_in_died = 1; require Net::SFTP; };
        if(!$@){
             $mod_sftp = 1;
-            import Net::sFTP;
+            import Net::SFTP;
             }
 if($mod_sftp!=1){
-    print $err."Error: modul Net::sFTP not found! crondump.pl can't transfer data via sFTP.</font><br>\n";
+    print $err."Error: modul Net::SFTP not found! crondump.pl can't transfer data via sFTP.</font><br>\n";
 } else {
-    print $ok."Found modul Net::sFTP. OK - crondump.pl can send backups via sFTP.</font><br>\n";
+    print $ok."Found modul Net::SFTP. OK - crondump.pl can send backups via FTP.</font><br>\n";
 }
 
 
