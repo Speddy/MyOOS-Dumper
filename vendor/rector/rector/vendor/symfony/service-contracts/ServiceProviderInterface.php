@@ -8,9 +8,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-namespace RectorPrefix202310\Symfony\Contracts\Service;
+namespace RectorPrefix202311\Symfony\Contracts\Service;
 
-use RectorPrefix202310\Psr\Container\ContainerInterface;
+use RectorPrefix202311\Psr\Container\ContainerInterface;
 /**
  * A ServiceProviderInterface exposes the identifiers and the types of services provided by a container.
  *
@@ -35,7 +35,7 @@ interface ServiceProviderInterface extends ContainerInterface
      *  * ['foo' => '?'] means the container provides service name "foo" of unspecified type
      *  * ['bar' => '?Bar\Baz'] means the container provides a service "bar" of type Bar\Baz|null
      *
-     * @return string[] The provided service types, keyed by service names
+     * @return array<string, string> The provided service types, keyed by service names
      */
     public function getProvidedServices() : array;
 }
