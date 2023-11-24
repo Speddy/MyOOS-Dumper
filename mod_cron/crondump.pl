@@ -79,6 +79,7 @@ $output $query $skip $html_output $datei
 $record_count $filesize $status_start $status_end $sql_text $punktzaehler @backupfiles_name
 @backupfiles_size $mysql_commentstring $character_set $mod_gz $mod_mime $mod_ftp
 $mod_ftpssl @multipartfiles %db_tables @tablenames $tablename $opttbl $command $current_dir
+@sftp_transfer @sftp_timeout @sftp_server @sftp_port @sftp_user @sftp_pass @sftp_dir @sftp_path_to_private_key @sftp_secret_passphrase_for_private_key @sftp_fingerprint
 );
 
 $memory_limit=100000;
@@ -113,6 +114,8 @@ $mod_gz=0;
 $mod_ftp=0;
 $mod_mime=0;
 $mod_ftpssl=0;
+$mod_sftp=0;
+$mod_sftp_foreign=0;
 push (@INC, "$cgibin_path");
 
 eval { $eval_in_died = 1; require Compress::Zlib; };
@@ -124,6 +127,16 @@ eval { $eval_in_died = 1; require Net::FTP; };
 if(!$@){
     $mod_ftp = 1;
     import Net::FTP;
+}
+eval { $eval_in_died = 1; require Net::SFTP; };
+if(!$@){
+    $mod_sftp = 1;
+    import Net::SFTP;
+}
+eval { $eval_in_died = 1; require Net::SFTP::Foreign; };
+if(!$@){
+    $mod_sftp_foreign = 1;
+    import Net::SFTP::Foreign;
 }
 eval { $eval_in_died = 1; require Net::FTPSSL; };
 if(!$@){
@@ -263,6 +276,18 @@ if($mod_ftp==1) {
 } else {
     $cronftp=0;
     PrintOut("<span style=\"color:red;\">FTP Library loading failed - FTP deactivated ...</span>");
+}
+if($mod_sftp==1) {
+    PrintOut("<span style=\"color:#0000FF;\">SFTP Library loaded successfully...</span>");
+} else {
+    $cronsftp=0;
+    PrintOut("<span style=\"color:red;\">SFTP Library loading failed - SFTP deactivated ...</span>");
+}
+if($mod_sftp_foreign==1) {
+    PrintOut("<span style=\"color:#0000FF;\">SFTP Library with a private key loaded successfully...</span>");
+} else {
+    $cronsftpforeign=0;
+    PrintOut("<span style=\"color:red;\">Failed to load the library SFTP connection with a private key - SFTP deactivated ...</span>");
 }
 if($mod_ftpssl==1) {
     PrintOut("<span style=\"color:#0000FF;\">FTP-SSL Library loaded successfully...</span>");
@@ -896,6 +921,72 @@ sub send_ftp {
         }
     }
 }
+
+sub send_sftp {
+    #save files to ftp-server
+    my $ret=0;
+    my $x=0;
+    for(my $i = 0; $i <3; $i++)
+    {
+        if ($sftp_transfer[$i]==1)
+        {
+            if ($sftp_timeout[$i]<1) { $sftp_timeout[$i]=30; };
+                if (${ftp_useSSL[$i]}==1 && $mod_sftp_foreign==1)
+                {    
+					use Net::SFTP::Foreign; 
+					my $sftp = Net::SFTP::Foreign->new($sftp_server, user => $sftp_user, key_path => $sftp_path_to_private_key, passphrase => $sftp_secret_passphrase_for_private_key, port => $sftp_port) or err_trap( "FTP-SSL-ERROR: Can't connect: $@\n",1);
+                }
+                else
+                {    
+					use Net::SFTP;
+					my $sftp = Net::SFTP->new($sftp_server[$i], user => $sftp_user[$i], password => $sftp_pass[$i], port => $sftp_port[$i], timeout => $sftp_timeout[i]) or errt​rap("SFTP−ERROR:Can′tconnect:@\n",1);
+                }
+            $sftp->binary();
+            $sftp->cwd($sftp_dir[$i]) or err_trap("SFTP-ERROR: Couldn't change directory: ".$sftp_dir[$i],1);
+            
+            if($mp==0) 
+            {
+                PrintOut("SFTP: transferring `$backupfile`");
+                $ret=$sftp->put($sql_file);
+                if (!$ret)
+                {
+                    err_trap("SFTP-Error: Couldn't put $backupfile to ".$sftp_server[$i]." into dir ".$sftp_dir[$i]."\n",1);
+                }
+                else
+                {
+                    write_log("SFTP: transferred `$backupfile` to $sftp_server[$i] into dir $sftp_dir[$i] successfully\n");
+                    PrintOut(" to $sftp_server[$i] into dir $sftp_dir[$i] was successful.\n");
+                }
+            } 
+            else 
+            {
+                $dateistamm=substr($backupfile,0,index($backupfile,"part_"))."part_";
+                $dateiendung=($compression==1)?".sql.gz":".sql";
+                $mpdatei="";
+                for ($x=1;$x<$mp;$x++) 
+                {
+                    $mpdatei=$dateistamm.$x.$dateiendung;
+                    PrintOut("SFTP: transferring multipart $mpdatei");
+                    
+                    $ret=$sftp->put($backup_path.$mpdatei);
+                    if (!$ret) 
+                    {
+                        err_trap("Couldn't put $backup_path.$mpdatei to ".$sftp_server[$i]." into dir ".$sftp_dir[$i]."\n",1);
+                    }
+                    else
+                    {
+                        #write_log("SFTP: transferring of `$mpdatei` to ".$sftp_server[$i]." finished successfully.\n");
+                        #PrintOut("SFTP: transferring of `$mpdatei` to $sftp_server[$i] finished successfully.");
+                        write_log("SFTP: transferred multipart '$mpdatei' to $sftp_server[$i] into dir $sftp_dir[$i] successfully\n");
+                        PrintOut(" to $sftp_server[$i] into dir $sftp_dir[$i] was successful.\n");
+                    }
+                }
+            }
+        }
+    }
+}
+
+
 
 sub send_mail {
     #sent email w/o files
