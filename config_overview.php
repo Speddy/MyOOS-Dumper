@@ -234,6 +234,14 @@ if ($sftptested > -1) {
     $config['sftp_user'][$sftptested] = $sftp_user[$sftptested];
     $config['sftp_pass'][$sftptested] = $sftp_pass[$sftptested];
     $config['sftp_dir'][$sftptested] = $sftp_dir[$sftptested];
+	
+	// Die if-Abfrage, die etwas ausgibt, wenn alle drei Variablen leer sind 
+	if (empty($sftp_path_to_private_key[$sftptested]) && empty($sftp_secret_passphrase_for_private_key[$sftptested]) && empty($sftp_fingerprint[$sftptested])) { 
+		$config['sftp_foreig'][$sftptested] = 0;
+	} else {
+		$config['sftp_foreig'][$sftptested] = 1;
+	}	
+	
     $config['sftp_path_to_private_key'][$sftptested] = $sftp_path_to_private_key[$sftptested];
     $config['sftp_secret_passphrase_for_private_key'][$sftptested] = $sftp_secret_passphrase_for_private_key[$sftptested];
     $config['sftp_fingerprint'][$sftptested] = $sftp_fingerprint[$sftptested];
@@ -502,6 +510,12 @@ if (isset($_POST['save'])) {
         $config['sftp_secret_passphrase_for_private_key'][$i] = (isset($_POST['sftp_secret_passphrase_for_private_key'][$i])) ? stripslashes((string) $_POST['sftp_secret_passphrase_for_private_key'][$i]) : null;
         $config['sftp_fingerprint'][$i] = (isset($_POST['sftp_fingerprint'][$i])) ? stripslashes((string) $_POST['sftp_fingerprint'][$i]) : null;
 
+		if ($config['sftp_path_to_private_key'][$i] === null && $config['sftp_secret_passphrase_for_private_key'][$i] === null && $config['sftp_fingerprint'][$i] === null) { 
+			$config['sftp_foreig'][$i] = 0;
+		} else {
+			$config['sftp_foreig'][$i] = 1;
+		}
+
         if (0 == $config['sftp_port'][$i]) {
             $config['sftp_port'][$i] = 22;
         }
@@ -720,25 +734,25 @@ $databases['multi'] = explode(';', (string) $databases['multisetting']);
 $aus['formstart'] = headline($lang['L_CONFIG_HEADLINE'].': '.$config['config_file']);
 $aus['formstart'] .= '<form name="frm_config" method="POST" action="config_overview.php"><input type="hidden" name="sel" id="sel" value="db">'.$nl;
 $aus['formstart'] .= '<div id="configleft">';
-$aus['formstart'] .= '<input type="Button" id="command1" onclick="show_pardivs(\'db\');" value="'.$lang['L_DBS'].'" class="ConfigButton"><br>'.$nl;
-$aus['formstart'] .= '<input type="Button" id="command2" onclick="show_pardivs(\'global1\');" value="'.$lang['L_GENERAL'].'" class="ConfigButton"><br>'.$nl;
-$aus['formstart'] .= '<input type="Button" id="command3" onclick="show_pardivs(\'global2\');" value="'.$lang['L_CONFIG_INTERFACE'].'" class="ConfigButton"><br>'.$nl;
-$aus['formstart'] .= '<input type="Button" id="command4" onclick="show_pardivs(\'global3\');" value="'.$lang['L_CONFIG_AUTODELETE'].'" class="ConfigButton"><br>'.$nl;
-$aus['formstart'] .= '<input type="Button" id="command5" onclick="show_pardivs(\'transfer1\');" value="'.$lang['L_CONFIG_EMAIL'].'" class="ConfigButton"><br>'.$nl;
-$aus['formstart'] .= '<input type="Button" id="command6" onclick="show_pardivs(\'transfer2\');" value="'.$lang['L_FTP'].'" class="ConfigButton"><br>'.$nl;
-$aus['formstart'] .= '<input type="Button" id="command11" onclick="show_pardivs(\'transfer3\');" value="'.$lang['L_SFTP'].'" class="ConfigButton"><br>'.$nl;
-$aus['formstart'] .= '<input type="Button" id="command7" onclick="show_pardivs(\'cron\');" value="'.$lang['L_CONFIG_CRONSCRIPT'].'" class="ConfigButton"><br>'.$nl;
-$aus['formstart'] .= '<input type="Button" id="command0" onclick="show_pardivs(\'configs\');" value="'.$lang['L_CONFIGFILES'].'" class="ConfigButton"><br>'.$nl;
-//$aus['formstart'] .= '<input type="Button" id="command8" onclick="show_pardivs(\'all\');" value="'.$lang['L_ALLPARS'].'" class="ConfigButton"><br>'.$nl;
+$aus['formstart'] .= '<input type="Button" id="command1" onclick="show_pardivs(\'db\');" value="'.($lang['L_DBS'] ?? '').'" class="ConfigButton"><br>'.$nl;
+$aus['formstart'] .= '<input type="Button" id="command2" onclick="show_pardivs(\'global1\');" value="'.($lang['L_GENERAL'] ?? '').'" class="ConfigButton"><br>'.$nl;
+$aus['formstart'] .= '<input type="Button" id="command3" onclick="show_pardivs(\'global2\');" value="'.($lang['L_CONFIG_INTERFACE'] ?? '').'" class="ConfigButton"><br>'.$nl;
+$aus['formstart'] .= '<input type="Button" id="command4" onclick="show_pardivs(\'global3\');" value="'.($lang['L_CONFIG_AUTODELETE'] ?? '').'" class="ConfigButton"><br>'.$nl;
+$aus['formstart'] .= '<input type="Button" id="command5" onclick="show_pardivs(\'transfer1\');" value="'.($lang['L_CONFIG_EMAIL'] ?? '').'" class="ConfigButton"><br>'.$nl;
+$aus['formstart'] .= '<input type="Button" id="command6" onclick="show_pardivs(\'transfer2\');" value="'.($lang['L_FTP'] ?? '').'" class="ConfigButton"><br>'.$nl;
+$aus['formstart'] .= '<input type="Button" id="command11" onclick="show_pardivs(\'transfer3\');" value="'.($lang['L_SFTP'] ?? '').'" class="ConfigButton"><br>'.$nl;
+$aus['formstart'] .= '<input type="Button" id="command7" onclick="show_pardivs(\'cron\');" value="'.($lang['L_CONFIG_CRONSCRIPT'] ?? '').'" class="ConfigButton"><br>'.$nl;
+$aus['formstart'] .= '<input type="Button" id="command0" onclick="show_pardivs(\'configs\');" value="'.($lang['L_CONFIGFILES'] ?? '').'" class="ConfigButton"><br>'.$nl;
+//$aus['formstart'] .= '<input type="Button" id="command8" onclick="show_pardivs(\'all\');" value="'.($lang['L_ALLPARS'] ?? '').'" class="ConfigButton"><br>'.$nl;
 
 //$aus['formstart'] .= '<input class="Formbutton" type="reset" name="reset" value="'.$lang['L_RESET'].'">';
-$aus['formstart'] .= '<br><input class="Formbutton" type="submit" name="save" value="'.$lang['L_SAVE'].'"><br><br>'.$nl;
-$aus['formstart'] .= '<input class="Formbutton" type="Submit" name="load" value="'.$lang['L_LOAD'].'" onclick="if (!confirm(\''.$lang['L_CONFIG_ASKLOAD'].'\')) return false;">'.$nl;
+$aus['formstart'] .= '<br><input class="Formbutton" type="submit" name="save" value="'.($lang['L_SAVE'] ?? '').'"><br><br>'.$nl;
+$aus['formstart'] .= '<input class="Formbutton" type="Submit" name="load" value="'.($lang['L_LOAD'] ?? '').'" onclick="if (!confirm(\''.($lang['L_CONFIG_ASKLOAD'] ?? '').'\')) return false;">'.$nl;
 //$aus['formstart'] .= '<input class="Formbutton" type="button" value="'.$lang['L_INSTALL'].'" onclick="parent.location.href=\'install.php\'">'.$nl;
 $aus['formstart'] .= '</div><div id="configright">'.$msg.$nl;
 
 // Configuration files
-$aus['conf'] = '<div id="configs"><fieldset><legend>'.$lang['L_CONFIGFILES'].'</legend>'.$nl.$nl;
+$aus['conf'] = '<div id="configs"><fieldset><legend>'.($lang['L_CONFIGFILES'] ?? '').'</legend>'.$nl.$nl;
 
 $aus['conf'] .= '<table><tr class="dbrow">';
 $aus['conf'] .= '<td style="vertical-align:middle">'.$lang['L_CREATE_CONFIGFILE'].':</td>';
@@ -746,8 +760,8 @@ $aus['conf'] .= '<td style="vertical-align:middle"><input type="text" class="tex
 $aus['conf'] .= '<td colspan="2">'.print_save_button().'</td>';
 $aus['conf'] .= '</tr></table>';
 
-$aus['conf'] .= '<br><table class="bdr"><tr class="thead"><th>#</th><th>'.$lang['L_CONFIGFILE'].' / '.$lang['L_MYSQL_DATA'].'</th>';
-$aus['conf'] .= '<th>'.$lang['L_CONFIGURATIONS'].'</th><th>'.$lang['L_ACTION'].'</th></tr>';
+$aus['conf'] .= '<br><table class="bdr"><tr class="thead"><th>#</th><th>'.($lang['L_CONFIGFILE'] ?? '').' / '.($lang['L_MYSQL_DATA'] ?? '').'</th>';
+$aus['conf'] .= '<th>'.($lang['L_CONFIGURATIONS'] ?? '').'</th><th>'.($lang['L_ACTION'] ?? '').'</th></tr>';
 
 $i = 0;
 $old_config = $config;
@@ -772,13 +786,13 @@ if (sizeof($configs) > 0) {
         $aus['conf'] .= '<td>';
 
         $aus['conf'] .= '<table>';
-        $aus['conf'] .= '<tr><td>'.$lang['L_NAME'].':</td><td><strong>'.$c.'</strong></td></tr>'; // filename
+        $aus['conf'] .= '<tr><td>'.($lang['L_NAME'] ?? '').':</td><td><strong>'.$c.'</strong></td></tr>'; // filename
 
-        $aus['conf'] .= '<tr><td>'.$lang['L_DB_HOST'].':</td><td><strong>'.$config['dbhost'].'</strong></td></tr>';
-        $aus['conf'] .= '<tr><td>'.$lang['L_DB_USER'].':</td><td><strong>'.$config['dbuser'].'</strong></td></tr>';
+        $aus['conf'] .= '<tr><td>'.($lang['L_DB_HOST'] ?? '').':</td><td><strong>'.$config['dbhost'].'</strong></td></tr>';
+        $aus['conf'] .= '<tr><td>'.($lang['L_DB_USER'] ?? '').':</td><td><strong>'.$config['dbuser'].'</strong></td></tr>';
         $aus['conf'] .= '<tr><td>';
 
-        $aus['conf'] .= $lang['L_DBS'].':</td><td>';
+        $aus['conf'] .= ($lang['L_DBS'] ?? '').':</td><td>';
         $aus['conf'] .= '<a href="#config'.sprintf('%03d', $i).'" onclick="SwitchVP(\'show_db'.sprintf('%03d', $i).'\');">';
         $aus['conf'] .= $icon['search'].'<strong>'.sizeof($databases['Name']).'</strong></a>';
         $aus['conf'] .= '</td></tr>';
