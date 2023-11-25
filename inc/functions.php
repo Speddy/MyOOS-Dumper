@@ -584,6 +584,20 @@ function WriteCronScript($restore_values = false)
     $cronscript .= '@ftp_timeout='.my_implode($config['ftp_timeout'], 1);
     $cronscript .= '@ftp_useSSL='.my_implode($config['ftp_useSSL'], 1);
     $cronscript .= '@ftp_transfer='.my_implode($config['ftp_transfer'], 1);
+
+    $cronscript .= '@sftp_server='.my_implode($config['sftp_server']);
+    $cronscript .= '@sftp_port='.my_implode($config['sftp_port'], 1);
+    $cronscript .= '@sftp_user='.my_implode($config['sftp_user']);
+    $cronscript .= '@sftp_pass='.my_implode($config['sftp_pass']);
+    $cronscript .= '@sftp_dir='.my_implode($config['sftp_dir']);	
+
+    $cronscript .= '@sftp_path_to_private_key='.my_implode($config['sftp_path_to_private_key']);
+    $cronscript .= '@sftp_secret_passphrase_for_private_key='.my_implode($config['sftp_secret_passphrase_for_private_key']);
+    $cronscript .= '@sftp_fingerprint='.my_implode($config['sftp_fingerprint']);		
+	
+    $cronscript .= '@sftp_timeout='.my_implode($config['sftp_timeout'], 1);
+	$cronscript .= '@sftp_transfer='.my_implode($config['sftp_transfer'], 1);
+	
     $cronscript .= '$mp='.$config['multi_part'].';'.$nl;
     $cronscript .= '$multipart_groesse='.$config['multipart_groesse'].';'.$nl;
     $cronscript .= '$email_maxsize='.$config['email_maxsize'].';'.$nl;

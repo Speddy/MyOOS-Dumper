@@ -717,8 +717,15 @@ sub DoDump {
         }
     }
 
-    # sent to ftp-server
-    send_ftp();
+    if($mod_sftp==1) or ($mod_sftp_foreign==1)  {
+		# sent to sftp-server
+		send_sftp();
+	}
+    else
+	{
+		# sent to ftp-server
+		send_ftp();
+	}
 }
 
 #print error message and optional exit
@@ -923,7 +930,7 @@ sub send_ftp {
 }
 
 sub send_sftp {
-    #save files to ftp-server
+    #save files to sftp-server
     my $ret=0;
     my $x=0;
     for(my $i = 0; $i <3; $i++)
@@ -931,15 +938,13 @@ sub send_sftp {
         if ($sftp_transfer[$i]==1)
         {
             if ($sftp_timeout[$i]<1) { $sftp_timeout[$i]=30; };
-                if (${ftp_useSSL[$i]}==1 && $mod_sftp_foreign==1)
+                if ($mod_sftp_foreign==1)
                 {    
-					use Net::SFTP::Foreign; 
-					my $sftp = Net::SFTP::Foreign->new($sftp_server, user => $sftp_user, key_path => $sftp_path_to_private_key, passphrase => $sftp_secret_passphrase_for_private_key, port => $sftp_port) or err_trap( "FTP-SSL-ERROR: Can't connect: $@\n",1);
+					$sftp = Net::SFTP::Foreign->new($sftp_server[$i], user => $sftp_user[$i], key_path => $sftp_path_to_private_key[$i], passphrase => $sftp_secret_passphrase_for_private_key[$i], port => $sftp_port[$i]) or err_trap( "SFTP-SSL-ERROR: Can't connect: $@\n",1);
                 }
                 else
                 {    
-					use Net::SFTP;
-					my $sftp = Net::SFTP->new($sftp_server[$i], user => $sftp_user[$i], password => $sftp_pass[$i], port => $sftp_port[$i], timeout => $sftp_timeout[i]) or errt​rap("SFTP−ERROR:Can′tconnect:@\n",1);
+					$sftp = Net::SFTP->new($sftp_server[$i], user => $sftp_user[$i], password => $sftp_pass[$i], port => $sftp_port[$i], timeout => $sftp_timeout[i]) or errt​rap("SFTP−ERROR:Can′tconnect:@\n",1);
                 }
             $sftp->binary();
             $sftp->cwd($sftp_dir[$i]) or err_trap("SFTP-ERROR: Couldn't change directory: ".$sftp_dir[$i],1);
