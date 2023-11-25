@@ -835,7 +835,7 @@ function TesteSFTP($i)
         } catch (Exception $e) {
             // handle the error
             echo 'Exception: ',  $e->getMessage(), "\n";
-            $s .= '<br><span class="error">'.$lang['L_CONN_NOT_POSSIBLE'].'</span>';
+            $s .= '<br><span class="error">'.($lang['L_CONN_NOT_POSSIBLE'] ?? '').'</span>';
             $pass = 2;
         }
 
@@ -846,14 +846,14 @@ function TesteSFTP($i)
         } catch (Exception $e) {
             // handle the error
             echo 'Exception: ',  $e->getMessage(), "\n";
-            $s .= '<br><span class="error">'.$lang['L_CHANGEDIRERROR'].'</span>';
+            $s .= '<br><span class="error">'.($lang['L_CHANGEDIRERROR'] ?? '').'</span>';
             $pass = 2;
         }
 
         if (1 == $pass) {
-            $s .= ' <span class="success">'.$lang['L_OK'].'</span>';
-            $s .= '<br><strong>Login ok</strong><br>'.$lang['L_CHANGEDIR'].' `'.$config['sftp_dir'][$i].'` ';
-            $s .= '<br><strong>'.$lang['L_SFTP_OK'].'</strong>';
+            $s .= ' <span class="success">'.($lang['L_OK'] ?? '').'</span>';
+            $s .= '<br><strong>Login ok</strong><br>'.($lang['L_CHANGEDIR'] ?? '').' `'.$config['sftp_dir'][$i].'` ';
+            $s .= '<br><strong>'.($lang['L_SFTP_OK'] ?? '').'</strong>';
         }
     }
 
@@ -927,15 +927,15 @@ function SendViaSFTP($i, $source_file, $conn_msg = 1)
     } catch (Exception $e) {
         // handle the error
         $out .= '<br>Exception: ' .  $e->getMessage();
-        $out .= '<br><span class="error">'.$lang['L_CONN_NOT_POSSIBLE'].'</span>';
+        $out .= '<br><span class="error">'.($lang['L_CONN_NOT_POSSIBLE'] ?? '').'</span>';
         $pass = 3;
     }
 
     // Check upload status
     if (3 == $pass) {
-        $out .= '<span class="error">'.$lang['L_FTPCONNERROR3']."<br>($source -> $path)</span><br>";
+        $out .= '<span class="error">'.($lang['L_FTPCONNERROR3'] ?? '')."<br>($source -> $path)</span><br>";
     } else {
-        $out .= '<span class="success">'.$lang['L_FILE'].' <a href="'.$config['paths']['backup'].$source_file.'" class="smallblack">'.$source_file.'</a>'.$lang['L_FTPCONNECTED2'].$config['sftp_server'][$i].$lang['L_FTPCONNECTED3'].'</span><br>';
+        $out .= '<span class="success">'.($lang['L_FILE'] ?? '').' <a href="'.$config['paths']['backup'].$source_file.'" class="smallblack">'.$source_file.'</a>'.$lang['L_FTPCONNECTED2'].$config['sftp_server'][$i].$lang['L_FTPCONNECTED3'].'</span><br>';
         WriteLog("'$source_file' sent via sFTP.");
     }
 }
