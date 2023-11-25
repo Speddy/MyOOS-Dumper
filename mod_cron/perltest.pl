@@ -8,7 +8,7 @@
 #   Based on:
 #
 #   MySqlDumper
-#   http://www.mysqldumper.de
+#   //www.mysqldumper.de
 #
 #   Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
 #   ----------------------------------------------------------------------
