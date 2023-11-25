@@ -79,7 +79,7 @@ $output $query $skip $html_output $datei
 $record_count $filesize $status_start $status_end $sql_text $punktzaehler @backupfiles_name
 @backupfiles_size $mysql_commentstring $character_set $mod_gz $mod_mime $mod_ftp
 $mod_ftpssl @multipartfiles %db_tables @tablenames $tablename $opttbl $command $current_dir
-@sftp_transfer @sftp_timeout @sftp_server @sftp_port @sftp_user @sftp_pass @sftp_dir @sftp_path_to_private_key @sftp_secret_passphrase_for_private_key @sftp_fingerprint
+@sftp_transfer @sftp_timeout @sftp_server @sftp_port @sftp_user @sftp_pass @sftp_dir @sftp_foreig @sftp_path_to_private_key @sftp_secret_passphrase_for_private_key @sftp_fingerprint
 );
 
 $memory_limit=100000;
@@ -938,7 +938,7 @@ sub send_sftp {
         if ($sftp_transfer[$i]==1)
         {
             if ($sftp_timeout[$i]<1) { $sftp_timeout[$i]=30; };
-                if ($mod_sftp_foreign==1)
+				if (${sftp_foreig[$i]}==1 && $mod_ftpssl==1)
                 {    
 					$sftp = Net::SFTP::Foreign->new($sftp_server[$i], user => $sftp_user[$i], key_path => $sftp_path_to_private_key[$i], passphrase => $sftp_secret_passphrase_for_private_key[$i], port => $sftp_port[$i]) or err_trap( "SFTP-SSL-ERROR: Can't connect: $@\n",1);
                 }

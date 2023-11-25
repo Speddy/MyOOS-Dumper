@@ -529,18 +529,19 @@ function WriteCronScript($restore_values = false)
     $config['ftp_pass'] ??= '';
     $config['ftp_dir'] ??= '';
     $config['ftp_timeout'] ??= '';
-    $config['ftp_useSSL'] ??= '';
-    $config['ftp_transfer'] ??= '';
+    $config['ftp_useSSL'] ??= 0;
+    $config['ftp_transfer'] ??= 0;
     $config['sftp_server'] ??= '';
     $config['sftp_port'] ??= '';
     $config['sftp_user'] ??= '';
     $config['sftp_pass'] ??= '';
     $config['sftp_dir'] ??= '';
+	$config['sftp_foreig'] ??= 0;
     $config['sftp_path_to_private_key'] ??= null;
     $config['sftp_secret_passphrase_for_private_key'] ??= null;
     $config['sftp_fingerprint'] ??= null;
     $config['sftp_timeout'] ??= '';
-    $config['sftp_transfer'] ??= '';
+    $config['sftp_transfer'] ??= 0;
     $config['cron_comment'] ??= '';
 
     $cronscript = "<?php\n#Vars - written at ".date('Y-m-d').$nl;
@@ -593,6 +594,7 @@ function WriteCronScript($restore_values = false)
     $cronscript .= '@sftp_pass='.my_implode($config['sftp_pass']);
     $cronscript .= '@sftp_dir='.my_implode($config['sftp_dir']);
 
+	$cronscript .= '@sftp_foreig='.my_implode($config['sftp_foreig'], 1);
     $cronscript .= '@sftp_path_to_private_key='.my_implode($config['sftp_path_to_private_key']);
     $cronscript .= '@sftp_secret_passphrase_for_private_key='.my_implode($config['sftp_secret_passphrase_for_private_key']);
     $cronscript .= '@sftp_fingerprint='.my_implode($config['sftp_fingerprint']);
