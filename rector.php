@@ -24,15 +24,14 @@ return static function (RectorConfig $rectorConfig): void {
         LevelSetList::UP_TO_PHP_80
         ]
     );
-    
-    
+
+
     // exclude a directory from Rector
     $rectorConfig->skip(
         [
         __DIR__ . '/work', // exclude the whole work directory
         __DIR__ . '/inc/config/*.conf.php', // exclude all files with .conf.php extension in the inc directory
-        __DIR__ . '/vendor', // exclude the whole vendor directory        
+        __DIR__ . '/vendor', // exclude the whole vendor directory
         ]
     );
-};    
-    
+};

@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 if (!defined('MOD_VERSION')) {
@@ -88,7 +88,8 @@ for ($i = 0; $i < (is_countable($databases['Name']) ? count($databases['Name']) 
     //gibts die Datenbank überhaupt?
     if (!mysqli_select_db($config['dbconnection'], $databases['Name'][$i])) {
         $tpl->assign_block_vars(
-            'DB_NOT_FOUND', [
+            'DB_NOT_FOUND',
+            [
             'ROWCLASS' => $rowclass,
             'NR' => ($i + 1),
             'DB_NAME' => $databases['Name'][$i],
@@ -99,7 +100,8 @@ for ($i = 0; $i < (is_countable($databases['Name']) ? count($databases['Name']) 
         $tabellen = mysqli_query($config['dbconnection'], 'SHOW TABLES FROM `'.$databases['Name'][$i].'`');
         $num_tables = mysqli_num_rows($tabellen);
         $tpl->assign_block_vars(
-            'ROW', [
+            'ROW',
+            [
             'ROWCLASS' => $rowclass,
             'NR' => ($i + 1),
             'DB_NAME' => $databases['Name'][$i],
@@ -176,7 +178,8 @@ if (isset($_GET['dbid'])) {
             if ('MyIsam' == $row['Engine']) {
             }
             $tpl->assign_block_vars(
-                'ROW', [
+                'ROW',
+                [
                 'ROWCLASS' => $rowclass,
                 'NR' => ($i + 1),
                 'TABLE_NAME' => $row['Name'],
@@ -235,7 +238,8 @@ if (isset($_GET['dbid'])) {
         }
         // Output sum-row
         $tpl->assign_block_vars(
-            'SUM', [
+            'SUM',
+            [
             'RECORDS' => number_format($sum_records, 0, ',', '.'),
             'SIZE' => byte_output($sum_data_length),
             'LAST_UPDATE' => $last_update, ]

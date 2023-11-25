@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 if (!defined('MOD_VERSION')) {
@@ -102,7 +102,8 @@ if ($is_new_version_available) {
 
 if (isset($update_info)) {
     $tpl->assign_block_vars(
-        'UPDATE_INFO', [
+        'UPDATE_INFO',
+        [
         'MSG' => $update_info, ]
     );
 }
@@ -110,14 +111,16 @@ if (isset($update_info)) {
 
 if ($directory_warnings > '') {
     $tpl->assign_block_vars(
-        'DIRECTORY_WARNINGS', [
+        'DIRECTORY_WARNINGS',
+        [
         'MSG' => $directory_warnings, ]
     );
 }
 
 if ($config['disabled'] > '') {
     $tpl->assign_block_vars(
-        'DISABLED_FUNCTIONS', [
+        'DISABLED_FUNCTIONS',
+        [
         'PHP_DISABLED_FUNCTIONS' => str_replace(',', ', ', (string) $config['disabled']), ]
     );
 }
@@ -149,7 +152,8 @@ if ($is_htaccess) {
 
 if ($Sum_Files > 0 && isset($Last_BU[1])) {
     $tpl->assign_block_vars(
-        'LAST_BACKUP', [
+        'LAST_BACKUP',
+        [
         'LAST_BACKUP_INFO' => $Last_BU[1],
         'LAST_BACKUP_LINK' => $config['paths']['backup'].urlencode($Last_BU[0]),
         'LAST_BACKUP_NAME' => $Last_BU[0], ]

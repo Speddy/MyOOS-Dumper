@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 define('OOS_VALID_MOD', true);
@@ -148,8 +148,8 @@ if ($restore['filehandle']) {
         // Disable Keys of actual table to speed up restoring
         if (is_array($restore['tables_to_restore']) && sizeof($restore['tables_to_restore']) > 0 && in_array($restore['actual_table'], $restore['tables_to_restore'])) {
             @mysqli_query($config['dbconnection'], '/*!40000 ALTER TABLE `'.$restore['actual_table'].'` DISABLE KEYS */;');
-        } elseif (!is_array($restore['tables_to_restore']) 
-            && (is_array($restore['tables_to_restore']) && 0 == sizeof($restore['tables_to_restore'])) 
+        } elseif (!is_array($restore['tables_to_restore'])
+            && (is_array($restore['tables_to_restore']) && 0 == sizeof($restore['tables_to_restore']))
             && ($restore['actual_table'] > '' && 'unbekannt' != $restore['actual_table'])
         ) {
             @mysqli_query($config['dbconnection'], '/*!40000 ALTER TABLE `'.$restore['actual_table'].'` DISABLE KEYS */;');

@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 define('OOS_VALID_MOD', true);
@@ -24,7 +24,7 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
-define('MOD_INCLUDE_PATH', __DIR__=='/' ? '' : __DIR__);
+define('MOD_INCLUDE_PATH', __DIR__ == '/' ? '' : __DIR__);
 
 session_name('MyOOSDumperID');
 session_start();

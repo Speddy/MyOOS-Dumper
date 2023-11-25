@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 if (!defined('MOD_VERSION')) {
@@ -1111,12 +1111,12 @@ function build_where_from_record($data)
             $val = str_replace('<span class="treffer">', '', $val);
             $val = str_replace('</span>', '', $val);
         }
-        $nLen = strlen($val ?? ''); 
+        $nLen = strlen($val ?? '');
         if (!empty($val) && ($nLen < 200)) {
             $ret .= '`'.$key.'`="'.addslashes((string) $val).'" AND ';
         }
     }
-    
+
     $ret = substr($ret, 0, -5);
 
     return $ret;

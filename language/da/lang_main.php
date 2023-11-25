@@ -43,7 +43,8 @@ $lang['L_HTACC_CHECK_ERROR'] = 'It could not be checked whether the program is p
 $lang['L_HTACC_NOT_NEEDED'] = 'The program is protected by higher-level authorizations; local directory protection is not required.';
 $lang['L_HTACC_COMPLETE'] = 'The program is protected, the directory protection is complete.';
 $lang['L_HTACC_INCOMPLETE'] = 'The program is not protected, the directory protection is incomplete!';
-$lang['L_HTACC_PROPOSED'] = 'The program is not protected, directory protection is strongly recommended!';;
+$lang['L_HTACC_PROPOSED'] = 'The program is not protected, directory protection is strongly recommended!';
+;
 $lang['L_HTACC_EDIT'] = 'Rediger .htaccess';
 $lang['L_HTACCESS18'] = 'Opret .htaccess i ';
 $lang['L_HTACCESS19'] = 'Genindlæs';

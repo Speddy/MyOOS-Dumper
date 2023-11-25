@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 if (!defined('MOD_VERSION')) {
@@ -30,7 +30,8 @@ $tpl->set_filenames(
 
 if (isset($_GET['readfile']) && 1 == $_GET['readfile']) {
     $tpl->assign_block_vars(
-        'SQLUPLOAD', [
+        'SQLUPLOAD',
+        [
         'POSTTARGET' => $params,
         'LANG_OPENSQLFILE' => $lang['L_SQL_OPENFILE'],
         'LANG_OPENSQLFILE_BUTTON' => $lang['L_SQL_OPENFILE_BUTTON'],
@@ -59,7 +60,8 @@ if (isset($_POST['submit_openfile'])) {
 $sqlcombo = SQL_ComboBox();
 if ($sqlcombo > '') {
     $tpl->assign_block_vars(
-        'SQLCOMBO', [
+        'SQLCOMBO',
+        [
         'SQL_COMBOBOX' => $sqlcombo, ]
     );
 }

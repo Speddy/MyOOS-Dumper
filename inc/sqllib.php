@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 if (!defined('MOD_VERSION')) {
@@ -42,8 +42,8 @@ $sqllib[$i]['sql'] = 'ALTER TABLE `table` AUTO_INCREMENT=1;';
 ++$i;
 
 /*********
-* 
- * phpBB-Boards 
+*
+ * phpBB-Boards
 *********************************/
 $sqllib[$i]['name'] = 'phpBB-'.$lang['L_SQLLIB_BOARDS'];
 $sqllib[$i]['sql'] = 'trenn';

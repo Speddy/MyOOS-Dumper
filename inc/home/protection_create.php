@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 if (!defined('MOD_VERSION')) {
@@ -82,25 +82,25 @@ if (isset($_POST['username'])) {
             "Require valid-user\n";
         switch ($type) {
             // CRYPT
-        case 0:
-            $userpass = crypt((string) $userpass1, 'rl');
-            break;
-            // MD5(APR)
-        case 1:
-            $userpass = APR1_MD5::hash($userpass1);
-            break;
-            // PLAIN TEXT
-        case 2:
-            $userpass = $userpass1;
-            break;
-            // SHA1
-        case 3:
-            $userpass = '{SHA}'.base64_encode(sha1((string) $userpass1, true));
-            break;
-            // BCRYPT
-        case 4:
-            $userpass = password_hash((string) $userpass1, PASSWORD_BCRYPT);
-            break;
+            case 0:
+                $userpass = crypt((string) $userpass1, 'rl');
+                break;
+                // MD5(APR)
+            case 1:
+                $userpass = APR1_MD5::hash($userpass1);
+                break;
+                // PLAIN TEXT
+            case 2:
+                $userpass = $userpass1;
+                break;
+                // SHA1
+            case 3:
+                $userpass = '{SHA}'.base64_encode(sha1((string) $userpass1, true));
+                break;
+                // BCRYPT
+            case 4:
+                $userpass = password_hash((string) $userpass1, PASSWORD_BCRYPT);
+                break;
         }
         $htpasswd = $username.':'.$userpass;
         @chmod($config['paths']['root'], 0777);
@@ -127,7 +127,8 @@ if (isset($_POST['username'])) {
         if (false !== $saved) {
             $msg = '<span class="success">'.$lang['L_HTACC_CREATED'].'</span>';
             $tpl->assign_block_vars(
-                'CREATE_SUCCESS', [
+                'CREATE_SUCCESS',
+                [
                 'HTACCESS' => htmlspecialchars($htaccess),
                 'HTPASSWD' => htmlspecialchars($htpasswd),
                 ]
@@ -135,7 +136,8 @@ if (isset($_POST['username'])) {
             @chmod($config['paths']['root'], 0755);
         } else {
             $tpl->assign_block_vars(
-                'CREATE_ERROR', [
+                'CREATE_ERROR',
+                [
                 'HTACCESS' => htmlspecialchars($htaccess),
                 'HTPASSWD' => htmlspecialchars($htpasswd),
                 ]
@@ -153,7 +155,8 @@ if (sizeof($error) > 0 || !isset($_POST['username'])) {
     );
 
     $tpl->assign_block_vars(
-        'INPUT', [
+        'INPUT',
+        [
         'USERNAME' => htmlspecialchars((string) $username),
         'USERPASS1' => htmlspecialchars((string) $userpass1),
         'USERPASS2' => htmlspecialchars((string) $userpass2),
@@ -171,7 +174,8 @@ if (sizeof($error) > 0) {
 }
 if ($msg > '') {
     $tpl->assign_block_vars(
-        'MSG', [
+        'MSG',
+        [
         'TEXT' => $msg, ]
     );
 }

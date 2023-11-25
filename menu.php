@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 define('OOS_VALID_MOD', true);
@@ -136,7 +136,8 @@ if (isset($databases['Name']) && (is_countable($databases['Name']) ? count($data
     for ($i = 0; $i < $datenbanken; ++$i) {
         $selected = ($i == $databases['db_selected_index']) ? ' selected' : '';
         $tpl->assign_block_vars(
-            'DB_LIST.DB_ROW', [
+            'DB_LIST.DB_ROW',
+            [
             'ID' => $i,
             'NAME' => $databases['Name'][$i],
             'SELECTED' => $selected, ]

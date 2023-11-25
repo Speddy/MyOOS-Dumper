@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 if (!defined('MOD_VERSION')) {
@@ -137,7 +137,7 @@ if (!$skip_mysql_execution) {
 if (isset($res) && $res) {
     $numrows = mysqli_num_rows($res);
 } else {
-    $numrows = 0; 
+    $numrows = 0;
 }
 
 

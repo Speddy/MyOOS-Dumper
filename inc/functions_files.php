@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 if (!defined('MOD_VERSION')) {
@@ -373,33 +373,33 @@ function Converter($filesource, $filedestination, $cp)
         $t = strtolower(substr($zeile, 0, 10));
         if ($t > '') {
             switch ($t) {
-            case 'insert int':
+                case 'insert int':
                     // eine neue Insert Anweisung beginnt
-                if (!str_contains($zeile, '(')) {
-                    //Feldnamen stehen in der naechsten Zeile - holen
-                    $zeile .= "\n\r";
-                    $zeile .= (1 == $cps) ? trim((string) gzgets($f, 8192)) : trim((string) fgets($f, 8192));
-                    $zeile .= ' ';
-                }
+                    if (!str_contains($zeile, '(')) {
+                        //Feldnamen stehen in der naechsten Zeile - holen
+                        $zeile .= "\n\r";
+                        $zeile .= (1 == $cps) ? trim((string) gzgets($f, 8192)) : trim((string) fgets($f, 8192));
+                        $zeile .= ' ';
+                    }
 
                     // get INSERT-Satement
                     $insert = substr($zeile, 0, strpos($zeile, '('));
-                if (!str_ends_with(strtoupper($insert), 'VALUES ')) {
-                    $insert .= ' VALUES ';
-                }
+                    if (!str_ends_with(strtoupper($insert), 'VALUES ')) {
+                        $insert .= ' VALUES ';
+                    }
                     $mode = 'insert';
                     $zeile = "\n\r".$zeile;
                     $splitable = false;
-                break;
+                    break;
 
-            case 'create tab':
+                case 'create tab':
                     $mode = 'create';
-                while (!str_ends_with(rtrim($zeile), ';')) {
-                    $zeile .= fgets($f, 8192);
-                }
+                    while (!str_ends_with(rtrim($zeile), ';')) {
+                        $zeile .= fgets($f, 8192);
+                    }
                     $zeile = "\n\r".MySQLi_Ticks($zeile)."\n\r";
                     $splitable = true;
-                break;
+                    break;
             }
         }
 

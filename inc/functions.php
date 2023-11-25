@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 /* ensure this file is being included by a parent file */
@@ -69,13 +69,13 @@ if (!function_exists('stripos')) { // borrowed from php.net comments
 }
 
 /**
- * Filter a string value by removing null bytes and HTML tags and encoding quotes and 
+ * Filter a string value by removing null bytes and HTML tags and encoding quotes and
  * special characters.
  *
- * This function mimics the behavior of the deprecated FILTER_SANITIZE_STRING filter, 
- * which was used to sanitize strings by removing HTML tags and encoding quotes and 
- * certain special characters. This filter was unclear in its purpose and behavior 
- * and was therefore deprecated as of PHP 8.1.0. It is recommended to use 
+ * This function mimics the behavior of the deprecated FILTER_SANITIZE_STRING filter,
+ * which was used to sanitize strings by removing HTML tags and encoding quotes and
+ * certain special characters. This filter was unclear in its purpose and behavior
+ * and was therefore deprecated as of PHP 8.1.0. It is recommended to use
  * htmlspecialchars () instead.
  *
  * @param  mixed $string The value to be filtered. If it is not a string, null is returned.
@@ -115,10 +115,12 @@ function DeleteFilesM($dir, $pattern = '*.*')
         [
                                 "\*",
                                 "\?",
-        ], [
+        ],
+        [
             '.*',
             '.',
-        ], preg_quote((string) $pattern)
+        ],
+        preg_quote((string) $pattern)
     );
     if (!str_ends_with((string) $dir, '/')) {
         $dir .= '/';
@@ -387,9 +389,9 @@ function my_implode($arr, $mode = 0) // 0=String, 1=intval
         }
     }
     if ($mode == 0) {
-        $ret='("' . implode('","', $arr) . '");' . $nl;
+        $ret = '("' . implode('","', $arr) . '");' . $nl;
     } else {
-        $ret='(' . implode(',', $arr) . ');' . $nl;
+        $ret = '(' . implode(',', $arr) . ');' . $nl;
     }
     return $ret;
 }
@@ -447,13 +449,13 @@ function WriteCronScript($restore_values = false)
     $newDbNames = $databases['Name'];
     //remove database we don't want to backup
     // from newDbNames
-    foreach ($databases['Name'] as $k=>$v) {
+    foreach ($databases['Name'] as $k => $v) {
         if (in_array($v, $dontBackupDatabases)) {
             unset($newDbNames[$k]);
         }
     }
     // and from cron (cron_db_array has different length to newDbNames: at least mysql and information_schema are missing)
-    foreach ($cron_db_array as $k=>$v) {
+    foreach ($cron_db_array as $k => $v) {
         if (in_array($v, $dontBackupDatabases)) {
             unset(
                 $cron_db_array[$k],
@@ -556,10 +558,10 @@ function WriteCronScript($restore_values = false)
     $cronscript .= '$nl="\n";'.$nl;
     $cronscript .= '$cron_dbindex='.$cronDbIndex.';'.$nl;
     $cronscript .= '$cron_printout='.$config['cron_printout'].';'.$nl;
-    
-    if ((2 == $config['cron_use_mail']) || (3 == $config['cron_use_mail']) ) {
+
+    if ((2 == $config['cron_use_mail']) || (3 == $config['cron_use_mail'])) {
         $cronscript .= '$cronmail=0;'.$nl;
-        $cronscript .= '$cronmail_dump=0;'.$nl;    
+        $cronscript .= '$cronmail_dump=0;'.$nl;
     } else {
         $cronscript .= '$cronmail='.$config['send_mail'].';'.$nl;
         $cronscript .= '$cronmail_dump='.$config['send_mail_dump'].';'.$nl;
@@ -569,7 +571,7 @@ function WriteCronScript($restore_values = false)
         $cronscript .= '$cron_use_mail='.$config['cron_use_mail'].';'.$nl;
         $cronscript .= '$cron_smtp="'.escape_specialchars($config['cron_smtp']).'";'.$nl;
         $cronscript .= '$cron_smtp_port="'.$config['cron_smtp_port'].'";'.$nl;
-    } 
+    }
     $cronscript .= '@cron_db_array='.my_implode($cron_db_array);
     $cronscript .= '@cron_dbpraefix_array='.my_implode($cron_dbpraefix_array);
     $cronscript .= '@cron_command_before_dump='.my_implode($cron_command_before_dump);
@@ -589,15 +591,15 @@ function WriteCronScript($restore_values = false)
     $cronscript .= '@sftp_port='.my_implode($config['sftp_port'], 1);
     $cronscript .= '@sftp_user='.my_implode($config['sftp_user']);
     $cronscript .= '@sftp_pass='.my_implode($config['sftp_pass']);
-    $cronscript .= '@sftp_dir='.my_implode($config['sftp_dir']);	
+    $cronscript .= '@sftp_dir='.my_implode($config['sftp_dir']);
 
     $cronscript .= '@sftp_path_to_private_key='.my_implode($config['sftp_path_to_private_key']);
     $cronscript .= '@sftp_secret_passphrase_for_private_key='.my_implode($config['sftp_secret_passphrase_for_private_key']);
-    $cronscript .= '@sftp_fingerprint='.my_implode($config['sftp_fingerprint']);		
-	
+    $cronscript .= '@sftp_fingerprint='.my_implode($config['sftp_fingerprint']);
+
     $cronscript .= '@sftp_timeout='.my_implode($config['sftp_timeout'], 1);
-	$cronscript .= '@sftp_transfer='.my_implode($config['sftp_transfer'], 1);
-	
+    $cronscript .= '@sftp_transfer='.my_implode($config['sftp_transfer'], 1);
+
     $cronscript .= '$mp='.$config['multi_part'].';'.$nl;
     $cronscript .= '$multipart_groesse='.$config['multipart_groesse'].';'.$nl;
     $cronscript .= '$email_maxsize='.$config['email_maxsize'].';'.$nl;

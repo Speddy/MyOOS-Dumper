@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 if (!defined('MOD_VERSION')) {
@@ -71,7 +71,8 @@ if ('Backup' == $tblr) {
             $table_size = '-';
         }
         $tpl->assign_block_vars(
-            'ROW', [
+            'ROW',
+            [
                                             'CLASS' => 'dbrow'.$klasse,
                                             'ID' => $i,
                                             'NR' => $i + 1,
@@ -139,7 +140,8 @@ if ('Backup' == $tblr) {
         for ($i = 0; $i < sizeof($tabledata); ++$i) {
             $klasse = ($i % 2) ? 1 : '';
             $tpl->assign_block_vars(
-                'ROW', [
+                'ROW',
+                [
                                                 'CLASS' => 'dbrow'.$klasse,
                                                 'ID' => $i,
                                                 'NR' => $i + 1,

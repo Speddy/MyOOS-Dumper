@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 error_reporting(E_ALL);
@@ -149,7 +149,7 @@ function v($t)
 
 function getServerProtocol()
 {
-    
+
     if (isset($_SERVER['HTTPS']) && (strtolower((string) $_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == 1)) {
         $scheme = 'https://';
     } elseif (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443) {
@@ -157,7 +157,7 @@ function getServerProtocol()
     } else {
         $scheme = 'http://';
     }
-    
-    
+
+
     return $scheme;
 }

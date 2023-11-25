@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 // insert a new record
@@ -35,7 +35,8 @@ if ($res) {
         $row = mysqli_fetch_object($res);
         $feldnamen .= $row->Field.'|';
         $tpl->assign_block_vars(
-            'ROW', [
+            'ROW',
+            [
             'CLASS' => ($x % 2) ? 1 : 2,
             'FIELD_NAME' => $row->Field,
             'FIELD_ID' => correct_post_index($row->Field), ]
@@ -49,7 +50,8 @@ if ($res) {
         }
 
         if (in_array(
-            $type, [
+            $type,
+            [
             'BLOB',
             'TEXT', ]
         )

@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 define('OOS_VALID_MOD', true);
@@ -307,7 +307,7 @@ if (isset($_POST['save'])) {
     if (isset($_POST['stop_with_error'])) {
         $config['stop_with_error'] = $_POST['stop_with_error'];
     }
-    
+
 
     $config['ignore_enable_keys'] = isset($_POST['ignore_enable_keys']) ? (int) $_POST['ignore_enable_keys'] : 0;
     $config['update_core'] = isset($_POST['update_core']) ? (int) $_POST['update_core'] : 0;
@@ -701,12 +701,12 @@ ReadSQL();
     function WriteMem() {
         document.getElementById("mlimit").value=<?php
         echo round($config['php_ram'] * 1024 * 1024 * 0.9, 0);
-        ?>;
+?>;
     }
 </script>
 <?php
 if (!isset($config['email_maxsize1'])) {
-            $config['email_maxsize1'] = 0;
+    $config['email_maxsize1'] = 0;
 }
 if (!isset($config['email_maxsize2'])) {
     $config['email_maxsize2'] = 1;

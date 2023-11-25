@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 // Edit record -> built Edit-Form
@@ -39,7 +39,8 @@ $fieldnames = '';
 foreach ($record as $field => $fieldvalue) {
     $fieldnames .= $field.'|';
     $tpl->assign_block_vars(
-        'ROW', [
+        'ROW',
+        [
         'CLASS' => ($x % 2) ? 1 : 2,
         'FIELD_NAME' => $field,
         'FIELD_VALUE' => my_quotes($fieldvalue),
@@ -49,14 +50,16 @@ foreach ($record as $field => $fieldvalue) {
     if ('YES' == $fields[$field]['null']) {
         //field is nullable - precheck checkbox if value is null
         $tpl->assign_block_vars(
-            'ROW.IS_NULLABLE', [
+            'ROW.IS_NULLABLE',
+            [
             'NULL_CHECKED' => is_null($fieldvalue) ? ' checked="checked"' : '', ]
         );
     }
 
     $type = strtoupper((string) $fields[$field]['type']);
     if (in_array(
-        $type, [
+        $type,
+        [
         'BLOB',
         'TEXT', ]
     )

@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 define('OOS_VALID_MOD', true);
@@ -33,7 +33,6 @@ if (!@ob_start('ob_gzhandler')) {
 
 $autoloader = include_once './vendor/autoload.php';
 use VisualAppeal\AutoUpdate;
-
 
 require_once './inc/header.php';
 require_once './inc/runtime.php';
@@ -70,7 +69,7 @@ if ((isset($config['update_core']) && 1 == $config['update_core'])) {
 
         // Replace with your server update directory
         $update->setUpdateUrl('https://oos-shop.de/modserver');
-    
+
         // Custom logger (optional)
         $logger = new \Monolog\Logger("default");
         $logger->pushHandler(new Monolog\Handler\StreamHandler($config['paths']['log'] . 'update.log'));

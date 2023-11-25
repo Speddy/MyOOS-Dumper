@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 if (!defined('MOD_VERSION')) {
@@ -36,38 +36,38 @@ if (isset($_POST['dbdosubmit'])) {
     $changed = false;
     $ausgabe = $out = '';
     switch ($db_action) {
-    case 'drop':
-        if (MOD_DoSQL('DROP DATABASE `'.$databases['Name'][$db_index].'`')) {
-            echo SQLOutput($out, '<p class="success">'.$lang['L_DB'].' `'.$databases['Name'][$db_index].'` '.$lang['L_SQL_DELETED'].'</p>');
-            $changed = true;
-        }
-        break;
-    case 'empty':
-        EmptyDB($databases['Name'][$db_index]);
-        echo SQLOutput($out, '<p class="success">'.$lang['L_DB'].' `'.$databases['Name'][$db_index].'` '.$lang['L_SQL_WASEMPTIED'].'.</p>');
-        break;
-    case 'rename':
-        $dbold = $databases['Name'][$db_index];
-        if (DB_Copy($dbold, $newname, 1)) {
-            echo SQLOutput($out, '<p class="success">'.$lang['L_DB'].' `'.$dbold.'` '.$lang['L_SQL_RENAMEDTO'].' `'.$newname.'`.</p>');
-            $changed = true;
-        }
-        break;
-    case 'copy':
-        $dbold = $databases['Name'][$db_index];
-        if (DB_Copy($dbold, $newname)) {
-            $changed = true;
-            echo SQLOutput($out, '<p class="success">'.sprintf($lang['L_SQL_DBCOPY'], $dbold, $newname).'</p>');
-        }
-        break;
-    case 'structure':
-        if (DB_Copy($databases['Name'][$db_index], $newname, 0, 0)) {
-            $changed = true;
-            echo SQLOutput($out, '<p class="success">'.sprintf($lang['L_SQL_DBSCOPY'], $databases['Name'][$db_index], $newname).'</p>');
-        }
-        break;
-    case 'rights':
-        break;
+        case 'drop':
+            if (MOD_DoSQL('DROP DATABASE `'.$databases['Name'][$db_index].'`')) {
+                echo SQLOutput($out, '<p class="success">'.$lang['L_DB'].' `'.$databases['Name'][$db_index].'` '.$lang['L_SQL_DELETED'].'</p>');
+                $changed = true;
+            }
+            break;
+        case 'empty':
+            EmptyDB($databases['Name'][$db_index]);
+            echo SQLOutput($out, '<p class="success">'.$lang['L_DB'].' `'.$databases['Name'][$db_index].'` '.$lang['L_SQL_WASEMPTIED'].'.</p>');
+            break;
+        case 'rename':
+            $dbold = $databases['Name'][$db_index];
+            if (DB_Copy($dbold, $newname, 1)) {
+                echo SQLOutput($out, '<p class="success">'.$lang['L_DB'].' `'.$dbold.'` '.$lang['L_SQL_RENAMEDTO'].' `'.$newname.'`.</p>');
+                $changed = true;
+            }
+            break;
+        case 'copy':
+            $dbold = $databases['Name'][$db_index];
+            if (DB_Copy($dbold, $newname)) {
+                $changed = true;
+                echo SQLOutput($out, '<p class="success">'.sprintf($lang['L_SQL_DBCOPY'], $dbold, $newname).'</p>');
+            }
+            break;
+        case 'structure':
+            if (DB_Copy($databases['Name'][$db_index], $newname, 0, 0)) {
+                $changed = true;
+                echo SQLOutput($out, '<p class="success">'.sprintf($lang['L_SQL_DBSCOPY'], $databases['Name'][$db_index], $newname).'</p>');
+            }
+            break;
+        case 'rights':
+            break;
     }
 
     if (true == $changed) {
@@ -119,40 +119,40 @@ if (isset($_POST['dbwantaction'])) {
 						<input type="hidden" name="newname" value="'.$newname.'">
 						<input type="hidden" name="db_index" value="'.$db_index.'">';
         switch ($db_action) {
-        case 'drop':
-            echo '<strong>'.sprintf($lang['L_ASKDBDELETE'], $databases['Name'][$i]).'</strong><br><br>';
-            echo '<input type="submit" name="dbdosubmit" value="'.$lang['L_DO_NOW'].'" class="Formbutton">';
-            break;
-        case 'empty':
-            echo '<strong>'.sprintf($lang['L_ASKDBEMPTY'], $databases['Name'][$i]).'</strong><br><br>';
-            echo '<input type="submit" name="dbdosubmit" value="'.$lang['L_DO_NOW'].'" class="Formbutton">';
-            break;
-        case 'rename':
-            echo '<strong>'.$lang['L_SQL_RENAMEDB'].' `'.$databases['Name'][$db_index].'` '.$lang['L_IN'].' `'.$newname.'`</strong><br><br>';
-            if ('' == $newname) {
-                echo '<p class="error">'.$lang['L_SQL_NAMEDEST_MISSING'].'</p>';
-            } else {
+            case 'drop':
+                echo '<strong>'.sprintf($lang['L_ASKDBDELETE'], $databases['Name'][$i]).'</strong><br><br>';
                 echo '<input type="submit" name="dbdosubmit" value="'.$lang['L_DO_NOW'].'" class="Formbutton">';
-            }
-            break;
-        case 'copy':
-            echo '<strong>'.sprintf($lang['L_ASKDBCOPY'], $databases['Name'][$db_index], $newname).'</strong><br><br>';
-            if ('' == $newname) {
-                echo '<p class="error">'.$lang['L_SQL_NAMEDEST_MISSING'].'</p>';
-            } else {
+                break;
+            case 'empty':
+                echo '<strong>'.sprintf($lang['L_ASKDBEMPTY'], $databases['Name'][$i]).'</strong><br><br>';
                 echo '<input type="submit" name="dbdosubmit" value="'.$lang['L_DO_NOW'].'" class="Formbutton">';
-            }
-            break;
-        case 'structure':
-            echo '<strong>'.$lang['L_FM_ASKDBCOPY1'].'`'.$databases['Name'][$db_index].'`'.$lang['L_FM_ASKDBCOPY2'].'`'.$newname.'`'.$lang['L_FM_ASKDBCOPY3'].'</strong><br><br>';
-            if ('' == $newname) {
-                echo '<p class="error">'.$lang['L_SQL_NAMEDEST_MISSING'].'</p>';
-            } else {
-                echo '<input type="submit" name="dbdosubmit" value="'.$lang['L_DO_NOW'].'" class="Formbutton">';
-            }
-            break;
-        case 'rights':
-            break;
+                break;
+            case 'rename':
+                echo '<strong>'.$lang['L_SQL_RENAMEDB'].' `'.$databases['Name'][$db_index].'` '.$lang['L_IN'].' `'.$newname.'`</strong><br><br>';
+                if ('' == $newname) {
+                    echo '<p class="error">'.$lang['L_SQL_NAMEDEST_MISSING'].'</p>';
+                } else {
+                    echo '<input type="submit" name="dbdosubmit" value="'.$lang['L_DO_NOW'].'" class="Formbutton">';
+                }
+                break;
+            case 'copy':
+                echo '<strong>'.sprintf($lang['L_ASKDBCOPY'], $databases['Name'][$db_index], $newname).'</strong><br><br>';
+                if ('' == $newname) {
+                    echo '<p class="error">'.$lang['L_SQL_NAMEDEST_MISSING'].'</p>';
+                } else {
+                    echo '<input type="submit" name="dbdosubmit" value="'.$lang['L_DO_NOW'].'" class="Formbutton">';
+                }
+                break;
+            case 'structure':
+                echo '<strong>'.$lang['L_FM_ASKDBCOPY1'].'`'.$databases['Name'][$db_index].'`'.$lang['L_FM_ASKDBCOPY2'].'`'.$newname.'`'.$lang['L_FM_ASKDBCOPY3'].'</strong><br><br>';
+                if ('' == $newname) {
+                    echo '<p class="error">'.$lang['L_SQL_NAMEDEST_MISSING'].'</p>';
+                } else {
+                    echo '<input type="submit" name="dbdosubmit" value="'.$lang['L_DO_NOW'].'" class="Formbutton">';
+                }
+                break;
+            case 'rights':
+                break;
         }
         echo '</form></div></div><br>';
     }

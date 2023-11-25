@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 if (!defined('MOD_VERSION')) {
@@ -312,7 +312,8 @@ if (is_array($treffer) && isset($treffer[0])) {
     $anzahl_treffer = count($treffer);
     // Blaettern-Buttons
     $tpl->assign_block_vars(
-        'HITS', [
+        'HITS',
+        [
         'LANG_SEARCH_RESULTS' => $search_message,
         'LAST_OFFSET' => $offset - $max_treffer,
         'BACK_BUTTON_DISABLED' => $offset > 0 ? '' : ' disabled',
@@ -327,7 +328,8 @@ if (is_array($treffer) && isset($treffer[0])) {
     // Ausgabe der Tabellenueberschrift/ Feldnamen
     foreach ($treffer[0] as $key => $val) {
         $tpl->assign_block_vars(
-            'HITS.TABLEHEAD', [
+            'HITS.TABLEHEAD',
+            [
             'KEY' => $key, ]
         );
     }
@@ -365,7 +367,8 @@ if (is_array($treffer) && isset($treffer[0])) {
         $edit_link = 'sql.php?mode=searchedit&db='.urlencode((string) $db).'&tablename='.urlencode((string) $tables[$table_selected]).'&recordkey='.$rk;
 
         $tpl->assign_block_vars(
-            'HITS.TABLEROW', [
+            'HITS.TABLEROW',
+            [
             'CLASS' => ($a % 2) ? 'dbrow' : 'dbrow1',
             'NR' => $a + $offset + 1,
             'TABLENAME' => $tables[$table_selected],
@@ -380,7 +383,8 @@ if (is_array($treffer) && isset($treffer[0])) {
                 $val = '&nbsp;';
             }
             $tpl->assign_block_vars(
-                'HITS.TABLEROW.TABLEDATA', [
+                'HITS.TABLEROW.TABLEDATA',
+                [
                 'VAL' => $val, ]
             );
         }
@@ -391,12 +395,14 @@ if (is_array($treffer) && isset($treffer[0])) {
     }
     if ('' == $suchbegriffe) {
         $tpl->assign_block_vars(
-            'NO_ENTRIES', [
+            'NO_ENTRIES',
+            [
             'LANG_NO_ENTRIES' => sprintf($lang['L_NO_ENTRIES'], $tables[$table_selected]), ]
         );
     } else {
         $tpl->assign_block_vars(
-            'NO_RESULTS', [
+            'NO_RESULTS',
+            [
             'LANG_SEARCH_NO_RESULTS' => sprintf($lang['L_SEARCH_NO_RESULTS'], $suchbegriffe, $tables[$table_selected]), ]
         );
     }

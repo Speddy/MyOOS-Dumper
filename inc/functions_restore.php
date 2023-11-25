@@ -15,7 +15,7 @@
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
    Released under the GNU General Public License
-   ---------------------------------------------------------------------- 
+   ----------------------------------------------------------------------
  */
 
 define('DEBUG', 0);
@@ -43,8 +43,8 @@ function get_sqlbefehl()
             echo '<br><br>Zeile: '.htmlspecialchars($zeile);
         }
         /*******************
-* 
- * Setzen des Parserstatus 
+*
+ * Setzen des Parserstatus
 *******************/
         // herausfinden um was für einen Befehl es sich handelt
         if (0 == $sqlparser_status) {
@@ -143,8 +143,8 @@ function get_sqlbefehl()
                 exit('<br>'.$lang['L_UNKNOWN_SQLCOMMAND'].': '.$zeile.'<br><br>'.$complete_sql);
             }
             /*******************
-* 
- * Ende von Setzen des Parserstatus 
+*
+ * Ende von Setzen des Parserstatus
 *******************/
         }
 
@@ -228,18 +228,18 @@ function get_sqlbefehl()
                 if ($config['minspeed'] > 0) {
                     $restore['anzahl_zeilen'] = $config['minspeed'];
                 }
-                    $complete_sql = del_inline_comments($complete_sql);
-                    $sqlparser_status = 100;
+                $complete_sql = del_inline_comments($complete_sql);
+                $sqlparser_status = 100;
             }
         }
 
         // Kommentar oder Condition
         elseif (5 == $sqlparser_status) { //Anweisung
-                $t = strrpos($zeile, '*/;');
+            $t = strrpos($zeile, '*/;');
             if (false === !$t) {
                 $restore['anzahl_zeilen'] = $config['minspeed'];
                 $sqlparser_status = 100;
-                if ($config['ignore_enable_keys'] 
+                if ($config['ignore_enable_keys']
                     && false !== strrpos($zeile, 'ENABLE KEYS ')
                 ) {
                     $sqlparser_status = 100;
@@ -263,8 +263,8 @@ function get_sqlbefehl()
                 if ($config['minspeed'] > 0) {
                     $restore['anzahl_zeilen'] = $config['minspeed'];
                 }
-                                $complete_sql = '';
-                                $sqlparser_status = 0;
+                $complete_sql = '';
+                $sqlparser_status = 0;
             }
         }
 
