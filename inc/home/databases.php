@@ -3,14 +3,14 @@
  * ---------------------------------------------------------------------
 
    MyOOS [Dumper]
-   //www.oos-shop.de/
+   https://www.oos-shop.de/
 
    Copyright (c) 2013 - 2022 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
    MySqlDumper
-   //www.mysqldumper.de
+   https://www.mysqldumper.de
 
    Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
    ----------------------------------------------------------------------
