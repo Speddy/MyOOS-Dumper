@@ -481,7 +481,6 @@ function DoEmail()
         $text = strip_tags($msg_body);
         $phpmailer->IsHTML(true);
         $phpmailer->Body = $msg_body;
-        ;
         $phpmailer->AltBody = $text;
 
 
@@ -523,7 +522,6 @@ function DoEmail()
             $text = strip_tags($msg_body);
             $phpmailer->IsHTML(true);
             $phpmailer->Body = $msg_body;
-            ;
             $phpmailer->AltBody = $text;
 
             $filename = $config['paths']['backup'].$mpdatei[$i];
