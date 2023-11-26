@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
 #
 #   MyOOS [Dumper]
-#   https:https://www.oos-shop.de/
+#   https://www.oos-shop.de/
 #
 #   Copyright (c) 2013 - 2023 by the MyOOS Development Team.
 #   ----------------------------------------------------------------------
@@ -97,6 +97,9 @@ $cron_printout = 1;
 #config file
 $conffile="";
 
+
+
+{ no warnings 'redefine'; sub GetPerlVersion {…} }
 #return perl version
 sub GetPerlVersion (){
     my $pversion;
@@ -546,7 +549,7 @@ sub DoDump {
     $status_start=$mysql_commentstring."Status:$t:$r:";
     my $flags="1$optimize_tables_beforedump";
     $status_end=":$dbname:perl:$pcd_version:$my_comment:$version:$flags";
-    $status_end.=":$command_beforedump:$command_afterdump:$character_set:EXTINFO$st_e\n".$mysql_commentstring."Dump created on $CTIME_String by PERL Cron-Script\n".$mysql_commentstring."Dump by MyOOS Dumper (https:https://www.oos-shop.de/)\n\n";
+    $status_end.=":$command_beforedump:$command_afterdump:$character_set:EXTINFO$st_e\n".$mysql_commentstring."Dump created on $CTIME_String by PERL Cron-Script\n".$mysql_commentstring."Dump by MyOOS Dumper (https://www.oos-shop.de/)\n\n";
 
 
     if($mp>0) 

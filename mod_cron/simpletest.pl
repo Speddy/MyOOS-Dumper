@@ -15,7 +15,7 @@
 # </Directory>
 #
 #   MyOOS [Dumper]
-#   https:https://www.oos-shop.de/
+#   https://www.oos-shop.de/
 #
 #   Copyright (c) 2013 - 2023 by the MyOOS Development Team.
 #   ----------------------------------------------------------------------
