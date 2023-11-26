@@ -29,7 +29,7 @@
 #
 ########################################################################################
 # Script-Version
-my $pcd_version='5.0.23';
+our $pcd_version='5.0.23';
 
 ########################################################################################
 # please enter the absolute path of the config-dir
@@ -99,7 +99,7 @@ $conffile="";
 
 #return perl version
 sub GetPerlVersion (){
-    my $pversion ;
+    my $pversion;
     if ($^V){
         $pversion = sprintf "v%vd", $^V ; # v5.10.1
     }else{
