@@ -46,7 +46,7 @@ $expand = filter_input(INPUT_GET, 'expand', FILTER_VALIDATE_INT) ?: -1;
 $selectfile = filter_string_polyfill(filter_input(INPUT_POST, 'selectfile'));
 $destfile = filter_string_polyfill(filter_input(INPUT_POST, 'destfile'));
 $compressed = filter_string_polyfill(filter_input(INPUT_POST, 'compressed'));
-$dk = filter_string_polyfill(filter_input(INPUT_POST, 'dk'));
+$dk = filter_string_polyfill(filter_input(INPUT_POST, 'dumpKommentar'));
 
 
 if ($dk === null) {
