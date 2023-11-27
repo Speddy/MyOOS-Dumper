@@ -29,7 +29,7 @@
 #
 ########################################################################################
 # Script-Version
-our $pcd_version='5.0.23';
+our $pcd_version="5.0.23";
 
 ########################################################################################
 # please enter the absolute path of the config-dir
@@ -37,7 +37,7 @@ our $pcd_version='5.0.23';
 # e.g. - (zum Beispiel): 
 # my $absolute_path_of_configdir="/home/www/doc/8176/example.org/www/myoosdumper/work/config/";
 
-my $absolute_path_of_configdir="";
+my $absolute_path_of_configdir="/home/rqqade/public_html/geheim/mod/work/config/";
 my $cgibin_path=""; # this is needed for MIME::Lite if it is in cgi-bin
 my $default_configfile="myoosdumper.conf.php";
 
@@ -56,30 +56,31 @@ use CGI;
 use Data::Dumper;
 use Getopt::Long;
 
+
 ########################################################################################
-use vars qw(
-$pcd_version $dbhost $dbname $dbuser $dbpass $dbport $dbsocket
-$cron_dbindex @cron_db_array @ftp_server $dbpraefix @cron_dbpraefix_array 
-$compression  $backup_path $logdatei $completelogdatei $command_beforedump $command_afterdump
-$cron_printout $cronmail $cronmail_dump $cronmailto $cronmailto_cc $cronmailfrom
-$cronftp $mp $multipart_groesse $email_maxsize
-$auto_delete $max_backup_files $perlspeed $optimize_tables_beforedump $result
-@key_value $pair $key $value $conffile @confname $logcompression $log_maxsize $complete_log 
-$starttime $Sekunden $Minuten $Stunden $Monatstag $Monat $Jahr $Wochentag $Jahrestag $Sommerzeit
-$rct $tabelle  @tables @tablerecords $dt $sql_create @ergebnis @ar $sql_daten $inhalt
-$insert $totalrecords $error_message $cfh $oldbar $print_out $msg $dt $ftp $dateistamm $dateiendung
-$mpdatei $i $BodyNormal $BodyMultipart $BodyToBig $BodyNoAttach $BodyAttachOnly $Body $DoAttach $cmt $part $fpath $fname
-$fmtime $timenow $daydiff $datei $inh $gz $search $fdbname @str $item %dbanz $anz %db_dat 
-$fieldlist $first_insert $my_comment $sendmail_call $config_read_from
-$cron_smtp $cron_smtp_port $cron_use_sendmail
-@ftp_transfer @ftp_timeout @ftp_user @ftp_pass @ftp_dir @ftp_server @ftp_port @ftp_mode @ftp_useSSL
-$output $query $skip $html_output $datei
-@trash_files $time_stamp @filearr $sql_file $backupfile $memory_limit $dbh $sth @db_array
-@dbpraefix_array @cron_command_before_dump @cron_command_after_dump $db_anz
-$record_count $filesize $status_start $status_end $sql_text $punktzaehler @backupfiles_name
-@backupfiles_size $mysql_commentstring $character_set $mod_gz $mod_mime $mod_ftp
-$mod_ftpssl @multipartfiles %db_tables @tablenames $tablename $opttbl $command $current_dir
-@sftp_transfer @sftp_timeout @sftp_server @sftp_port @sftp_user @sftp_pass @sftp_dir @sftp_foreig @sftp_path_to_private_key @sftp_secret_passphrase_for_private_key @sftp_fingerprint
+our (
+$dbhost, $dbname, $dbuser, $dbpass, $dbport, $dbsocket, 
+$cron_dbindex, @cron_db_array, $db_praefix, @cron_dbpraefix_array, 
+$compression, $backup_path, $logdatei, $completelogdatei, $command_beforedump, $command_afterdump,
+$cron_printout, $cronmail, $cronmail_dump, $cronmailto, $cronmailto_cc, $cronmailfrom,
+$cronftp, $mp, $multipart_groesse, $email_maxsize,
+$auto_delete, $max_backup_files, $perlspeed, $optimize_tables_beforedump, $result,
+@key_value, $pair, $key, $value, $conffile, @confname, $logcompression, $log_maxsize, $complete_log, 
+$starttime, $Sekunden, $Minuten, $Stunden, $Monatstag, $Monat, $Jahr, $Wochentag, $Jahrestag, $Sommerzeit,
+$rct, $tabelle, @tables, @tablerecords, $dt, $sql_create, @ergebnis, @ar, $sql_daten, $inhalt,
+$insert, $totalrecords, $error_message, $cfh, $oldbar, $print_out, $msg, $dt, $ftp, $dateistamm, $dateiendung,
+$mpdatei, $i, $BodyNormal, $BodyMultipart, $BodyToBig, $BodyNoAttach, $BodyAttachOnly, $Body, $DoAttach, $cmt, $part, $fpath, $fname,
+$fmtime, $timenow, $daydiff, $datei, $inh, $gz, $search, $fdbname, @str, $item, %dbanz, $anz, %db_dat, 
+$fieldlist, $first_insert, $my_comment, $sendmail_call, $config_read_from,
+$cron_smtp, $cron_smtp_port, $cron_use_sendmail,
+@ftp_transfer, @ftp_timeout, @ftp_user, @ftp_pass, @ftp_dir, @ftp_server, @ftp_port, @ftp_mode, @ftp_useSSL,
+$output, $query, $skip, $html_output, $datei,
+@trash_files, $time_stamp, @filearr, $sql_file, $backupfile, $memory_limit, $dbh, $sth, @db_array,
+@dbpraefix_array, @cron_command_before_dump, @cron_command_after_dump, $db_anz,
+$record_count, $filesize, $status_start, $status_end, $sql_text, $punktzaehler, @backupfiles_name,
+@backupfiles_size, $mysql_commentstring, $character_set, $mod_gz, $mod_mime, $mod_ftp,
+$mod_ftpssl, @multipartfiles, %db_tables, @tablenames, $tablename, $opttbl, $command, $current_dir,
+$mod_sftp, $mod_sftp_foreign, @sftp_transfer, @sftp_timeout, @sftp_server, @sftp_port, @sftp_user, @sftp_pass, @sftp_dir, @sftp_foreig, @sftp_path_to_private_key, @sftp_secret_passphrase_for_private_key, @sftp_fingerprint
 );
 
 $memory_limit=100000;
@@ -91,25 +92,11 @@ $punktzaehler=0;
 @trash_files=();
 @filearr=();
 $opttbl=0;
-$dbpraefix="";
-$complete_log= 0;
-$cron_printout = 1;
+$db_praefix="";
+$complete_log=0;
+$cron_printout=1;
 #config file
 $conffile="";
-
-
-
-{ no warnings 'redefine'; sub GetPerlVersion {…} }
-#return perl version
-sub GetPerlVersion (){
-    my $pversion;
-    if ($^V){
-        $pversion = sprintf "v%vd", $^V ; # v5.10.1
-    }else{
-        $pversion = local $];
-    }
-    return $pversion;
-}
 
 # import the optional modules ...
 my $eval_in_died;
@@ -121,39 +108,55 @@ $mod_sftp=0;
 $mod_sftp_foreign=0;
 push (@INC, "$cgibin_path");
 
-eval { $eval_in_died = 1; require Compress::Zlib; };
+eval { $eval_in_died=1; require Compress::Zlib; };
 if(!$@){
-    $mod_gz = 1;
+    $mod_gz=1;
     import Compress::Zlib;
 }
-eval { $eval_in_died = 1; require Net::FTP; };
+eval { $eval_in_died=1; require Net::FTP; };
 if(!$@){
-    $mod_ftp = 1;
+    $mod_ftp=1;
     import Net::FTP;
 }
-eval { $eval_in_died = 1; require Net::SFTP; };
+eval { $eval_in_died=1; require Net::SFTP; };
 if(!$@){
-    $mod_sftp = 1;
+    $mod_sftp=1;
     import Net::SFTP;
 }
-eval { $eval_in_died = 1; require Net::SFTP::Foreign; };
+eval { $eval_in_died=1; require Net::SFTP::Foreign; };
 if(!$@){
-    $mod_sftp_foreign = 1;
+    $mod_sftp_foreign=1;
     import Net::SFTP::Foreign;
 }
-eval { $eval_in_died = 1; require Net::FTPSSL; };
+eval { $eval_in_died=1; require Net::FTPSSL; };
 if(!$@){
-    $mod_ftpssl = 1;
+    $mod_ftpssl=1;
     import Net::FTPSSL;
 }
-eval { $eval_in_died = 1; require MIME::Lite; };
+eval { $eval_in_died=1; require MIME::Lite; };
 if(!$@){
-    $mod_mime = 1;
+    $mod_mime=1;
     import MIME::Lite;
 }
 
 #include config file
 $conffile="";
+
+
+
+
+# { no warnings 'redefine'; sub GetPerlVersion {…} }
+#return perl version
+sub GetPerlVersion (){
+    my $pversion;
+    if ($^V){
+        $pversion = sprintf "v%vd", $^V ; # v5.10.1
+    }else{
+        $pversion = local $];
+    }
+    return $pversion;
+}
+
 
 #read args from command
 GetOptions ("config=s" => \$conffile, "html_output=s"  => \$html_output);
@@ -318,7 +321,7 @@ write_log("Using configuration $conffile\n");
 if($cron_dbindex > -1) 
 {
     $dbname=$cron_db_array[$cron_dbindex];
-    $dbpraefix=$cron_dbpraefix_array[$cron_dbindex];
+    $db_praefix=$cron_dbpraefix_array[$cron_dbindex];
     $command_beforedump=$cron_command_before_dump[$cron_dbindex];
     $command_afterdump=$cron_command_after_dump[$cron_dbindex];
     ExecuteCommand(1,$command_beforedump);
@@ -332,12 +335,12 @@ else
     {
         if ($mp>0) { $mp=1; } # Part-Reset if using Multipart (for next database)
         $dbname=$cron_db_array[$ii];
-        $dbpraefix=$cron_dbpraefix_array[$ii];
+        $db_praefix=$cron_dbpraefix_array[$ii];
         $command_beforedump=$cron_command_before_dump[$ii];
         $command_afterdump=$cron_command_after_dump[$ii];
         PrintOut("<hr>Starting to backup database <strong>`$dbname`</strong> (".($ii+1)."/$db_anz).");
-        if ($dbpraefix ne "") {
-            PrintOut("Scanning for tables with prefix '<span style=\"color:blue\">$dbpraefix</span>')");
+        if ($db_praefix ne "") {
+            PrintOut("Scanning for tables with prefix '<span style=\"color:blue\">$db_praefix</span>')");
         }
         ExecuteCommand(1,$command_beforedump);
         DoDump();
@@ -417,10 +420,10 @@ sub DoDump {
     my $engine='';
     my %db_tables_views;
     my $query="SHOW TABLE STATUS FROM `$dbname`";
-    if ($dbpraefix ne "") 
+    if ($db_praefix ne "") 
     { 
-        $query.=" LIKE '$dbpraefix%'"; 
-        PrintOut("Searching for tables inside database <strong>`$dbname`</strong> with prefix <strong>'$dbpraefix'</strong>."); 
+        $query.=" LIKE '$db_praefix%'"; 
+        PrintOut("Searching for tables inside database <strong>`$dbname`</strong> with prefix <strong>'$db_praefix'</strong>."); 
     } 
     else
     {
@@ -495,9 +498,9 @@ sub DoDump {
     foreach $tablename (@tablenames) 
     {
         my $dump_table=1;
-        if ($dbpraefix ne "")
+        if ($db_praefix ne "")
         {
-            if (substr($tablename,0,length($dbpraefix)) ne $dbpraefix) 
+            if (substr($tablename,0,length($db_praefix)) ne $db_praefix) 
             {
                 # exclude table from backup because it doesn't fit to praefix
                 $dump_table=0;
@@ -566,7 +569,7 @@ sub DoDump {
     foreach $tablename (@tables) 
     {
         # first get CREATE TABLE Statement 
-        if($dbpraefix eq "" || ($dbpraefix ne "" && substr($tablename,0,length($dbpraefix)) eq $dbpraefix)) 
+        if($db_praefix eq "" || ($db_praefix ne "" && substr($tablename,0,length($db_praefix)) eq $db_praefix)) 
         {
             PrintOut("Dumping table `<strong>$tablename</strong>` <em>(Type ".$db_tables{$tablename}{Engine}.")</em>:");
             $a="\n\n$mysql_commentstring\n$mysql_commentstring"."Table structure for table `$tablename`\n$mysql_commentstring\n";
@@ -817,7 +820,7 @@ sub PrintOut {
             $cfh = select (STDOUT);
 
             #set autoflush on
-            $| = 1;
+            $|=1;
             
             #remove html-tags
             if($html_output==0) 
