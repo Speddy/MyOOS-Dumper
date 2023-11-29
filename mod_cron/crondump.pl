@@ -37,7 +37,7 @@ our $pcd_version="5.0.23";
 # e.g. - (zum Beispiel): 
 # my $absolute_path_of_configdir="/home/www/doc/8176/example.org/www/myoosdumper/work/config/";
 
-my $absolute_path_of_configdir="/home/rqqade/public_html/geheim/mod/work/config/";
+my $absolute_path_of_configdir="";
 my $cgibin_path=""; # this is needed for MIME::Lite if it is in cgi-bin
 my $default_configfile="myoosdumper.conf.php";
 
@@ -80,7 +80,9 @@ $output, $query, $skip, $html_output,
 $record_count, $filesize, $status_start, $status_end, $sql_text, $punktzaehler, @backupfiles_name,
 @backupfiles_size, $mysql_commentstring, $character_set, $mod_gz, $mod_mime, $mod_ftp,
 $mod_ftpssl, @multipartfiles, %db_tables, @tablenames, $tablename, $opttbl, $command, $current_dir,
-$mod_sftp, $mod_sftp_foreign, @sftp_transfer, @sftp_timeout, @sftp_server, @sftp_port, @sftp_user, @sftp_pass, @sftp_dir, @sftp_foreig, @sftp_path_to_private_key, @sftp_secret_passphrase_for_private_key, @sftp_fingerprint
+$mod_sftp, $mod_sftp_foreign, @sftp_transfer, @sftp_timeout, @sftp_server, @sftp_port, @sftp_user, @sftp_pass, 
+@sftp_dir, @sftp_foreig, @sftp_path_to_private_key, @sftp_secret_passphrase_for_private_key, @sftp_fingerprint,
+$cronsftp, $cronsftpforeign
 );
 
 $memory_limit=100000;
@@ -277,6 +279,18 @@ if($mod_ftp==1) {
 } else {
     $cronftp=0;
     PrintOut("<span style=\"color:red;\">FTP Library loading failed - FTP deactivated ...</span>");
+}
+if($mod_sftp==1) {
+    PrintOut("<span style=\"color:#0000FF;\">SFTP Library loaded successfully...</span>");
+} else {
+    $cronsftp=0;
+    PrintOut("<span style=\"color:red;\">SFTP Library loading failed - SFTP deactivated ...</span>");
+}
+if($mod_sftp_foreign==1) {
+    PrintOut("<span style=\"color:#0000FF;\">SFTP Library with a private key loaded successfully...</span>");
+} else {
+    $cronsftpforeign=0;
+    PrintOut("<span style=\"color:red;\">Failed to load the library SFTP connection with a private key - SFTP deactivated ...</span>");
 }
 if($mod_ftpssl==1) {
     PrintOut("<span style=\"color:#0000FF;\">FTP-SSL Library loaded successfully...</span>");
