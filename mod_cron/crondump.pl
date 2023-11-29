@@ -508,7 +508,7 @@ sub DoDump {
         {
 
 			#www.betanet-web.ch - 30.04.2019
-			#Erweitert mit SQL Abfrage fÃ¼r Ausgabe Anzahl der EintrÃ¤ge in der Tabelle (analog PHP)
+			#Erweitert mit SQL Abfrage für Ausgabe Anzahl der Einträge in der Tabelle (analog PHP)
 			$sql_create = "SELECT COUNT(*) FROM `$tablename`";	
 			$sth = $dbh->prepare($sql_create);
             if (!$sth)
@@ -627,7 +627,7 @@ sub DoDump {
                 # how many rows
 		
 				#www.betanet-web.ch - 30.04.2019
-				#Erweitert mit SQL Abfrage fÃ¼r Ausgabe Anzahl der EintrÃ¤ge in der Tabelle (analog PHP)
+				#Erweitert mit SQL Abfrage für Ausgabe Anzahl der Einträge in der Tabelle (analog PHP)
 				$sql_create = "SELECT COUNT(*) FROM `$tablename`";	
 				$sth = $dbh->prepare($sql_create);
                 if (!$sth)
