@@ -20,6 +20,9 @@
 
 error_reporting(E_ALL);
 
+// Set the error handling function
+set_error_handler("myErrorHandler");
+
 if (function_exists('date_default_timezone_set')) {
     date_default_timezone_set(@date_default_timezone_get());
 }
@@ -134,6 +137,7 @@ $dontBackupDatabases = ['mysql', 'information_schema'];
 $_POST = trim_deep($_POST);
 $_GET = trim_deep($_GET);
 
+
 function v($t)
 {
     echo '<br>';
@@ -145,6 +149,23 @@ function v($t)
         echo $t;
     }
 }
+
+
+// Define the error handling function
+function myErrorHandler($errno, $errstr, $errfile, $errline)
+{
+	global $config;
+
+    // Open the error_log.txt file for writing
+    $file = fopen($config['paths']['log'].'error_log.txt', 'a');
+    // Write the error in the file
+    fwrite($file, "Error $errno: $errstr in $errfile on line $errline\n");
+    // Close the file
+    fclose($file);
+    // Return true to avoid the standard error handling
+    return true;
+}
+
 
 
 function getServerProtocol()
