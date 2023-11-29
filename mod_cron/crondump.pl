@@ -8,7 +8,7 @@
 #   Based on:
 #
 #   MySqlDumper
-#   https://www.mysqldumper.de
+#   http://www.mysqldumper.de
 #
 #   Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
 #   ----------------------------------------------------------------------
@@ -37,7 +37,7 @@ our $pcd_version="5.0.23";
 # e.g. - (zum Beispiel): 
 # my $absolute_path_of_configdir="/home/www/doc/8176/example.org/www/myoosdumper/work/config/";
 
-my $absolute_path_of_configdir="";
+my $absolute_path_of_configdir="/home/rqqade/public_html/geheim/mod/work/config/";
 my $cgibin_path=""; # this is needed for MIME::Lite if it is in cgi-bin
 my $default_configfile="myoosdumper.conf.php";
 
@@ -68,13 +68,13 @@ $auto_delete, $max_backup_files, $perlspeed, $optimize_tables_beforedump, $resul
 @key_value, $pair, $key, $value, $conffile, @confname, $logcompression, $log_maxsize, $complete_log, 
 $starttime, $Sekunden, $Minuten, $Stunden, $Monatstag, $Monat, $Jahr, $Wochentag, $Jahrestag, $Sommerzeit,
 $rct, $tabelle, @tables, @tablerecords, $dt, $sql_create, @ergebnis, @ar, $sql_daten, $inhalt,
-$insert, $totalrecords, $error_message, $cfh, $oldbar, $print_out, $msg, $dt, $ftp, $dateistamm, $dateiendung,
+$insert, $totalrecords, $error_message, $cfh, $oldbar, $print_out, $msg, $ftp, $dateistamm, $dateiendung,
 $mpdatei, $i, $BodyNormal, $BodyMultipart, $BodyToBig, $BodyNoAttach, $BodyAttachOnly, $Body, $DoAttach, $cmt, $part, $fpath, $fname,
 $fmtime, $timenow, $daydiff, $datei, $inh, $gz, $search, $fdbname, @str, $item, %dbanz, $anz, %db_dat, 
 $fieldlist, $first_insert, $my_comment, $sendmail_call, $config_read_from,
 $cron_smtp, $cron_smtp_port, $cron_use_sendmail,
 @ftp_transfer, @ftp_timeout, @ftp_user, @ftp_pass, @ftp_dir, @ftp_server, @ftp_port, @ftp_mode, @ftp_useSSL,
-$output, $query, $skip, $html_output, $datei,
+$output, $query, $skip, $html_output, 
 @trash_files, $time_stamp, @filearr, $sql_file, $backupfile, $memory_limit, $dbh, $sth, @db_array,
 @dbpraefix_array, @cron_command_before_dump, @cron_command_after_dump, $db_anz,
 $record_count, $filesize, $status_start, $status_end, $sql_text, $punktzaehler, @backupfiles_name,
@@ -98,6 +98,17 @@ $cron_printout=1;
 #config file
 $conffile="";
 
+#return perl version
+sub GetPerlVersion (){
+    my $pversion ;
+    if ($^V){
+        $pversion = sprintf "v%vd", $^V ; # v5.10.1
+    }else{
+        $pversion = local $];
+    }
+    return $pversion;
+}
+
 # import the optional modules ...
 my $eval_in_died;
 $mod_gz=0;
@@ -110,13 +121,18 @@ push (@INC, "$cgibin_path");
 
 eval { $eval_in_died=1; require Compress::Zlib; };
 if(!$@){
-    $mod_gz=1;
+    $mod_gz = 1;
     import Compress::Zlib;
 }
-eval { $eval_in_died=1; require Net::FTP; };
+eval { $eval_in_died = 1; require Net::FTP; };
 if(!$@){
-    $mod_ftp=1;
+    $mod_ftp = 1;
     import Net::FTP;
+}
+eval { $eval_in_died = 1; require Net::FTPSSL; };
+if(!$@){
+    $mod_ftpssl = 1;
+    import Net::FTPSSL;
 }
 eval { $eval_in_died=1; require Net::SFTP; };
 if(!$@){
@@ -128,35 +144,14 @@ if(!$@){
     $mod_sftp_foreign=1;
     import Net::SFTP::Foreign;
 }
-eval { $eval_in_died=1; require Net::FTPSSL; };
+eval { $eval_in_died = 1; require MIME::Lite; };
 if(!$@){
-    $mod_ftpssl=1;
-    import Net::FTPSSL;
-}
-eval { $eval_in_died=1; require MIME::Lite; };
-if(!$@){
-    $mod_mime=1;
+    $mod_mime = 1;
     import MIME::Lite;
 }
 
 #include config file
 $conffile="";
-
-
-
-
-# { no warnings 'redefine'; sub GetPerlVersion {…} }
-#return perl version
-sub GetPerlVersion (){
-    my $pversion;
-    if ($^V){
-        $pversion = sprintf "v%vd", $^V ; # v5.10.1
-    }else{
-        $pversion = local $];
-    }
-    return $pversion;
-}
-
 
 #read args from command
 GetOptions ("config=s" => \$conffile, "html_output=s"  => \$html_output);
@@ -282,18 +277,6 @@ if($mod_ftp==1) {
 } else {
     $cronftp=0;
     PrintOut("<span style=\"color:red;\">FTP Library loading failed - FTP deactivated ...</span>");
-}
-if($mod_sftp==1) {
-    PrintOut("<span style=\"color:#0000FF;\">SFTP Library loaded successfully...</span>");
-} else {
-    $cronsftp=0;
-    PrintOut("<span style=\"color:red;\">SFTP Library loading failed - SFTP deactivated ...</span>");
-}
-if($mod_sftp_foreign==1) {
-    PrintOut("<span style=\"color:#0000FF;\">SFTP Library with a private key loaded successfully...</span>");
-} else {
-    $cronsftpforeign=0;
-    PrintOut("<span style=\"color:red;\">Failed to load the library SFTP connection with a private key - SFTP deactivated ...</span>");
 }
 if($mod_ftpssl==1) {
     PrintOut("<span style=\"color:#0000FF;\">FTP-SSL Library loaded successfully...</span>");
@@ -723,15 +706,8 @@ sub DoDump {
         }
     }
 
-    if($mod_sftp==1) or ($mod_sftp_foreign==1)  {
-		# sent to sftp-server
-		send_sftp();
-	}
-    else
-	{
-		# sent to ftp-server
-		send_ftp();
-	}
+    # sent to ftp-server
+    send_ftp();
 }
 
 #print error message and optional exit
@@ -820,7 +796,7 @@ sub PrintOut {
             $cfh = select (STDOUT);
 
             #set autoflush on
-            $|=1;
+            $| = 1;
             
             #remove html-tags
             if($html_output==0) 
@@ -934,70 +910,6 @@ sub send_ftp {
         }
     }
 }
-
-sub send_sftp {
-    #save files to sftp-server
-    my $ret=0;
-    my $x=0;
-    for(my $i = 0; $i <3; $i++)
-    {
-        if ($sftp_transfer[$i]==1)
-        {
-            if ($sftp_timeout[$i]<1) { $sftp_timeout[$i]=30; };
-				if (${sftp_foreig[$i]}==1 && $mod_sftp_foreign==1)
-                {    
-					$sftp = Net::SFTP::Foreign->new($sftp_server[$i], user => $sftp_user[$i], key_path => $sftp_path_to_private_key[$i], passphrase => $sftp_secret_passphrase_for_private_key[$i], port => $sftp_port[$i]) or err_trap( "SFTP-SSL-ERROR: Can't connect: $@\n",1);
-                }
-                else
-                {    
-					$sftp = Net::SFTP->new($sftp_server[$i], user => $sftp_user[$i], password => $sftp_pass[$i], port => $sftp_port[$i], timeout => $sftp_timeout[i]) or errt​rap("SFTP−ERROR:Can′tconnect:@\n",1);
-                }
-            $sftp->binary();
-            $sftp->cwd($sftp_dir[$i]) or err_trap("SFTP-ERROR: Couldn't change directory: ".$sftp_dir[$i],1);
-            
-            if($mp==0) 
-            {
-                PrintOut("SFTP: transferring `$backupfile`");
-                $ret=$sftp->put($sql_file);
-                if (!$ret)
-                {
-                    err_trap("SFTP-Error: Couldn't put $backupfile to ".$sftp_server[$i]." into dir ".$sftp_dir[$i]."\n",1);
-                }
-                else
-                {
-                    write_log("SFTP: transferred `$backupfile` to $sftp_server[$i] into dir $sftp_dir[$i] successfully\n");
-                    PrintOut(" to $sftp_server[$i] into dir $sftp_dir[$i] was successful.\n");
-                }
-            } 
-            else 
-            {
-                $dateistamm=substr($backupfile,0,index($backupfile,"part_"))."part_";
-                $dateiendung=($compression==1)?".sql.gz":".sql";
-                $mpdatei="";
-                for ($x=1;$x<$mp;$x++) 
-                {
-                    $mpdatei=$dateistamm.$x.$dateiendung;
-                    PrintOut("SFTP: transferring multipart $mpdatei");
-                    
-                    $ret=$sftp->put($backup_path.$mpdatei);
-                    if (!$ret) 
-                    {
-                        err_trap("Couldn't put $backup_path.$mpdatei to ".$sftp_server[$i]." into dir ".$sftp_dir[$i]."\n",1);
-                    }
-                    else
-                    {
-                        #write_log("SFTP: transferring of `$mpdatei` to ".$sftp_server[$i]." finished successfully.\n");
-                        #PrintOut("SFTP: transferring of `$mpdatei` to $sftp_server[$i] finished successfully.");
-                        write_log("SFTP: transferred multipart '$mpdatei' to $sftp_server[$i] into dir $sftp_dir[$i] successfully\n");
-                        PrintOut(" to $sftp_server[$i] into dir $sftp_dir[$i] was successful.\n");
-                    }
-                }
-            }
-        }
-    }
-}
-
-
 
 sub send_mail {
     #sent email w/o files
