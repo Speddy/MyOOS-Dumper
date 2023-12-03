@@ -508,7 +508,7 @@ sub DoDump {
         {
 
 			#www.betanet-web.ch - 30.04.2019
-			#Erweitert mit SQL Abfrage für Ausgabe Anzahl der Einträge in der Tabelle (analog PHP)
+			#Erweitert mit SQL Abfrage fÃ¼r Ausgabe Anzahl der EintrÃ¤ge in der Tabelle (analog PHP)
 			$sql_create = "SELECT COUNT(*) FROM `$tablename`";	
 			$sth = $dbh->prepare($sql_create);
             if (!$sth)
@@ -627,7 +627,7 @@ sub DoDump {
                 # how many rows
 		
 				#www.betanet-web.ch - 30.04.2019
-				#Erweitert mit SQL Abfrage für Ausgabe Anzahl der Einträge in der Tabelle (analog PHP)
+				#Erweitert mit SQL Abfrage fÃ¼r Ausgabe Anzahl der EintrÃ¤ge in der Tabelle (analog PHP)
 				$sql_create = "SELECT COUNT(*) FROM `$tablename`";	
 				$sth = $dbh->prepare($sql_create);
                 if (!$sth)
@@ -943,15 +943,19 @@ sub send_sftp {
             if ($sftp_timeout[$i]<1) { $sftp_timeout[$i]=30; };
 				if (${sftp_foreig[$i]}==1 && $mod_sftp_foreign==1)
                 {    
-					$sftp = Net::SFTP::Foreign->new($sftp_server[$i], user => $sftp_user[$i], key_path => $sftp_path_to_private_key[$i], passphrase => $sftp_secret_passphrase_for_private_key[$i], port => $sftp_port[$i]) or err_trap( "SFTP-SSL-ERROR: Can't connect: $@\n",1);
+					$sftp = Net::SFTP::Foreign->new ($sftp_server[$i], user => $sftp_user[$i], key_path => $sftp_path_to_private_key[$i], passphrase => $sftp_secret_passphrase_for_private_key[$i], backend => 'Net_SSH2');
+					$sftp->error and
+							die "Unable to stablish SFTP connection: ". $sftp->error;
                 }
                 else
                 {    
-					$sftp = Net::SFTP->new($sftp_server[$i], user => $sftp_user[$i], password => $sftp_pass[$i], port => $sftp_port[$i], timeout => $sftp_timeout[$i]) or err_trap( "FTP-ERROR: Can't connect: $@\n",1);
-
+					# https://metacpan.org/pod/Net::SFTP::Foreign::Backend::Net_SSH2
+					$sftp = Net::SFTP::Foreign->new ($sftp_server[$i], user => $sftp_user[$i], password => $sftp_pass[$i], port => $sftp_port[$i], timeout => $sftp_timeout[$i], backend => 'Net_SSH2');
+					$sftp->error and
+							die "Unable to stablish SFTP connection: ". $sftp->error;
                 }
-            $sftp->binary();
-            $sftp->cwd($sftp_dir[$i]) or err_trap("SFTP-ERROR: Couldn't change directory: ".$sftp_dir[$i],1);
+
+            $sftp->setcwd($sftp_dir[$i]) or err_trap("SFTP-ERROR: Couldn't change directory: ".$sftp_dir[$i],1);
             
             if($mp==0) 
             {
