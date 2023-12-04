@@ -29,6 +29,7 @@
 #
 ########################################################################################
 # Script-Version
+package MyOOSCron;
 our $pcd_version="5.0.23";
 
 ########################################################################################
@@ -47,6 +48,7 @@ my $default_configfile="myoosdumper.conf.php";
 # import the necessary modules ...
 use strict;
 use warnings;
+use utf8;
 use DBI;
 use File::Find;
 use File::Basename;
@@ -80,9 +82,9 @@ $output, $query, $skip, $html_output,
 $record_count, $filesize, $status_start, $status_end, $sql_text, $punktzaehler, @backupfiles_name,
 @backupfiles_size, $mysql_commentstring, $character_set, $mod_gz, $mod_mime, $mod_ftp,
 $mod_ftpssl, @multipartfiles, %db_tables, @tablenames, $tablename, $opttbl, $command, $current_dir,
-$mod_sftp, $mod_sftp_foreign, @sftp_transfer, @sftp_timeout, @sftp_server, @sftp_port, @sftp_user, @sftp_pass, 
+$mod_sftp_foreign, @sftp_transfer, @sftp_timeout, @sftp_server, @sftp_port, @sftp_user, @sftp_pass, 
 @sftp_dir, @sftp_foreig, @sftp_path_to_private_key, @sftp_secret_passphrase_for_private_key, @sftp_fingerprint,
-$cronsftp, $cronsftpforeign
+$cronsftpforeign
 );
 
 $memory_limit=100000;
@@ -101,7 +103,7 @@ $cron_printout=1;
 $conffile="";
 
 #return perl version
-sub GetPerlVersion (){
+sub MyOOSCron::GetPerlVersion (){
     my $pversion ;
     if ($^V){
         $pversion = sprintf "v%vd", $^V ; # v5.10.1
@@ -117,7 +119,6 @@ $mod_gz=0;
 $mod_ftp=0;
 $mod_mime=0;
 $mod_ftpssl=0;
-$mod_sftp=0;
 $mod_sftp_foreign=0;
 push (@INC, "$cgibin_path");
 
@@ -135,11 +136,6 @@ eval { $eval_in_died = 1; require Net::FTPSSL; };
 if(!$@){
     $mod_ftpssl = 1;
     import Net::FTPSSL;
-}
-eval { $eval_in_died=1; require Net::SFTP; };
-if(!$@){
-    $mod_sftp=1;
-    import Net::SFTP;
 }
 eval { $eval_in_died=1; require Net::SFTP::Foreign; };
 if(!$@){
@@ -182,7 +178,7 @@ if($ENV{'QUERY_STRING'}) {
 }
 
 # Now we know if script was called via HTTP-Requets or from Shell. So output Headers
-PrintHeader();
+MyOOSCron::PrintHeader();
 
 # Security: try to detect wether someone tries to include some external configfile
 die "Hacking attempt - I wont do anything!\nGo away\n\n" if (lc($conffile) =~ m /:/);
@@ -225,7 +221,7 @@ if($absolute_path_of_configdir eq "" || ! -d $absolute_path_of_configdir)
     }
 }
 
-$conffile=trim($conffile);
+$conffile=MyOOSCron::trim($conffile);
 if($conffile eq "") 
 {
     $conffile=$default_configfile; # no Parameter for configfile given -> use standardfile "mysqldumper.conf.php"
@@ -233,9 +229,9 @@ if($conffile eq "")
 }
 
 # check config-dir
-$absolute_path_of_configdir=trim($absolute_path_of_configdir); # remove spaces
+$absolute_path_of_configdir=MyOOSCron::trim($absolute_path_of_configdir); # remove spaces
 if (!opendir(DIR, $absolute_path_of_configdir)){
-    err_trap("The config-directory you entered is wrong !\n($absolute_path_of_configdir - $!) \n\nPlease edit $0 and enter the right configuration-path.\n",0,1);
+    MyOOSCron::err_trap("The config-directory you entered is wrong !\n($absolute_path_of_configdir - $!) \n\nPlease edit $0 and enter the right configuration-path.\n",0,1);
 }
 closedir(DIR);
 
@@ -267,50 +263,44 @@ if ($html_output==1) { $cron_printout=1; }; # overwrite output if HTML-Output is
 @confname=split(/\//,$conffile);
 
 
-PrintOut("<span style=\"color:#0000FF;\">Configuration '".$conffile."' loaded successfully from ".$config_read_from.".</span>");
+MyOOSCron::PrintOut("<span style=\"color:#0000FF;\">Configuration '".$conffile."' loaded successfully from ".$config_read_from.".</span>");
 if($mod_gz==1) {
-    PrintOut("<span style=\"color:#0000FF;\">Compression Library loaded successfully...</span>");
+    MyOOSCron::PrintOut("<span style=\"color:#0000FF;\">Compression Library loaded successfully...</span>");
 } else {
     $compression=0;
-    PrintOut("<span style=\"color:red;\">Compression Library loading failed - Compression deactivated ...</span>");
+    MyOOSCron::PrintOut("<span style=\"color:red;\">Compression Library loading failed - Compression deactivated ...</span>");
 }
 if($mod_ftp==1) {
-    PrintOut("<span style=\"color:#0000FF;\">FTP Library loaded successfully...</span>");
+    MyOOSCron::PrintOut("<span style=\"color:#0000FF;\">FTP Library loaded successfully...</span>");
 } else {
     $cronftp=0;
-    PrintOut("<span style=\"color:red;\">FTP Library loading failed - FTP deactivated ...</span>");
-}
-if($mod_sftp==1) {
-    PrintOut("<span style=\"color:#0000FF;\">SFTP Library loaded successfully...</span>");
-} else {
-    $cronsftp=0;
-    PrintOut("<span style=\"color:red;\">SFTP Library loading failed - SFTP deactivated ...</span>");
+    MyOOSCron::PrintOut("<span style=\"color:red;\">FTP Library loading failed - FTP deactivated ...</span>");
 }
 if($mod_sftp_foreign==1) {
-    PrintOut("<span style=\"color:#0000FF;\">SFTP Library with a private key loaded successfully...</span>");
+    MyOOSCron::PrintOut("<span style=\"color:#0000FF;\">SFTP Library with a private key loaded successfully...</span>");
 } else {
     $cronsftpforeign=0;
-    PrintOut("<span style=\"color:red;\">Failed to load the library SFTP connection with a private key - SFTP deactivated ...</span>");
+    MyOOSCron::PrintOut("<span style=\"color:red;\">Failed to load the library SFTP connection with a private key - SFTP deactivated ...</span>");
 }
 if($mod_ftpssl==1) {
-    PrintOut("<span style=\"color:#0000FF;\">FTP-SSL Library loaded successfully...</span>");
+    MyOOSCron::PrintOut("<span style=\"color:#0000FF;\">FTP-SSL Library loaded successfully...</span>");
     $cronftp=1;
 } else {
     $cronftp=0;
-    PrintOut("<span style=\"color:red;\">FTP-SSL Library loading failed - FTP-SSL deactivated ...</span>");
+    MyOOSCron::PrintOut("<span style=\"color:red;\">FTP-SSL Library loading failed - FTP-SSL deactivated ...</span>");
 }
 if($mod_mime==1) {
-    PrintOut("<span style=\"color:#0000FF;\">Mail Library loaded successfully...</span>");
+    MyOOSCron::PrintOut("<span style=\"color:#0000FF;\">Mail Library loaded successfully...</span>");
 } else {
     $cronmail=0;
-    PrintOut("<span style=\"color:red;\">Mail Library loading failed - Mail deactivated ...</span>");
+    MyOOSCron::PrintOut("<span style=\"color:red;\">Mail Library loading failed - Mail deactivated ...</span>");
 }
 
 #try writing to logfile
-write_log("***********************************************************************\n");
-write_log("Starting backup using Perlscript version $pcd_version (using perl ".GetPerlVersion().")\n");
-PrintOut("Starting backup using Perlscript version $pcd_version (using perl ".GetPerlVersion().")\n");
-write_log("Using configuration $conffile\n");
+MyOOSCron::write_log("***********************************************************************\n");
+MyOOSCron::write_log("Starting backup using Perlscript version $pcd_version (using perl ".MyOOSCron::GetPerlVersion().")\n");
+MyOOSCron::PrintOut("Starting backup using Perlscript version $pcd_version (using perl ".MyOOSCron::GetPerlVersion().")\n");
+MyOOSCron::write_log("Using configuration $conffile\n");
 
 #now do the dump
 
@@ -322,7 +312,7 @@ if($cron_dbindex > -1)
     $command_beforedump=$cron_command_before_dump[$cron_dbindex];
     $command_afterdump=$cron_command_after_dump[$cron_dbindex];
     ExecuteCommand(1,$command_beforedump);
-    DoDump();
+    MyOOSCron::DoDump();
     ExecuteCommand(2,$command_afterdump);
 }  
 else 
@@ -335,12 +325,12 @@ else
         $db_praefix=$cron_dbpraefix_array[$ii];
         $command_beforedump=$cron_command_before_dump[$ii];
         $command_afterdump=$cron_command_after_dump[$ii];
-        PrintOut("<hr>Starting to backup database <strong>`$dbname`</strong> (".($ii+1)."/$db_anz).");
+        MyOOSCron::PrintOut("<hr>Starting to backup database <strong>`$dbname`</strong> (".($ii+1)."/$db_anz).");
         if ($db_praefix ne "") {
-            PrintOut("Scanning for tables with prefix '<span style=\"color:blue\">$db_praefix</span>')");
+            MyOOSCron::PrintOut("Scanning for tables with prefix '<span style=\"color:blue\">$db_praefix</span>')");
         }
         ExecuteCommand(1,$command_beforedump);
-        DoDump();
+        MyOOSCron::DoDump();
         ExecuteCommand(2,$command_afterdump);
     }
 }
@@ -349,19 +339,19 @@ if($auto_delete>0)
 {
     if($max_backup_files>0) 
     {
-        PrintOut("<br><b>Starting autodelete function: </b><br>Keep the latest <font color=\"#0000FF\">$max_backup_files</font> backup files for each database and delete older ones.");
+        MyOOSCron::PrintOut("<br><b>Starting autodelete function: </b><br>Keep the latest <font color=\"#0000FF\">$max_backup_files</font> backup files for each database and delete older ones.");
         find(\&AutoDeleteCount, $backup_path);
         DoAutoDeleteCount();
         DeleteFiles (\@trash_files);
     }
 }
-closeScript();
+MyOOSCron::closeScript();
 if ($html_output==0) { print "\nEnd of Cronscript\n"; }
 
 ##############################################
 # Subroutinen                                #
 ##############################################
-sub DoDump {
+sub MyOOSCron::DoDump {
     undef(%db_tables);
     ($Sekunden, $Minuten, $Stunden, $Monatstag, $Monat, $Jahr, $Wochentag, $Jahrestag, $Sommerzeit) = localtime(time);
     $Jahr+=1900;$Monat+=1;$Jahrestag+=1;
@@ -371,7 +361,7 @@ sub DoDump {
     $starttime= sprintf("%02d",$Monatstag).".".sprintf("%02d",$Monat).".".$Jahr."  ".sprintf("%02d",$Stunden).":".sprintf("%02d",$Minuten);
     $fieldlist="";
     # Verbindung mit MySQL herstellen, $dbh ist das Database Handle
-    if (trim($dbsocket) eq "")
+    if (MyOOSCron::trim($dbsocket) eq "")
     {
         $dbh = DBI->connect("DBI:mysql:$dbname:$dbhost:$dbport","$dbuser","$dbpass") || die "Database connection not made: $DBI::errstr"; 
     }
@@ -405,7 +395,7 @@ sub DoDump {
         @ar=$sth->fetchrow; 
         if (defined($ar[1])) { $character_set=$ar[1]; }
     }
-    PrintOut("Characterset of connection and backup file set to <strong>".$character_set."</strong>.");
+    MyOOSCron::PrintOut("Characterset of connection and backup file set to <strong>".$character_set."</strong>.");
     
     #Statuszeile erstellen
     my $t=0;
@@ -420,14 +410,14 @@ sub DoDump {
     if ($db_praefix ne "") 
     { 
         $query.=" LIKE '$db_praefix%'"; 
-        PrintOut("Searching for tables inside database <strong>`$dbname`</strong> with prefix <strong>'$db_praefix'</strong>."); 
+        MyOOSCron::PrintOut("Searching for tables inside database <strong>`$dbname`</strong> with prefix <strong>'$db_praefix'</strong>."); 
     } 
     else
     {
-        PrintOut("Searching for tables inside database <strong>`$dbname`</strong>."); 
+        MyOOSCron::PrintOut("Searching for tables inside database <strong>`$dbname`</strong>."); 
     }
     $sth = $dbh->prepare($query);
-    $sth->execute || err_trap("Error executing: ".$query." !  MySQL-Error: ".$DBI::errstr);
+    $sth->execute || MyOOSCron::err_trap("Error executing: ".$query." !  MySQL-Error: ".$DBI::errstr);
     while ( $value=$sth->fetchrow_hashref()) 
     {
         $value->{skip_data}=0; #defaut -> backup data of table
@@ -483,7 +473,7 @@ sub DoDump {
     $tablename='';
     if (@tablenames<1)
     {
-        PrintOut("There are no tables inside database <b>".$dbname."</b>! It doesn't make sense to backup an empty database. Skipping this one.");
+        MyOOSCron::PrintOut("There are no tables inside database <b>".$dbname."</b>! It doesn't make sense to backup an empty database. Skipping this one.");
         return;
     }
     if($optimize_tables_beforedump==1) 
@@ -507,16 +497,15 @@ sub DoDump {
         if ($dump_table==1)
         {
 
-			#www.betanet-web.ch - 30.04.2019
-			#Erweitert mit SQL Abfrage fÃ¼r Ausgabe Anzahl der EintrÃ¤ge in der Tabelle (analog PHP)
+			#Erweitert mit SQL Abfrage für Ausgabe Anzahl der Einträge in der Tabelle (analog PHP)
 			$sql_create = "SELECT COUNT(*) FROM `$tablename`";	
 			$sth = $dbh->prepare($sql_create);
             if (!$sth)
 			{
-				err_trap("<font color=\"red\">Fatal error sending Query '".$sql_create."'! MySQL-Error: ".$DBI::errstr);
+				MyOOSCron::err_trap("<font color=\"red\">Fatal error sending Query '".$sql_create."'! MySQL-Error: ".$DBI::errstr);
 			}				
 				
-			$sth->execute || err_trap("Couldn't execute ".$sql_create);
+			$sth->execute || MyOOSCron::err_trap("Couldn't execute ".$sql_create);
 			$rct = $sth->fetchrow;
 			$sth->finish;
 				
@@ -535,7 +524,7 @@ sub DoDump {
     }
     $st_e.="-- EOF TABLE-INFO";
     
-    PrintOut("Found ".(@tables)." tables with $r records.");
+    MyOOSCron::PrintOut("Found ".(@tables)." tables with $r records.");
 
     #AUFBAU der Statuszeile:
     #    -- Status:tabellenzahl:datensaetze:Multipart:Datenbankname:script:scriptversion:Kommentar:MySQLVersion:Backupflags:SQLBefore:SQLAfter:Charset:EXTINFO
@@ -568,7 +557,7 @@ sub DoDump {
         # first get CREATE TABLE Statement 
         if($db_praefix eq "" || ($db_praefix ne "" && substr($tablename,0,length($db_praefix)) eq $db_praefix)) 
         {
-            PrintOut("Dumping table `<strong>$tablename</strong>` <em>(Type ".$db_tables{$tablename}{Engine}.")</em>:");
+            MyOOSCron::PrintOut("Dumping table `<strong>$tablename</strong>` <em>(Type ".$db_tables{$tablename}{Engine}.")</em>:");
             $a="\n\n$mysql_commentstring\n$mysql_commentstring"."Table structure for table `$tablename`\n$mysql_commentstring\n";
             if ($db_tables{$tablename}{Engine} ne 'VIEW' ) {
                 $a.="DROP TABLE IF EXISTS `$tablename`;\n";
@@ -580,16 +569,16 @@ sub DoDump {
             $sth = $dbh->prepare($sql_create);
             if (!$sth)
             {
-                err_trap("<font color=\"red\">Fatal error sending Query '".$sql_create."'! MySQL-Error: ".$DBI::errstr);
+                MyOOSCron::err_trap("<font color=\"red\">Fatal error sending Query '".$sql_create."'! MySQL-Error: ".$DBI::errstr);
             }
 
-            $sth->execute || err_trap("Couldn't execute ".$sql_create);
+            $sth->execute || MyOOSCron::err_trap("Couldn't execute ".$sql_create);
             @ergebnis=$sth->fetchrow;
             $sth->finish;
             $a=$ergebnis[1].";\n";
             if (length($a)<10)
             {
-                err_trap("Fatal error! Couldn't read CREATE-Statement of table `$tabelle`! This backup might be incomplete! Check your database for errors."."' MySQL-Error: ".$DBI::errstr,1);
+                MyOOSCron::err_trap("Fatal error! Couldn't read CREATE-Statement of table `$tabelle`! This backup might be incomplete! Check your database for errors."."' MySQL-Error: ".$DBI::errstr,1);
                 $skip=1;
             }
             else 
@@ -612,10 +601,10 @@ sub DoDump {
                 $sth = $dbh->prepare($sql_create);
                 if (!$sth)
                 {
-                    err_trap("<font color=\"red\">Fatal error sending Query '".$sql_create."'! MySQL-Error: ".$DBI::errstr);
+                    MyOOSCron::err_trap("<font color=\"red\">Fatal error sending Query '".$sql_create."'! MySQL-Error: ".$DBI::errstr);
                 }
                 
-                $sth->execute || err_trap("Couldn't execute ".$sql_create);
+                $sth->execute || MyOOSCron::err_trap("Couldn't execute ".$sql_create);
                 while ( @ar=$sth->fetchrow) {
                     $fieldlist.="`".$ar[0]."`,";
                 }
@@ -624,18 +613,16 @@ sub DoDump {
                 # remove trailing ',' and add ')'
                 $fieldlist=substr($fieldlist,0,length($fieldlist)-1).")";
 
-                # how many rows
-		
-				#www.betanet-web.ch - 30.04.2019
-				#Erweitert mit SQL Abfrage fÃ¼r Ausgabe Anzahl der EintrÃ¤ge in der Tabelle (analog PHP)
+                # how many rows		
+				#Erweitert mit SQL Abfrage für Ausgabe Anzahl der Einträge in der Tabelle (analog PHP)
 				$sql_create = "SELECT COUNT(*) FROM `$tablename`";	
 				$sth = $dbh->prepare($sql_create);
                 if (!$sth)
                 {
-                    err_trap("<font color=\"red\">Fatal error sending Query '".$sql_create."'! MySQL-Error: ".$DBI::errstr);
+                    MyOOSCron::err_trap("<font color=\"red\">Fatal error sending Query '".$sql_create."'! MySQL-Error: ".$DBI::errstr);
                 }				
 				
-				$sth->execute || err_trap("Couldn't execute ".$sql_create);
+				$sth->execute || MyOOSCron::err_trap("Couldn't execute ".$sql_create);
 				$rct = $sth->fetchrow;
 				$sth->finish;
 			
@@ -653,9 +640,9 @@ sub DoDump {
                     $sth = $dbh->prepare($sql_daten);
                     if (!$sth)
                     {
-                        err_trap("<font color=\"red\">Fatal error sending Query '".$sql_create."'! MySQL-Error: ".$DBI::errstr);
+                        MyOOSCron::err_trap("<font color=\"red\">Fatal error sending Query '".$sql_create."'! MySQL-Error: ".$DBI::errstr);
                     }
-                    $sth->execute || err_trap("Couldn't execute \"".$sql_daten."\" - MySQL-Error: ".$DBI::errstr);
+                    $sth->execute || MyOOSCron::err_trap("Couldn't execute \"".$sql_daten."\" - MySQL-Error: ".$DBI::errstr);
                     while ( @ar=$sth->fetchrow) 
                     {
                         #Start the insert
@@ -692,12 +679,12 @@ sub DoDump {
 
             if ($db_tables{$tablename}{skip_data} == 0)
             {
-                PrintOut("\n<br><em>$db_tables{$tablename}{Rows} inserted records (size of backupfile: ".byte_output($filesize).")</em>");
+                MyOOSCron::PrintOut("\n<br><em>$db_tables{$tablename}{Rows} inserted records (size of backupfile: ".MyOOSCron::byte_output($filesize).")</em>");
                 $totalrecords+=$db_tables{$tablename}{Rows};
             }
             else
             {
-                PrintOut("\n<br>Dumping structure of <strong>`$tablename`</strong> <em>(Type ".$db_tables{$tablename}{Engine}." ) (size of backupfile: ".byte_output($filesize).")</em>");
+                MyOOSCron::PrintOut("\n<br>Dumping structure of <strong>`$tablename`</strong> <em>(Type ".$db_tables{$tablename}{Engine}." ) (size of backupfile: ".MyOOSCron::byte_output($filesize).")</em>");
             }
             
             if($mp>0 && $filesize>$multipart_groesse) {NewFilename();}
@@ -706,33 +693,33 @@ sub DoDump {
     # end
     WriteToFile("\nSET FOREIGN_KEY_CHECKS=1;\n");
     WriteToFile($mysql_commentstring."EOB\n");
-    PrintOut("\n<hr>Finished backup of database `$dbname`.\n");
-    write_log("Finished backup of database `$dbname`.\n");
+    MyOOSCron::PrintOut("\n<hr>Finished backup of database `$dbname`.\n");
+    MyOOSCron::write_log("Finished backup of database `$dbname`.\n");
 
     # sent via email
     if($cronmail==1) {
-        PrintOut("Sending E-Mail ...");
-        $ret=send_mail();
+        MyOOSCron::PrintOut("Sending E-Mail ...");
+        $ret=MyOOSCron::send_mail();
         if ($ret)
         {
-            write_log("Recipient/s: $cronmailto $cronmailto_cc\n");
-            PrintOut("Recipient/s: $cronmailto $cronmailto_cc\n");
+            MyOOSCron::write_log("Recipient/s: $cronmailto $cronmailto_cc\n");
+            MyOOSCron::PrintOut("Recipient/s: $cronmailto $cronmailto_cc\n");
         }
     }
 
-    if(($mod_sftp==1) || ($mod_sftp_foreign==1))  {
+    if($mod_sftp_foreign==1)  {
 		# sent to sftp-server
-		send_sftp();
+		MyOOSCron::send_sftp();
 	}
     else
 	{
 		# sent to ftp-server
-		send_ftp();
+		MyOOSCron::send_ftp();
 	}
 }
 
 #print error message and optional exit
-sub err_trap {
+sub MyOOSCron::err_trap {
     my $error_message = shift(@_);
     
     #continue instead of exit
@@ -741,26 +728,26 @@ sub err_trap {
     #don't write to logfile, if we did not read config before
     my $nolog = shift(@_);
     
-    PrintOut("<font color=\"red\">Perl Cronscript ERROR: <b>$error_message</b></font><br>\n");
-    write_log("<font color=\"red\">Perl Cronscript ERROR: <b>$error_message</b></font><br>\n") if !defined $nolog;
+    MyOOSCron::PrintOut("<font color=\"red\">Perl Cronscript ERROR: <b>$error_message</b></font><br>\n");
+    MyOOSCron::write_log("<font color=\"red\">Perl Cronscript ERROR: <b>$error_message</b></font><br>\n") if !defined $nolog;
     if (!defined $continue || $continue ==0)
     {
-        PrintOut("<font color=\"red\"><b>Stopping script because of this fatal error!</b></font><br>\n");
-        write_log("<font color=\"red\"><b>Stopping script because of this fatal error!</b></font><br>\n") if !defined $nolog;
+        MyOOSCron::PrintOut("<font color=\"red\"><b>Stopping script because of this fatal error!</b></font><br>\n");
+        MyOOSCron::write_log("<font color=\"red\"><b>Stopping script because of this fatal error!</b></font><br>\n") if !defined $nolog;
         exit(1);
     }
 }
 
-sub PrintHeader {
+sub MyOOSCron::PrintHeader {
     my $cgi = new CGI;
-    my $perlversion = GetPerlVersion();
+    my $perlversion = MyOOSCron::GetPerlVersion();
     
     if ($html_output==1)
     {
         print $cgi->header(-type => 'text/html; charset=utf-8', -cache_control => 'no-cache, no-store, must-revalidate');
-        print "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n";
+        print "<!DOCTYPE HTML>\n";
         print "<html>\n<head>\n<title>MyOOS [Dumper] - Perl CronDump [Version $pcd_version (using perl $perlversion)]</title>\n";
-        print "<style type=\"text/css\">\nbody { padding:20px; font-family:Verdana,Helvetica,Sans-Serif;font-size: 0.9em !important;}</style>\n";
+        print "<style>\nbody { padding:20px; font-family:Verdana,Helvetica,Sans-Serif;font-size: 0.9em !important;}</style>\n";
         print "</head>\n<body><h3>MyOOS [Dumper] - Perl CronDump [Version $pcd_version (using perl $perlversion)]</h3>\n";
     }
     else
@@ -770,10 +757,10 @@ sub PrintHeader {
     }
 }
 
-sub PrintOut {
+sub MyOOSCron::PrintOut {
     $print_out = shift(@_);
 
-    if (defined $print_out && length(trim($print_out))>0)
+    if (defined $print_out && length(MyOOSCron::trim($print_out))>0)
     {
         if($complete_log==1) 
         {
@@ -791,19 +778,19 @@ sub PrintOut {
             $output =~ s/\n//gi;
             $output =~ s/\r//gi;
             $output =~ s/<br>//gi;
-            $output=trim($output);
+            $output=MyOOSCron::trim($output);
             
             if ( ($logcompression==0) || ($mod_gz==0)) 
             {
-                open(DATEI,">>$completelogdatei") || err_trap('can\'t open myoosdump_perl.complete.log ('.$completelogdatei.').');
-                print DATEI "$dt $output\n" || err_trap('can\'t write to myoosdump_perl.complete.log ('.$completelogdatei.').');
-                close(DATEI)|| err_trap('can\'t close myoosdump_perl.complete.log ('.$completelogdatei.').');
+                open(DATEI,">>$completelogdatei") || MyOOSCron::err_trap('can\'t open myoosdump_perl.complete.log ('.$completelogdatei.').');
+                print DATEI "$dt $output\n" || MyOOSCron::err_trap('can\'t write to myoosdump_perl.complete.log ('.$completelogdatei.').');
+                close(DATEI)|| MyOOSCron::err_trap('can\'t close myoosdump_perl.complete.log ('.$completelogdatei.').');
                 chmod(0777,$completelogdatei);
             }
             else
             {
-                $gz = gzopen($completelogdatei, "ab") || err_trap("Cannot open myoosdump_perl.complete.log.gz. ");
-                $gz->gzwrite("$dt $output\n")  || err_trap("Error writing myoosdump_perl.complete.log.gz. ");
+                $gz = gzopen($completelogdatei, "ab") || MyOOSCron::err_trap("Cannot open myoosdump_perl.complete.log.gz. ");
+                $gz->gzwrite("$dt $output\n")  || MyOOSCron::err_trap("Error writing myoosdump_perl.complete.log.gz. ");
                 $gz->gzclose ;
                 chmod(0777,$completelogdatei);
             }
@@ -839,7 +826,7 @@ sub PrintOut {
     }
 }
 
-sub write_log {
+sub MyOOSCron::write_log {
     $msg = shift(@_);
     ($Sekunden, $Minuten, $Stunden, $Monatstag, $Monat, $Jahr, $Wochentag, $Jahrestag, $Sommerzeit) = localtime(time);
     $Jahr+=1900; $Monat+=1;$Jahrestag+=1;
@@ -855,21 +842,21 @@ sub write_log {
 
     if ( ($logcompression==0) || ($mod_gz==0)) 
     {
-        open(DATEI,">>$logdatei") || err_trap("Can't open file ($logdatei).");
-        print DATEI "$dt $msg" || err_trap("Can't write to file ($logdatei).");
-        close(DATEI)|| err_trap("can't close file ($logdatei).");
+        open(DATEI,">>$logdatei") || MyOOSCron::err_trap("Can't open file ($logdatei).");
+        print DATEI "$dt $msg" || MyOOSCron::err_trap("Can't write to file ($logdatei).");
+        close(DATEI)|| MyOOSCron::err_trap("can't close file ($logdatei).");
         chmod(0777,$logdatei);
     } 
     else
     {
-        $gz = gzopen($logdatei, "ab") || err_trap("Can't open $logdatei.");
-        $gz->gzwrite("$dt $msg")  || err_trap("Can't write to $logdatei. ");
+        $gz = gzopen($logdatei, "ab") || MyOOSCron::err_trap("Can't open $logdatei.");
+        $gz->gzwrite("$dt $msg")  || MyOOSCron::err_trap("Can't write to $logdatei. ");
         $gz->gzclose ;
         chmod(0777,$logdatei);
     }
 }
 
-sub send_ftp {
+sub MyOOSCron::send_ftp {
     #save files to ftp-server
     my $ret=0;
     my $x=0;
@@ -880,28 +867,28 @@ sub send_ftp {
             if ($ftp_timeout[$i]<1) { $ftp_timeout[$i]=30; };
                 if (${ftp_useSSL[$i]}==1 && $mod_ftpssl==1)
                 {    #use ftp-ssl
-                    $ftp = Net::FTPSSL->new($ftp_server[$i], Encryption => Net::FTPSSL->EXP_CRYPT, Port => $ftp_port[$i], DataProtLevel =>Net::FTPSSL->DATA_PROT_CLEAR, Timeout => $ftp_timeout[$i], Debug   => 0) or err_trap( "FTP-SSL-ERROR: Can't connect: $@\n",1);
+                    $ftp = Net::FTPSSL->new($ftp_server[$i], Encryption => Net::FTPSSL->EXP_CRYPT, Port => $ftp_port[$i], DataProtLevel =>Net::FTPSSL->DATA_PROT_CLEAR, Timeout => $ftp_timeout[$i], Debug   => 0) or MyOOSCron::err_trap( "FTP-SSL-ERROR: Can't connect: $@\n",1);
                 }
                 else
                 {    #use 'plain' ftp
-                    $ftp = Net::FTP->new($ftp_server[$i], Port => $ftp_port[$i], Timeout => $ftp_timeout[$i], Debug   => 1,Passive => $ftp_mode[$i]) or err_trap( "FTP-ERROR: Can't connect: $@\n",1);
+                    $ftp = Net::FTP->new($ftp_server[$i], Port => $ftp_port[$i], Timeout => $ftp_timeout[$i], Debug   => 1,Passive => $ftp_mode[$i]) or MyOOSCron::err_trap( "FTP-ERROR: Can't connect: $@\n",1);
                 }
-            $ftp->login($ftp_user[$i], $ftp_pass[$i]) or err_trap("FTP-ERROR: Couldn't login\n",1);
+            $ftp->login($ftp_user[$i], $ftp_pass[$i]) or MyOOSCron::err_trap("FTP-ERROR: Couldn't login\n",1);
             $ftp->binary();
-            $ftp->cwd($ftp_dir[$i]) or err_trap("FTP-ERROR: Couldn't change directory: ".$ftp_dir[$i],1);
+            $ftp->cwd($ftp_dir[$i]) or MyOOSCron::err_trap("FTP-ERROR: Couldn't change directory: ".$ftp_dir[$i],1);
             
             if($mp==0) 
             {
-                PrintOut("FTP: transferring `$backupfile`");
+                MyOOSCron::PrintOut("FTP: transferring `$backupfile`");
                 $ret=$ftp->put($sql_file);
                 if (!$ret)
                 {
-                    err_trap("FTP-Error: Couldn't put $backupfile to ".$ftp_server[$i]." into dir ".$ftp_dir[$i]."\n",1);
+                    MyOOSCron::err_trap("FTP-Error: Couldn't put $backupfile to ".$ftp_server[$i]." into dir ".$ftp_dir[$i]."\n",1);
                 }
                 else
                 {
-                    write_log("FTP: transferred `$backupfile` to $ftp_server[$i] into dir $ftp_dir[$i] successfully\n");
-                    PrintOut(" to $ftp_server[$i] into dir $ftp_dir[$i] was successful.\n");
+                    MyOOSCron::write_log("FTP: transferred `$backupfile` to $ftp_server[$i] into dir $ftp_dir[$i] successfully\n");
+                    MyOOSCron::PrintOut(" to $ftp_server[$i] into dir $ftp_dir[$i] was successful.\n");
                 }
             } 
             else 
@@ -912,19 +899,19 @@ sub send_ftp {
                 for ($x=1;$x<$mp;$x++) 
                 {
                     $mpdatei=$dateistamm.$x.$dateiendung;
-                    PrintOut("FTP: transferring multipart $mpdatei");
+                    MyOOSCron::PrintOut("FTP: transferring multipart $mpdatei");
                     
                     $ret=$ftp->put($backup_path.$mpdatei);
                     if (!$ret) 
                     {
-                        err_trap("Couldn't put $backup_path.$mpdatei to ".$ftp_server[$i]." into dir ".$ftp_dir[$i]."\n",1);
+                        MyOOSCron::err_trap("Couldn't put $backup_path.$mpdatei to ".$ftp_server[$i]." into dir ".$ftp_dir[$i]."\n",1);
                     }
                     else
                     {
-                        #write_log("FTP: transferring of `$mpdatei` to ".$ftp_server[$i]." finished successfully.\n");
-                        #PrintOut("FTP: transferring of `$mpdatei` to $ftp_server[$i] finished successfully.");
-                        write_log("FTP: transferred multipart '$mpdatei' to $ftp_server[$i] into dir $ftp_dir[$i] successfully\n");
-                        PrintOut(" to $ftp_server[$i] into dir $ftp_dir[$i] was successful.\n");
+                        #MyOOSCron::write_log("FTP: transferring of `$mpdatei` to ".$ftp_server[$i]." finished successfully.\n");
+                        #MyOOSCron::PrintOut("FTP: transferring of `$mpdatei` to $ftp_server[$i] finished successfully.");
+                        MyOOSCron::write_log("FTP: transferred multipart '$mpdatei' to $ftp_server[$i] into dir $ftp_dir[$i] successfully\n");
+                        MyOOSCron::PrintOut(" to $ftp_server[$i] into dir $ftp_dir[$i] was successful.\n");
                     }
                 }
             }
@@ -932,7 +919,7 @@ sub send_ftp {
     }
 }
 
-sub send_sftp {
+sub MyOOSCron::send_sftp {
     #save files to sftp-server
     my $ret=0;
     my $x=0;
@@ -955,20 +942,20 @@ sub send_sftp {
 							die "Unable to stablish SFTP connection: ". $sftp->error;
                 }
 
-            $sftp->setcwd($sftp_dir[$i]) or err_trap("SFTP-ERROR: Couldn't change directory: ".$sftp_dir[$i],1);
+            $sftp->setcwd($sftp_dir[$i]) or MyOOSCron::err_trap("SFTP-ERROR: Couldn't change directory: ".$sftp_dir[$i],1);
             
             if($mp==0) 
             {
-                PrintOut("SFTP: transferring `$backupfile`");
+                MyOOSCron::PrintOut("SFTP: transferring `$backupfile`");
                 $ret=$sftp->put($sql_file);
                 if (!$ret)
                 {
-                    err_trap("SFTP-Error: Couldn't put $backupfile to ".$sftp_server[$i]." into dir ".$sftp_dir[$i]."\n",1);
+                    MyOOSCron::err_trap("SFTP-Error: Couldn't put $backupfile to ".$sftp_server[$i]." into dir ".$sftp_dir[$i]."\n",1);
                 }
                 else
                 {
-                    write_log("SFTP: transferred `$backupfile` to $sftp_server[$i] into dir $sftp_dir[$i] successfully\n");
-                    PrintOut(" to $sftp_server[$i] into dir $sftp_dir[$i] was successful.\n");
+                    MyOOSCron::write_log("SFTP: transferred `$backupfile` to $sftp_server[$i] into dir $sftp_dir[$i] successfully\n");
+                    MyOOSCron::PrintOut(" to $sftp_server[$i] into dir $sftp_dir[$i] was successful.\n");
                 }
             } 
             else 
@@ -979,19 +966,19 @@ sub send_sftp {
                 for ($x=1;$x<$mp;$x++) 
                 {
                     $mpdatei=$dateistamm.$x.$dateiendung;
-                    PrintOut("SFTP: transferring multipart $mpdatei");
+                    MyOOSCron::PrintOut("SFTP: transferring multipart $mpdatei");
                     
                     $ret=$sftp->put($backup_path.$mpdatei);
                     if (!$ret) 
                     {
-                        err_trap("Couldn't put $backup_path.$mpdatei to ".$sftp_server[$i]." into dir ".$sftp_dir[$i]."\n",1);
+                        MyOOSCron::err_trap("Couldn't put $backup_path.$mpdatei to ".$sftp_server[$i]." into dir ".$sftp_dir[$i]."\n",1);
                     }
                     else
                     {
-                        #write_log("SFTP: transferring of `$mpdatei` to ".$sftp_server[$i]." finished successfully.\n");
-                        #PrintOut("SFTP: transferring of `$mpdatei` to $sftp_server[$i] finished successfully.");
-                        write_log("SFTP: transferred multipart '$mpdatei' to $sftp_server[$i] into dir $sftp_dir[$i] successfully\n");
-                        PrintOut(" to $sftp_server[$i] into dir $sftp_dir[$i] was successful.\n");
+                        #MyOOSCron::write_log("SFTP: transferring of `$mpdatei` to ".$sftp_server[$i]." finished successfully.\n");
+                        #MyOOSCron::PrintOut("SFTP: transferring of `$mpdatei` to $sftp_server[$i] finished successfully.");
+                        MyOOSCron::write_log("SFTP: transferred multipart '$mpdatei' to $sftp_server[$i] into dir $sftp_dir[$i] successfully\n");
+                        MyOOSCron::PrintOut(" to $sftp_server[$i] into dir $sftp_dir[$i] was successful.\n");
                     }
                 }
             }
@@ -1001,11 +988,11 @@ sub send_sftp {
 
 
 
-sub send_mail {
+sub MyOOSCron::send_mail {
     #sent email w/o files
     $BodyNormal='Find attached a backup of your database `'.$dbname.'`.';
     $BodyMultipart="A multipart backup has been made.<br>You will receive one or more emails with the backup-files attached.<br>The database `".$dbname."` has been backuped.<br>The following files have been created:";
-    $BodyToBig="The backup is bigger than the allowed max-limit of ".byte_output($email_maxsize)." and has not been attached.<br>Backup of database ".$dbname."<br><br>The following files have been created:";
+    $BodyToBig="The backup is bigger than the allowed max-limit of ".MyOOSCron::byte_output($email_maxsize)." and has not been attached.<br>Backup of database ".$dbname."<br><br>The following files have been created:";
     $BodyNoAttach="The backup has not been attached.<br>I saved your database `".$dbname."` to file<br>";
     $BodyAttachOnly="Here is your backup.";
     $Body="";
@@ -1019,17 +1006,17 @@ sub send_mail {
             #attache files
             if($cronmail_dump==0) 
             {    #The backup has not been attached
-                $Body=$BodyNoAttach.$backupfile." (".byte_output($filesize).")";
+                $Body=$BodyNoAttach.$backupfile." (".MyOOSCron::byte_output($filesize).")";
             } 
             else 
             {    #The backup is bigger than the allowed max-limit
-                $Body=$BodyToBig.$backupfile." (".byte_output($filesize).")";
+                $Body=$BodyToBig.$backupfile." (".MyOOSCron::byte_output($filesize).")";
             }
             $DoAttach=0;
         } 
         else 
         {    #Find attached your backup
-            $Body=$BodyNormal." File ".$backupfile." (".byte_output($filesize).")";
+            $Body=$BodyNormal." File ".$backupfile." (".MyOOSCron::byte_output($filesize).")";
         }
     } 
     else 
@@ -1043,18 +1030,18 @@ sub send_mail {
             $mpdatei=$dateistamm.$i.$dateiendung;
             push(@mparray,"$mpdatei|$i");
             $filesize=(stat($backup_path.$mpdatei))[7];
-            $Body.="\n<br>$mpdatei (".(byte_output($filesize))." )";
+            $Body.="\n<br>$mpdatei (".(MyOOSCron::byte_output($filesize))." )";
         }
     }
     $Body.="\n\n<br><br>Best regards,<br><br>MyOOS [Dumper]<br>If you have any questions, feel free and visit the support board at:<br><a href=\"https://foren.myoos.de/viewforum.php?f=40\">https://foren.myoos.de/viewforum.php?f=40</a>";
 
     if ($cron_use_sendmail==1)
     {    
-        MIME::Lite->send("sendmail", $sendmail_call) || err_trap("Error setting sendmail call!",1);
+        MIME::Lite->send("sendmail", $sendmail_call) || MyOOSCron::err_trap("Error setting sendmail call!",1);
     }
     else
     {
-        MIME::Lite->send('smtp', $cron_smtp, Timeout=>60) || err_trap("Error setting smtp call !",1);    
+        MIME::Lite->send('smtp', $cron_smtp, Timeout=>60) || MyOOSCron::err_trap("Error setting smtp call !",1);    
     }
 
     $msg = MIME::Lite->new(
@@ -1077,12 +1064,12 @@ sub send_mail {
         $ret=$msg->send;
         if (!$ret)
         {
-            err_trap("Error 1 sending mail with backup ".$backupfile."!",1);
+            MyOOSCron::err_trap("Error 1 sending mail with backup ".$backupfile."!",1);
         }
         else
         {
-            PrintOut("<font color=\"green\">E-Mail with backup ".$backupfile." sent successfully.</font>");
-            write_log("<font color=\"green\">E-Mail with backup ".$backupfile." sent successfully.</font>\n");
+            MyOOSCron::PrintOut("<font color=\"green\">E-Mail with backup ".$backupfile." sent successfully.</font>");
+            MyOOSCron::write_log("<font color=\"green\">E-Mail with backup ".$backupfile." sent successfully.</font>\n");
         }
         return $ret;
     }
@@ -1110,12 +1097,12 @@ sub send_mail {
             $ret=$msg->send;
             if (!$ret)
             {
-                err_trap("Error 2 sending mail with backup ".$str[0]."!",1);
+                MyOOSCron::err_trap("Error 2 sending mail with backup ".$str[0]."!",1);
             }
             else
             {
-                PrintOut("<font color=\"green\">E-Mail with backup ".$str[0]." sent successfully.</font>");
-                write_log("<font color=\"green\">E-Mail with backup ".$str[0]." sent successfully.</font>\n");
+                MyOOSCron::PrintOut("<font color=\"green\">E-Mail with backup ".$str[0]." sent successfully.</font>");
+                MyOOSCron::write_log("<font color=\"green\">E-Mail with backup ".$str[0]." sent successfully.</font>\n");
             }
         }
         return $ret;
@@ -1124,17 +1111,17 @@ sub send_mail {
     $ret=$msg->send;
     if (!$ret)
     {
-        err_trap("<font color=\"error\">Error 3 sending E-Mail!</font><br>",1);
+        MyOOSCron::err_trap("<font color=\"error\">Error 3 sending E-Mail!</font><br>",1);
     }
     else
     {
-        PrintOut("<font color=\"green\">E-Mail sent successfully.</font>");
-        write_log("<font color=\"green\">E-Mail sent successfully.</font>\n");
+        MyOOSCron::PrintOut("<font color=\"green\">E-Mail sent successfully.</font>");
+        MyOOSCron::write_log("<font color=\"green\">E-Mail sent successfully.</font>\n");
     }
     return $ret;
 }
 
-sub NewFilename {
+sub MyOOSCron::NewFilename {
     $part="";
     if($mp>0) 
     {
@@ -1153,18 +1140,18 @@ sub NewFilename {
     }
     if($mp==0) 
     {
-        PrintOut("\n<br>Starting to dump data into file <strong>`$backupfile`</strong>");
-        write_log("Dumping data into file <strong>`$backupfile`</strong> \n");
+        MyOOSCron::PrintOut("\n<br>Starting to dump data into file <strong>`$backupfile`</strong>");
+        MyOOSCron::write_log("Dumping data into file <strong>`$backupfile`</strong> \n");
     }
     if($mp==2) 
     {
-        PrintOut("\n<br>Starting to dump data into multipart-file <strong>`$backupfile`</strong>");
-        write_log("Start Perl Multipart-Dump with file `$backupfile` \n");
+        MyOOSCron::PrintOut("\n<br>Starting to dump data into multipart-file <strong>`$backupfile`</strong>");
+        MyOOSCron::write_log("Start Perl Multipart-Dump with file `$backupfile` \n");
     }
     if($mp>2) 
     {
-        PrintOut("\n<br>Continuing Multipart-Dump with file <strong>`$backupfile`</strong>");
-        write_log("Continuing Multipart-Dump with file `$backupfile` \n");
+        MyOOSCron::PrintOut("\n<br>Continuing Multipart-Dump with file <strong>`$backupfile`</strong>");
+        MyOOSCron::write_log("Continuing Multipart-Dump with file `$backupfile` \n");
     }
     if($mp>0) 
     {
@@ -1185,7 +1172,7 @@ sub NewFilename {
     push(@backupfiles_name,$sql_file);
 }
 
-sub WriteToFile {
+sub MyOOSCron::WriteToFile {
     $inh=shift;
     my $points=shift;
     if (!defined($points)) { $points=2; }
@@ -1196,8 +1183,8 @@ sub WriteToFile {
             print DATEI $inh;
             close(DATEI);
         } else {
-            $gz = gzopen($sql_file, "ab") || err_trap("Cannot open ".$sql_file);
-            $gz->gzwrite($inh)  || err_trap("Error writing ".$sql_file);
+            $gz = gzopen($sql_file, "ab") || MyOOSCron::err_trap("Cannot open ".$sql_file);
+            $gz->gzwrite($inh)  || MyOOSCron::err_trap("Error writing ".$sql_file);
             $gz->gzclose ;
         }
         if ($points>1)
@@ -1214,7 +1201,7 @@ sub WriteToFile {
     }
 }
 
-sub AutoDeleteCount {
+sub MyOOSCron::AutoDeleteCount {
     $fpath=$File::Find::name;
     $fname=basename($fpath);
     my @fileparts=split(/\./,"$fname");
@@ -1255,7 +1242,7 @@ sub AutoDeleteCount {
             my @infos=split(/\:/,$line);
             my $file_multipart=($infos[3])?$infos[3]:'';
             $file_multipart=~ s/MP_/ /g;
-            $file_multipart=trim($file_multipart);
+            $file_multipart=MyOOSCron::trim($file_multipart);
             my $file_databasename=($infos[4])?$infos[4]:'';
             if ($file_multipart eq "" || substr($file_multipart,0,1) eq "0")
             {
@@ -1269,12 +1256,12 @@ sub AutoDeleteCount {
         }
         else
         {
-            PrintOut("No Statusline in `<strong>$fname</strong>` found. Seems not to be a MyOOS [Dumper] file. Skipping file.");
+            MyOOSCron::PrintOut("No Statusline in `<strong>$fname</strong>` found. Seems not to be a MyOOS [Dumper] file. Skipping file.");
         }
     }
 }
 
-sub DoAutoDeleteCount {
+sub MyOOSCron::DoAutoDeleteCount {
     my @str;
     my @dbarray;
     my $item;
@@ -1298,7 +1285,7 @@ sub DoAutoDeleteCount {
                 $dbanz{$str[1]}=0;
                 @multipartfiles=();
             }        
-            #PrintOut($max_backup_files.': '.$dbanz{$str[1]}.' -> '.$str[0].' - '.$str[1].' - '.$str[2]);
+            #MyOOSCron::PrintOut($max_backup_files.': '.$dbanz{$str[1]}.' -> '.$str[0].' - '.$str[1].' - '.$str[2]);
                 
             #no multipart file -> update db counter
             if(defined $str[1] && !defined $str[2])
@@ -1342,12 +1329,12 @@ sub DoAutoDeleteCount {
     }
 }
 
-sub DeleteFiles 
+sub MyOOSCron::DeleteFiles 
 {
     my $res=0;
     if(@trash_files==0) 
     {
-        PrintOut("<font color=red><b>No file to delete.</b></font>");
+        MyOOSCron::PrintOut("<font color=red><b>No file to delete.</b></font>");
     }
     else 
     {
@@ -1357,19 +1344,19 @@ sub DeleteFiles
             $res=unlink($file_to_delete);
             if ($res)
             {
-                PrintOut("Autodelete: old backup file <font color=red><b>".$datei."</b></font> deleted.");
-                write_log( "Autodelete: old backup file <b>$datei</b> deleted.\n" ) ;
+                MyOOSCron::PrintOut("Autodelete: old backup file <font color=red><b>".$datei."</b></font> deleted.");
+                MyOOSCron::write_log( "Autodelete: old backup file <b>$datei</b> deleted.\n" ) ;
             }
             else
             {
-                err_trap("Autodelete: <font color=red>Error deleting old backup file <b>".$datei."</b></font>!<br>",1);
+                MyOOSCron::err_trap("Autodelete: <font color=red>Error deleting old backup file <b>".$datei."</b></font>!<br>",1);
             }
         }
         undef(@trash_files);
     }
 }
 
-sub ExecuteCommand 
+sub MyOOSCron::ExecuteCommand 
 {
     my $cmt = shift(@_);
     my $command = shift(@_);
@@ -1392,10 +1379,10 @@ sub ExecuteCommand
         if(substr($commandDump,0,7) ne "system:") 
         {    
             # prepare command
-            $commandDump = replaceQueryStringSimple($commandDump);
-            if (trim($dbsocket) eq "")
+            $commandDump = MyOOSCron::replaceQueryStringSimple($commandDump);
+            if (MyOOSCron::trim($dbsocket) eq "")
             {
-                $dbh = DBI->connect("DBI:mysql:$dbname:$dbhost:$dbport","$dbuser","$dbpass") || err_trap("Database connection not made: $DBI::errstr");
+                $dbh = DBI->connect("DBI:mysql:$dbname:$dbhost:$dbport","$dbuser","$dbpass") || MyOOSCron::err_trap("Database connection not made: $DBI::errstr");
             }
             else
             {
@@ -1423,13 +1410,13 @@ sub ExecuteCommand
                     $sth->execute or $err=$sth->errstr();
                     if ($err ne '') 
                     {
-                        write_log("<span style=\"color:red;\">Executing Query '$cad[$i]' caused an error! MySQL returns: '$err'</span>\n"); 
-                        PrintOut("<span style=\"color:red;\">Executing Query '$cad[$i]' caused an error! MySQL returns: '$err'</span>\n"); 
+                        MyOOSCron::write_log("<span style=\"color:red;\">Executing Query '$cad[$i]' caused an error! MySQL returns: '$err'</span>\n"); 
+                        MyOOSCron::PrintOut("<span style=\"color:red;\">Executing Query '$cad[$i]' caused an error! MySQL returns: '$err'</span>\n"); 
                     }
                     else 
                     {
-                        write_log("<span style=\"color:green;font-size:11px;\">Successfully executed Query: $cad[$i]</span>\n"); 
-                        PrintOut("<span style=\"color:green;font-size:11px;\">Successfully executed Query: $cad[$i]</span>\n"); 
+                        MyOOSCron::write_log("<span style=\"color:green;font-size:11px;\">Successfully executed Query: $cad[$i]</span>\n"); 
+                        MyOOSCron::PrintOut("<span style=\"color:green;font-size:11px;\">Successfully executed Query: $cad[$i]</span>\n"); 
                     }
                     $sth->finish;
                 }
@@ -1440,13 +1427,13 @@ sub ExecuteCommand
             #Systembefehl
             $commandDump=substr($commandDump,7);
             system($commandDump);
-            PrintOut("<p style=\"color:blue;\">$succText ($commandDump)</p>");
-            write_log("$succText ($commandDump)\n");
+            MyOOSCron::PrintOut("<p style=\"color:blue;\">$succText ($commandDump)</p>");
+            MyOOSCron::write_log("$succText ($commandDump)\n");
         }
     }
 }
 
-sub closeScript 
+sub MyOOSCron::closeScript 
 {
     my ($Start, $Jetzt, $Totalzeit);
     $Start = $^T; $Jetzt = (time); 
@@ -1454,15 +1441,15 @@ sub closeScript
     ($Sekunden, $Minuten, $Stunden, $Monatstag, $Monat, $Jahr, $Wochentag, $Jahrestag, $Sommerzeit) = localtime(time);
     $Jahr+=1900;$Monat+=1;$Jahrestag+=1;
     $starttime=sprintf("%02d",$Monatstag).".".sprintf("%02d",$Monat).".".$Jahr."  ".sprintf("%02d",$Stunden).":".sprintf("%02d",$Minuten).":".sprintf("%02d",$Sekunden);
-    PrintOut("<hr>Everythings is done: closing script <strong>$starttime</strong>");
-    PrintOut("<em>total time used: $Totalzeit sec.</em>");
-    PrintOut("#EOS (End of script)<hr></body></html>");
+    MyOOSCron::PrintOut("<hr>Everythings is done: closing script <strong>$starttime</strong>");
+    MyOOSCron::PrintOut("<em>total time used: $Totalzeit sec.</em>");
+    MyOOSCron::PrintOut("#EOS (End of script)<hr></body></html>");
     # Datenbankverbindung schliessen
     $sth->finish() if (defined $sth);
     ($dbh->disconnect() || warn $dbh->errstr) if (defined $dbh);
 }
 
-sub trim
+sub MyOOSCron::trim
 { 
         my $string = shift; 
         if (defined($string)) 
@@ -1477,7 +1464,7 @@ sub trim
         return $string; 
 } 
 
-sub byte_output
+sub MyOOSCron::byte_output
 {
     my $bytes= shift;
     my $suffix="Bytes";
@@ -1488,12 +1475,12 @@ sub byte_output
     return $ret;
 }
 
-sub optimise_tables
+sub MyOOSCron::optimise_tables
 {
     my $engine='';
     my $ret=0;
     $opttbl=0;
-    PrintOut("Optimizing tables:");
+    MyOOSCron::PrintOut("Optimizing tables:");
     foreach $tablename (@tablenames)
     {
         #optimize table if engine supports optimization
@@ -1504,25 +1491,25 @@ sub optimise_tables
             $ret=$sth_to->execute; 
             if ($ret)
             {
-                PrintOut("<span style=\"color:green;font-size:11px;\">Table ".($opttbl+1)." `$tablename` optimized successfully.</span>");
+                MyOOSCron::PrintOut("<span style=\"color:green;font-size:11px;\">Table ".($opttbl+1)." `$tablename` optimized successfully.</span>");
                 $opttbl++;
             }
             else
             {
-                err_trap("<span style=\"color:red;font-size:12px;\">&nbsp;&nbsp;Error optimizing table `$tablename`</span>",1);
+                MyOOSCron::err_trap("<span style=\"color:red;font-size:12px;\">&nbsp;&nbsp;Error optimizing table `$tablename`</span>",1);
             }
         }
     }
-    PrintOut("<span style=\"font-size:11px;\">$opttbl tables have been optimized</span><br>") if($opttbl>0) ;
+    MyOOSCron::PrintOut("<span style=\"font-size:11px;\">$opttbl tables have been optimized</span><br>") if($opttbl>0) ;
 }
 
 # replace in querystring all ';' in VALUES with '$$MOD$$'
-sub replaceQueryStringSimple{
+sub MyOOSCron::replaceQueryStringSimple{
     my $string = shift(@_);
     
     if ($string =~ m#(.*)\'(.*)\;(.*)\'(.*)#){
         # if found search for more ';'
-        return replaceQueryStringSimple($1.'\''.$2.'$$MOD$$'.$3.'\''.$4);;
+        return MyOOSCron::replaceQueryStringSimple($1.'\''.$2.'$$MOD$$'.$3.'\''.$4);;
     }else{
         return $string;
     }
