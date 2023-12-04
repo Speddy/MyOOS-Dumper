@@ -23,9 +23,13 @@
 
 
 use strict;
+use warnings;
+use utf8;
 use Socket;
 use Config;
-use CGI::Carp qw(warningsToBrowser fatalsToBrowser);  
+use CGI::Carp qw(warningsToBrowser fatalsToBrowser); 
+use CGI qw(:standard);
+use feature 'say';
 use CGI;
 warningsToBrowser(1); # dies ist ganz wichtig!
 
@@ -35,7 +39,7 @@ my $mod_ff=0;
 my $mod_fb=0;
 my $mod_gz=0;
 my $mod_ftp=0;
-my $mod_sftp=0;
+my $mod_sftp_foreign=0;
 my $mod_mime=0;
 my $mod_ftpssl=0;
 my $dbi_driver;
@@ -46,13 +50,15 @@ my $err='<font color="red">';
 my $zlib_version='unknown';
 
 my $cgi = CGI->new();
-print $cgi->header(-type => 'text/html; charset=utf-8', -cache_control => 'no-cache, no-store, must-revalidate');
-print "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n";
-print "<html><head><title>MyOOS [Dumper] Perl modul test</title>\n";
-print '<style type="text/css">body { padding-left:18px; font-family:Verdana,Helvetica,Sans-Serif;}</style></head>';
-print "<body><h2>Testing needed Perl-Moduls in order to run the Perl script crondump.pl</h2>\n";
-print "<h4 style=\"background-color:#ccffcc;\">Necessary Modules for crondump.pl</h4>";
-print "<strong>testing DBI ...</strong>\n";
+say header(-type => q{text/html; charset=utf-8}, -cache_control => q{no-cache, no-store, must-revalidate});
+say q{<!DOCTYPE HTML>};
+say q{<html><head><title>MyOOS [Dumper] Perl modul test</title>};
+say q{<style>body { padding-left:18px; font-family:Verdana,Helvetica,Sans-Serif;}</style></head>};
+say q{<body><h2>Testing needed Perl-Moduls in order to run the Perl script crondump.pl</h2>};
+say q{<h4 style="background-color:#ccffcc;">Necessary Modules for crondump.pl</h4>};
+say q{<strong>testing DBI ...</strong>};
+
+
 eval { $eval_in_died = 1; require DBI; };
        if(!$@){
             $mod_dbi = 1;
@@ -136,18 +142,17 @@ if($mod_ftp!=1){
 }
 
 
-print "<br><strong>testing Net::SFTP (needed if you want to transfer backups to another server)...</strong><br>\n";
-eval { $eval_in_died = 1; require Net::SFTP; };
+print "<br><strong>testing Net::SFTP::Foreign (needed if you want to transfer backups to another server)...</strong><br>\n";
+eval { $eval_in_died = 1; require Net::SFTP::Foreign; };
        if(!$@){
-            $mod_sftp = 1;
+            $mod_sftp_foreign = 1;
             import Net::SFTP;
             }
-if($mod_sftp!=1){
-    print $err."Error: modul Net::SFTP not found! crondump.pl can't transfer data via sFTP.</font><br>\n";
+if($mod_sftp_foreign!=1){
+    print $err."Error: modul Net::SFTP::Foreign not found! crondump.pl can't transfer data via sFTP.</font><br>\n";
 } else {
-    print $ok."Found modul Net::SFTP. OK - crondump.pl can send backups via FTP.</font><br>\n";
+    print $ok."Found modul Net::SFTP::Foreign. OK - crondump.pl can send backups via FTP.</font><br>\n";
 }
-
 
 
 print "<br><strong>testing Net::FTPSSL (needed if you want to transfer backups to another server with ssl encryption)...</strong><br>\n";
