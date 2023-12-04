@@ -13,7 +13,7 @@
 		"ext-zip": "*",
 		"ext-zlib": "*",
 		"phpmailer/phpmailer": "^6.8",
-		"phpseclib/phpseclib": "3.0.21",		
+		"phpseclib/phpseclib": "3.0.34",		
 		"visualappeal/php-auto-update": "^1.0.2",
         "league/flysystem-sftp-v3": "^3.10",
         "paragonie/random_compat": "2.*"
