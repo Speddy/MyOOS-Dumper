@@ -24,7 +24,7 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
-global $config;
+global $config, $databases;
 
 require_once './inc/header.php';
 require './inc/template.php';

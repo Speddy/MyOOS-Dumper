@@ -29,7 +29,7 @@ define('MOD_INCLUDE_PATH', __DIR__ == '/' ? '' : __DIR__);
 session_name('MyOOSDumperID');
 session_start();
 
-global $config;
+global $config, $databases;
 
 $aus2 = $page_parameter = $a = $out = '';
 require_once './inc/functions_dump.php';

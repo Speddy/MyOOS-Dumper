@@ -27,7 +27,7 @@ if (!@ob_start('ob_gzhandler')) {
 session_name('MyOOSDumperID');
 session_start();
 
-global $config;
+global $config, $databases;
 
 require './inc/functions.php';
 require './inc/functions_restore.php';

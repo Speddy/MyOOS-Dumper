@@ -20,7 +20,7 @@
 
 define('OOS_VALID_MOD', true);
 
-global $config;
+global $config, $databases;
 
 if (isset($_GET['action']) && 'dl' == $_GET['action']) {
     $download = true;

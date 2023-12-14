@@ -21,6 +21,8 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
+
+global $databases;
 require './inc/functions_imexport.php';
 //Im-/Export
 $import = (isset($_GET['import'])) ? 1 : 0;

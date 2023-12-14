@@ -24,6 +24,8 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
+global $databases;
+
 function print_save_button()
 {
     global $lang;

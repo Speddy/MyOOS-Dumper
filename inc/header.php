@@ -25,7 +25,7 @@ if (!defined('MOD_PATH')) {
 session_name('MyOOSDumperID');
 session_start();
 
-global $config;
+global $config, $databases;
 
 if (!isset($download)) {
     header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');

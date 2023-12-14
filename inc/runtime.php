@@ -26,7 +26,7 @@ set_error_handler("myErrorHandler");
 if (function_exists('date_default_timezone_set')) {
     date_default_timezone_set(@date_default_timezone_get());
 }
-global $config;
+global $config, $databases;
 //Konstanten
 if (!defined('MOD_VERSION')) {
     define('MOD_VERSION', '5.0.23');

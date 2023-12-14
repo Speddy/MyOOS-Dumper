@@ -22,7 +22,7 @@ if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
 
-global $config;
+global $config, $databases;
 
 $Sum_Files = $Sum_Size = 0;
 $Last_BU = [];
