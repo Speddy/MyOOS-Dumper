@@ -536,7 +536,7 @@ function WriteCronScript($restore_values = false)
     $config['sftp_user'] ??= '';
     $config['sftp_pass'] ??= '';
     $config['sftp_dir'] ??= '';
-	$config['sftp_foreig'] ??= 0;
+    $config['sftp_foreig'] ??= 0;
     $config['sftp_path_to_private_key'] ??= null;
     $config['sftp_secret_passphrase_for_private_key'] ??= null;
     $config['sftp_fingerprint'] ??= null;
@@ -594,7 +594,7 @@ function WriteCronScript($restore_values = false)
     $cronscript .= '@sftp_pass='.my_implode($config['sftp_pass']);
     $cronscript .= '@sftp_dir='.my_implode($config['sftp_dir']);
 
-	$cronscript .= '@sftp_foreig='.my_implode($config['sftp_foreig'], 1);
+    $cronscript .= '@sftp_foreig='.my_implode($config['sftp_foreig'], 1);
     $cronscript .= '@sftp_path_to_private_key='.my_implode($config['sftp_path_to_private_key']);
     $cronscript .= '@sftp_secret_passphrase_for_private_key='.my_implode($config['sftp_secret_passphrase_for_private_key']);
     $cronscript .= '@sftp_fingerprint='.my_implode($config['sftp_fingerprint']);

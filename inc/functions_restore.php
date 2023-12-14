@@ -42,10 +42,10 @@ function get_sqlbefehl()
         if (DEBUG) {
             echo '<br><br>Zeile: '.htmlspecialchars($zeile);
         }
-/*******************
-*
-* Setzen des Parserstatus
-*******************/
+        /*******************
+        *
+        * Setzen des Parserstatus
+        *******************/
         // herausfinden um was für einen Befehl es sich handelt
         if (0 == $sqlparser_status) {
             //Vergleichszeile, um nicht bei jedem Vergleich strtoupper ausführen zu müssen
@@ -142,10 +142,10 @@ function get_sqlbefehl()
                 echo '<br>Erweiterte Inserts: '.$restore['erweiterte_inserts'];
                 exit('<br>'.$lang['L_UNKNOWN_SQLCOMMAND'].': '.$zeile.'<br><br>'.$complete_sql);
             }
-/*******************
-*
-* Ende von Setzen des Parserstatus
-*******************/
+            /*******************
+            *
+            * Ende von Setzen des Parserstatus
+            *******************/
         }
 
         $last_char = substr(rtrim($zeile), -1);

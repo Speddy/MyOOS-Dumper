@@ -171,11 +171,11 @@ if ((isset($_POST['testSFTP0'])) || (isset($_POST['testSFTP1'])) || (isset($_POS
         $config['sftp_secret_passphrase_for_private_key'][$i] = (isset($_POST['sftp_secret_passphrase_for_private_key'][$i])) ? stripslashes((string) $_POST['sftp_secret_passphrase_for_private_key'][$i]) : '';
         $config['sftp_fingerprint'][$i] = (isset($_POST['sftp_fingerprint'][$i])) ? stripslashes((string) $_POST['sftp_fingerprint'][$i]) : '';
 
-		if (strlen($config['sftp_path_to_private_key'][$i]) == 0 && strlen($config['sftp_secret_passphrase_for_private_key'][$i]) == 0 && strlen($config['sftp_fingerprint'][$i]) == 0) {
-			$config['sftp_foreig'][$i] = 0;
+        if (strlen($config['sftp_path_to_private_key'][$i]) == 0 && strlen($config['sftp_secret_passphrase_for_private_key'][$i]) == 0 && strlen($config['sftp_fingerprint'][$i]) == 0) {
+            $config['sftp_foreig'][$i] = 0;
         } else {
-			$config['sftp_foreig'][$i] = 1;
-        }	
+            $config['sftp_foreig'][$i] = 1;
+        }
 
 
         if ('' == $config['sftp_dir'][$i] || (strlen($config['sftp_dir'][$i] ?? '') > 1 && !str_ends_with((string) $config['sftp_dir'][$i], '/'))) {
@@ -246,12 +246,12 @@ if ($sftptested > -1) {
     $config['sftp_pass'][$sftptested] = $sftp_pass[$sftptested];
     $config['sftp_dir'][$sftptested] = $sftp_dir[$sftptested];
 
-	if (strlen($sftp_path_to_private_key[$sftptested]) == 0 && strlen($sftp_secret_passphrase_for_private_key[$sftptested]) == 0 && strlen($sftp_fingerprint[$sftptested]) == 0) {
-		$config['sftp_foreig'][$sftptested] = 0;
-	} else {
-		$config['sftp_foreig'][$sftptested] = 1;
-	}	
-	
+    if (strlen($sftp_path_to_private_key[$sftptested]) == 0 && strlen($sftp_secret_passphrase_for_private_key[$sftptested]) == 0 && strlen($sftp_fingerprint[$sftptested]) == 0) {
+        $config['sftp_foreig'][$sftptested] = 0;
+    } else {
+        $config['sftp_foreig'][$sftptested] = 1;
+    }
+
     $config['sftp_path_to_private_key'][$sftptested] = $sftp_path_to_private_key[$sftptested];
     $config['sftp_secret_passphrase_for_private_key'][$sftptested] = $sftp_secret_passphrase_for_private_key[$sftptested];
     $config['sftp_fingerprint'][$sftptested] = $sftp_fingerprint[$sftptested];
@@ -520,11 +520,11 @@ if (isset($_POST['save'])) {
         $config['sftp_secret_passphrase_for_private_key'][$i] = (isset($_POST['sftp_secret_passphrase_for_private_key'][$i])) ? stripslashes((string) $_POST['sftp_secret_passphrase_for_private_key'][$i]) : '';
         $config['sftp_fingerprint'][$i] = (isset($_POST['sftp_fingerprint'][$i])) ? stripslashes((string) $_POST['sftp_fingerprint'][$i]) : '';
 
-		if (strlen($config['sftp_path_to_private_key'][$i]) == 0 && strlen($config['sftp_secret_passphrase_for_private_key'][$i]) == 0 && strlen($config['sftp_fingerprint'][$i]) == 0) {
-			$config['sftp_foreig'][$i] = 0;
-		} else {
-			$config['sftp_foreig'][$i] = 1;
-		}
+        if (strlen($config['sftp_path_to_private_key'][$i]) == 0 && strlen($config['sftp_secret_passphrase_for_private_key'][$i]) == 0 && strlen($config['sftp_fingerprint'][$i]) == 0) {
+            $config['sftp_foreig'][$i] = 0;
+        } else {
+            $config['sftp_foreig'][$i] = 1;
+        }
 
         if (0 == $config['sftp_port'][$i]) {
             $config['sftp_port'][$i] = 22;

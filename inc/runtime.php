@@ -155,7 +155,7 @@ function v($t)
 // Define the error handling function
 function myErrorHandler($errno, $errstr, $errfile, $errline)
 {
-	global $config;
+    global $config;
 
     // Open the error_log.txt file for writing
     $file = fopen($config['paths']['log'].'error_log.txt', 'a');
