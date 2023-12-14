@@ -21,7 +21,7 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
-global $config;
+global $config, $databases;
 require './language/'.$config['language'].'/lang.php';
 require './language/'.$config['language'].'/lang_dump.php';
 require './inc/template.php';
