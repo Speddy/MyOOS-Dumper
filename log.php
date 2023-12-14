@@ -24,6 +24,8 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
+global $config;
+
 require './inc/header.php';
 require_once './language/'.$config['language'].'/lang_log.php';
 echo MODHeader();

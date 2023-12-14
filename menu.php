@@ -24,6 +24,8 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
+global $config;
+
 require_once './inc/header.php';
 require './inc/template.php';
 $lang_old = $config['language'];

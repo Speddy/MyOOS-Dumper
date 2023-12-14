@@ -22,6 +22,8 @@ if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
 
+global $config;
+
 //SQL-Library laden
 require './inc/sqllib.php';
 

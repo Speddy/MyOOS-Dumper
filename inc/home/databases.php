@@ -21,6 +21,8 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
+global $config;
+
 require './language/'.$config['language'].'/lang_sql.php';
 $checkit = (isset($_GET['checkit'])) ? urldecode((string) $_GET['checkit']) : '';
 $repair = $_GET['repair'] ?? 0;

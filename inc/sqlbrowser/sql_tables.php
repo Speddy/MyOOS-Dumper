@@ -21,6 +21,7 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
+global $config;
 //Tabellen
 echo $aus.'<h6>'.$lang['L_SQL_TABLESOFDB'].' `'.$databases['Name'][$dbid].'` '.$lang['L_SQL_EDIT'].'</h6>';
 

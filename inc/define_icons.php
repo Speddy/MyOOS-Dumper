@@ -21,6 +21,8 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
+global $config;
+
 //define icons
 $icon['arrow_up'] = '<img src="'.$config['files']['iconpath'].'arrow_up.gif" alt="">';
 $icon['arrow_down'] = '<img src="'.$config['files']['iconpath'].'arrow_down.gif" alt="">';

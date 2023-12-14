@@ -23,6 +23,7 @@ define('OOS_VALID_MOD', true);
 if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
+global $config;
 
 $download = (isset($_POST['f_export_submit']) && (isset($_POST['f_export_sendresult']) && 1 == $_POST['f_export_sendresult']));
 require './inc/header.php';

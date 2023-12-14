@@ -21,6 +21,9 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
+
+global $config;
+
 $Sum_Files = $Sum_Size = 0;
 $Last_BU = [];
 $is_htaccess = (file_exists('./.htaccess'));

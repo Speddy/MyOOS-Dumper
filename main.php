@@ -26,6 +26,7 @@ error_reporting(E_ALL & ~E_STRICT);
 if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
+global $config;
 
 $autoloader = include_once './vendor/autoload.php';
 use VisualAppeal\AutoUpdate;

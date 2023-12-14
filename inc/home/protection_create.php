@@ -21,6 +21,7 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
+global $config;
 require './language/'.$config['language'].'/lang_sql.php';
 
 require './inc/home/apr1_md5/apr1_md5.php';

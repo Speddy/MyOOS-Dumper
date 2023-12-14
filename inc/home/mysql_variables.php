@@ -21,6 +21,7 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
+global $config;
 $var = $_GET['var'] ?? 'prozesse';
 $Titelausgabe = [
 'variables' => $lang['L_VARIABELN'], 'status' => $lang['L_STATUS'], 'prozesse' => $lang['L_PROZESSE'], ];

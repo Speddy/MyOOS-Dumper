@@ -24,6 +24,8 @@ if (!@ob_start('ob_gzhandler')) {
     @ob_start();
 }
 
+global $config;
+
 require './inc/header.php';
 require MOD_PATH.'language/'.$config['language'].'/lang.php';
 require MOD_PATH.'language/'.$config['language'].'/lang_help.php';

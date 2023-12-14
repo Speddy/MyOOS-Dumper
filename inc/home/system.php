@@ -21,6 +21,7 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
+global $config;
 $sysaction = $_GET['dosys'] ?? 0;
 $msg = '';
 $res = mysqli_query($config['dbconnection'], "SHOW VARIABLES LIKE 'datadir'");

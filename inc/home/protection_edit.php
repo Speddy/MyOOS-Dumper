@@ -21,6 +21,7 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
+global $config;
 require './language/'.$config['language'].'/lang_sql.php';
 echo MODHeader();
 echo headline($lang['L_HTACC_EDIT']);

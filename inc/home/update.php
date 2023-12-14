@@ -24,6 +24,8 @@ if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
 
+global $config;
+
 if ($update->newVersionAvailable() && $check_update === true) {
     // Install new update
     echo '<p align="center"><a href="main.php">&lt;&lt; Home</a></p>';

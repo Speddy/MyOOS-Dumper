@@ -21,6 +21,8 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
+global $config;
+
 // fuegt eine Sortierungsnummer hinzu, um die Ausgabereihenfolge der Daten steuern zu koennen
 // (das Feld ENGINE interessiert mich nicht so sehr und muss nicht vorne stehen)
 $keysort = [

@@ -21,6 +21,7 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
+global $config;
 @unlink($config['paths']['root'].'.htaccess');
 @unlink($config['paths']['root'].'.htpasswd');
 $action = 'status';

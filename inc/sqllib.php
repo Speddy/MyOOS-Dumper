@@ -21,6 +21,7 @@
 if (!defined('MOD_VERSION')) {
     exit('No direct access.');
 }
+global $config;
 //SQL-Library
 require './language/'.$config['language'].'/lang_sql.php';
 /*
