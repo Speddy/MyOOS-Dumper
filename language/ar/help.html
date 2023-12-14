@@ -46,7 +46,7 @@ Send money to the MyOOS project. <br>
 with PHP >= Version 8.0.2 with GZip support, MySQL (version 5.6 or higher), JavaScript (must be enabled)</p>.
 <p>Copy the mod folder from the MyOOS archive to a separate working folder.</p>.
 
-<h4>Installation</h4></a>.
+<h4>Installation</h4>.
 The installation process is straightforward.
 <p>From the MyOOS archive, copy the mod folder into any folder.<br>
 Upload all the files from the mod folder to your web server. (For example, to the lowest level in [server web directory/]mod)<br>
@@ -97,9 +97,9 @@ Windowsuser have to change the first line of all scripts, there is the path of P
 instead of: #!/usr/bin/perl -w <br>
 now: #!C:_usr/bin/perl.exe -w <br>
 
-<h4>Operation</h4><ul>.
+<h4>Operation</h4>
 
-<h6>Menu</h6>.
+<h6>Menu</h6>
 In the selection list above you set the database.<br>
 All actions refer to the database set here.
 
@@ -109,13 +109,13 @@ versions and details about the configured databases.<br>
 If you click on the database name, you will see a list of the tables with the number of entries
 with the number of entries, the size and the last update date.
 
-<h6>Configuration</h6>.
+<h6>Configuration</h6>
 Here you can edit your configuration, save it or restore the initial configuration.
 restore.
-<ul><br>
+<ul>
 	<li><a id="conf1"></a><strong>Configured databases:</strong> the listing of configured databases. The active database is listed in <b>bold</b>. </li>
-	<li><a id="conf2"></a><strong>Table prefix:</strong> here you can specify (for each database) a prefix. This is a filter that will take into account for dumps only the tables that start with this prefix (for example, all tables that start with "phpBB_"). If you want all tables in this database to be saved, just leave the field empty.</li>.
-	<li><a id="conf3"></a><strong>GZip compression:</strong> Here you can enable compression. It is recommended to enable it, because the files will be much smaller after all and disk space is always scarce.</li>.
+	<li><a id="conf2"></a><strong>Table prefix:</strong> here you can specify (for each database) a prefix. This is a filter that will take into account for dumps only the tables that start with this prefix (for example, all tables that start with "phpBB_"). If you want all tables in this database to be saved, just leave the field empty.</li>
+	<li><a id="conf3"></a><strong>GZip compression:</strong> Here you can enable compression. It is recommended to enable it, because the files will be much smaller after all and disk space is always scarce.</li>
 	<li><a id="conf5"></a><strong>Email with Dumpfile:</strong> If this option is enabled, an email with the dump as an attachment will be sent after the backup is complete (caution, compression should absolutely be on, otherwise the attachment will be too large and may not be sent!).</li>
 	<li><a id="conf6"></a><strong>Email address:</strong> Recipient address for the email.</li>
 	<li><a id="conf7"></a><strong>Sender of the email:</strong> this address appears as the sender in the email.</li>
@@ -125,23 +125,22 @@ restore.
 	<li><a id="conf16"></a><strong>FTP User: </strong>The username of the FTP account. </li>
 	<li><a id="conf17"></a><strong>FTP Password: </strong>The password of the FTP account. </li>
 	<li><a id="conf18"></a><strong>FTP Upload Folder: </strong>The directory where the backup file should go (upload permissions must exist!).</li>
-	<li><a id="conf8"></a><strong>Automatic deletion of backups:</strong> If this option is enabled, older backups will be deleted automatically according to the following rules.</li>.
+	<li><a id="conf8"></a><strong>Automatic deletion of backups:</strong> If this option is enabled, older backups will be deleted automatically according to the following rules.</li>
 	<li><a id="conf10"></a><strong>Number of backup files:</strong> A value > 0 deletes all backup files except for the number specified here.</li>
 	<li><a id="conf11"></a><strong>Language:</strong> here you specify the language for the interface.</li>
 </ul>
 
-<h6>Administration</h6>.
+<h6>Administration</h6>
 This is where the actual actions are performed.<br>
 It will show you all the files in the backup directory.
 For the actions "Restore" and "Delete" a file must be selected.
 <UL>
 	<li><strong>Restore:</strong> This will update the database with the selected backup file.</li>
 	<li><strong>Delete:</strong> This lets you delete the selected backup file.</li>
-	<li><strong>Start new backup:</strong> Here you start a new backup (dump) according to the parameters set in the configuration.</li>.
+	<li><strong>Start new backup:</strong> Here you start a new backup (dump) according to the parameters set in the configuration.</li>
 </UL>
 
 <h6>Log</h6>
 Here you can see and delete the log entries.
 <h6>Credits / Help</h6>
 this page.
-</ul>
