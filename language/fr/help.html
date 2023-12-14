@@ -60,7 +60,7 @@ répertoires.<br>
 Le script se termine par une déclaration appropriée !<br>
 Une fois que vous avez créé les répertoires (selon l'indication), il fonctionne normalement et sans restrictions.</i>
 
-<a name="perl"></a><h4>Instructions pour le script Perl</h4>
+<a id="perl"></a><h4>Instructions pour le script Perl</h4>
 La plupart ont un répertoire cgi-bin où Perl peut être exécuté. <br>
 Il est généralement accessible par le navigateur via http://www.example.com/cgi-bin/. <br>
 <br>
@@ -114,21 +114,21 @@ avec le nombre d'entrées, la taille et la date de la dernière mise à jour.
 Vous pouvez y modifier votre configuration, l'enregistrer ou restaurer la configuration initiale.
 pour revenir à la configuration initiale.
 <ul><br>
-	<li><a name="conf1"></a><strong>Bases de données configurées:</strong> la liste des bases de données configurées. La base de données active est indiquée en <b>gras</b>. </li>
-	<li><a name="conf2"></a><strong>Préfixe de table:</strong> ici vous pouvez spécifier un préfixe (pour chaque base de données). Il s'agit d'un filtre qui ne prend en compte que les tables commençant par ce préfixe lors du vidage (par exemple, toutes les tables commençant par "phpBB_"). Si vous voulez que toutes les tables de cette base de données soient enregistrées, laissez le champ vide.</li>.
-	<li><a name="conf3"></a><strong>Compression GZip:</strong> Ici, vous pouvez activer la compression. Il est recommandé de l'activer, car les fichiers deviennent beaucoup plus petits et l'espace de stockage est toujours rare.
-	<li><a name="conf5"></a><strong>Email avec fichier dump:</strong> Si cette option est activée, un email avec le dump en pièce jointe est envoyé après la fin de la sauvegarde (attention, la compression doit absolument être activée, sinon la pièce jointe sera trop grande et risque de ne pas être envoyée !)
-	<li><a name="conf6"></a><strong>Adresse e-mail:</strong>Adresse du destinataire de l'e-mail.</li>
-	<li><a name="conf7"></a><strong>Envoyeur du courriel:</strong> cette adresse apparaît comme l'expéditeur dans le courriel.</li>
-	<li><a name="conf13"></a><strong>Transfert FTP : </strong>Si cette option est activée, le fichier de sauvegarde sera envoyé par FTP une fois la sauvegarde terminée.</li>.
-	<li><a name="conf14"></a><strong>Serveur FTP : </strong>L'adresse du serveur FTP (par exemple ftp.mybackups.de).</li>
-	<li><a name="conf15"></a><strong>Port du serveur FTP : </strong>Le port du serveur FTP (généralement 21).</li>
-	<li><a name="conf16"></a><strong>Utilisateur FTP : </strong>Le nom d'utilisateur du compte FTP. </li>
-	<li><a name="conf17"></a><strong>Mot de passe FTP : </strong>Le mot de passe du compte FTP. </li>
-	<li><a name="conf18"></a><strong>Dossier de téléchargement FTP : </strong>Le répertoire où le fichier de sauvegarde doit aller (les autorisations de téléchargement doivent exister !).</li>.
-	<li><a name="conf8"></a><strong>Suppression automatique des sauvegardes:</strong>Si cette option est activée, les anciennes sauvegardes seront supprimées automatiquement selon les règles suivantes.</li>
-	<li><a name="conf10"></a><strong>Nombre de fichiers de sauvegarde :</strong> Une valeur > 0 supprime tous les fichiers de sauvegarde sauf le nombre spécifié ici.</li>.
-	<li><a name="conf11"></a><strong>Langue:</strong> ici vous définissez la langue de l'interface.</li>
+	<li><a id="conf1"></a><strong>Bases de données configurées:</strong> la liste des bases de données configurées. La base de données active est indiquée en <b>gras</b>. </li>
+	<li><a id="conf2"></a><strong>Préfixe de table:</strong> ici vous pouvez spécifier un préfixe (pour chaque base de données). Il s'agit d'un filtre qui ne prend en compte que les tables commençant par ce préfixe lors du vidage (par exemple, toutes les tables commençant par "phpBB_"). Si vous voulez que toutes les tables de cette base de données soient enregistrées, laissez le champ vide.</li>.
+	<li><a id="conf3"></a><strong>Compression GZip:</strong> Ici, vous pouvez activer la compression. Il est recommandé de l'activer, car les fichiers deviennent beaucoup plus petits et l'espace de stockage est toujours rare.
+	<li><a id="conf5"></a><strong>Email avec fichier dump:</strong> Si cette option est activée, un email avec le dump en pièce jointe est envoyé après la fin de la sauvegarde (attention, la compression doit absolument être activée, sinon la pièce jointe sera trop grande et risque de ne pas être envoyée !)
+	<li><a id="conf6"></a><strong>Adresse e-mail:</strong>Adresse du destinataire de l'e-mail.</li>
+	<li><a id="conf7"></a><strong>Envoyeur du courriel:</strong> cette adresse apparaît comme l'expéditeur dans le courriel.</li>
+	<li><a id="conf13"></a><strong>Transfert FTP : </strong>Si cette option est activée, le fichier de sauvegarde sera envoyé par FTP une fois la sauvegarde terminée.</li>.
+	<li><a id="conf14"></a><strong>Serveur FTP : </strong>L'adresse du serveur FTP (par exemple ftp.mybackups.de).</li>
+	<li><a id="conf15"></a><strong>Port du serveur FTP : </strong>Le port du serveur FTP (généralement 21).</li>
+	<li><a id="conf16"></a><strong>Utilisateur FTP : </strong>Le nom d'utilisateur du compte FTP. </li>
+	<li><a id="conf17"></a><strong>Mot de passe FTP : </strong>Le mot de passe du compte FTP. </li>
+	<li><a id="conf18"></a><strong>Dossier de téléchargement FTP : </strong>Le répertoire où le fichier de sauvegarde doit aller (les autorisations de téléchargement doivent exister !).</li>.
+	<li><a id="conf8"></a><strong>Suppression automatique des sauvegardes:</strong>Si cette option est activée, les anciennes sauvegardes seront supprimées automatiquement selon les règles suivantes.</li>
+	<li><a id="conf10"></a><strong>Nombre de fichiers de sauvegarde :</strong> Une valeur > 0 supprime tous les fichiers de sauvegarde sauf le nombre spécifié ici.</li>.
+	<li><a id="conf11"></a><strong>Langue:</strong> ici vous définissez la langue de l'interface.</li>
 </ul>
 
 <h6>Administration</h6>

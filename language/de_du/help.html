@@ -62,7 +62,7 @@ Verzeichnissen ablegt.<br>
 Das Script bricht mit einer entsprechenden Anweisung ab!<br>
 Nachdem Ihr die Verzeichnisse (dem Hinweis entsprechend) erstellt habt, läuft es normal und ohne Einschränkungen.</i>
 
-<a name="perl"></a><h4>Perlskript Anleitung</h4>
+<a id="perl"></a><h4>Perlskript Anleitung</h4>
 Die Meisten haben ein cgi-bin Verzeichnis, in dem Perl ausgeführt werden kann. <br>
 Dies ist meist per Browser über http://www.example.com/cgi-bin/ erreichbar. <br>
 <br>
@@ -116,21 +116,21 @@ mit der Anzahl der Einträge, der Größe und das letzte Aktualisierungsdatum.
 Hier könnt Ihr eure Konfiguration bearbeiten, abspeichern oder die Ausgangskonfiguration
 wieder herstellen.
 <ul><br>
-	<li><a name="conf1"></a><strong>Konfigurierte Datenbanken:</strong> die Auflistung der konfigurierten Datenbanken. Die aktive Datenbank wird in <b>bold</b> gelistet. </li>
-	<li><a name="conf2"></a><strong>Tabellen-Präfix:</strong> hier könnt Ihr (für jede Datenbank) einen Präfix angeben. Dies ist ein Filter, der bei Dumps nur die Tabellen berücksichtigt, die mit diesem Präfix beginnen (z.B. alle Tabellen, die mit "phpBB_" beginnen). Wenn alle Tabellen dieser Datenbank gespeichert werden sollen, so lasst das Feld einfach leer.</li>
-	<li><a name="conf3"></a><strong>GZip-Kompression:</strong> Hier kann die Kompression aktiviert werden. Empfehlenswert ist die Aktivierung, da die Dateien doch wesentlich kleiner werden und Speicherplatz immer rar ist.</li>
-	<li><a name="conf5"></a><strong>Email mit Dumpfile:</strong> Ist diese Option aktiviert, so wird nach abgeschlossenem Backup eine Email mit dem Dump als Anhang verschickt (Vorsicht, Kompression sollte unbedingt an sein, sonst wird der Anhang zu gross und kann evtl. nicht versandt werden!).</li>
-	<li><a name="conf6"></a><strong>Email-Adresse:</strong> Empfängeradresse für die Email.</li>
-	<li><a name="conf7"></a><strong>Absender der Email:</strong> diese Adresse taucht als Absender in der Email auf.</li>
-	<li><a name="conf13"></a><strong>FTP-Transfer: </strong>Ist diese Option aktiviert, so wird nach abgeschlossenem Backup die Backupdatei per FTP versandt.</li>
-	<li><a name="conf14"></a><strong>FTP Server: </strong>Die Adresse des FTP-Servers (z. B. ftp.mybackups.de).</li>
-	<li><a name="conf15"></a><strong>FTP Server Port: </strong>Der Port des FTP-Servers (in der Regel 21).</li>
-	<li><a name="conf16"></a><strong>FTP User: </strong>Der Benutzername des FTP-Accounts. </li>
-	<li><a name="conf17"></a><strong>FTP Passwort: </strong>Das Passwort des FTP-Accounts. </li>
-	<li><a name="conf18"></a><strong>FTP Upload-Ordner: </strong>Das Verzeichnis, in das die Backupdatei soll (es müssen Upload-Berechtigungen bestehen!).</li>
-	<li><a name="conf8"></a><strong>Automatisches Löschen der Backups:</strong> Wenn diese Option aktiviert ist, werden ältere Backups nach den folgenden Regeln automatisch gelöscht.</li>
-	<li><a name="conf10"></a><strong>Anzahl von Backupdateien:</strong> Ein Wert > 0 löscht alle Backupdateien, bis auf die hier angegebe Zahl.</li>
-	<li><a name="conf11"></a><strong>Sprache:</strong> hier legst du die Sprache für das Interface fest.</li>
+	<li><a id="conf1"></a><strong>Konfigurierte Datenbanken:</strong> die Auflistung der konfigurierten Datenbanken. Die aktive Datenbank wird in <b>bold</b> gelistet. </li>
+	<li><a id="conf2"></a><strong>Tabellen-Präfix:</strong> hier könnt Ihr (für jede Datenbank) einen Präfix angeben. Dies ist ein Filter, der bei Dumps nur die Tabellen berücksichtigt, die mit diesem Präfix beginnen (z.B. alle Tabellen, die mit "phpBB_" beginnen). Wenn alle Tabellen dieser Datenbank gespeichert werden sollen, so lasst das Feld einfach leer.</li>
+	<li><a id="conf3"></a><strong>GZip-Kompression:</strong> Hier kann die Kompression aktiviert werden. Empfehlenswert ist die Aktivierung, da die Dateien doch wesentlich kleiner werden und Speicherplatz immer rar ist.</li>
+	<li><a id="conf5"></a><strong>Email mit Dumpfile:</strong> Ist diese Option aktiviert, so wird nach abgeschlossenem Backup eine Email mit dem Dump als Anhang verschickt (Vorsicht, Kompression sollte unbedingt an sein, sonst wird der Anhang zu gross und kann evtl. nicht versandt werden!).</li>
+	<li><a id="conf6"></a><strong>Email-Adresse:</strong> Empfängeradresse für die Email.</li>
+	<li><a id="conf7"></a><strong>Absender der Email:</strong> diese Adresse taucht als Absender in der Email auf.</li>
+	<li><a id="conf13"></a><strong>FTP-Transfer: </strong>Ist diese Option aktiviert, so wird nach abgeschlossenem Backup die Backupdatei per FTP versandt.</li>
+	<li><a id="conf14"></a><strong>FTP Server: </strong>Die Adresse des FTP-Servers (z. B. ftp.mybackups.de).</li>
+	<li><a id="conf15"></a><strong>FTP Server Port: </strong>Der Port des FTP-Servers (in der Regel 21).</li>
+	<li><a id="conf16"></a><strong>FTP User: </strong>Der Benutzername des FTP-Accounts. </li>
+	<li><a id="conf17"></a><strong>FTP Passwort: </strong>Das Passwort des FTP-Accounts. </li>
+	<li><a id="conf18"></a><strong>FTP Upload-Ordner: </strong>Das Verzeichnis, in das die Backupdatei soll (es müssen Upload-Berechtigungen bestehen!).</li>
+	<li><a id="conf8"></a><strong>Automatisches Löschen der Backups:</strong> Wenn diese Option aktiviert ist, werden ältere Backups nach den folgenden Regeln automatisch gelöscht.</li>
+	<li><a id="conf10"></a><strong>Anzahl von Backupdateien:</strong> Ein Wert > 0 löscht alle Backupdateien, bis auf die hier angegebe Zahl.</li>
+	<li><a id="conf11"></a><strong>Sprache:</strong> hier legst du die Sprache für das Interface fest.</li>
 </ul>
 
 <h6>Verwaltung</h6>

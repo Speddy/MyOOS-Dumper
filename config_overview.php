@@ -788,7 +788,7 @@ if (sizeof($configs) > 0) {
         }
         $aus['conf'] .= '">';
 
-        $aus['conf'] .= '<td><a name="config'.sprintf('%03d', $i).'" style="text-decoration:none;">'.$i.'.</a></td>';
+        $aus['conf'] .= '<td><a id="config'.sprintf('%03d', $i).'" style="text-decoration:none;">'.$i.'.</a></td>';
 
         // Settings
         $aus['conf'] .= '<td>';

@@ -61,7 +61,7 @@ directorios.<br>
 El script termina con una declaración apropiada! <br>
 Después de haber creado los directorios (según la pista), se ejecuta normalmente y sin restricciones.</i>
 
-<a name="perl"></a><h4>Instrucciones del script de Perl</h4>.
+<a id="perl"></a><h4>Instrucciones del script de Perl</h4>.
 La mayoría tiene un directorio cgi-bin donde se puede ejecutar perl. <br>
 Suele ser accesible por el navegador a través de http://www.example.com/cgi-bin/. <br>
 <br>
@@ -116,21 +116,21 @@ con el número de entradas, el tamaño y la última fecha de actualización.
 Aquí puede editar su configuración, guardarla o restaurar la configuración inicial.
 restaurar la configuración inicial.
 <ul><br>
-	<li><a name="conf1"></a><strong>Bases de datos configuradas:</strong> la lista de bases de datos configuradas. La base de datos activa aparece en <b>negrita</b>. </li> <li>Por lo tanto, no es necesario que el usuario se sienta cómodo.
-	<li><a name="conf2"></a><strong>Prefijo de la tabla:</strong> aquí se puede especificar un prefijo (para cada base de datos). Se trata de un filtro que sólo tiene en cuenta las tablas que empiezan por este prefijo al realizar el volcado (por ejemplo, todas las tablas que empiezan por "phpBB_"). Si quiere que se guarden todas las tablas de esta base de datos, simplemente deje el campo vacío.</li>.
-	<li><a name="conf3"></a><strong>Compresión GZip:</strong> Aquí puedes activar la compresión. Se recomienda activarlo, ya que los archivos se hacen mucho más pequeños y el espacio de almacenamiento es siempre escaso.
-	<li><a name="conf5"></a><strong>Correo electrónico con el archivo de volcado:</strong> Si esta opción está activada, se enviará un correo electrónico con el volcado como archivo adjunto una vez finalizada la copia de seguridad (atención, la compresión debe estar definitivamente activada, de lo contrario, el archivo adjunto será demasiado grande y podría no enviarse).
-	<li><a name="conf6"></a><strong>Dirección de correo electrónico:</strong> Dirección del destinatario del correo electrónico.</li>.
-	<li><a name="conf7"></a><strong>Remitente del correo electrónico:</strong> esta dirección aparece como remitente en el correo electrónico.</li>.
-	<li><a name="conf13"></a><strong>Transferencia FTP: </strong>Si esta opción está activada, el archivo de copia de seguridad se enviará por FTP una vez finalizada la copia de seguridad.</li>.
-	<li><a name="conf14"></a><strong>Servidor FTP: </strong>La dirección del servidor FTP (por ejemplo, ftp.mybackups.de).</li>.
-	<li><a name="conf15"></a><strong>Puerto del servidor FTP: </strong>El puerto del servidor FTP (normalmente el 21).</li>.
-	<li><a name="conf16"></a><strong>Usuario FTP: </strong>El nombre de usuario de la cuenta FTP. </li> <li>Por lo tanto, no es necesario que el usuario se sienta cómodo.
-	<li><a name="conf17"></a><strong>Contraseña FTP: </strong>La contraseña de la cuenta FTP. </li> <li>Por lo tanto, no es necesario que el usuario se sienta cómodo.
-	<li><a name="conf18"></a><strong>Carpeta de carga FTP: </strong>El directorio donde debe ir el archivo de copia de seguridad (¡los permisos de carga deben existir!).</li>.
-	<li><a name="conf8"></a><strong>Borrado automático de copias de seguridad:</strong> Si esta opción está activada, las copias de seguridad más antiguas se borrarán automáticamente según las siguientes reglas.</li>.
-	<li><a name="conf10"></a><strong>Número de archivos de copia de seguridad:</strong> Un valor > 0 elimina todos los archivos de copia de seguridad excepto el número especificado aquí.</li>
-	<li><a name="conf11"></a><strong>Idioma:</strong> aquí se establece el idioma de la interfaz.</li>.
+	<li><a id="conf1"></a><strong>Bases de datos configuradas:</strong> la lista de bases de datos configuradas. La base de datos activa aparece en <b>negrita</b>. </li> <li>Por lo tanto, no es necesario que el usuario se sienta cómodo.
+	<li><a id="conf2"></a><strong>Prefijo de la tabla:</strong> aquí se puede especificar un prefijo (para cada base de datos). Se trata de un filtro que sólo tiene en cuenta las tablas que empiezan por este prefijo al realizar el volcado (por ejemplo, todas las tablas que empiezan por "phpBB_"). Si quiere que se guarden todas las tablas de esta base de datos, simplemente deje el campo vacío.</li>.
+	<li><a id="conf3"></a><strong>Compresión GZip:</strong> Aquí puedes activar la compresión. Se recomienda activarlo, ya que los archivos se hacen mucho más pequeños y el espacio de almacenamiento es siempre escaso.
+	<li><a id="conf5"></a><strong>Correo electrónico con el archivo de volcado:</strong> Si esta opción está activada, se enviará un correo electrónico con el volcado como archivo adjunto una vez finalizada la copia de seguridad (atención, la compresión debe estar definitivamente activada, de lo contrario, el archivo adjunto será demasiado grande y podría no enviarse).
+	<li><a id="conf6"></a><strong>Dirección de correo electrónico:</strong> Dirección del destinatario del correo electrónico.</li>.
+	<li><a id="conf7"></a><strong>Remitente del correo electrónico:</strong> esta dirección aparece como remitente en el correo electrónico.</li>.
+	<li><a id="conf13"></a><strong>Transferencia FTP: </strong>Si esta opción está activada, el archivo de copia de seguridad se enviará por FTP una vez finalizada la copia de seguridad.</li>.
+	<li><a id="conf14"></a><strong>Servidor FTP: </strong>La dirección del servidor FTP (por ejemplo, ftp.mybackups.de).</li>.
+	<li><a id="conf15"></a><strong>Puerto del servidor FTP: </strong>El puerto del servidor FTP (normalmente el 21).</li>.
+	<li><a id="conf16"></a><strong>Usuario FTP: </strong>El nombre de usuario de la cuenta FTP. </li> <li>Por lo tanto, no es necesario que el usuario se sienta cómodo.
+	<li><a id="conf17"></a><strong>Contraseña FTP: </strong>La contraseña de la cuenta FTP. </li> <li>Por lo tanto, no es necesario que el usuario se sienta cómodo.
+	<li><a id="conf18"></a><strong>Carpeta de carga FTP: </strong>El directorio donde debe ir el archivo de copia de seguridad (¡los permisos de carga deben existir!).</li>.
+	<li><a id="conf8"></a><strong>Borrado automático de copias de seguridad:</strong> Si esta opción está activada, las copias de seguridad más antiguas se borrarán automáticamente según las siguientes reglas.</li>.
+	<li><a id="conf10"></a><strong>Número de archivos de copia de seguridad:</strong> Un valor > 0 elimina todos los archivos de copia de seguridad excepto el número especificado aquí.</li>
+	<li><a id="conf11"></a><strong>Idioma:</strong> aquí se establece el idioma de la interfaz.</li>.
 
 
 <h6>Administración</h6>
