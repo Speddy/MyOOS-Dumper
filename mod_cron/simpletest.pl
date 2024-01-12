@@ -39,11 +39,16 @@
 
 
 use strict;
+use warnings;
+
 use CGI::Carp qw(warningsToBrowser fatalsToBrowser);  
 warningsToBrowser(1);
 
-print "Content-type: text/html\n\n";
-print "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">\n";
+print "Content-Type: text/html; charset=utf-8\n"; # Content-Type ist ein Pflicht-Header
+print "Cache-Control: no-cache, no-store, must-revalidate\n"; # Optionaler Header
+print "\n"; # Leerzeile, um die Header vom Inhalt zu trennen
+
+print "<!DOCTYPE HTML>\n";
 print "<html><head><title>MyOOS [Dumper] - simple Perl test</title>\n";
 print '<style type="text/css">body { padding-left:18px; font-family:Verdana,Helvetica,Sans-Serif;}</style>';
 print "\n</head><body>\n";

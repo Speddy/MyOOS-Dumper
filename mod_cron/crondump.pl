@@ -739,12 +739,14 @@ sub MyOOSCron::err_trap {
 }
 
 sub MyOOSCron::PrintHeader {
-    my $cgi = new CGI;
     my $perlversion = MyOOSCron::GetPerlVersion();
     
     if ($html_output==1)
     {
-        print $cgi->header(-type => 'text/html; charset=utf-8', -cache_control => 'no-cache, no-store, must-revalidate');
+		print "Content-Type: text/html; charset=utf-8\n"; # Content-Type ist ein Pflicht-Header
+		print "Cache-Control: no-cache, no-store, must-revalidate\n"; # Optionaler Header
+		print "\n"; # Leerzeile, um die Header vom Inhalt zu trennen
+
         print "<!DOCTYPE HTML>\n";
         print "<html>\n<head>\n<title>MyOOS [Dumper] - Perl CronDump [Version $pcd_version (using perl $perlversion)]</title>\n";
         print "<style>\nbody { padding:20px; font-family:Verdana,Helvetica,Sans-Serif;font-size: 0.9em !important;}</style>\n";

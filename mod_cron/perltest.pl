@@ -28,9 +28,6 @@ use utf8;
 use Socket;
 use Config;
 use CGI::Carp qw(warningsToBrowser fatalsToBrowser); 
-use CGI qw(:standard);
-use feature 'say';
-use CGI;
 warningsToBrowser(1); # dies ist ganz wichtig!
 
 my $eval_in_died;
@@ -49,15 +46,16 @@ my $ok='<font color="green">';
 my $err='<font color="red">';
 my $zlib_version='unknown';
 
-my $cgi = CGI->new();
-say header(-type => q{text/html; charset=utf-8}, -cache_control => q{no-cache, no-store, must-revalidate});
-say q{<!DOCTYPE HTML>};
-say q{<html><head><title>MyOOS [Dumper] Perl modul test</title>};
-say q{<style>body { padding-left:18px; font-family:Verdana,Helvetica,Sans-Serif;}</style></head>};
-say q{<body><h2>Testing needed Perl-Moduls in order to run the Perl script crondump.pl</h2>};
-say q{<h4 style="background-color:#ccffcc;">Necessary Modules for crondump.pl</h4>};
-say q{<strong>testing DBI ...</strong>};
+print "Content-Type: text/html; charset=utf-8\n"; # Content-Type ist ein Pflicht-Header
+print "Cache-Control: no-cache, no-store, must-revalidate\n"; # Optionaler Header
+print "\n"; # Leerzeile, um die Header vom Inhalt zu trennen
 
+print "<!DOCTYPE HTML>\n";
+print "<html><head><title>MyOOS [Dumper] Perl modul test</title>\n";
+print '<style type="text/css">body { padding-left:18px; font-family:Verdana,Helvetica,Sans-Serif;}</style></head>';
+print "<body><h2>Testing needed Perl-Moduls in order to run the Perl script crondump.pl</h2>\n";
+print "<h4 style=\"background-color:#ccffcc;\">Necessary Modules for crondump.pl</h4>";
+print "<strong>testing DBI ...</strong>\n";
 
 eval { $eval_in_died = 1; require DBI; };
        if(!$@){
