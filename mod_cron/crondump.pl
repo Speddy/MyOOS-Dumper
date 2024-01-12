@@ -30,7 +30,7 @@
 ########################################################################################
 # Script-Version
 package MyOOSCron;
-our $pcd_version="5.0.23";
+our $pcd_version="5.0.24";
 
 ########################################################################################
 # please enter the absolute path of the config-dir
@@ -54,7 +54,7 @@ use File::Find;
 use File::Basename;
 use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
 warningsToBrowser(1);
-use CGI;
+
 use Data::Dumper;
 use Getopt::Long;
 
