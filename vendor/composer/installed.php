@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '2b5c349c6242d49ccb0d0b53b4c2266630fe90f7',
+        'reference' => '7080dd86201cb324f786e3bba07bc61355882f02',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '2b5c349c6242d49ccb0d0b53b4c2266630fe90f7',
+            'reference' => '7080dd86201cb324f786e3bba07bc61355882f02',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -119,9 +119,9 @@
             'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.10.50',
-            'version' => '1.10.50.0',
-            'reference' => '06a98513ac72c03e8366b5a0cb00750b487032e4',
+            'pretty_version' => '1.10.55',
+            'version' => '1.10.55.0',
+            'reference' => '9a88f9d18ddf4cf54c922fbeac16c4cb164c5949',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
@@ -158,9 +158,9 @@
             ),
         ),
         'rector/rector' => array(
-            'pretty_version' => '0.18.12',
-            'version' => '0.18.12.0',
-            'reference' => 'ed8d5352a3faa69e4a5e315896abffd4bc29c828',
+            'pretty_version' => '0.18.13',
+            'version' => '0.18.13.0',
+            'reference' => 'f8011a76d36aa4f839f60f3b4f97707d97176618',
             'type' => 'library',
             'install_path' => __DIR__ . '/../rector/rector',
             'aliases' => array(),
@@ -169,7 +169,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => '3c2385497f806decca1e5abeba3cb8fd7caba4e0',
+            'reference' => 'c892bcc085a40eaa63e195cabdab5a7558c1b1c0',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
