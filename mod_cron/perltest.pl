@@ -27,8 +27,6 @@ use warnings;
 use utf8;
 use Socket;
 use Config;
-use CGI::Carp qw(warningsToBrowser fatalsToBrowser); 
-warningsToBrowser(1); # dies ist ganz wichtig!
 
 my $eval_in_died;
 my $mod_dbi=0;
@@ -45,6 +43,16 @@ my $get_options=0;
 my $ok='<font color="green">';
 my $err='<font color="red">';
 my $zlib_version='unknown';
+
+# Define a custom die handler
+$SIG{__DIE__} = sub {
+  my $error = shift;
+  # Print the error to STDERR
+  print STDERR "Fatal error: $error\n";
+  # Exit with non-zero status
+  exit 1;
+};
+
 
 print "Content-Type: text/html; charset=utf-8\n"; # Content-Type ist ein Pflicht-Header
 print "Cache-Control: no-cache, no-store, must-revalidate\n"; # Optionaler Header

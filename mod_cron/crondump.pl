@@ -52,8 +52,6 @@ use utf8;
 use DBI;
 use File::Find;
 use File::Basename;
-use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
-warningsToBrowser(1);
 
 use Data::Dumper;
 use Getopt::Long;
@@ -101,6 +99,18 @@ $complete_log=0;
 $cron_printout=1;
 #config file
 $conffile="";
+
+
+# Define a custom die handler
+$SIG{__DIE__} = sub {
+  my $error = shift;
+  # Print the error to STDERR
+  print STDERR "Fatal error: $error\n";
+  # Exit with non-zero status
+  exit 1;
+};
+
+
 
 #return perl version
 sub MyOOSCron::GetPerlVersion (){
@@ -351,6 +361,80 @@ if ($html_output==0) { print "\nEnd of Cronscript\n"; }
 ##############################################
 # Subroutinen                                #
 ##############################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 sub MyOOSCron::DoDump {
     undef(%db_tables);
     ($Sekunden, $Minuten, $Stunden, $Monatstag, $Monat, $Jahr, $Wochentag, $Jahrestag, $Sommerzeit) = localtime(time);
