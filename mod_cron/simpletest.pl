@@ -41,8 +41,21 @@
 use strict;
 use warnings;
 
-use CGI::Carp qw(warningsToBrowser fatalsToBrowser);  
-warningsToBrowser(1);
+# Define a custom die handler
+$SIG{__DIE__} = sub {
+  my $error = shift;
+  # Print the error to STDERR
+  print STDERR "Fatal error: $error\n";
+  # Exit with non-zero status
+  exit 1;
+};
+
+$SIG{__WARN__} = sub {
+  my $warning = shift;
+  # Output the warning to STDERR
+  print STDERR "Warning: $warning\n";
+};
+
 
 print "Content-Type: text/html; charset=utf-8\n"; # Content-Type ist ein Pflicht-Header
 print "Cache-Control: no-cache, no-store, must-revalidate\n"; # Optionaler Header

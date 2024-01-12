@@ -110,7 +110,11 @@ $SIG{__DIE__} = sub {
   exit 1;
 };
 
-
+$SIG{__WARN__} = sub {
+  my $warning = shift;
+  # Output the warning to STDERR
+  print STDERR "Warning: $warning\n";
+};
 
 #return perl version
 sub MyOOSCron::GetPerlVersion (){

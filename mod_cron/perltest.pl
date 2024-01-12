@@ -53,6 +53,11 @@ $SIG{__DIE__} = sub {
   exit 1;
 };
 
+$SIG{__WARN__} = sub {
+  my $warning = shift;
+  # Output the warning to STDERR
+  print STDERR "Warning: $warning\n";
+};
 
 print "Content-Type: text/html; charset=utf-8\n"; # Content-Type ist ein Pflicht-Header
 print "Cache-Control: no-cache, no-store, must-revalidate\n"; # Optionaler Header
