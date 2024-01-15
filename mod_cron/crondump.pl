@@ -78,7 +78,7 @@ $fieldlist, $first_insert, $my_comment, $sendmail_call, $config_read_from,
 $cron_smtp, $cron_smtp_port, $cron_use_sendmail,
 @ftp_transfer, @ftp_timeout, @ftp_user, @ftp_pass, @ftp_dir, @ftp_server, @ftp_port, @ftp_mode, @ftp_useSSL,
 $output, $query, $skip, $html_output, 
-@trash_files, $zero, $time_stamp, @filearr, $sql_file, $backupfile, $memory_limit, $dbh, $sth, @db_array,
+@trash_files, $time_stamp, @filearr, $sql_file, $backupfile, $memory_limit, $dbh, $sth, @db_array,
 @dbpraefix_array, @cron_command_before_dump, @cron_command_after_dump, $db_anz,
 $record_count, $filesize, $status_start, $status_end, $sql_text, $punktzaehler, @backupfiles_name,
 @backupfiles_size, $mysql_commentstring, $character_set, $mod_gz, $mod_mime, $mod_ftp,
@@ -95,8 +95,8 @@ $sql_text='';
 $sql_file='';
 $punktzaehler=0;
 @trash_files=();
-my @filopttblearr=();
-$zero=0;
+@filearr=();
+$opttbl=0;
 $db_praefix="";
 $complete_log=0;
 $cron_printout=1;
