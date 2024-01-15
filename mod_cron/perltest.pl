@@ -24,6 +24,7 @@
 
 use strict;
 use warnings;
+use threads;
 use utf8;
 use Socket;
 use Config;
@@ -192,3 +193,5 @@ if($mod_mime!=1){
 }
 
 print "<br><br><br><br></body></html>\n";
+
+close STDOUT;

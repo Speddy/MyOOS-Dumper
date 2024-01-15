@@ -48,11 +48,14 @@ my $default_configfile="myoosdumper.conf.php";
 # import the necessary modules ...
 use strict;
 use warnings;
+use threads;
 use utf8;
 use DBI;
 use File::Find;
 use File::Basename;
-
+# use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
+# warningsToBrowser(1);
+# use CGI;
 use Data::Dumper;
 use Getopt::Long;
 
@@ -75,14 +78,14 @@ $fieldlist, $first_insert, $my_comment, $sendmail_call, $config_read_from,
 $cron_smtp, $cron_smtp_port, $cron_use_sendmail,
 @ftp_transfer, @ftp_timeout, @ftp_user, @ftp_pass, @ftp_dir, @ftp_server, @ftp_port, @ftp_mode, @ftp_useSSL,
 $output, $query, $skip, $html_output, 
-@trash_files, $time_stamp, @filearr, $sql_file, $backupfile, $memory_limit, $dbh, $sth, @db_array,
+@trash_files, $zero, $time_stamp, @filearr, $sql_file, $backupfile, $memory_limit, $dbh, $sth, @db_array,
 @dbpraefix_array, @cron_command_before_dump, @cron_command_after_dump, $db_anz,
 $record_count, $filesize, $status_start, $status_end, $sql_text, $punktzaehler, @backupfiles_name,
 @backupfiles_size, $mysql_commentstring, $character_set, $mod_gz, $mod_mime, $mod_ftp,
 $mod_ftpssl, @multipartfiles, %db_tables, @tablenames, $tablename, $opttbl, $command, $current_dir,
 $mod_sftp_foreign, @sftp_transfer, @sftp_timeout, @sftp_server, @sftp_port, @sftp_user, @sftp_pass, 
 @sftp_dir, @sftp_foreig, @sftp_path_to_private_key, @sftp_secret_passphrase_for_private_key, @sftp_fingerprint,
-$cronsftpforeign
+$cronsftpforeign, 
 );
 
 $memory_limit=100000;
@@ -92,8 +95,8 @@ $sql_text='';
 $sql_file='';
 $punktzaehler=0;
 @trash_files=();
-@filearr=();
-$opttbl=0;
+my @filopttblearr=();
+$zero=0;
 $db_praefix="";
 $complete_log=0;
 $cron_printout=1;
@@ -102,19 +105,19 @@ $conffile="";
 
 
 # Define a custom die handler
-$SIG{__DIE__} = sub {
-  my $error = shift;
-  # Print the error to STDERR
-  print STDERR "Fatal error: $error\n";
-  # Exit with non-zero status
-  exit 1;
-};
+# $SIG{__DIE__} = sub {
+#  my $error = shift;
+#  # Print the error to STDERR
+#  print STDERR "Fatal error: $error\n";
+#  # Exit with non-zero status
+#  exit 1;
+# };
 
-$SIG{__WARN__} = sub {
-  my $warning = shift;
-  # Output the warning to STDERR
-  print STDERR "Warning: $warning\n";
-};
+# $SIG{__WARN__} = sub {
+#  my $warning = shift;
+#  # Output the warning to STDERR
+#  print STDERR "Warning: $warning\n";
+# };
 
 #return perl version
 sub MyOOSCron::GetPerlVersion (){
@@ -365,80 +368,6 @@ if ($html_output==0) { print "\nEnd of Cronscript\n"; }
 ##############################################
 # Subroutinen                                #
 ##############################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 sub MyOOSCron::DoDump {
     undef(%db_tables);
     ($Sekunden, $Minuten, $Stunden, $Monatstag, $Monat, $Jahr, $Wochentag, $Jahrestag, $Sommerzeit) = localtime(time);
@@ -842,6 +771,10 @@ sub MyOOSCron::PrintHeader {
     }
     else
     {
+		print "Content-Type: text/html; charset=utf-8\n"; # Content-Type ist ein Pflicht-Header
+		print "Cache-Control: no-cache, no-store, must-revalidate\n"; # Optionaler Header
+		print "\n"; # Leerzeile, um die Header vom Inhalt zu trennen		
+		
         #small output for external cronjobs, which expect a small returnvalue
         print "MyOOS [Dumper] - Perl CronDump [Version $pcd_version] started successfully (using perl $perlversion)\n";
     }
@@ -1605,3 +1538,4 @@ sub MyOOSCron::replaceQueryStringSimple{
     }
 }
 
+close STDOUT;

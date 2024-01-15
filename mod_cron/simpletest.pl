@@ -40,6 +40,7 @@
 
 use strict;
 use warnings;
+use threads;
 
 # Define a custom die handler
 $SIG{__DIE__} = sub {
@@ -68,3 +69,5 @@ print "\n</head><body>\n";
 print "<p>If you see this perl works fine on your system !<br><br>";
 print "Wenn Du das siehst, funktioniert Perl auf Deinem System !</p>";
 print "</body></html>\n";
+
+close STDOUT;
