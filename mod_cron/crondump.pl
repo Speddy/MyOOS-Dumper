@@ -124,7 +124,9 @@ sub MyOOSCron::GetPerlVersion (){
     my $pversion ;
     if ($^V){
         $pversion = sprintf "v%vd", $^V ; # v5.10.1
-    }else{
+    }
+	else
+	{
         $pversion = local $];
     }
     return $pversion;
@@ -190,7 +192,9 @@ if($ENV{'QUERY_STRING'}) {
         }
         if($key eq "html_output") { $html_output=$value; }; # overwrite var if given in call
     }
-}else{
+}
+else
+{
     $config_read_from="shell";
 }
 
@@ -578,7 +582,9 @@ sub MyOOSCron::DoDump {
             $a="\n\n$mysql_commentstring\n$mysql_commentstring"."Table structure for table `$tablename`\n$mysql_commentstring\n";
             if ($db_tables{$tablename}{Engine} ne 'VIEW' ) {
                 $a.="DROP TABLE IF EXISTS `$tablename`;\n";
-            } else {
+            }
+			else
+			{
                 $a.="DROP VIEW IF EXISTS `$tablename`;\n";
             }
             $sql_text.=$a;
@@ -1205,7 +1211,9 @@ sub MyOOSCron::WriteToFile {
             open(DATEI,">>$sql_file");
             print DATEI $inh;
             close(DATEI);
-        } else {
+        }
+		else
+		{
             $gz = gzopen($sql_file, "ab") || MyOOSCron::err_trap("Cannot open ".$sql_file);
             $gz->gzwrite($inh)  || MyOOSCron::err_trap("Error writing ".$sql_file);
             $gz->gzclose ;
@@ -1533,7 +1541,9 @@ sub MyOOSCron::replaceQueryStringSimple{
     if ($string =~ m#(.*)\'(.*)\;(.*)\'(.*)#){
         # if found search for more ';'
         return MyOOSCron::replaceQueryStringSimple($1.'\''.$2.'$$MOD$$'.$3.'\''.$4);;
-    }else{
+    }
+	else
+	{
         return $string;
     }
 }
