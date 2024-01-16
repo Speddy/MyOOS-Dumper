@@ -1073,12 +1073,13 @@ sub MyOOSCron::send_mail {
         MIME::Lite->send('smtp', $cron_smtp, Timeout=>60) || MyOOSCron::err_trap("Error setting smtp call !",1);    
     }
 
+	$Body = encode_utf8($Body);
     $msg = MIME::Lite->new(
         From    => $cronmailfrom,
         To      => $cronmailto,
         Cc    => $cronmailto_cc,
         Subject => "MOD (Perl) - Backup of DB ".$dbname,
-        Type    => 'text/html; charset=iso-8859-1',
+        Type    => 'text/html; charset=utf-8',
         Data    => "<body>\n".$Body."</body>\n"
     );
 
