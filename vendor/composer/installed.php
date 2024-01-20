@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '5d9803649f846a110f5cb301fc662c5b88dc46dc',
+        'reference' => 'e183bc46a8e68f1118146d16f114d4156d734c59',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '5d9803649f846a110f5cb301fc662c5b88dc46dc',
+            'reference' => 'e183bc46a8e68f1118146d16f114d4156d734c59',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -119,9 +119,9 @@
             'dev_requirement' => false,
         ),
         'phpstan/phpstan' => array(
-            'pretty_version' => '1.10.55',
-            'version' => '1.10.55.0',
-            'reference' => '9a88f9d18ddf4cf54c922fbeac16c4cb164c5949',
+            'pretty_version' => '1.10.56',
+            'version' => '1.10.56.0',
+            'reference' => '27816a01aea996191ee14d010f325434c0ee76fa',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpstan/phpstan',
             'aliases' => array(),
@@ -169,7 +169,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'c892bcc085a40eaa63e195cabdab5a7558c1b1c0',
+            'reference' => 'f81bd7cb90f5f30d3b246e342843ae905947158f',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
