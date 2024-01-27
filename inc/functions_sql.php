@@ -5,7 +5,7 @@
    MyOOS [Dumper]
    https://www.oos-shop.de/
 
-   Copyright (c) 2017 by the MyOOS Development Team.
+   Copyright (c) 2013 - 2024 by the MyOOS Development Team.
    ----------------------------------------------------------------------
    Based on:
 
