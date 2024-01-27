@@ -1,4 +1,23 @@
 <?php
+/**
+ * ---------------------------------------------------------------------
+
+   MyOOS [Dumper]
+   https://www.oos-shop.de/
+
+   Copyright (c) 2003 - 2024 by the MyOOS Development Team.
+   ----------------------------------------------------------------------
+   Based on:
+
+   MySqlDumper
+   https://www.mysqldumper.de
+
+   Copyright (C)2004-2011 Daniel Schlichtholz (admin@mysqldumper.de)
+   ----------------------------------------------------------------------
+   Released under the GNU General Public License
+   ----------------------------------------------------------------------
+ */
+
 
 // MyOOS [Dumper] Configuration
 
@@ -162,8 +181,6 @@ $config['other_smtp_port'] = '587';
 $config['other_smtp_username'] = '';
 $config['other_smtp_password'] = '';
 $config['other_smtp_auth'] = '';
-
-
 
 $config['cron_extender'] = 0;
 $config['cron_compression'] = 1;
