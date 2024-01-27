@@ -164,17 +164,17 @@
         },
         {
             "name": "league/flysystem",
-            "version": "3.23.0",
-            "version_normalized": "3.23.0.0",
+            "version": "3.23.1",
+            "version_normalized": "3.23.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem.git",
-                "reference": "d4ad81e2b67396e33dc9d7e54ec74ccf73151dcc"
+                "reference": "199e1aebbe3e62bd39f4d4fc8c61ce0b3786197e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/d4ad81e2b67396e33dc9d7e54ec74ccf73151dcc",
-                "reference": "d4ad81e2b67396e33dc9d7e54ec74ccf73151dcc",
+                "url": "https://api.github.com/repos/thephpleague/flysystem/zipball/199e1aebbe3e62bd39f4d4fc8c61ce0b3786197e",
+                "reference": "199e1aebbe3e62bd39f4d4fc8c61ce0b3786197e",
                 "shasum": ""
             },
             "require": {
@@ -207,7 +207,7 @@
                 "phpunit/phpunit": "^9.5.11|^10.0",
                 "sabre/dav": "^4.3.1"
             },
-            "time": "2023-12-04T10:16:17+00:00",
+            "time": "2024-01-26T18:42:03+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -241,7 +241,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem/issues",
-                "source": "https://github.com/thephpleague/flysystem/tree/3.23.0"
+                "source": "https://github.com/thephpleague/flysystem/tree/3.23.1"
             },
             "funding": [
                 {
@@ -257,17 +257,17 @@
         },
         {
             "name": "league/flysystem-local",
-            "version": "3.23.0",
-            "version_normalized": "3.23.0.0",
+            "version": "3.23.1",
+            "version_normalized": "3.23.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-local.git",
-                "reference": "5cf046ba5f059460e86a997c504dd781a39a109b"
+                "reference": "b884d2bf9b53bb4804a56d2df4902bb51e253f00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-local/zipball/5cf046ba5f059460e86a997c504dd781a39a109b",
-                "reference": "5cf046ba5f059460e86a997c504dd781a39a109b",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-local/zipball/b884d2bf9b53bb4804a56d2df4902bb51e253f00",
+                "reference": "b884d2bf9b53bb4804a56d2df4902bb51e253f00",
                 "shasum": ""
             },
             "require": {
@@ -276,7 +276,7 @@
                 "league/mime-type-detection": "^1.0.0",
                 "php": "^8.0.2"
             },
-            "time": "2023-12-04T10:14:46+00:00",
+            "time": "2024-01-26T18:25:23+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -304,7 +304,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem-local/issues",
-                "source": "https://github.com/thephpleague/flysystem-local/tree/3.23.0"
+                "source": "https://github.com/thephpleague/flysystem-local/tree/3.23.1"
             },
             "funding": [
                 {
@@ -320,17 +320,17 @@
         },
         {
             "name": "league/flysystem-sftp-v3",
-            "version": "3.22.0",
-            "version_normalized": "3.22.0.0",
+            "version": "3.23.1",
+            "version_normalized": "3.23.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-sftp-v3.git",
-                "reference": "a9827f810265d756690f5bfc257c0d82acd4ca84"
+                "reference": "09d001860d6642e2bed75f9d2f9e9fa931a3a6be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp-v3/zipball/a9827f810265d756690f5bfc257c0d82acd4ca84",
-                "reference": "a9827f810265d756690f5bfc257c0d82acd4ca84",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp-v3/zipball/09d001860d6642e2bed75f9d2f9e9fa931a3a6be",
+                "reference": "09d001860d6642e2bed75f9d2f9e9fa931a3a6be",
                 "shasum": ""
             },
             "require": {
@@ -339,7 +339,7 @@
                 "php": "^8.0.2",
                 "phpseclib/phpseclib": "^3.0"
             },
-            "time": "2023-12-03T15:42:36+00:00",
+            "time": "2024-01-26T18:25:23+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -367,7 +367,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem-sftp-v3/issues",
-                "source": "https://github.com/thephpleague/flysystem-sftp-v3/tree/3.22.0"
+                "source": "https://github.com/thephpleague/flysystem-sftp-v3/tree/3.23.1"
             },
             "funding": [
                 {
@@ -1107,12 +1107,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "c9c42c85b30185dd4cafbc8ac45c413babc0f934"
+                "reference": "cea5a32b418b44dc5a480049f531f53563c26210"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/c9c42c85b30185dd4cafbc8ac45c413babc0f934",
-                "reference": "c9c42c85b30185dd4cafbc8ac45c413babc0f934",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/cea5a32b418b44dc5a480049f531f53563c26210",
+                "reference": "cea5a32b418b44dc5a480049f531f53563c26210",
                 "shasum": ""
             },
             "conflict": {
@@ -1511,7 +1511,7 @@
                 "phpxmlrpc/extras": "<0.6.1",
                 "phpxmlrpc/phpxmlrpc": "<4.9.2",
                 "pi/pi": "<=2.5",
-                "pimcore/admin-ui-classic-bundle": "<1.2.2",
+                "pimcore/admin-ui-classic-bundle": "<1.3.2",
                 "pimcore/customer-management-framework-bundle": "<4.0.6",
                 "pimcore/data-hub": "<1.2.4",
                 "pimcore/demo": "<10.3",
@@ -1535,7 +1535,7 @@
                 "prestashop/ps_facetedsearch": "<3.4.1",
                 "prestashop/ps_linklist": "<3.1",
                 "privatebin/privatebin": "<1.4",
-                "processwire/processwire": "<=3.0.200",
+                "processwire/processwire": "<=3.0.210",
                 "propel/propel": ">=2.0.0.0-alpha1,<=2.0.0.0-alpha7",
                 "propel/propel1": ">=1,<=1.7.1",
                 "pterodactyl/panel": "<1.7",
@@ -1794,7 +1794,7 @@
                 "zfr/zfr-oauth2-server-module": "<0.1.2",
                 "zoujingli/thinkadmin": "<=6.1.53"
             },
-            "time": "2024-01-23T21:04:12+00:00",
+            "time": "2024-01-24T22:04:16+00:00",
             "default-branch": true,
             "type": "metapackage",
             "notification-url": "https://packagist.org/downloads/",
