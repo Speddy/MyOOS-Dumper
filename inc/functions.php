@@ -777,6 +777,14 @@ function IsWritable($dir)
 
 function IsAccessProtected()
 {
+	$context = stream_context_create(array(
+		'http' => array(
+		'method' => 'GET',
+		'header' => 'User-Agent: Mozilla/5.0\r\n'
+		)
+	));
+
+
     $rc = false;
 
     if (isset($_SERVER['HTTPS']) && (strtolower((string) $_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == 1)) {
@@ -788,10 +796,11 @@ function IsAccessProtected()
     }
 
     $url = sprintf('%s://%s%s', $scheme, $_SERVER['HTTP_HOST'], dirname((string) $_SERVER['PHP_SELF']));
-    $headers = @get_headers($url);
+	$headers = @get_headers($url, true, $context);
     if (is_array($headers) && count($headers) > 0) {
         $rc = (preg_match('/\s+(?:401|403)\s+/', (string) $headers[0])) ? 1 : 0;
     }
+
     return $rc;
 }
 
