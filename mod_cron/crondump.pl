@@ -895,11 +895,13 @@ sub MyOOSCron::send_ftp {
         {
             if ($ftp_timeout[$i]<1) { $ftp_timeout[$i]=30; };
                 if (${ftp_useSSL[$i]}==1 && $mod_ftpssl==1)
-                {    #use ftp-ssl
-                    $ftp = Net::FTPSSL->new($ftp_server[$i], Encryption => Net::FTPSSL->EXP_CRYPT, Port => $ftp_port[$i], DataProtLevel =>Net::FTPSSL->DATA_PROT_CLEAR, Timeout => $ftp_timeout[$i], Debug   => 0) or MyOOSCron::err_trap( "FTP-SSL-ERROR: Can't connect: $@\n",1);
-                }
+                {    
+					#use ftp-ssl
+					$ftp = Net::FTPSSL->new($ftp_server[$i], Encryption => Net::FTPSSL->EXP_CRYPT, Port => $ftp_port[$i], DataProtLevel =>Net::FTPSSL->DATA_PROT_PRIVATE, Timeout => $ftp_timeout[$i], Debug => 0) or MyOOSCron::err_trap( "FTP-SSL-ERROR: Can't connect: $@\n",1);				
+				}
                 else
-                {    #use 'plain' ftp
+                {    
+					#use 'plain' ftp
                     $ftp = Net::FTP->new($ftp_server[$i], Port => $ftp_port[$i], Timeout => $ftp_timeout[$i], Debug   => 1,Passive => $ftp_mode[$i]) or MyOOSCron::err_trap( "FTP-ERROR: Can't connect: $@\n",1);
                 }
             $ftp->login($ftp_user[$i], $ftp_pass[$i]) or MyOOSCron::err_trap("FTP-ERROR: Couldn't login\n",1);
