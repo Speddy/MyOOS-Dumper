@@ -159,10 +159,19 @@ function myErrorHandler($errno, $errstr, $errfile, $errline)
 
     // Open the error_log.txt file for writing
     $file = fopen($config['paths']['log'].'error_log.txt', 'a');
-    // Write the error in the file
-    fwrite($file, "Error $errno: $errstr in $errfile on line $errline\n");
-    // Close the file
-    fclose($file);
+	
+	// Check if fopen was successful
+	if ($file) {
+		// Write the error in the file
+		fwrite($file, "Error $errno: $errstr in $errfile on line $errline\n");
+		// Close the file
+		fclose($file);
+	} else {
+		// Handle the error
+		echo "Could not open file for writing\n";
+		echo $file . "\n";
+		echo "Error $errno: $errstr in $errfile on line $errline\n";
+	}	
     // Return true to avoid the standard error handling
     return true;
 }
