@@ -187,7 +187,7 @@ function getmicrotime()
 function MD_FreeDiskSpace()
 {
     global $lang;
-    $dfs = @diskfreespace('../');
+    $dfs = disk_free_space('../');
     return ($dfs) ? byte_output($dfs) : $lang['L_NOTAVAIL'];
 }
 
