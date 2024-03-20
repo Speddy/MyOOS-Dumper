@@ -40,7 +40,7 @@ class SftpConnectionProvider implements ConnectionProvider
         private int $timeout = 10,
         private int $maxTries = 4,
         private ?string $hostFingerprint = null,
-        ConnectivityChecker $connectivityChecker = null,
+        ?ConnectivityChecker $connectivityChecker = null,
         private array $preferredAlgorithms = [],
         private bool $disableStatCache = true,
     ) {
@@ -81,6 +81,14 @@ class SftpConnectionProvider implements ConnectionProvider
         }
 
         return $this->connection = $connection;
+    }
+
+    public function disconnect(): void
+    {
+        if ($this->connection) {
+            $this->connection->disconnect();
+            $this->connection = null;
+        }
     }
 
     private function setupConnection(): SFTP
