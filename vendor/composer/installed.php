@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '5c3806ffaea6b86f898962b075c2db832fd75124',
+        'reference' => 'e0250c441718e2fb038bd324bc46438883f20d5e',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '5c3806ffaea6b86f898962b075c2db832fd75124',
+            'reference' => 'e0250c441718e2fb038bd324bc46438883f20d5e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -38,9 +38,9 @@
             'dev_requirement' => false,
         ),
         'league/flysystem' => array(
-            'pretty_version' => '3.25.1',
-            'version' => '3.25.1.0',
-            'reference' => 'abbd664eb4381102c559d358420989f835208f18',
+            'pretty_version' => '3.26.0',
+            'version' => '3.26.0.0',
+            'reference' => '072735c56cc0da00e10716dd90d5a7f7b40b36be',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/flysystem',
             'aliases' => array(),
@@ -56,9 +56,9 @@
             'dev_requirement' => false,
         ),
         'league/flysystem-sftp-v3' => array(
-            'pretty_version' => '3.25.1',
-            'version' => '3.25.1.0',
-            'reference' => '5cf169f33e4351832373f9d1b663c137589aa260',
+            'pretty_version' => '3.26.0',
+            'version' => '3.26.0.0',
+            'reference' => 'bb186407f8b6e71df2caa35436c3426466d84048',
             'type' => 'library',
             'install_path' => __DIR__ . '/../league/flysystem-sftp-v3',
             'aliases' => array(),
@@ -151,7 +151,7 @@
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
             'version' => 'dev-latest',
-            'reference' => 'a93bfa3d635bfaf71fa8c459a6df6278c5cdb9e8',
+            'reference' => '1cd94da9f134cc15fbef701aeb7349c4a50ebbbe',
             'type' => 'metapackage',
             'install_path' => NULL,
             'aliases' => array(
