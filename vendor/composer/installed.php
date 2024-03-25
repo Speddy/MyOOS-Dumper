@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '3c75b5d7ebbb8dde0fe40f58358d0561d02923a4',
+        'reference' => '5c3806ffaea6b86f898962b075c2db832fd75124',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3c75b5d7ebbb8dde0fe40f58358d0561d02923a4',
+            'reference' => '5c3806ffaea6b86f898962b075c2db832fd75124',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -118,15 +118,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'phpstan/phpstan' => array(
-            'pretty_version' => '1.10.63',
-            'version' => '1.10.63.0',
-            'reference' => 'ad12836d9ca227301f5fb9960979574ed8628339',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../phpstan/phpstan',
-            'aliases' => array(),
-            'dev_requirement' => true,
-        ),
         'psr/log' => array(
             'pretty_version' => '1.1.4',
             'version' => '1.1.4.0',
@@ -156,15 +147,6 @@
             'provided' => array(
                 0 => '1.0',
             ),
-        ),
-        'rector/rector' => array(
-            'pretty_version' => '0.18.13',
-            'version' => '0.18.13.0',
-            'reference' => 'f8011a76d36aa4f839f60f3b4f97707d97176618',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../rector/rector',
-            'aliases' => array(),
-            'dev_requirement' => true,
         ),
         'roave/security-advisories' => array(
             'pretty_version' => 'dev-latest',
